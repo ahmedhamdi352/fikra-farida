@@ -2,20 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
+    --background: #ffffff;
+    --foreground: rgba(38, 38, 38, 0.9);
+    --font-poppins: 'Poppins', sans-serif;
+    --font-quicksand: 'Quicksand', sans-serif;
+    --liner-primary: #F1911B;
+    --liner-gradient-start: #FEC400;
+    --liner-gradient-end: #8B5410;
+    --main-color1: #FEC400;
+    --small-text: #F4DD94;
+  }
+
+  :root.dark {
     --foreground: #ededed;
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Smooth theme transition */
+  .transition-colors {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* Prevent transition on page load */
+  .no-transitions * {
+    transition: none !important;
+  }
+
+  /* Default font for English */
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: var(--font-poppins), system-ui, sans-serif;
+    background-image: url('/images/dark-theme-bg.svg');
+    /* min-height: 100vh; */
+  }
+
+  /* Apply dark theme background to body */
+  :root.dark body {
+    --background: rgba(38, 38, 38, 0.9);
+    background-repeat: repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  /* Mobile Dark Mode Background */
+  @media (max-width: 768px) {
+    :root.dark body {
+      /* --background: #737373; */
+          --background: rgba(38, 38, 38, 0.9);
+      /* background-size: 100%; */
+      background-position: start 20%;
+      background-size: fill;
+    }
+  }
+
+  /* Arabic font */
+  :lang(ar) {
+    font-family: var(--font-quicksand), system-ui, sans-serif;
+  }
+
+  /* Blog specific styles */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .bg-primary {
+    background-color: #1a1a1a;
+  }
+
+  .hover\:bg-primary\/90:hover {
+    background-color: rgba(26, 26, 26, 0.9);
+  }
 }

@@ -1,18 +1,101 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
-export default {
+const config: Config = {
+  darkMode: 'class',
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['var(--font-poppins)'],
+        quicksand: ['var(--font-quicksand)'],
+        cairo: ['Cairo', 'sans-serif'],
+        mochiy: ['var(--font-mochiy)'],
+      },
+      backgroundColor: {
+        primary: 'var(--background-primary)',
+        secondary: 'var(--background-secondary)',
+      },
+      textColor: {
+        primary: 'var(--text-primary)',
+        secondary: 'var(--text-secondary)',
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        liner: {
+          primary: 'var(--liner-primary)',
+          gradientStart: 'var(--liner-gradient-start)',
+          gradientEnd: 'var(--liner-gradient-end)',
+        }
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(50px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInDown: {
+          '0%': { opacity: '0', transform: 'translateY(-50px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInLeft: {
+          '0%': { opacity: '0', transform: 'translateX(-100px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        fadeInRight: {
+          '0%': { opacity: '0', transform: 'translateX(100px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        rotateIn: {
+          '0%': { opacity: '0', transform: 'rotate(-10deg)' },
+          '100%': { opacity: '1', transform: 'rotate(0)' },
+        },
+        skewIn: {
+          '0%': { opacity: '0', transform: 'skewX(10deg)' },
+          '100%': { opacity: '1', transform: 'skewX(0)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.6s ease-out forwards',
+        fadeInUp: 'fadeInUp 1s ease-in-out forwards',
+        fadeInDown: 'fadeInDown 1s ease-in-out forwards',
+        fadeInLeft: 'fadeInLeft 1s ease-in-out forwards',
+        fadeInRight: 'fadeInRight 1s ease-in-out forwards',
+        scaleIn: 'scaleIn 0.5s ease-out forwards',
+        rotateIn: 'rotateIn 1s ease-in-out forwards',
+        skewIn: 'skewIn 1s ease-in-out forwards',
+        float: 'float 3s ease-in-out infinite',
+        'float-delay-1': 'float 3s ease-in-out infinite 1s',
+        'float-delay-2': 'float 3s ease-in-out infinite 2s',
       },
     },
   },
   plugins: [],
-} satisfies Config;
+  // Enable RTL support
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  // Add RTL specific utilities
+  variants: {
+    extend: {
+      margin: ['rtl'],
+      padding: ['rtl'],
+      textAlign: ['rtl'],
+    },
+  },
+};
+
+export default config;

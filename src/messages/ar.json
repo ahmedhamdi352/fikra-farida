@@ -1,0 +1,110 @@
+{
+  "common": {
+    "nav": {
+      "home": "الرئيسية",
+      "about": "من نحن",
+      "contact": "اتصل بنا"
+    },
+    "actions": {
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "submit": "إرسال"
+    }
+  },
+  "errors": {
+    "authentication": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
+    "authorization": "ليس لديك صلاحية لتنفيذ هذا الإجراء.",
+    "validation": "يرجى التحقق من المدخلات والمحاولة مرة أخرى.",
+    "notFound": "لم يتم العثور على المورد المطلوب.",
+    "server": "حدث خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.",
+    "network": "تعذر الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت.",
+    "unknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+    "default": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  },
+  "home": {
+    "title": "مرحباً بك في {site}",
+    "description": "موقع متعدد اللغات بالكامل",
+    "hero": {
+      "title": "بطاقة الأعمال الرقمية",
+      "subtitle": "مستقبل التواصل التجاري"
+    },
+    "features": {
+      "title": "مميزات خاصة",
+      "paymentsProtection": "قم بتأمين معاملاتك مع نظام حماية الدفع المتقدم",
+      "secureEnvironment": "اعمل في بيئة آمنة ومشفرة بالكامل",
+      "blockchainBanking": "اختبر مستقبل الخدمات المصرفية مع تقنية البلوكتشين"
+    },
+    "countries": {
+      "title": "يمكنك الحصول على منتجاتنا أينما ذهبت",
+      "egypt": "مصر",
+      "saudiArabia": "المملكة العربية السعودية",
+      "uae": "الإمارات العربية المتحدة"
+    }
+  },
+  "about": {
+    "title": "من نحن",
+    "description": "تعرف أكثر على فريقنا ومهمتنا"
+  },
+  "contact": {
+    "header": {
+      "title": {
+        "part1": "اجعل فريقك",
+        "part2": "مميزاً"
+      },
+      "subtitle": "مع منتجاتنا وخدماتنا"
+    },
+    "title": {
+      "line1": "تواصل معنا",
+      "line2": "مع",
+      "line3": "فريقنا"
+    },
+    "form": {
+      "fullName": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "message": "اكتب رسالتك هنا...",
+      "submit": "إرسال الآن"
+    },
+    "info": {
+      "title": "مهتم بتحسين التواصل في شركتك؟",
+      "subtitle": "الحل الرقمي معنا.",
+      "phone": {
+        "label": "رقم الهاتف",
+        "value": "01101092009"
+      },
+      "email": {
+        "label": "البريد الإلكتروني",
+        "value": "contact@fikrafarida.com"
+      },
+      "location": {
+        "label": "الموقع",
+        "value": "مصر"
+      }
+    },
+    "backgroundAlt": "خلفية صفحة الاتصال"
+  },
+  "auth": {
+    "login": {
+      "welcome": "مرحباً بعودتك",
+      "emailPlaceholder": "البريد الإلكتروني",
+      "passwordPlaceholder": "كلمة المرور",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "signUp": "انضم إلينا الآن!"
+    },
+    "register": {
+      "title": "أنشئ حسابك الآن",
+      "usernamePlaceholder": "اسم المستخدم",
+      "fullNamePlaceholder": "الاسم الكامل",
+      "phonePlaceholder": "رقم الهاتف",
+      "emailPlaceholder": "بريدك الإلكتروني",
+      "passwordPlaceholder": "كلمة المرور",
+      "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+      "submit": "إنشاء حساب",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
+    }
+  }
+}

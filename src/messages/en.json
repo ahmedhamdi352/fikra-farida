@@ -1,0 +1,110 @@
+{
+  "common": {
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "contact": "Contact"
+    },
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "submit": "Submit"
+    }
+  },
+  "errors": {
+    "authentication": "Your session has expired. Please login again.",
+    "authorization": "You do not have permission to perform this action.",
+    "validation": "Please check your input and try again.",
+    "notFound": "The requested resource was not found.",
+    "server": "An internal server error occurred. Please try again later.",
+    "network": "Unable to connect to the server. Please check your internet connection.",
+    "unknown": "An unexpected error occurred. Please try again.",
+    "default": "Something went wrong. Please try again."
+  },
+  "home": {
+    "title": "Welcome to {site}",
+    "description": "A fully internationalized website",
+    "hero": {
+      "title": "Digital Business Card",
+      "subtitle": "The Future of Business Communication"
+    },
+    "features": {
+      "title": "Special Features",
+      "paymentsProtection": "Secure your transactions with our advanced payment protection system",
+      "secureEnvironment": "Operate in a fully secure and encrypted environment",
+      "blockchainBanking": "Experience the future of banking with blockchain technology"
+    },
+    "countries": {
+      "title": "You Can Get Our Products Whatever You Go",
+      "egypt": "Egypt",
+      "saudiArabia": "Saudi Arabia",
+      "uae": "United Arab Emirates"
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "description": "Learn more about our team and mission"
+  },
+  "contact": {
+    "header": {
+      "title": {
+        "part1": "Make Your Team",
+        "part2": "Special"
+      },
+      "subtitle": "with Our Products & Services"
+    },
+    "title": {
+      "line1": "Get in Touch",
+      "line2": "with our",
+      "line3": "Team"
+    },
+    "form": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "message": "Write something here...",
+      "submit": "Submit Now"
+    },
+    "info": {
+      "title": "Interested in improving your company's communication?",
+      "subtitle": "The digital solution is with us.",
+      "phone": {
+        "label": "phone number",
+        "value": "01101092009"
+      },
+      "email": {
+        "label": "E-mail address",
+        "value": "contact@fikrafarida.com"
+      },
+      "location": {
+        "label": "Location",
+        "value": "EGYPT"
+      }
+    },
+    "backgroundAlt": "Contact Background"
+  },
+  "auth": {
+    "login": {
+      "welcome": "Welcome Back",
+      "emailPlaceholder": "E-Mail",
+      "passwordPlaceholder": "Enter your Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot Password",
+      "submit": "Login",
+      "noAccount": "don't have an account ?",
+      "signUp": "let's join us now!"
+    },
+    "register": {
+      "title": "Create Your Account Now",
+      "usernamePlaceholder": "User name",
+      "fullNamePlaceholder": "Full name",
+      "phonePlaceholder": "Phone Number",
+      "emailPlaceholder": "Your Email",
+      "passwordPlaceholder": "Password",
+      "confirmPasswordPlaceholder": "Confirm Password",
+      "submit": "SIGN UP",
+      "haveAccount": "Already have an account?",
+      "login": "Login here"
+    }
+  }
+}
