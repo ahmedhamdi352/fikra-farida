@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import { Newsletter } from 'components/Newsletter';
 import blog1 from 'assets/images/blogs/blogDetails.png';
@@ -57,8 +55,16 @@ const blogs = [
   }
 ];
 
-export default function BlogDetails({ params }: { params: { id: string } }) {
-  const blog = blogs.find(b => b.id === parseInt(params.id));
+interface BlogDetailsProps {
+  params: Promise<{ locale: string; id: string }>;
+}
+
+// eslint-disable-next-line @next/next/no-async-client-component
+export default async function BlogDetails({
+  params,
+}: BlogDetailsProps) {
+  const resolvedParams = await params; // Resolve the Promise if `params` is asynchronous
+  const blog = blogs.find(b => b.id === parseInt(resolvedParams.id));
 
   if (!blog) {
     return <div>Blog not found</div>;
