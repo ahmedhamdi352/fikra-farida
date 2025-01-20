@@ -27,13 +27,15 @@ export default function CountryFlags() {
               className="object-cover"
               priority
               fill
+              sizes="(max-width: 708px) 60vw, (max-width: 1100px) 30vw, 33vw"
             />
           </div>
 
           {/* Content */}
           <div className="relative z-10 py-16 px-6">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white flex items-center justify-center gap-4">
+              <h2 className="text-white text-center text-[12px] md:text-[30px] lg:text-[36px] font-bold capitalize flex items-center justify-center gap-4"
+                style={{ lineHeight: 'normal' }}>
                 <Image
                   src={locationIcon}
                   alt="Location"
@@ -45,7 +47,7 @@ export default function CountryFlags() {
               </h2>
             </div>
 
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+            <div className="flex justify-center items-center gap-3 md:gap-12">
               {countries.map((country, index) => (
                 <div
                   key={index}
@@ -56,7 +58,7 @@ export default function CountryFlags() {
                     alt={t(country.translationKey)}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 708px) 60vw, (max-width: 1100px) 30vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-black/10 hover:bg-black/0 transition-colors duration-300" />
                 </div>

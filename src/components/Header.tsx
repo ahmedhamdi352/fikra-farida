@@ -32,6 +32,14 @@ const Header = ({ siteData }: HeaderProps) => {
     };
   }, [isMobileMenuOpen]);
 
+  const scrollToHowItWorks = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const section = document.getElementById('how-it-works');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="p-2 text-white bg-black" >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
@@ -60,9 +68,9 @@ const Header = ({ siteData }: HeaderProps) => {
           <Link href="/contact" className="hover:text-gray-300">
             Contact Us
           </Link>
-          <Link href="/how-it-use" className="hover:text-gray-300">
+          <a href="#how-it-works" onClick={scrollToHowItWorks} className="hover:text-gray-300">
             How it use
-          </Link>
+          </a>
         </nav>
 
         {/* Icons Section */}
@@ -142,16 +150,23 @@ const Header = ({ siteData }: HeaderProps) => {
                 <span>Connect Us</span>
               </Link>
 
-              <Link
-                href="/how-it-use"
+              <a
+                href="#how-it-works"
                 className="flex items-center space-x-3 px-4 py-3 rounded-lg text-white hover:bg-white/10"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  const section = document.getElementById('how-it-works');
+                  if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>how it work</span>
-              </Link>
+                <span>How to use</span>
+              </a>
 
               <div className="mt-auto flex flex-col space-y-3">
                 <div className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white">
