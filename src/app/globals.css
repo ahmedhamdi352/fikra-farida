@@ -52,10 +52,10 @@
   @media (max-width: 768px) {
     :root.dark body {
       /* --background: #737373; */
-          --background: rgba(38, 38, 38, 0.9);
-      /* background-size: 100%; */
+      --background: rgba(38, 38, 38, 0.9);
+      background-size: 100%;
       background-position: start 20%;
-      background-size: fill;
+      background-size: contain;
     }
   }
 
