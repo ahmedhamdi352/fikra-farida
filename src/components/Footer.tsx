@@ -108,7 +108,7 @@ const Footer = ({ siteData }: FooterProps) => {
           </div>
         </div>
 
-        <div className="mt-16 pt-8">
+        <div className="mt-8 pt-8">
           <div className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent" style={{
             background: 'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)'
           }}></div>

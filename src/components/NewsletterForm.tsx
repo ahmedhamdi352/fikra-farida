@@ -42,7 +42,7 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
         <p className="text-gray-300 mb-4">Subscribe to our newsletter</p>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row gap-4 relative">
+        <div className="flex sm:flex-row gap-4 relative">
           <input
             type="email"
             placeholder="E-Mail"
