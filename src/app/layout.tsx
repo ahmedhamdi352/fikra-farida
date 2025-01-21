@@ -5,6 +5,22 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Fikra Farida",
   description: "Communication between people easily and in the fastest way",
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#000000' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' }
+  ],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: 'cover',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Fikra Farida',
+  },
   icons: {
     icon: [
       { url: '/icons/favicon.png', sizes: '32x32', type: 'image/png' },
@@ -29,6 +45,11 @@ export default function RootLayout({
 }>) {
   return (
     <html>
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="format-detection" content="telephone=no" />
+      </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         {children}
       </body>
