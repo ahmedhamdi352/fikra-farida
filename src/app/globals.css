@@ -79,4 +79,18 @@
   .hover\:bg-primary\/90:hover {
     background-color: rgba(26, 26, 26, 0.9);
   }
+
+  /* Prevent horizontal scrolling */
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Ensure all content stays within viewport */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
