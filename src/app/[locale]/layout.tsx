@@ -10,6 +10,7 @@ import { Metadata } from 'next';
 import { getSiteData } from '../actions';
 import HeaderWrapper from 'components/HeaderWrapper';
 import FooterWrapper from 'components/FooterWrapper';
+// import { siteConfig } from 'config/site';
 
 type Props = {
   children: React.ReactNode;
@@ -22,10 +23,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   if (!locales.includes(locale)) notFound();
 
+  const siteConfig = await getSiteData();
+
   return {
     title: {
-      template: '%s | Fikra Farida',
-      default: 'Fikra Farida 7nksh',
+      template: `%s | ${siteConfig.name}`,
+      default: `${siteConfig.siteName} - Communication between people easily`,
     },
     description: 'Communication between people easily and in the fastest way',
   };
