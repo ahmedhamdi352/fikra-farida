@@ -6,7 +6,7 @@ export default function CompatibleDevices() {
   return (
     <section className="py-8 relative">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-white mb-16">Compatible Devices</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-8">Compatible Devices</h2>
         <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto">
           {/* Android Card */}
           <div className="flex flex-col items-center">

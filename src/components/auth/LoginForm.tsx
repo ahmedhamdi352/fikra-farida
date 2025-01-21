@@ -4,23 +4,47 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
+import TextInput from '../forms/text-input';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+const schema = yup.object().shape({
+  email: yup.string().required('Email is required').email('Invalid email format'),
+  password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+});
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const t = useTranslations('auth');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement login logic
-    console.log({ email, password, rememberMe });
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting }
+  } = useForm<LoginFormData>({
+    resolver: yupResolver(schema),
+    mode: 'onBlur'
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      // TODO: Implement login logic
+      console.log({ ...data, rememberMe });
+    } catch (error) {
+      console.error('Login error:', error);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-black/20 backdrop-blur-sm p-8 rounded-2xl border border-yellow-500/20">
+      <div className="max-w-md w-full space-y-8 bg-black/20 backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
         <div className="flex flex-col items-center">
           <Image
             src={fikraLogo}
@@ -30,39 +54,37 @@ export default function LoginForm() {
             className="mb-6"
             priority
           />
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">
             {t('login.welcome')}
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form noValidate className="mt-4 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-4 py-3 bg-black/40 placeholder-gray-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-transparent"
-                placeholder={t('login.emailPlaceholder')}
-              />
-            </div>
-            <div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none relative block w-full px-4 py-3 bg-black/40 placeholder-gray-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-transparent"
-                placeholder={t('login.passwordPlaceholder')}
-              />
-            </div>
+            <TextInput
+              control={control}
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder={t('login.emailPlaceholder')}
+              icon={
+                <svg className="w-5 h-5 text-[var(--main-color1)]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+              }
+            />
+            <TextInput
+              control={control}
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              placeholder={t('login.passwordPlaceholder')}
+              icon={
+                <svg className="w-5 h-5 text-[var(--main-color1)]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+                </svg>
+              }
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -73,7 +95,7 @@ export default function LoginForm() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-600 rounded bg-black/40"
+                className="h-4 w-4 text-[var(--main-color1)] focus:ring-[var(--main-color1)] border-gray-600 rounded bg-black/40"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
                 {t('login.rememberMe')}
@@ -83,7 +105,7 @@ export default function LoginForm() {
             <div className="text-sm">
               <Link
                 href="/forgot-password"
-                className="font-medium text-yellow-500 hover:text-yellow-400"
+                className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]"
               >
                 {t('login.forgotPassword')}
               </Link>
@@ -93,9 +115,10 @@ export default function LoginForm() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+              disabled={isSubmitting}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-[var(--main-color1)] hover:bg-[var(--liner-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--main-color1)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {t('login.submit')}
+              {isSubmitting ? 'Loading...' : t('login.submit')}
             </button>
           </div>
 
@@ -103,7 +126,7 @@ export default function LoginForm() {
             <span className="text-white">{t('login.noAccount')} </span>
             <Link
               href="/register"
-              className="font-medium text-yellow-500 hover:text-yellow-400"
+              className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]"
             >
               {t('login.signUp')}
             </Link>

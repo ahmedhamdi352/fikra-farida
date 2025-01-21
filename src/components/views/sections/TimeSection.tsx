@@ -41,18 +41,76 @@ export default function TimeSection() {
   ];
 
   return (
-    <section className="py-20">
+    <section className="py-8 lg:py-20">
       <div className="container mx-auto px-4">
-        <div className="rounded-[15px] border-2 border-[#F4DD94]  p-16 relative">
-          {/* Grid of Cards */}
-          <div className="grid grid-cols-3 gap-8">
+        <div className="rounded-[15px] border-2 border-[#F4DD94] p-4 lg:p-16 relative">
+          {/* Mobile Layout */}
+          <div className="flex flex-col gap-8 lg:hidden">
+            {/* First Row - Special Item */}
+            <div className="w-full">
+              {cards.map((card, index) => 
+                card.special && (
+                  <div key={index} className="text-center p-8 rounded-[15px] bg-[#F4DD94] border-2 border-[#FFF]">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
+                      <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
+                      <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
+                      <span className="w-6 h-6 rounded-full bg-[#FEC400]/30 flex items-center justify-center text-white text-sm">+1</span>
+                    </div>
+                    <h3 className="text-[32px] leading-[40px] font-semibold text-black mb-4">{card.title}</h3>
+                    <p className="text-black text-[32px] leading-[48px] font-semibold">{card.description}</p>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* Second Row - 2 Items */}
+            <div className="grid grid-cols-2 gap-4">
+              {cards.slice(0, 1).concat(cards.slice(2, 3)).map((card, index) => (
+                <div key={index} className="text-center p-4 rounded-[15px]">
+                  <div className="mb-4">
+                    <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className="mx-auto" />
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">{card.title}</h3>
+                  <p className="text-gray-400 text-sm">{card.description}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Third Row - 2 Items */}
+            <div className="grid grid-cols-2 gap-4">
+              {cards.slice(3, 5).map((card, index) => (
+                <div key={index} className="text-center p-4 rounded-[15px]">
+                  <div className="mb-4">
+                    <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className="mx-auto" />
+                  </div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">{card.title}</h3>
+                  <p className="text-gray-400 text-sm">{card.description}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Fourth Row - 1 Item */}
+            <div className="w-full">
+              <div className="text-center p-4 rounded-[15px]">
+                <div className="mb-4">
+                  <Image src={cards[5].icon} alt={`${cards[5].title} icon`} width={32} height={32} className="mx-auto" />
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">{cards[5].title}</h3>
+                <p className="text-gray-400 text-sm">{cards[5].description}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden lg:grid grid-cols-3 gap-8">
             {cards.map((card, index) => (
               <div
                 key={index}
                 className={`text-center p-8 rounded-[15px] ${card.special
                   ? 'bg-[#F4DD94] border-2 border-[#FFF]'
                   : ''
-                  } transition-colors`}
+                } transition-colors`}
               >
                 {card.special ? (
                   <>

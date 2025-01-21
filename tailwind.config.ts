@@ -67,6 +67,10 @@ const config: Config = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
         },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.6s ease-out forwards',
@@ -80,6 +84,7 @@ const config: Config = {
         float: 'float 3s ease-in-out infinite',
         'float-delay-1': 'float 3s ease-in-out infinite 1s',
         'float-delay-2': 'float 3s ease-in-out infinite 2s',
+        shimmer: 'shimmer 2s linear infinite',
       },
     },
   },
