@@ -104,7 +104,6 @@
     overflow-x: hidden;
   }
 
-  /* Ensure all content stays within viewport */
   * {
     box-sizing: border-box;
     margin: 0;

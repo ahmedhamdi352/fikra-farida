@@ -23,7 +23,7 @@ const Header = ({ siteData }: HeaderProps) => {
   useEffect(() => {
     const controlHeader = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Show header in these conditions:
       // 1. Scrolling up
       // 2. At the top of the page
@@ -33,7 +33,7 @@ const Header = ({ siteData }: HeaderProps) => {
       } else {
         setIsVisible(false);
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
@@ -57,6 +57,17 @@ const Header = ({ siteData }: HeaderProps) => {
     };
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const scrollToHowItWorks = (e: React.MouseEvent) => {
     e.preventDefault();
     const section = document.getElementById('how-it-works');
@@ -66,13 +77,12 @@ const Header = ({ siteData }: HeaderProps) => {
   };
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${
-        isVisible 
-          ? 'translate-y-0 opacity-100' 
-          : '-translate-y-full opacity-0'
-      }`} 
-      style={{ 
+    <header
+      className={`fixed top-0 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${isVisible
+        ? 'translate-y-0 opacity-100'
+        : '-translate-y-full opacity-0'
+        }`}
+      style={{
         background: 'linear-gradient(239deg, rgba(12, 13, 13, 0.90) 29.09%, rgba(41, 47, 54, 0.90) 109.67%)',
         backdropFilter: 'blur(8px)'
       }}
@@ -177,99 +187,120 @@ const Header = ({ siteData }: HeaderProps) => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed w-[80%] inset-y-0 right-0 z-50">
+        <>
+          {/* Overlay */}
           <div
-            ref={menuRef}
-            className="w-[85%] h-screen bg-[#737373]/95 rounded-l-3xl overflow-hidden ml-auto"
-          >
-            <nav className="h-full p-4 flex flex-col space-y-2">
-              <Link
-                href="/"
-                className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname === '/'
-                  ? 'bg-yellow-500 text-white font-bold'
-                  : 'text-gray-200 group'
-                  }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="relative z-10">Home</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
-              </Link>
-              <Link
-                href="/products"
-                className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/products')
-                  ? 'bg-yellow-500 text-white font-bold'
-                  : 'text-gray-200 group'
-                  }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="relative z-10">Products</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
-              </Link>
-              <Link
-                href="/blogs"
-                className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/blogs')
-                  ? 'bg-yellow-500 text-white font-bold'
-                  : 'text-gray-200 group'
-                  }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="relative z-10">Blog</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
-              </Link>
-              <Link
-                href="/contact"
-                className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/contact')
-                  ? 'bg-yellow-500 text-white font-bold'
-                  : 'text-gray-200 group'
-                  }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="relative z-10">Contact Us</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
-              </Link>
-              <a
-                href="#how-it-works"
-                className="relative p-2 rounded-md transition-all duration-300 overflow-hidden text-gray-200 group"
-                onClick={(e) => {
-                  scrollToHowItWorks(e);
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <span className="relative z-10">How it use</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
-              </a>
-              <div className="mt-auto flex flex-col space-y-3">
-                <div className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white">
-                  <div className="flex items-center space-x-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                    </svg>
-                    <span>English</span>
-                  </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
+            className="fixed inset-0 bg-[#1a1a1a]/95 backdrop-blur-sm z-40 transition-opacity duration-300"
+            onClick={() => setMobileMenuOpen(false)}
+          />
 
-                <Link
-                  href="/login"
-                  className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white"
+          <div className="lg:hidden fixed inset-0 z-50">
+            <div className="min-h-screen flex items-start pt-[20%] justify-center">
+              <div
+                ref={menuRef}
+                className={`relative w-[95%] p-4 h-[550px] bg-[#292929] rounded-3xl overflow-hidden transition-transform ease-out duration-500 ${isMobileMenuOpen ? 'animate-slideDown' : ''
+                  }`}
+              >
+                {/* Close Button */}
+                <button
                   onClick={() => setMobileMenuOpen(false)}
+                  className="absolute -top-0 left-1/2 -translate-x-1/2 p-2.5 rounded-full bg-white hover:bg-gray-100 transition-colors duration-200 shadow-lg z-[60]"
                 >
-                  <div className="flex items-center space-x-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span>Log In</span>
-                  </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                </Link>
+                </button>
+
+                <nav className="h-full p-4 flex flex-col space-y-2">
+                  <Link
+                    href="/"
+                    className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname === '/'
+                      ? 'bg-yellow-500 text-white font-bold'
+                      : 'text-gray-200 group'
+                      }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span className="relative z-10">Home</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
+                  </Link>
+                  <Link
+                    href="/products"
+                    className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/products')
+                      ? 'bg-yellow-500 text-white font-bold'
+                      : 'text-gray-200 group'
+                      }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span className="relative z-10">Products</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
+                  </Link>
+                  <Link
+                    href="/blogs"
+                    className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/blogs')
+                      ? 'bg-yellow-500 text-white font-bold'
+                      : 'text-gray-200 group'
+                      }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span className="relative z-10">Blog</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/contact')
+                      ? 'bg-yellow-500 text-white font-bold'
+                      : 'text-gray-200 group'
+                      }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span className="relative z-10">Contact Us</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
+                  </Link>
+                  <a
+                    href="#how-it-works"
+                    className="relative p-2 rounded-md transition-all duration-300 overflow-hidden text-gray-200 group"
+                    onClick={(e) => {
+                      scrollToHowItWorks(e);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <span className="relative z-10">How it use</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
+                  </a>
+                  <div className="mt-auto flex flex-col space-y-3">
+                    <div className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white">
+                      <div className="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                        </svg>
+                        <span>English</span>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+
+                    <Link
+                      href="/login"
+                      className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>Log In</span>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </nav>
               </div>
-            </nav>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );

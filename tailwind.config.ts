@@ -88,6 +88,10 @@ const config: Config = {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        slideDown: {
+          '0%': { transform: 'translateY(-100%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.6s ease-out forwards',
@@ -102,6 +106,7 @@ const config: Config = {
         'float-delay-1': 'float 3s ease-in-out infinite 1s',
         'float-delay-2': 'float 3s ease-in-out infinite 2s',
         shimmer: 'shimmer 2s linear infinite',
+        slideDown: 'slideDown 0.5s ease-out forwards',
       },
     },
   },
