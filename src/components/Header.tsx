@@ -16,7 +16,30 @@ interface HeaderProps {
 const Header = ({ siteData }: HeaderProps) => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const controlHeader = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Show header in these conditions:
+      // 1. Scrolling up
+      // 2. At the top of the page
+      // 3. Scrolled less than 100px
+      if (currentScrollY < lastScrollY || currentScrollY < 100) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', controlHeader);
+    return () => window.removeEventListener('scroll', controlHeader);
+  }, [lastScrollY]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,7 +66,18 @@ const Header = ({ siteData }: HeaderProps) => {
   };
 
   return (
-    <header className="p-2 text-white" style={{ background: 'linear-gradient(239deg, rgba(12, 13, 13, 0.50) 29.09%, rgba(41, 47, 54, 0.50) 109.67%)' }} dir="ltr">
+    <header 
+      className={`fixed top-0 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${
+        isVisible 
+          ? 'translate-y-0 opacity-100' 
+          : '-translate-y-full opacity-0'
+      }`} 
+      style={{ 
+        background: 'linear-gradient(239deg, rgba(12, 13, 13, 0.90) 29.09%, rgba(41, 47, 54, 0.90) 109.67%)',
+        backdropFilter: 'blur(8px)'
+      }}
+      dir="ltr"
+    >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
         {/* Logo */}
         <div className="flex items-center">

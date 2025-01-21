@@ -42,25 +42,24 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
         <p className="text-gray-300 mb-4">Subscribe to our newsletter</p>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-2">
-        <div className="flex sm:flex-row gap-4 relative">
+        <div className="flex flex-row items-center gap-2 w-full">
           <input
             type="email"
             placeholder="E-Mail"
             {...register('email')}
-            className={`flex-1 bg-transparent border ${errors.email ? 'border-red-500' : 'border-[#FEC400]'} rounded-[10px] px-4 py-3 text-white placeholder:text-[#FEC400] focus:outline-none`}
+            className={`flex-1 min-w-0 bg-transparent border ${errors.email ? 'border-red-500' : 'border-[#FEC400]'} rounded-[10px] px-4 py-2 text-sm sm:text-base text-white placeholder:text-[#FEC400] focus:outline-none`}
           />
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#FEC400] text-white text-[18px] font-semibold leading-normal capitalize px-8 py-2 rounded-[10px] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            className="shrink-0 bg-[#FEC400] text-white text-sm sm:text-base font-semibold leading-normal capitalize px-4 sm:px-8 py-2 rounded-[10px] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
           >
             {isSubmitting ? 'Subscribing...' : 'Subscribe'}
           </button>
         </div>
         {errors.email && (
-          <div className="flex items-start mx-2">
-
-            <p className="text-red-500 m-0">
+          <div className="flex items-start">
+            <p className="text-red-500 text-sm m-0">
               {errors.email.message}
             </p>
           </div>

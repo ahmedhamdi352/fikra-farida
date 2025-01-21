@@ -58,7 +58,7 @@ export default async function LocaleLayout(props: Props) {
           <ThemeProvider>
             <div className="relative flex min-h-screen flex-col">
               <HeaderWrapper initialData={siteData} />
-              <main className="flex-1">{children}</main>
+              <main className="flex-1 pt-[72px]">{children}</main>
               <FooterWrapper initialData={siteData} />
               <ToastContainer
                 position={locale === 'ar' ? 'top-left' : 'top-right'}
