@@ -1,20 +1,19 @@
 import { Suspense } from 'react';
-import HeroSection from 'components/sections/HeroSection';
-import FeaturesSection from 'components/sections/FeaturesSection';
-// import ProductCards from 'components/sections/ProductCards';
-import CountryFlags from 'components/sections/CountryFlags';
-import ContactForm from 'components/sections/ContactForm';
-import PartnersSection from 'components/sections/PartnersSection';
-import SmartCardSection from 'components/sections/SmartCardSection';
-import CompatibleDevices from 'components/sections/CompatibleDevices';
-import HowItWorksSection from 'components/sections/HowItWorksSection';
-import TimeSection from 'components/sections/TimeSection';
+import {
+  HeroSection,
+  FeaturesSection,
+  CountryFlags,
+  ContactForm,
+  PartnersSection,
+  SmartCardSection,
+  CompatibleDevices,
+  HowItWorksSection,
+  TimeSection
+} from 'components';
 
-// Mark page as Server Component
 export default async function HomePage() {
   return (
     <div className="flex flex-col w-full">
-      {/* Static SSR Components */}
       <HeroSection />
       <PartnersSection />
       <SmartCardSection />
@@ -23,7 +22,6 @@ export default async function HomePage() {
       <TimeSection />
       <CompatibleDevices />
       <ContactForm />
-      {/* Client-side Product Cards with loading state */}
       <Suspense
         fallback={
           <div className="h-96 flex items-center justify-center">
@@ -35,10 +33,7 @@ export default async function HomePage() {
           </div>
         }
       >
-        {/* <ProductCards /> */}
       </Suspense>
-
-      {/* Country Flags Section */}
       <CountryFlags />
     </div>
   );

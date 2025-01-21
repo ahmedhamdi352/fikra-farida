@@ -1,0 +1,9 @@
+export { default as CompatibleDevices } from './CompatibleDevices';
+export { default as ContactForm } from './ContactForm';
+export { default as HeroSection } from './HeroSection';
+export { default as FeaturesSection } from './FeaturesSection';
+export { default as CountryFlags } from './CountryFlags';
+export { default as HowItWorksSection } from './HowItWorksSection';
+export { default as SmartCardSection } from './SmartCardSection';
+export { default as TimeSection } from './TimeSection';
+export { default as PartnersSection } from './PartnersSection';
