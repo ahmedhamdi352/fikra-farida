@@ -37,25 +37,42 @@
     color: var(--foreground);
     background: var(--background);
     font-family: var(--font-poppins), system-ui, sans-serif;
-    background-image: url('/images/dark-theme-bg.svg');
-    /* min-height: 100vh; */
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100% auto;
   }
 
   /* Apply dark theme background to body */
   :root.dark body {
     --background: rgba(38, 38, 38, 0.9);
-    background-repeat: repeat;
-    background-position: center;
-    background-size: cover;
   }
+
   /* Mobile Dark Mode Background */
   @media (max-width: 768px) {
     :root.dark body {
-      /* --background: #737373; */
-      --background: rgba(38, 38, 38, 0.9);
-      background-size: 100%;
-      background-position: start 20%;
-      background-size: contain;
+      background-image: url('/images/dark-theme-bg.svg');
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: 100% auto;
+    }
+  }
+
+  @media (max-width: 480px) {
+    :root.dark body {
+      background-size: 200% auto;
     }
   }
 
