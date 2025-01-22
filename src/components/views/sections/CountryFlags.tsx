@@ -4,7 +4,7 @@ import bgImage from 'assets/images/flags/Map.png';
 import egyptFlag from 'assets/images/flags/eg.png';
 import saudiFlag from 'assets/images/flags/sa.png';
 import uaeFlag from 'assets/images/flags/ae.png';
-import locationIcon from 'assets/icons/location.png';
+// import locationIcon from 'assets/icons/location.png';
 
 const countries = [
   { code: 'eg', translationKey: 'egypt', flag: egyptFlag },
@@ -18,7 +18,7 @@ export default function CountryFlags() {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <div className="relative rounded-2xl overflow-hidden  min-h-[400px]">
+        <div className="relative rounded-2xl overflow-hidden  min-h-[250px]">
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
@@ -33,7 +33,7 @@ export default function CountryFlags() {
 
           {/* Content */}
           <div className="relative z-10 py-16 px-6">
-            <div className="text-center mb-16">
+            {/* <div className="text-center mb-16">
               <h2 className="text-white text-center text-[12px] md:text-[30px] lg:text-[36px] font-bold capitalize flex items-center justify-center gap-4"
                 style={{ lineHeight: 'normal' }}>
                 <Image
@@ -45,7 +45,7 @@ export default function CountryFlags() {
                 />
                 {t('title')}
               </h2>
-            </div>
+            </div> */}
 
             <div className="flex justify-center items-center gap-3 md:gap-12">
               {countries.map((country, index) => (

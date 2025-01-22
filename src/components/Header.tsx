@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client"
 
 import { useState, useEffect, useRef } from "react";
@@ -8,6 +9,7 @@ import ThemeSwitcher from './ThemeSwitcher';
 import CartIcon from './CartIcon';
 import { SiteData } from 'services/api.service';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation'
 
 interface HeaderProps {
   siteData: SiteData;
@@ -15,6 +17,7 @@ interface HeaderProps {
 
 const Header = ({ siteData }: HeaderProps) => {
   const pathname = usePathname();
+  const router = useRouter()
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -33,13 +36,22 @@ const Header = ({ siteData }: HeaderProps) => {
       } else {
         setIsVisible(false);
       }
-
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener('scroll', controlHeader);
     return () => window.removeEventListener('scroll', controlHeader);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+    }
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -71,8 +83,12 @@ const Header = ({ siteData }: HeaderProps) => {
   const scrollToHowItWorks = (e: React.MouseEvent) => {
     e.preventDefault();
     const section = document.getElementById('how-it-works');
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
+    if (pathname === '/') {
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      router.push('/#how-it-works');
     }
   };
 
@@ -145,7 +161,7 @@ const Header = ({ siteData }: HeaderProps) => {
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
           </Link>
           <a
-            href="#how-it-works"
+            href="/#how-it-works"
             onClick={scrollToHowItWorks}
             className="relative px-3 py-1 rounded-md transition-all duration-300 text-black hover:text-white group"
           >
@@ -257,7 +273,7 @@ const Header = ({ siteData }: HeaderProps) => {
                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
                   </Link>
                   <a
-                    href="#how-it-works"
+                    href="/#how-it-works"
                     className="relative p-2 rounded-md transition-all duration-300 overflow-hidden text-gray-200 group"
                     onClick={(e) => {
                       scrollToHowItWorks(e);

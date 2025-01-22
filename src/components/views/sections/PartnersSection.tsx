@@ -39,7 +39,7 @@ export default function PartnersSection() {
             {[weImg, winnersImg, sevenImg, qatariImg, midbankImg, harvestImg, aldawaaImg, afaqImg].map((img, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl p-6 aspect-square flex items-center justify-center hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg"
+                className="bg-white opacity-70 rounded-xl p-6 aspect-square flex items-center justify-center hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg"
               >
                 <Image
                   src={img}
