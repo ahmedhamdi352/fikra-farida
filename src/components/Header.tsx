@@ -220,14 +220,14 @@ const Header = ({ siteData }: HeaderProps) => {
                 {/* Close Button */}
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="absolute -top-0 left-1/2 -translate-x-1/2 p-2.5 rounded-full bg-white hover:bg-gray-100 transition-colors duration-200 shadow-lg z-[60]"
+                  className="absolute top-2 left-1/2 -translate-x-1/2 p-2.5 rounded-full bg-white hover:bg-gray-100 transition-colors duration-200 shadow-lg z-[60]"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
 
-                <nav className="h-full p-4 flex flex-col space-y-2">
+                <nav className="h-full mt-[35px] p-4 flex flex-col space-y-2">
                   <Link
                     href="/"
                     className={`relative p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname === '/'
