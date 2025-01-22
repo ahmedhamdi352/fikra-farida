@@ -33,9 +33,9 @@ export default function BlogsPage() {
   return (
     <main className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-[var(--main-color1)] lg:text-white text-[12px] md:text-[24px] lg:text-[32px] font-bold leading-[150%] md:leading-[105%] tracking-[0.12px] md:tracking-normal uppercase">{`CREATE DIGITAL BUSINESS CARDS`}</h1>
-        <h2 className="text-white lg:text-[var(--main-color1)]  text-[12px] md:text-[24px] lg:text-[32px] font-bold leading-[150%] lg:leading-[105%] tracking-[0.12px] lg:tracking-normal uppercase mb-6">{`SHARE ANY THING & MORE!`}</h2>
-        <p className="lg:max-w-[50%] text-[var(--small-text)] text-[10px] md:text-[14px] lg:text-[16px] font-normal leading-[12px] md:leading-[150%] lg:leading-normal">
+        <h1 className="text-[var(--main-color1)] lg:text-white text-[18px] md:text-[24px] lg:text-[32px] font-bold leading-[150%] md:leading-[105%] tracking-[0.12px] md:tracking-normal uppercase">{`CREATE DIGITAL BUSINESS CARDS`}</h1>
+        <h2 className="text-white lg:text-[var(--main-color1)]  text-[18px] md:text-[24px] lg:text-[32px] font-bold leading-[150%] lg:leading-[105%] tracking-[0.12px] lg:tracking-normal uppercase mb-6">{`SHARE ANY THING & MORE!`}</h2>
+        <p className="lg:max-w-[50%] text-[var(--small-text)] text-[12px] leading-[150%] md:text-[14px] lg:text-[16px] font-normal leading-[12px] md:leading-[150%] lg:leading-normal">
           We can help you easily widen your social network in a new and easy way for all of your clients whether you are an artist, photographer, businessman, salesperson, model, celebrity, recruiter, athlete, business owner, or entrepreneur.
         </p>
       </div>
