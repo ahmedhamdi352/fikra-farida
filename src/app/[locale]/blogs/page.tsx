@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import blog1 from 'assets/images/blogs/blog1.png'
 import blog2 from 'assets/images/blogs/blog2.png'
 import blog3 from 'assets/images/blogs/blog3.png'
@@ -41,49 +42,59 @@ export default function BlogsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left side - Large blog post */}
-        <article className="flex flex-col justify-center items-center lg:pr-8">
-          <div className="relative h-[250px] lg:h-[400px] w-full mb-6">
-            <Image
-              src={firstBlog.image}
-              alt={firstBlog.title}
-              fill
-              className="object-cover"
-            />
-          </div>
-          <h2 className="text-[#FEC400] font-poppins text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
-          <p className="text-white font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6">{firstBlog.description}</p>
-          <div className="self-start w-[55%]">
-            <Button href={`/blogs/${firstBlog.id}`} withArrow>
-              Read More
-            </Button>
-          </div>
-        </article>
+        <Link href={`/blogs/${firstBlog.id}`}
+          className='bg-[rgba(217,217,217,0.20)] backdrop-blur-[50px] lg:bg-transparent overflow-hidden
+          p-5 lg:p-0 lg:pr-8 flex flex-col justify-center items-center shadow-sm'
+        >
+          <article className="flex flex-col justify-center items-center ">
+            <div className="relative h-[250px] lg:h-[400px] w-full mb-6">
+              <Image
+                src={firstBlog.image}
+                alt={firstBlog.title}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <h2 className="text-[#FEC400] font-poppins text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
+            <p className="text-white font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6">{firstBlog.description}</p>
+            <div className="hidden lg:block self-start w-[55%]">
+              <Button href={`/blogs/${firstBlog.id}`} withArrow>
+                Read More
+              </Button>
+            </div>
+          </article>
+        </Link>
 
         {/* Right side - Two smaller blog posts */}
         <div className="flex flex-col space-y-8">
           {otherBlogs.map((blog) => (
-            <article key={blog.id} className="flex flex-col">
-              <div className="relative h-[250px] lg:h-[360px] w-full mb-6">
-                <Image
-                  src={blog.image}
-                  alt={blog.title}
-                  fill
-                  className="object-cover "
-                />
-              </div>
-              <h2 className="text-[#FEC400] font-poppins text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{blog.title}</h2>
-              <p className="text-white font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{blog.description}</p>
-              <div className="mt-auto w-[55%]">
-                <Button href={`/blogs/${blog.id}`} withArrow>
-                  Read More
-                </Button>
-              </div>
-            </article>
+            <Link href={`/blogs/${blog.id}`} key={blog.id}
+              className='bg-[rgba(217,217,217,0.20)] backdrop-blur-[50px] lg:bg-transparent overflow-hidden
+               p-5 lg:p-0 lg:pr-8 flex flex-col justify-center items-center shadow-sm'
+            >
+              <article key={blog.id} className="flex flex-col">
+                <div className="relative h-[250px] lg:h-[360px] w-full mb-6">
+                  <Image
+                    src={blog.image}
+                    alt={blog.title}
+                    fill
+                    className="object-cover "
+                  />
+                </div>
+                <h2 className="text-[#FEC400] font-poppins text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{blog.title}</h2>
+                <p className="text-white font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{blog.description}</p>
+                <div className="hidden lg:block self-start w-[55%]">
+                  <Button href={`/blogs/${blog.id}`} withArrow>
+                    Read More
+                  </Button>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
       </div>
 
-      <div className="mt-16 -mx-4 lg:mx-0">
+      <div className="mt-16 lg:mx-0">
         <Newsletter />
       </div>
 

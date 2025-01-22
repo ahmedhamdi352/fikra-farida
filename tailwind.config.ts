@@ -45,7 +45,7 @@ const config: Config = {
           primary: 'var(--liner-primary)',
           gradientStart: 'var(--liner-gradient-start)',
           gradientEnd: 'var(--liner-gradient-end)',
-        }
+        },
       },
       keyframes: {
         fadeIn: {

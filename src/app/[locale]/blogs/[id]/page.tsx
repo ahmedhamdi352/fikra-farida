@@ -120,7 +120,7 @@ export default async function BlogDetails({
           </article>
         </div>
 
-        <div className="mt-16">
+        <div className="mt-16 lg:mx-0">
           <Newsletter />
         </div>
       </div>
