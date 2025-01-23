@@ -7,12 +7,14 @@ import midbankImg from 'assets/images/partners/midBank.png'
 import harvestImg from 'assets/images/partners/harvest.png'
 import aldawaaImg from 'assets/images/partners/aldawaa.png'
 import afaqImg from 'assets/images/partners/afaq.png'
+import LogoGridSection from 'components/common/LogoGridSection'
 
 export default function PartnersSection() {
   return (
-    <section className="py-8">
+    <section className="py-12">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center lg:items-start gap-12">
+
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
           {/* Left Section */}
           <div className="flex-1 text-center lg:text-left">
             <h2 className="text-[64px] lg:text-[100px] font-extrabold text-[#FEC400] leading-none mb-6">
@@ -35,8 +37,10 @@ export default function PartnersSection() {
           <div className="hidden lg:block w-px bg-[#FEC400]/40 self-stretch my-8"></div>
 
           {/* Right Section */}
-          <div className="flex-1 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 lg:gap-8">
-            {[weImg, winnersImg, sevenImg, qatariImg, midbankImg, harvestImg, aldawaaImg, afaqImg].map((img, index) => (
+          <div className="flex-1 max-w-full lg:max-w-[50%]">
+            <LogoGridSection images={[weImg, winnersImg, sevenImg, qatariImg, midbankImg, harvestImg, aldawaaImg, afaqImg]} />
+
+            {/* {[weImg, winnersImg, sevenImg, qatariImg, midbankImg, harvestImg, aldawaaImg, afaqImg].map((img, index) => (
               <div
                 key={index}
                 className="bg-white opacity-70 rounded-xl p-6 aspect-square flex items-center justify-center hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg"
@@ -49,7 +53,7 @@ export default function PartnersSection() {
                   className="object-contain"
                 />
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

@@ -1,0 +1,81 @@
+@use 'assets/scss/abstracts/mixins' as mixins;
+
+$animationSpeed: 40s;
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-250px * 7));
+  }
+}
+
+@keyframes scroll-rtl {
+  100% {
+    transform: translateX(0);
+  }
+  0% {
+    transform: translateX(calc(-250px * 7));
+  }
+}
+
+.v-slider {
+  margin: auto;
+  margin-block: 10px;
+  overflow: hidden;
+  position: relative;
+  width: auto;
+
+  &:dir(rtl) {
+    &::before,
+    &::after {
+      // background: linear-gradient(to left, rgba(255, 255, 255, 1), transparent);
+    }
+    .v-slide-track {
+      animation: scroll-rtl $animationSpeed linear infinite;
+    }
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 75px;
+    height: 100%;
+    // background: linear-gradient(to right, rgba(255, 255, 255, 1), transparent);
+    z-index: 1;
+
+    @include mixins.respond(tab-land) {
+      width: 250px;
+    }
+  }
+
+  &::after {
+    inset-inline-end: 0;
+    transform: rotateY(180deg);
+  }
+
+  .v-slide-track {
+    animation: scroll $animationSpeed linear infinite;
+    display: flex;
+    gap: 24px;
+
+    @include mixins.respond(tab-land) {
+      gap: 107px;
+    }
+  }
+}
+
+.v-slider-reverse {
+  &:dir(rtl) {
+    .v-slide-track {
+      animation: scroll $animationSpeed linear infinite;
+    }
+  }
+
+  .v-slide-track {
+    animation: scroll-rtl $animationSpeed linear infinite;
+  }
+}
