@@ -1,4 +1,4 @@
-import Image from 'next/image'
+// import Image from 'next/image'
 import weImg from 'assets/images/partners/we.png'
 import winnersImg from 'assets/images/partners/winners.png'
 import sevenImg from 'assets/images/partners/seven.png'

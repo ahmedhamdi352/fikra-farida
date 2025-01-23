@@ -59,11 +59,10 @@ interface BlogDetailsProps {
   params: Promise<{ locale: string; id: string }>;
 }
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default async function BlogDetails({
   params,
 }: BlogDetailsProps) {
-  const resolvedParams = await params; // Resolve the Promise if `params` is asynchronous
+  const resolvedParams = await params;
   const blog = blogs.find(b => b.id === parseInt(resolvedParams.id));
 
   if (!blog) {
@@ -72,7 +71,6 @@ export default async function BlogDetails({
 
   return (
     <main className="min-h-screen mx-auto  pb-12">
-      {/* Full-width cover image */}
       <div className="relative w-full h-[500px] mb-8 overflow-hidden">
         <Image
           src={blog.image}
