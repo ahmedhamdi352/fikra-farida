@@ -60,6 +60,7 @@
     },
     "form": {
       "fullName": "Full Name",
+      "company": "Company Name",
       "email": "Email Address",
       "phone": "Phone Number",
       "message": "Write something here...",

@@ -52,9 +52,9 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
                 {label}
               </label>
             )}
-            <div className="relative">
+            <div className="relative flex gap-5">
               {icon && (
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-yellow-500">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3 mr-10 text-yellow-500">
                   {icon}
                 </span>
               )}
@@ -62,7 +62,7 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
                 type={type}
                 id={name}
                 placeholder={placeholder}
-                className={`w-full ${icon ? 'pl-10' : 'pl-4'
+                className={`w-full ${icon ? 'pl-12' : 'pl-4'
                   } pr-4 py-4 bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-yellow-500'} text-white placeholder-gray-400 ${className}`}
                 value={type !== 'file' ? value ?? '' : undefined}
                 onChange={onChangeHandler}
