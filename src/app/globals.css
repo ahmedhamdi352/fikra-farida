@@ -72,7 +72,7 @@
 
   @media (max-width: 480px) {
     :root.dark body {
-      background-size: 200vh auto;
+      background-size: 250vh auto;
     }
   }
 
