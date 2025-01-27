@@ -34,17 +34,17 @@ const Footer = ({ siteData }: FooterProps) => {
       style={{ background: 'var(--FOOTER)' }}
     >
       {/* Mobile Layout */}
-      <div className="lg:hidden container mx-auto px-4 py-12">
-        <div className="flex flex-col gap-12">
+      <div className="lg:hidden container mx-auto px-4 py-4">
+        <div className="flex flex-col gap-4">
           {/* First Row: Logo and Description */}
           <div className="space-y-6">
             <div className="flex items-center text-start">
               <Image
                 src={siteData.siteLogo}
                 alt={siteData.siteName}
-                height={60}
+                height={40}
                 width={140}
-                className="w-[120px] lg:w-auto brightness-0 invert"
+                className="w-[100px] h-[100px] mt-4 lg:w-auto brightness-0 invert"
               />
               <p className="text-gray-300 text-sm leading-relaxed mt-6">
                 Communication Between People Easily And In The Fastest Way While Saving Time And Money,
@@ -101,14 +101,12 @@ const Footer = ({ siteData }: FooterProps) => {
             </div>
           </div>
 
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <NewsletterForm withTitle />
-            </div>
+          <div className="space-y-4">
+            <NewsletterForm withTitle />
           </div>
         </div>
 
-        <div className="mt-8 pt-8">
+        <div className="mt-8 ">
           <div className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent" style={{
             background: 'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)'
           }}></div>

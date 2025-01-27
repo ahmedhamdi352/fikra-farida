@@ -16,7 +16,7 @@ export default function CountryFlags() {
   const t = useTranslations('home.countries');
 
   return (
-    <section className="py-16">
+    <section className="lg:py-16">
       <div className="container mx-auto px-4">
         <div className="relative rounded-2xl overflow-hidden  min-h-[250px]">
           {/* Background Image */}

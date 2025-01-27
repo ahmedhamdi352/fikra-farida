@@ -26,6 +26,18 @@ const config: Config = {
       },
     },
     extend: {
+      fontSize: {
+        // Body Text
+        body: 'clamp(14px, 1.2vw, 18px)',
+        // Headers
+        h1: 'clamp(32px, 4vw, 48px)', // Main Header
+        h2: 'clamp(24px, 3vw, 32px)', // Sub Header
+        h3: 'clamp(20px, 2.5vw, 24px)', // Smaller Header
+      },
+      lineHeight: {
+        header: '1.2', // Line height for headers
+        body: '1.6', // Line height for paragraphs
+      },
       fontFamily: {
         poppins: ['var(--font-poppins)'],
         quicksand: ['var(--font-quicksand)'],

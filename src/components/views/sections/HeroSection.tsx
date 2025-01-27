@@ -6,7 +6,7 @@ export default function HeroSection() {
   // const t = useTranslations('home')
 
   return (
-    <section className="animate-fadeIn relative min-h-screen flex items-center">
+    <section className="animate-fadeIn relative min-h-fit lg:min-h-screen flex items-center">
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -20,16 +20,16 @@ export default function HeroSection() {
 
       <div className="container mx-auto px-4 py-20 text-center">
         <div className="max-w-4xl mx-auto">
-          <p className="text-yellow-400 mb-4 uppercase tracking-wider">
+          <p className="text-yellow-400 text-body mb-4 uppercase tracking-wider">
             SHARE ANY THING & MORE
           </p>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          <h1 className="text-h1 font-bold text-white mb-6">
             DIGITAL BUSINESS CARD
           </h1>
-          <h2 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-8">
+          <h2 className="text-h2 font-bold text-yellow-400 mb-8">
             THE FUTURE OF BUSINESS COMMUNICATION
           </h2>
-          <p className="text-white text-lg mb-8 max-w-3xl mx-auto">
+          <p className="text-body mb-8 max-w-3xl mx-auto">
             Communication between people easily and in the fastest way while saving time and money.
             We can help you easily widen your social network in a new and easy way for all of your clients
             whether you are an artist, photographer, businessman, salesperson, model, celebrity, recruiter,

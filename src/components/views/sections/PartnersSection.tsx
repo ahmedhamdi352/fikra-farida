@@ -21,10 +21,8 @@ export default function PartnersSection() {
               100 K+
             </h2>
             <p className="text-white text-lg lg:text-2xl font-semibold mb-4">
-              People And Businesses Place Their Trust
-            </p>
-            <p className="text-white text-lg lg:text-2xl font-semibold mb-6">
-              In All Of Our Services And Products
+              People And Businesses Place Their Trust In All Of Our Services And Products
+
             </p>
             <p className="text-[#FEC400] text-base lg:text-lg font-medium">
               We Help Businesses Strengthen Relationships

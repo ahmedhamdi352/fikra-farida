@@ -3,12 +3,12 @@ import {
   HeroSection,
   FeaturesSection,
   CountryFlags,
-  ContactForm,
+  // ContactForm,
   PartnersSection,
   SmartCardSection,
   CompatibleDevices,
   HowItWorksSection,
-  TimeSection
+  // TimeSection
 } from 'components';
 
 export default async function HomePage() {
@@ -19,9 +19,9 @@ export default async function HomePage() {
       <SmartCardSection />
       <HowItWorksSection />
       <FeaturesSection />
-      <TimeSection />
+      {/* <TimeSection /> */}
       <CompatibleDevices />
-      <ContactForm />
+      {/* <ContactForm /> */}
       <Suspense
         fallback={
           <div className="h-96 flex items-center justify-center">
