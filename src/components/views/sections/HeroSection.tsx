@@ -36,7 +36,7 @@ export default function HeroSection() {
         </div>
 
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-8">
-          <div className='flex flex-col rounded-2xl bg-[#3b3b3b] border border-[#FEC400] shadow-lg p-2 py-8
+          <div className='flex flex-col rounded-2xl  border border-[#FEC400] shadow-lg p-2 py-8
           lg:border-none lg:bg-transparent lg:shadow-none
           '>
             <h1 className="text-h1 font-bold lg:text-left w-full text-white mb-6 animate-fadeInLeft">

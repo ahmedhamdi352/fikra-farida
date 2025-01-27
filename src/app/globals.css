@@ -8,12 +8,12 @@
     --foreground: rgba(38, 38, 38, 0.9);
     --font-poppins: 'Poppins', sans-serif;
     --font-quicksand: 'Quicksand', sans-serif;
-    --liner-primary: #F1911B;
-    --liner-gradient-start: #FEC400;
-    --liner-gradient-end: #8B5410;
-    --main-color1: #FEC400;
-    --FOOTER: linear-gradient(239deg, rgba(12, 13, 13, 0.50) 29.09%, rgba(41, 47, 54, 0.50) 109.67%);
-    --small-text: #F4DD94;
+    --liner-primary: #f1911b;
+    --liner-gradient-start: #fec400;
+    --liner-gradient-end: #8b5410;
+    --main-color1: #fec400;
+    --FOOTER: linear-gradient(239deg, rgba(12, 13, 13, 0.5) 29.09%, rgba(41, 47, 54, 0.5) 109.67%);
+    --small-text: #f4dd94;
   }
 
   :root.dark {
@@ -66,13 +66,13 @@
       background-image: url('/images/dark-theme-bg.svg');
       background-repeat: no-repeat;
       background-position: center top;
-      background-size: 100% auto;
+      background-size: 200% auto;
     }
   }
 
   @media (max-width: 480px) {
     :root.dark body {
-      background-size: 200% auto;
+      background-size: 200vh auto;
     }
   }
 
