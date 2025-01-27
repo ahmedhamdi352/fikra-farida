@@ -18,7 +18,7 @@ export default function SmartCardSection() {
                 CONNECT WITH {" "} <br className='lg:hidden' />
                 <span className="relative text-black font-bold">
                   <span
-                    className="absolute  inset-0 -z-10 bg-[url('assets/icons/brush.svg')] bg-no-repeat bg-contain"
+                    className="absolute  inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
                     style={{
                       height: "50px",
                       width: "200px",
