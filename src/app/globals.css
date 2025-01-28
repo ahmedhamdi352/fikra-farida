@@ -58,21 +58,22 @@
   /* Apply dark theme background to body */
   :root.dark body {
     --background: rgba(38, 38, 38, 0.9);
+    background-image: url('/images/dark-theme-bg.svg');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100vw 100%;
   }
 
   /* Mobile Dark Mode Background */
   @media (max-width: 768px) {
     :root.dark body {
-      background-image: url('/images/dark-theme-bg.svg');
-      background-repeat: no-repeat;
-      background-position: center top;
-      background-size: 200% auto;
+      background-size: 200vw 100%;
     }
   }
 
   @media (max-width: 480px) {
     :root.dark body {
-      background-size: 250vh auto;
+      background-size: 250vw 100%;
     }
   }
 
