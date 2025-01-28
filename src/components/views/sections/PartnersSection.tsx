@@ -20,7 +20,7 @@ export default function PartnersSection() {
             <h2 className="text-[64px] lg:text-[100px] font-extrabold text-[#FEC400] leading-none mb-6">
               100 K+
             </h2>
-            <p className="text-white text-lg lg:text-2xl font-semibold mb-4">
+            <p className=" text-lg lg:text-2xl font-semibold mb-4">
               People And Businesses Place Their Trust In All Of Our Services And Products
 
             </p>

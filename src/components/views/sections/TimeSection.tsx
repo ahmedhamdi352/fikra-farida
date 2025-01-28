@@ -4,8 +4,11 @@ import send from 'assets/icons/send.svg'
 import wallet from 'assets/icons/wallet.svg'
 import corner from 'assets/icons/corner.svg'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
 export default function TimeSection() {
+  const t = useTranslations('contact');
+
   const cards = [
     {
       icon: send,
@@ -43,12 +46,21 @@ export default function TimeSection() {
   return (
     <section className="py-8 lg:py-20">
       <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 mb-12 text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+            <span className="text-white">{t('header.title.part1')} </span>
+            <span className="text-[var(--main-color1)]">{t('header.title.part2')}</span>
+          </h1>
+          <p className="text-white/80 text-lg font-semibold">
+            {t('header.subtitle')}
+          </p>
+        </div>
         <div className="rounded-[15px] border-2 border-[#F4DD94] p-4 lg:p-16 relative">
           {/* Mobile Layout */}
           <div className="flex flex-col gap-8 lg:hidden">
             {/* First Row - Special Item */}
             <div className="w-full">
-              {cards.map((card, index) => 
+              {cards.map((card, index) =>
                 card.special && (
                   <div key={index} className="text-center p-8 rounded-[15px] bg-[#F4DD94] border-2 border-[#FFF]">
                     <div className="flex items-center justify-center gap-2 mb-4">
@@ -110,7 +122,7 @@ export default function TimeSection() {
                 className={`text-center p-8 rounded-[15px] ${card.special
                   ? 'bg-[#F4DD94] border-2 border-[#FFF]'
                   : ''
-                } transition-colors`}
+                  } transition-colors`}
               >
                 {card.special ? (
                   <>

@@ -76,7 +76,7 @@ export default function FeaturesSection() {
                   className="w-8 h-8 sm:w-12 sm:h-12 lg:w-16 lg:h-16 drop-shadow-lg"
                 />
               </div>
-              <h3 className="text-sm sm:text-base lg:text-xl font-semibold text-center mb-2 text-white">
+              <h3 className="text-sm sm:text-base lg:text-xl font-semibold text-center mb-2">
                 {feature.title}
               </h3>
             </div>

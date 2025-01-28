@@ -41,9 +41,9 @@ export default function HowItWorksSection() {
               className="object-contain"
             />
             <h2 className="font-bold capitalize" style={{ lineHeight: 'normal' }}>
-              <span className="text-white text-[16px] md:text-[32px]">Easy Steps To Know </span>
-              <span className="text-[#FEC400] text-[16px] md:text-[36px]">How It&apos;s Work</span>
-              <span className="text-white text-[16px] md:text-[32px]"> !</span>
+              <span className="text-h2">Easy Steps To Know </span>
+              <span className="text-[#FEC400] text-h2">How It&apos;s Work</span>
+              <span className="text-h2"> !</span>
             </h2>
           </div>
           <div className="h-[1px] w-[80%] mb-8 lg:mb-16 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent" style={{
@@ -63,7 +63,7 @@ export default function HowItWorksSection() {
                     shadow-[0px_0px_30px_0px_rgba(255,202,41,0.50),inset_0px_0px_4px_0px_rgba(255,255,255,0.22)]">
                     {step.number}
                   </div>
-                  <span className="text-white text-[14px] md:text-2xl font-medium" style={{ lineHeight: 'normal' }}>{step.title}</span>
+                  <span className="text-h3 font-medium" style={{ lineHeight: 'normal' }}>{step.title}</span>
                 </div>
               ))}
             </div>

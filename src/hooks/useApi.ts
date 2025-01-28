@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { ApiResponse, ApiStatus } from '../types/api.types';
 import { AxiosError } from 'axios';
-import { errorService } from '../services/error.service';
+// import { errorService } from '../services/error.service';
 
 interface UseApiOptions<T> {
   onSuccess?: (data: T) => void;
@@ -30,9 +30,9 @@ export function useApi<T>(initialData?: T) {
     } catch (error) {
       if (error instanceof AxiosError) {
         // Let errorService handle the error display if not disabled
-        if (options?.showErrorToast !== false) {
-          errorService.handleError(error);
-        }
+        // if (options?.showErrorToast !== false) {
+        //   errorService.handleError(error);
+        // }
 
         const errorMessage = error.response?.data?.message || error.message;
         setStatus({ isLoading: false, error: errorMessage, success: false });
@@ -42,9 +42,9 @@ export function useApi<T>(initialData?: T) {
         setStatus({ isLoading: false, error: errorMessage, success: false });
         options?.onError?.(errorMessage);
 
-        if (options?.showErrorToast !== false) {
-          errorService.handleError(new Error(errorMessage));
-        }
+        // if (options?.showErrorToast !== false) {
+        //   errorService.handleError(new Error(errorMessage));
+        // }
       }
       throw error;
     }

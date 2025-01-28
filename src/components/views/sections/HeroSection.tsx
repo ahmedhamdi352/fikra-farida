@@ -1,6 +1,7 @@
 import Image from 'next/image'
 // import { useTranslations } from 'next-intl'
 import homeBg from 'assets/images/homePageBackground.png'
+import Link from 'next/link'
 export default function HeroSection() {
   // const t = useTranslations('home')
 
@@ -12,14 +13,14 @@ export default function HeroSection() {
           src={homeBg}
           alt="Hero Background"
           fill
-          className="object-cover"
+          className="object-cover opacity-1"
           priority
         />
       </div>
 
       <div className="container mx-auto px-4 py-20 my-auto text-center">
         <div className="flex items-center justify-center mb-5 animate-bounce">
-          <h2 className="text-white text-h2 font-semibold uppercase tracking-wider relative inline-block">
+          <h2 className=" text-h2 font-semibold uppercase tracking-wider relative inline-block">
             SHARE ANY THING{" "} <br className='lg:hidden' />
             <span className="relative text-black font-bold">
               <span
@@ -39,7 +40,7 @@ export default function HeroSection() {
           <div className='flex flex-col rounded-2xl  border border-[#FEC400] shadow-lg p-2 py-8
           lg:border-none lg:bg-transparent lg:shadow-none
           '>
-            <h1 className="text-h1 font-bold lg:text-left w-full text-white mb-6 animate-fadeInLeft">
+            <h1 className="text-h1 font-bold lg:text-left w-full  mb-6 animate-fadeInLeft">
               DIGITAL BUSINESS CARD
             </h1>
             <h2 className="text-h2 font-bold lg:text-left w-full text-yellow-400 mb-8 animate-fadeInRight">
@@ -56,12 +57,14 @@ export default function HeroSection() {
               <button className="bg-yellow-400 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors">
                 Products
               </button>
-              <button className="border border-yellow-400 text-yellow-400 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition-colors flex items-center gap-2">
+              <Link
+                href='/teams'
+                className="border border-yellow-400 text-yellow-400 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition-colors flex items-center gap-2">
                 For teams
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
 

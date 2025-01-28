@@ -14,7 +14,7 @@ export default function SmartCardSection() {
             {/* <p className="text-white/80 uppercase tracking-wider mb-4 text-[20px]">CONNECT WITH A TOUCH</p> */}
 
             <div className="flex items-center justify-center mb-5 animate-bounce">
-              <h3 className="text-white text-h3 font-semibold uppercase tracking-wider relative inline-block">
+              <h3 className="text-h3 font-semibold uppercase tracking-wider relative inline-block">
                 CONNECT WITH {" "} <br className='lg:hidden' />
                 <span className="relative text-black font-bold">
                   <span
@@ -32,11 +32,11 @@ export default function SmartCardSection() {
 
 
             <h2 className=" font-bold mb-6 text-h3">
-              <span className="text-white">Smart & Digital </span>
+              <span >Smart & Digital </span>
               <span className="text-[#FEC400]">Business Card</span>
-              <span className="text-white"> In Your Hand</span>
+              <span> In Your Hand</span>
             </h2>
-            <p className="text-white/80  mb-4 text-body">
+            <p className=" mb-4 text-body opacity-70">
               Get digital business cards for yourself or your team,
               <span className='block'>Join millions of professionals</span>
             </p>
@@ -83,21 +83,21 @@ export default function SmartCardSection() {
                 <div className="w-16 h-16 relative flex-shrink-0">
                   <Image src={scanningNfc} alt="Device" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-white text-body animate-rotateIn">Works on any type of device.</p>
+                <p className="text-body animate-rotateIn">Works on any type of device.</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <div className="w-16 h-16 relative flex-shrink-0">
                   <Image src={scanningQR} alt="Team" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-white text-body animate-rotateIn">The perfect alternative to the business card for teams and individuals</p>
+                <p className="text-body animate-rotateIn">The perfect alternative to the business card for teams and individuals</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <div className="w-16 h-16 relative flex-shrink-0">
                   <Image src={worldInternet} alt="NFC" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-white text-body animate-rotateIn">Compatible with NFC technology and Qr Code.</p>
+                <p className="text-body animate-rotateIn">Compatible with NFC technology and Qr Code.</p>
               </div>
             </div>
           </div>

@@ -19,7 +19,6 @@ export default async function HomePage() {
       <SmartCardSection />
       <HowItWorksSection />
       <FeaturesSection />
-      {/* <TimeSection /> */}
       <CompatibleDevices />
       {/* <ContactForm /> */}
       <Suspense

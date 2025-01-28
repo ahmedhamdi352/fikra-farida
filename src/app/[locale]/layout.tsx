@@ -62,7 +62,7 @@ export default async function LocaleLayout(props: Props) {
               <FooterWrapper initialData={siteData} />
               <ToastContainer
                 position={locale === 'ar' ? 'top-left' : 'top-right'}
-                autoClose={3000}
+                autoClose={1000}
                 hideProgressBar={false}
                 newestOnTop
                 closeOnClick

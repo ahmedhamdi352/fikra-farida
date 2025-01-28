@@ -29,10 +29,10 @@ class ApiService {
       });
       return response.data;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        errorService.handleError(error);
-        throw error;
-      }
+      // if (error instanceof AxiosError) {
+      //   errorService.handleError(error);
+      //   throw error;
+      // }
       throw error;
     }
   }
@@ -86,9 +86,14 @@ class ApiService {
 // Export singleton instance
 export const apiService = ApiService.getInstance();
 
-interface LoginCredentials {
+export interface LoginCredentials {
   email: string;
   password: string;
+}
+
+export interface ForgetData {
+  email: string;
+  redirectUrl: string;
 }
 
 interface UserData {
@@ -136,7 +141,9 @@ export interface SiteData {
 
 export const authApi = {
   login: (credentials: LoginCredentials) =>
-    apiService.post<{ token: string }, LoginCredentials>('/auth/login', credentials),
+    apiService.post<{ token: string }, LoginCredentials>('/api/Auth/login', credentials),
+  forgetPassword: (forgetData: ForgetData) =>
+    apiService.post<{ token: string }, ForgetData>('/api/Account/ResetPassword', forgetData),
   register: (userData: UserData) => apiService.post<{ userId: string }, UserData>('/auth/register', userData),
   refreshToken: (token: string) => apiService.post<{ token: string }, { token: string }>('/auth/refresh', { token }),
 };

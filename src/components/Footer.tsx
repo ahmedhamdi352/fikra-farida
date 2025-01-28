@@ -30,7 +30,6 @@ const Footer = ({ siteData }: FooterProps) => {
 
   return (
     <footer
-      className="text-white"
       style={{ background: 'var(--FOOTER)' }}
     >
       {/* Mobile Layout */}

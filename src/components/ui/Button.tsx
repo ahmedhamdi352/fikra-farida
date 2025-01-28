@@ -17,7 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
   className,
   withArrow = false,
 }) => {
-  const baseStyles = "inline-flex items-center justify-between px-8 py-3 text-white rounded-[10px] hover:opacity-80 transition-all w-full sm:w-auto capitalize";
+  const baseStyles = "inline-flex items-center justify-between px-8 py-3 rounded-[10px] hover:opacity-80 transition-all w-full sm:w-auto capitalize";
   const gradientBorderStyles = "relative border border-transparent [border-image-source:linear-gradient(90deg,#F1911B,#FEC400,#8B5410)] [border-image-slice:1]";
   const textStyles = "text-center font-poppins text-[20px] font-semibold leading-[23px]";
 

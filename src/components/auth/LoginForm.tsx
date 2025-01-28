@@ -9,6 +9,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
+import { useApi } from 'hooks';
+import { LoginCredentials, } from 'services/api.service';
+import { authApi } from 'services/api.service';
+
 
 interface LoginFormData {
   email: string;
@@ -21,13 +25,14 @@ const schema = yup.object().shape({
 });
 
 export default function LoginForm() {
+  const { execute: login, data: loginData, isLoading } = useApi<LoginCredentials>();
+
   const [rememberMe, setRememberMe] = useState(false);
   const t = useTranslations('auth');
 
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting }
   } = useForm<LoginFormData>({
     resolver: yupResolver(schema),
     mode: 'onBlur'
@@ -35,10 +40,10 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      // TODO: Implement login logic
-      console.log({ ...data, rememberMe });
-    } catch (error) {
-      console.error('Login error:', error);
+      await login(() => authApi.login({ email: data.email, password: data.password }));
+      console.log(loginData);
+    } catch (err) {
+      console.error(err)
     }
   };
 
@@ -97,14 +102,14 @@ export default function LoginForm() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="h-4 w-4 text-[var(--main-color1)] focus:ring-[var(--main-color1)] border-gray-600 rounded bg-black/40"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-white">
+              <label htmlFor="remember-me" className="ml-2 block text-sm  ">
                 {t('login.rememberMe')}
               </label>
             </div>
 
             <div className="text-sm">
               <Link
-                href="/forgot-password"
+                href="/forget-password"
                 className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]"
               >
                 {t('login.forgotPassword')}
@@ -112,25 +117,26 @@ export default function LoginForm() {
             </div>
           </div>
 
+
           <div>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isLoading}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-[var(--main-color1)] hover:bg-[var(--liner-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--main-color1)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Loading...' : t('login.submit')}
+              {isLoading ? 'Loading...' : t('login.submit')}
             </button>
           </div>
 
-          <div className="text-center text-sm">
-            <span className="text-white">{t('login.noAccount')} </span>
+          {/* <div className="text-center text-sm">
+            <span >{t('login.noAccount')} </span>
             <Link
               href="/register"
               className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]"
             >
               {t('login.signUp')}
             </Link>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

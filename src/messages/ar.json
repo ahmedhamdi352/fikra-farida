@@ -106,6 +106,13 @@
       "submit": "إنشاء حساب",
       "haveAccount": "لديك حساب بالفعل؟",
       "login": "تسجيل الدخول"
+    },
+      "forget":{
+      "title":"نسيت كلمة المرور",
+      "submit":"إرسال",
+      "rememberPassword":"Do you remember your password"
+
+
     }
   }
 }

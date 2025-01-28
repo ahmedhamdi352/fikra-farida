@@ -101,14 +101,14 @@ export default async function BlogDetails({
 
                   if (trimmedParagraph.endsWith('?') || trimmedParagraph.includes('Vision 2030:')) {
                     return (
-                      <h2 key={index} className="text-white text-xl font-semibold mb-4">
+                      <h2 key={index} className="  text-xl font-semibold mb-4">
                         {trimmedParagraph}
                       </h2>
                     );
                   }
 
                   return (
-                    <p key={index} className="text-white/80 text-base leading-relaxed mb-4">
+                    <p key={index} className=" text-base leading-relaxed mb-4">
                       {trimmedParagraph}
                     </p>
                   );

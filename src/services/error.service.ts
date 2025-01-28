@@ -31,9 +31,9 @@ interface ErrorConfig {
 }
 
 const defaultToastOptions: ToastOptions = {
-  position: 'top-right',
+  position: 'bottom-right',
   autoClose: 5000,
-  hideProgressBar: false,
+  hideProgressBar: true,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
@@ -59,7 +59,7 @@ export class ErrorService {
       return {
         type: ErrorType.NETWORK_ERROR,
         messageKey: 'errors.network',
-        toastOptions: { autoClose: false },
+        // toastOptions: { autoClose: false },
       };
     }
 
@@ -67,7 +67,7 @@ export class ErrorService {
       return {
         type: ErrorType.NETWORK_ERROR,
         messageKey: 'errors.network',
-        toastOptions: { autoClose: false },
+        // toastOptions: { autoClose: false },
       };
     }
 
@@ -123,7 +123,7 @@ export class ErrorService {
         return {
           type: ErrorType.SERVER_ERROR,
           messageKey: 'errors.server',
-          toastOptions: { autoClose: false },
+          // toastOptions: { autoClose: false },
         };
 
       default:
