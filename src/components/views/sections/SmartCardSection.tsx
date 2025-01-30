@@ -17,7 +17,7 @@ export default function SmartCardSection() {
           <div className="text-center  relative z-10">
             <div className="flex items-center justify-center mb-5 animate-bounce">
               <h3 className="text-h3 font-semibold uppercase tracking-wider relative inline-block">
-                {t('smartCard.title')} {" "} <br className='lg:hidden' />
+                {t('smartCard.title')} {" "} <br className='lg:hidden rtl:hidden' />
                 <span className="relative text-black font-bold">
                   <span
                     className="absolute  inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
