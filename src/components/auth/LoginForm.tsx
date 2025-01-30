@@ -49,7 +49,7 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-[70vh] lg:min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-black/20 backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
+      <div className="max-w-md w-full space-y-8  bg-white shadow-2xl dark:bg-black/20 dark:backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
         <div className="flex flex-col items-center">
           <Image
             src={fikraLogo}

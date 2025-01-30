@@ -40,6 +40,11 @@
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
+    background-image: url('/images/dark-theme-bg.svg');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 100vw 100%;
+
   }
 
   body::before {
@@ -58,21 +63,17 @@
   /* Apply dark theme background to body */
   :root.dark body {
     --background: rgba(38, 38, 38, 0.9);
-    background-image: url('/images/dark-theme-bg.svg');
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: 100vw 100%;
   }
 
   /* Mobile Dark Mode Background */
   @media (max-width: 768px) {
-    :root.dark body {
+    :root body {
       background-size: 200vw 100%;
     }
   }
 
   @media (max-width: 480px) {
-    :root.dark body {
+    :root body {
       background-size: 250vw 100%;
     }
   }
