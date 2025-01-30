@@ -80,21 +80,24 @@ export function ProductSlider({ products }: ProductSliderProps) {
       </div>
 
       {/* Mobile View - Single item with swipe */}
-      <div {...handlers} className="md:hidden overflow-hidden">
+      <div {...handlers} className="md:hidden overflow-hidden max-w-full">
         <div
           className="transition-transform duration-300 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * 100}%)`,
-            width: '100%',
+            // width: `${firstSixProducts.length * 100}%`,
             display: 'flex'
           }}
         >
           {firstSixProducts.map((product) => (
             <div
               key={product.id}
-              className="w-[100%] flex-shrink-0 px-4"
+              className="w-full flex-shrink-0 px-2"
+              style={{ width: "100%", }}
             >
-              <ProductCard product={product} />
+              <div className="max-w-[90vw] mx-auto">
+                <ProductCard product={product} />
+              </div>
             </div>
           ))}
         </div>
