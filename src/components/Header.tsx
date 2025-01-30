@@ -17,13 +17,13 @@ interface HeaderProps {
   siteData: SiteData;
 }
 
-const OfferBanner = () => {
-  return (
-    <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-red-800 via-grey-100 to-black text-white text-center p-2 z-10">
-      <div className="font-bold text-body whitespace-nowrap animate-marquee">🎉 Special Offer: Discount up to 10%! 🎉 🎉 Special Offer: Discount up to 10%! 🎉 🎉 Special Offer: Discount up to 10%! 🎉</div>
-    </div>
-  );
-};
+// const OfferBanner = () => {
+//   return (
+//     <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-red-800 via-grey-100 to-black text-white text-center p-2 z-10">
+//       <div className="font-bold text-body whitespace-nowrap animate-marquee">🎉 Special Offer: Discount up to 10%! 🎉 🎉 Special Offer: Discount up to 10%! 🎉 🎉 Special Offer: Discount up to 10%! 🎉</div>
+//     </div>
+//   );
+// };
 
 const Header = ({ siteData }: HeaderProps) => {
   const pathname = usePathname();
