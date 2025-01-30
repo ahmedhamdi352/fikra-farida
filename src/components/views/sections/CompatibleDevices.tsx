@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import androidIcon from 'assets/images/android.png';
 import iphoneIcon from 'assets/images/apple.png';
+import { useTranslations } from 'next-intl';
 
 export default function CompatibleDevices() {
+  const t = useTranslations('home')
+
   return (
     <section className="py-8 relative">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">Compatible Devices</h2>
+        <h2 className="text-3xl font-bold text-center mb-8">{t('devices.title')}</h2>
         <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto">
           {/* Android Card */}
           <div className="flex flex-col items-center">
@@ -20,7 +23,7 @@ export default function CompatibleDevices() {
                   objectFit="contain"
                 />
               </div>
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold">Android</h3>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold">{t('devices.android')}</h3>
             </div>
             {/* Card content */}
             <div className="rounded-[15px] p-4 sm:p-6 lg:p-8 w-full h-full" style={{
@@ -29,7 +32,7 @@ export default function CompatibleDevices() {
               backdropFilter: 'blur(10px)'
             }}>
               <p className="text-center text-sm sm:text-base opacity-80">
-                Almost all Android smartphones are compatible even if the person you want to share with don&apos;t have a compatible phone, you can still use our products! Simply use scan to share your information
+                {t('devices.descriptionAndroid')}
               </p>
             </div>
           </div>
@@ -46,7 +49,7 @@ export default function CompatibleDevices() {
                   objectFit="contain"
                 />
               </div>
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold ">iPhone</h3>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold ">{t('devices.ios')}</h3>
             </div>
             {/* Card content */}
             <div className="rounded-[15px] p-4 sm:p-6 lg:p-8 w-full h-full" style={{
@@ -55,7 +58,7 @@ export default function CompatibleDevices() {
               backdropFilter: 'blur(10px)'
             }}>
               <p className="opacity-80 text-center text-sm sm:text-base">
-                Works with iPhone phones starting from Model 7 as well as later versions, you only need to activate the NFC function in the settings and also with older versions it can be used by QR code.
+                {t('devices.descriptionIos')}
               </p>
             </div>
           </div>

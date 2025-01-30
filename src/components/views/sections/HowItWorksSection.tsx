@@ -1,29 +1,30 @@
 import ECommerceImg from 'assets/images/E-commerce.png'
 import EasyImg from 'assets/images/Easy.png'
+import { useTranslations } from 'next-intl';
 import Image from 'next/image'
-// import { Button } from '../../ui/Button';
-
 export default function HowItWorksSection() {
+  const t = useTranslations('home')
+
   const steps = [
     {
       number: "1",
-      title: "Get any of our products you like"
+      title: t("howItWork.step1")
     },
     {
       number: "2",
-      title: "Activate the product"
+      title: t("howItWork.step2")
     },
     {
       number: "3",
-      title: "Start setting up your profile account"
+      title: t("howItWork.step3")
     },
     {
       number: "4",
-      title: "Add your favorite links"
+      title: t("howItWork.step4")
     },
     {
       number: "5",
-      title: "Share your profile using NFC or QR code"
+      title: t("howItWork.step5")
     }
   ];
 
@@ -41,8 +42,8 @@ export default function HowItWorksSection() {
               className="object-contain"
             />
             <h2 className="font-bold capitalize" style={{ lineHeight: 'normal' }}>
-              <span className="text-h2">Easy Steps To Know </span>
-              <span className="text-[#FEC400] text-h2">How It&apos;s Work</span>
+              <span className="text-h2">{t("howItWork.headTitle")}</span>
+              <span className="text-[#FEC400] text-h2">{t("howItWork.headTitle2")}</span>
               <span className="text-h2"> !</span>
             </h2>
           </div>

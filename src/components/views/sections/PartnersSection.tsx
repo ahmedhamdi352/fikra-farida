@@ -8,26 +8,29 @@ import harvestImg from 'assets/images/partners/harvest.png'
 import aldawaaImg from 'assets/images/partners/aldawaa.png'
 import afaqImg from 'assets/images/partners/afaq.png'
 import LogoGridSection from 'components/common/LogoGridSection'
+import { useTranslations } from 'next-intl'
 
 export default function PartnersSection() {
+  const t = useTranslations('home')
+
   return (
     <section className="py-12">
       <div className="container mx-auto px-6">
 
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
           {/* Left Section */}
-          <div className="flex-1 text-center lg:text-left">
+          <div className="flex-1 text-center lg:text-left rtl:text-right">
             <h2 className="text-[64px] lg:text-[100px] font-extrabold text-[#FEC400] leading-none mb-6">
-              100 K+
+              {t('partners.headTitle')}
             </h2>
             <p className=" text-lg lg:text-2xl font-semibold mb-4">
-              People And Businesses Place Their Trust In All Of Our Services And Products
+              {t('partners.subTitle')}
 
             </p>
             <p className="text-[#FEC400] text-base lg:text-lg font-medium">
-              We Help Businesses Strengthen Relationships
+              {t('partners.description')}
               <br />
-              Quickly And Easily, While Reducing Costs
+              {t('partners.description2')}
             </p>
           </div>
 

@@ -12,12 +12,15 @@ import TiktokIcon from 'assets/social-media/TikTok.png'
 import SnapchatIcon from 'assets/social-media/Snapchat.png'
 import TwitterIcon from 'assets/social-media/TwitterX.png'
 import WhatsappIcon from 'assets/social-media/WhatsApp.png'
+import { useTranslations } from 'next-intl';
 
 interface FooterProps {
   siteData: SiteData;
 }
 
 const Footer = ({ siteData }: FooterProps) => {
+  const t = useTranslations('common');
+
   const socialLinks = [
     { href: siteData.contactWhatsapp, icon: WhatsappIcon, alt: 'WhatsApp' },
     { href: siteData.contactFacebook, icon: FacebookIcon, alt: 'Facebook' },
@@ -46,8 +49,7 @@ const Footer = ({ siteData }: FooterProps) => {
                 className="w-[100px] h-[100px] mt-4 lg:w-auto brightness-0 invert"
               />
               <p className="text-gray-300 text-sm leading-relaxed mt-6">
-                Communication Between People Easily And In The Fastest Way While Saving Time And Money,
-                It&apos;s The Perfect Alternative To The Digital Business Card For Teams & Individuals.
+                {t('footer.title')}
               </p>
             </div>
           </div>
@@ -56,13 +58,13 @@ const Footer = ({ siteData }: FooterProps) => {
           <div className="flex justify-between gap-8">
             {/* Pages Section */}
             <div className="space-y-6 flex-1">
-              <h2 className="text-[var(--main-color1)] text-xl font-semibold">Pages</h2>
+              <h2 className="text-[var(--main-color1)] text-xl font-semibold">{t('footer.pages')}</h2>
               <FooterNavigation />
             </div>
 
             {/* Contact Section */}
             <div className="space-y-6 flex-1">
-              <h2 className="text-[var(--main-color1)] text-xl font-semibold">Contact</h2>
+              <h2 className="text-[var(--main-color1)] text-xl font-semibold">{t('footer.contact')}</h2>
               <div className="space-y-4">
                 <a
                   href={`tel:${siteData.contactPhone}`}
@@ -110,7 +112,7 @@ const Footer = ({ siteData }: FooterProps) => {
             background: 'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)'
           }}></div>
           <p className="text-center text-sm text-gray-400">
-            {new Date().getFullYear()} {siteData.siteName}. All rights reserved.
+            {new Date().getFullYear()} {siteData.siteName} . {t('footer.copyright')}
           </p>
         </div>
       </div>
@@ -128,8 +130,7 @@ const Footer = ({ siteData }: FooterProps) => {
               className="w-auto brightness-0 invert"
             />
             <p className="text-gray-300 text-sm leading-relaxed">
-              Communication between people easily and in the fastest way while saving time and money,
-              It&apos;s the perfect alternative to the digital business card for teams & individuals.
+              {t('footer.title')}
             </p>
             {/* Social Media Icons */}
             <div className="flex items-center gap-4 pt-4">
@@ -149,7 +150,7 @@ const Footer = ({ siteData }: FooterProps) => {
 
           {/* Contact Column */}
           <div className="w-[40%] space-y-8">
-            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">Contact</h2>
+            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">{t("footer.contact")}</h2>
             <div className="space-y-6">
               <a
                 href={`tel:${siteData.contactPhone}`}
@@ -178,7 +179,7 @@ const Footer = ({ siteData }: FooterProps) => {
 
           {/* Pages Column */}
           <div className="w-[20%] space-y-8">
-            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">Pages</h2>
+            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">{t("footer.pages")}</h2>
             <div className="w-fit">
               <FooterNavigation />
             </div>
@@ -190,8 +191,8 @@ const Footer = ({ siteData }: FooterProps) => {
           <div className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent" style={{
             background: 'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)'
           }}></div>
-          <p className="text-center text-sm text-gray-400">
-            {new Date().getFullYear()} {siteData.siteName}. All rights reserved.
+          <p className="text-center text-sm text-gray-400 ">
+            {new Date().getFullYear()} {siteData.siteName} . {t("footer.copyright")}
           </p>
         </div>
       </div>

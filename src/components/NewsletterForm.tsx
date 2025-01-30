@@ -4,6 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useTranslations } from 'next-intl';
 
 interface NewsletterFormProps {
   withTitle?: boolean;
@@ -18,6 +19,9 @@ const schema = yup.object().shape({
 });
 
 export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = false }) => {
+  const t = useTranslations('common');
+  const tt = useTranslations('auth');
+
   const {
     register,
     handleSubmit,
@@ -39,13 +43,13 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
   return (
     <div className="mt-8">
       {withTitle && (
-        <p className="text-gray-300 mb-4">Subscribe to our newsletter</p>
+        <p className="text-gray-300 mb-4">{t('actions.subscribeTitle')}</p>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2 w-full">
           <input
             type="email"
-            placeholder="E-Mail"
+            placeholder={tt('login.emailPlaceholder')}
             {...register('email')}
             className={`flex-1 min-w-0 bg-transparent border ${errors.email ? 'border-red-500' : 'border-[#FEC400]'} rounded-[10px] px-4 py-2 text-sm sm:text-base text-white placeholder:text-[#FEC400] focus:outline-none`}
           />
@@ -54,7 +58,7 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
             disabled={isSubmitting}
             className="shrink-0 bg-[#FEC400] text-white text-sm sm:text-base font-semibold leading-normal capitalize px-4 sm:px-8 py-2 rounded-[10px] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
           >
-            {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+            {isSubmitting ? 'Subscribing...' : t('actions.subscribe')}
           </button>
         </div>
         {errors.email && (

@@ -87,7 +87,7 @@ export default function ContactFormFields() {
       <TextInput
         control={control}
         name="phone"
-        type="tel"
+        type="number"
         placeholder={t('form.phone')}
         icon={
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 33" fill="none">

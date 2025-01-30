@@ -3,42 +3,44 @@ import scanningNfc from 'assets/images/scanningNfc.png'
 import scanningQR from 'assets/images/scanningQR.png'
 import worldInternet from 'assets/images/worldInternet.png'
 import socialIcons from 'assets/images/socialIcons.png'
+import { useLocale, useTranslations } from 'next-intl';
 
 
 export default function SmartCardSection() {
+  const locale = useLocale();
+  const t = useTranslations('home');
+
   return (
     <section className="relative py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto rounded-2xl border border-[#FEC400] p-12 relative overflow-hidden">
           <div className="text-center  relative z-10">
-            {/* <p className="text-white/80 uppercase tracking-wider mb-4 text-[20px]">CONNECT WITH A TOUCH</p> */}
-
             <div className="flex items-center justify-center mb-5 animate-bounce">
               <h3 className="text-h3 font-semibold uppercase tracking-wider relative inline-block">
-                CONNECT WITH {" "} <br className='lg:hidden' />
+                {t('smartCard.title')} {" "} <br className='lg:hidden' />
                 <span className="relative text-black font-bold">
                   <span
                     className="absolute  inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
                     style={{
                       height: "50px",
                       width: "200px",
-                      transform: "translate(-20%, -8px)",
+                      transform: locale === 'en' ? "translate(-20%, -10px)" : "translate(20%, -10px)",
                     }}
                   ></span>
-                  A TOUCH
+                  {t('smartCard.titleMore')}
                 </span>
               </h3>
             </div>
 
 
             <h2 className=" font-bold mb-6 text-h3">
-              <span >Smart & Digital </span>
-              <span className="text-[#FEC400]">Business Card</span>
-              <span> In Your Hand</span>
+              <span >{t('smartCard.headTitle')}</span>
+              <span className="text-[#FEC400]">{t('smartCard.businessCard')}</span>
+              <span>{t('smartCard.headTitle2')}</span>
             </h2>
             <p className=" mb-4 text-body opacity-70">
-              Get digital business cards for yourself or your team,
-              <span className='block'>Join millions of professionals</span>
+              {t('smartCard.description')}
+              <span className='block'>{t('smartCard.description2')}</span>
             </p>
 
             {/* Decorative Line */}
@@ -58,14 +60,15 @@ export default function SmartCardSection() {
             </div>
           </div>
 
-          <div className="absolute right-0 top-0 w-1/2 h-full">
+          <div className="absolute ltr:right-0 rtl:left-0 top-0 w-1/2 h-full">
             <Image
               src={socialIcons}
               alt="social"
               className="animate-float object-contain"
               style={{
                 position: 'absolute',
-                right: '-5%',
+                ...(locale === 'en' && { right: '-5%' }),
+                ...(locale === 'ar' && { left: '-5%' }),
                 top: '35%',
                 transform: 'translateY(-50%) scale(1.2)',
                 width: '90%',
@@ -83,21 +86,21 @@ export default function SmartCardSection() {
                 <div className="w-16 h-16 relative flex-shrink-0">
                   <Image src={scanningNfc} alt="Device" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-body animate-rotateIn">Works on any type of device.</p>
+                <p className="text-body animate-rotateIn">{t('smartCard.feature1')}</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <div className="w-16 h-16 relative flex-shrink-0">
                   <Image src={scanningQR} alt="Team" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-body animate-rotateIn">The perfect alternative to the business card for teams and individuals</p>
+                <p className="text-body animate-rotateIn">{t('smartCard.feature2')}</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <div className="w-16 h-16 relative flex-shrink-0">
                   <Image src={worldInternet} alt="NFC" layout="fill" objectFit="contain" />
                 </div>
-                <p className="text-body animate-rotateIn">Compatible with NFC technology and Qr Code.</p>
+                <p className="text-body animate-rotateIn">{t('smartCard.feature3')}</p>
               </div>
             </div>
           </div>
