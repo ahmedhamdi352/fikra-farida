@@ -201,7 +201,7 @@ const Header = ({ siteData }: HeaderProps) => {
 
             </Link>
             <ThemeSwitcher />
-            <CartIcon count={3} />
+            <CartIcon />
             <LanguageSwitcher />
 
             {/* Mobile Menu Button */}

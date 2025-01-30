@@ -2,6 +2,31 @@ import { SiteData } from 'services/api.service';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const MEDIA_URL = 'https://fikrafarida.com/media/site/';
+const PRODUCT_MEDIA_URL = 'https://fikrafarida.com/Media/Products/';
+
+interface ProductColor {
+  name: string;
+  value: string;
+  url: string;
+  Media: string[];
+  updateDate: string;
+  rank: number;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  arName: string;
+  description?: string;
+  arDescription: string;
+  price: string;
+  finalPrice: string;
+  Media: string[];
+  updateDate: string;
+  rank: number;
+  label?: string;
+  colors: ProductColor[];
+}
 
 export async function getSiteData(countryCode: string = 'EG', domain: string = 'fikrafarida.com'): Promise<SiteData> {
   if (!BASE_URL) {
@@ -42,6 +67,51 @@ export async function getSiteData(countryCode: string = 'EG', domain: string = '
     return transformedData;
   } catch (error) {
     console.error('Error fetching site data:', error);
+    throw error;
+  }
+}
+
+export async function getProducts(countryCode: string = 'EG', domain: string = 'fikrafarida.com'): Promise<Product[]> {
+  if (!BASE_URL) {
+    throw new Error('API URL is not configured');
+  }
+
+  const params = new URLSearchParams({
+    CountryCode: countryCode,
+    domain: domain,
+  });
+
+  const url = `${BASE_URL}/endpoint/api/Store/Products?${params.toString()}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Transform the Media URLs
+    return data.map((product: Product) => ({
+      ...product,
+      Media: product.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
+      colors: product.colors.map(color => ({
+        ...color,
+        Media: color.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
+      })),
+    })).sort((a: Product, b: Product) => {
+      // Sort by rank in ascending order (lower rank first)
+      // If rank is undefined or null, treat it as highest rank (put at end)
+      const rankA = a.rank ?? Number.MAX_VALUE;
+      const rankB = b.rank ?? Number.MAX_VALUE;
+      return rankA - rankB;
+    });
+  } catch (error) {
+    console.error('Error fetching products:', error);
     throw error;
   }
 }

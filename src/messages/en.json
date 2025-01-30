@@ -3,23 +3,24 @@
     "nav": {
       "home": "Home",
       "contact": "Contact Us",
-      "products":"Products",
-      "blogs":"Blogs",
-      "howItUse":"How It Use",
-      "login":"Login"
+      "products": "Products",
+      "blogs": "Blogs",
+      "howItUse": "How It Use",
+      "login": "Login"
     },
-    "footer":{
-      "contact":"contact",
-      "pages":"Pages",
-      "copyright":" All rights reserved.",
-      "title":"Communication Between People Easily And In The Fastest Way While Saving Time And Money, It&apos;s The Perfect Alternative To The Digital Business Card For Teams & Individuals."
+    "footer": {
+      "contact": "contact",
+      "pages": "Pages",
+      "copyright": " All rights reserved.",
+      "title": "Communication Between People Easily And In The Fastest Way While Saving Time And Money, It&apos;s The Perfect Alternative To The Digital Business Card For Teams & Individuals."
     },
     "actions": {
       "save": "Save",
       "cancel": "Cancel",
       "submit": "Submit",
-      "subscribeTitle":"Subscribe to our newsletter",
-      "subscribe":"Subscribe"
+      "subscribeTitle": "Subscribe to our newsletter",
+      "subscribe": "Subscribe",
+      "readMore":"Read More"
     }
   },
   "errors": {
@@ -37,55 +38,55 @@
     "description": "A fully internationalized website",
     "hero": {
       "title": "SHARE ANY THING",
-      "titleMore":"& MORE",
-      "headTitle":"DIGITAL BUSINESS CARD",
+      "titleMore": "& MORE",
+      "headTitle": "DIGITAL BUSINESS CARD",
       "subtitle": " THE FUTURE OF BUSINESS COMMUNICATION",
-      "description":"Communication between people easily and in the fastest way while saving time and money. We can help you easily widen your social network in a new and easy way for all of your clients whether you are an artist, photographer, businessman, salesperson, model, celebrity, recruiter, athlete, business owner, or entrepreneur.",
-      "buttonForProducts":"Products",
-      "buttonForTeams":"For Teams"
+      "description": "Communication between people easily and in the fastest way while saving time and money. We can help you easily widen your social network in a new and easy way for all of your clients whether you are an artist, photographer, businessman, salesperson, model, celebrity, recruiter, athlete, business owner, or entrepreneur.",
+      "buttonForProducts": "Products",
+      "buttonForTeams": "For Teams"
     },
     "partners": {
-      "headTitle":"100 K+",
-      "subTitle":"People And Businesses Place Their Trust In All Of Our Services And Products",
-      "description":"We Help Businesses Strengthen Relationships",
-      "description2":"Quickly And Easily, While Reducing Costs"
+      "headTitle": "100 K+",
+      "subTitle": "People And Businesses Place Their Trust In All Of Our Services And Products",
+      "description": "We Help Businesses Strengthen Relationships",
+      "description2": "Quickly And Easily, While Reducing Costs"
     },
-    "smartCard":{
+    "smartCard": {
       "title": "CONNECT WITH",
-      "titleMore":"A TOUCH",
-      "headTitle":"Smart & Digital",
-      "businessCard":" Business Card  ",
-      "headTitle2":"In Your Hand",
-      "description":" Get digital business cards for yourself or your team,",
-      "description2":"Join millions of professionals",
-      "feature1":"Works on any type of device.",
-      "feature2":"The perfect alternative to the business card for teams and individuals",
-      "feature3":"Compatible with NFC technology and Qr Code."
+      "titleMore": "A TOUCH",
+      "headTitle": "Smart & Digital",
+      "businessCard": " Business Card  ",
+      "headTitle2": "In Your Hand",
+      "description": " Get digital business cards for yourself or your team,",
+      "description2": "Join millions of professionals",
+      "feature1": "Works on any type of device.",
+      "feature2": "The perfect alternative to the business card for teams and individuals",
+      "feature3": "Compatible with NFC technology and Qr Code."
     },
-    "howItWork":{
-      "headTitle":"Easy Steps To Know",
-      "headTitle2":"How It's Work",
-      "step1":"Get any of our products you like",
-      "step2":"Activate the product",
-      "step3":"Start setting up your profile account",
-      "step4":"Add your favorite links",
-      "step5":"Share your profile using NFC or QR code"
+    "howItWork": {
+      "headTitle": "Easy Steps To Know",
+      "headTitle2": "How It's Work",
+      "step1": "Get any of our products you like",
+      "step2": "Activate the product",
+      "step3": "Start setting up your profile account",
+      "step4": "Add your favorite links",
+      "step5": "Share your profile using NFC or QR code"
     },
-    "devices":{
+    "devices": {
       "title": "Compatible Devices",
-      "android":"Android",
-      "descriptionAndroid":"Almost all Android smartphones are compatible even if the person you want to share with don&apos;t have a compatible phone, you can still use our products! Simply use scan to share your information",
-      "ios":"iPhone",
-      "descriptionIos":"Works with iPhone phones starting from Model 7 as well as later versions, you only need to activate the NFC function in the settings and also with older versions it can be used by QR code."
+      "android": "Android",
+      "descriptionAndroid": "Almost all Android smartphones are compatible even if the person you want to share with don&apos;t have a compatible phone, you can still use our products! Simply use scan to share your information",
+      "ios": "iPhone",
+      "descriptionIos": "Works with iPhone phones starting from Model 7 as well as later versions, you only need to activate the NFC function in the settings and also with older versions it can be used by QR code."
     },
     "features": {
-      "special":"Special",
-      "features":"Features",
-      "grow":"To Grow Faster",
+      "special": "Special",
+      "features": "Features",
+      "grow": "To Grow Faster",
       "title": "Special Features",
-      "premium":"Premium Experiment",
-      "secure":"Secure Information",
-      "environmentSaving":"Environment Saving",
+      "premium": "Premium Experiment",
+      "secure": "Secure Information",
+      "environmentSaving": "Environment Saving",
       "paymentsProtection": "Secure your transactions with our advanced payment protection system",
       "secureEnvironment": "Operate in a fully secure and encrypted environment",
       "blockchainBanking": "Experience the future of banking with blockchain technology"
@@ -96,6 +97,16 @@
       "saudiArabia": "Saudi Arabia",
       "uae": "United Arab Emirates"
     }
+  },
+  "products": {
+    "title": "Make Yourself",
+    "subtitle":""
+  },
+  "blogs": {
+    "title": "SHARE ANY THING",
+    "titleMore": "& MORE",
+    "headTitle": "CREATE DIGITAL BUSINESS CARD",
+    "description": "We can help you easily widen your social network in a new and easy way for all of your clients whether you are an artist, photographer, businessman, salesperson, model, celebrity, recruiter, athlete, business owner, or entrepreneur."
   },
   "about": {
     "title": "About Us",
@@ -163,10 +174,10 @@
       "haveAccount": "Already have an account?",
       "login": "Login here"
     },
-    "forget":{
-      "title":"Forget Your Password",
-      "submit":"Submit",
-      "rememberPassword":"Do you remember your password?"
+    "forget": {
+      "title": "Forget Your Password",
+      "submit": "Submit",
+      "rememberPassword": "Do you remember your password?"
     }
   }
 }

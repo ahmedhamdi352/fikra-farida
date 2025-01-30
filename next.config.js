@@ -10,8 +10,13 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'fikrafarida.com',
-        pathname: '/media/site/**',
+        pathname: '/Media/Products/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'fikrafarida.com',
+        pathname: '/media/site/**',
+      }
     ],
   },
 };

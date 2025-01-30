@@ -1,8 +1,11 @@
-interface CartIconProps {
-  count?: number;
-}
+'use client';
 
-const CartIcon = ({ count = 0 }: CartIconProps) => {
+import { useCart } from 'context/CartContext';
+
+const CartIcon = () => {
+  const { items } = useCart();
+  const count = items.reduce((total, item) => total + item.quantity, 0);
+
   return (
     <div className="relative">
       <button className="hover:text-gray-300 p-2 rounded-full">

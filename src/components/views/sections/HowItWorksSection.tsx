@@ -89,16 +89,7 @@ export default function HowItWorksSection() {
 
 
         </div>
-        {/* <div className="mt-16">
-          <Button
-            href="/how-it-use"
-            withArrow
-            className="relative group px-8 py-3 text-white rounded-[10px] bg-transparent border-2 border-transparent hover:opacity-100 transition-colors"
-          // customGradient="bg-gradient-to-r from-[#F1911B] via-[#FEC400E5] to-[#8B5410]"
-          >
-            how it work
-          </Button>
-        </div> */}
+
       </div>
     </section>
   );

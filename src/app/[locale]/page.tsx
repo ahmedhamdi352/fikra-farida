@@ -8,6 +8,7 @@ import {
   SmartCardSection,
   CompatibleDevices,
   HowItWorksSection,
+  ProductsSection,
   // TimeSection
 } from 'components';
 
@@ -15,6 +16,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col w-full">
       <HeroSection />
+      <ProductsSection />
       <PartnersSection />
       <SmartCardSection />
       <HowItWorksSection />

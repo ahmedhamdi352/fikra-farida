@@ -5,6 +5,7 @@ import blog2 from 'assets/images/blogs/blog2.png'
 import blog3 from 'assets/images/blogs/blog3.png'
 import { Button } from 'components/ui/Button';
 import { Newsletter } from 'components/Newsletter';
+import { useTranslations } from 'next-intl';
 
 const blogs = [
   {
@@ -29,14 +30,15 @@ const blogs = [
 
 export default function BlogsPage() {
   const [firstBlog, ...otherBlogs] = blogs;
-
+  const t = useTranslations('blogs');
+  const tCommon = useTranslations('common');
   return (
     <main className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-[var(--main-color1)]  text-[18px] md:text-[24px] lg:text-[32px] font-bold leading-[150%] md:leading-[105%] tracking-[0.12px] md:tracking-normal uppercase">{`CREATE DIGITAL BUSINESS CARDS`}</h1>
-        <h2 className="lg:text-[var(--main-color1)]  text-[18px] md:text-[24px] lg:text-[32px] font-bold leading-[150%] lg:leading-[105%] tracking-[0.12px] lg:tracking-normal uppercase mb-6">{`SHARE ANY THING & MORE!`}</h2>
-        <p className="lg:max-w-[50%] text-[var(--small-text)] text-[12px] leading-[150%] md:text-[14px] lg:text-[16px] font-normal  md:leading-[150%] lg:leading-normal">
-          We can help you easily widen your social network in a new and easy way for all of your clients whether you are an artist, photographer, businessman, salesperson, model, celebrity, recruiter, athlete, business owner, or entrepreneur.
+        <h1 className="text-[var(--main-color1)]  text-h1 font-bold  tracking-[0.12px] md:tracking-normal uppercase">{t('headTitle')}</h1>
+        <h2 className="lg:text-[var(--main-color1)]  text-h2 font-bold leading-[150%] lg:leading-[105%] tracking-[0.12px] lg:tracking-normal uppercase mb-6">{t("title")}{" "}{t("titleMore")} </h2>
+        <p className="lg:max-w-[50%] text-[var(--small-text)] text-body  font-normal">
+          {t("description")}
         </p>
       </div>
 
@@ -55,11 +57,11 @@ export default function BlogsPage() {
                 className="object-cover"
               />
             </div>
-            <h2 className="text-[#FEC400] font-poppins text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
-            <p className=" font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6">{firstBlog.description}</p>
+            <h2 className="text-[#FEC400] font-semibold text-h3  md:font-medium md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
+            <p className="[font-feature-settings:'liga'_off] text-body mb-6">{firstBlog.description}</p>
             <div className="hidden lg:block self-start w-[55%]">
               <Button href={`/blogs/${firstBlog.id}`} withArrow>
-                Read More
+                {tCommon("actions.readMore")}
               </Button>
             </div>
           </article>
@@ -85,7 +87,7 @@ export default function BlogsPage() {
                 <p className="font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{blog.description}</p>
                 <div className="hidden lg:block self-start w-[55%]">
                   <Button href={`/blogs/${blog.id}`} withArrow>
-                    Read More
+                    {tCommon("actions.readMore")}
                   </Button>
                 </div>
               </article>

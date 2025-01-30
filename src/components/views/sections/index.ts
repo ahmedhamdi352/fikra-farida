@@ -7,3 +7,4 @@ export { default as HowItWorksSection } from './HowItWorksSection';
 export { default as SmartCardSection } from './SmartCardSection';
 export { default as TimeSection } from './TimeSection';
 export { default as PartnersSection } from './PartnersSection';
+export * from './ProductsSection';
