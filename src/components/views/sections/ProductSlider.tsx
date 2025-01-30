@@ -80,27 +80,23 @@ export function ProductSlider({ products }: ProductSliderProps) {
       </div>
 
       {/* Mobile View - Single item with swipe */}
-      <div {...handlers} className="md:hidden overflow-hidden max-w-full">
-        <div
-          className="transition-transform duration-300 ease-in-out max-w-full overflow-hidden"
-          style={{
-            transform: `translateX(-${currentIndex * 100}%)`,
-            // width: `${firstSixProducts.length * 100}%`,
-            display: 'flex'
-          }}
-        >
-          {firstSixProducts.map((product) => (
-            <div
-              key={product.id}
-              className="w-full max-w-full flex-shrink-0 px-2"
-              style={{ width: "100%", }}
-            >
-              <div className="max-w-[90vw] mx-auto">
+      <div className="md:hidden">
+        <div {...handlers} className="relative overflow-hidden">
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 100}vw)` }}
+          >
+            {firstSixProducts.map((product) => (
+              <div
+                key={product.id}
+                className="w-[100vw] flex-none px-4"
+              >
                 <ProductCard product={product} />
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
       </div>
 
       {/* Next Arrow - Hidden on mobile */}
@@ -115,8 +111,8 @@ export function ProductSlider({ products }: ProductSliderProps) {
       </button>
 
       {/* Page indicators */}
-      <div className="flex justify-center mt-4 gap-2">
-        {Array.from({ length: window.innerWidth >= 768 ? totalPages : firstSixProducts.length }).map((_, index) => (
+      <div className="flex justify-center mt-4 gap-2 md:hidden">
+        {Array.from({ length: firstSixProducts.length }).map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
