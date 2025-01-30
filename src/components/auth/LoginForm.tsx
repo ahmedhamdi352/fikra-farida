@@ -92,15 +92,15 @@ export default function LoginForm() {
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+          <div className="flex items-center justify-between ">
+            <div className="flex items-center gap-2">
               <input
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-[var(--main-color1)] focus:ring-[var(--main-color1)] border-gray-600 rounded bg-black/40"
+                className="h-5 w-5 text-[var(--main-color1)] focus:ring-[var(--main-color1)] border-gray-600 rounded bg-black/40"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm  ">
                 {t('login.rememberMe')}

@@ -166,7 +166,7 @@
     "forget":{
       "title":"Forget Your Password",
       "submit":"Submit",
-      "rememberPassword":"Do you remember your password"
+      "rememberPassword":"Do you remember your password?"
     }
   }
 }
