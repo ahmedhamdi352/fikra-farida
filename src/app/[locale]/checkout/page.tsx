@@ -184,15 +184,15 @@ export default function CheckoutPage() {
         </div>
 
         <div className="w-full lg:w-[500px] self-center lg:self-end bg-gradient-to-tr from-[rgba(217,217,217,0.05)] from-[4.53%] to-[rgba(115,115,115,0.05)] to-[92.45%] backdrop-blur-[10px] border border-white/10 rounded-lg p-6">
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-6 w-full">
             <input
               type="text"
               placeholder="Discount Code"
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
-              className="bg-[rgba(217,217,217,0.05)] border border-white/10 rounded-lg px-4 py-3 text-white flex-1 focus:outline-none focus:ring-1 focus:ring-[var(--main-color1)] focus:border-transparent placeholder:text-gray-400"
+              className="bg-[rgba(217,217,217,0.05)] border border-white/10 rounded-lg px-4 py-3 text-white flex-1 min-w-0 focus:outline-none focus:ring-1 focus:ring-[var(--main-color1)] focus:border-transparent placeholder:text-gray-400"
             />
-            <button className="px-6 py-3 rounded-lg bg-[#4A4A4A] text-white hover:bg-[#4A4A4A]/90">
+            <button className="shrink-0 px-6 py-3 rounded-lg bg-[#4A4A4A] text-white hover:bg-[#4A4A4A]/90 transition-colors">
               Apply
             </button>
           </div>
