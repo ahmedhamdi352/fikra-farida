@@ -61,32 +61,71 @@ export async function getSiteData(countryCode?: string, domain: string = 'fikraf
   }
 }
 
-export async function getProducts(countryCode?: string, domain: string = 'fikrafarida.com'): Promise<Product[]> {
+// export async function getProducts(countryCode?: string, domain: string = 'fikrafarida.com'): Promise<Product[]> {
+//   if (!BASE_URL) {
+//     throw new Error('API URL is not configured');
+//   }
+
+//   // const effectiveCountryCode: string = countryCode || 'EG';
+
+//   const params = new URLSearchParams({
+//     CountryCode: 'EG',
+//     domain,
+//   } as Record<string, string>);
+
+//   const url = `${BASE_URL}/api/Store/Products?${params.toString()}`;
+
+//   try {
+//     const response = await fetch(url, {
+//       method: 'POST',
+//       next: { revalidate: 3600 }, // Cache for 1 hour
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch products: ${response.statusText}`);
+//     }
+
+//     const data = await response.json();
+
+//     // Transform the Media URLs
+//     return data
+//       .map((product: Product) => ({
+//         ...product,
+//         Media: product.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
+//         colors: product.colors.map(color => ({
+//           ...color,
+//           Media: color.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
+//         })),
+//       }))
+//       .sort((a: Product, b: Product) => {
+//         const rankA = a.rank ?? Number.MAX_VALUE;
+//         const rankB = b.rank ?? Number.MAX_VALUE;
+//         return rankA - rankB;
+//       });
+//   } catch (error) {
+//     console.error('Error fetching products:', error);
+//     throw error;
+//   }
+// }
+
+export async function getProducts(countryCode: string = 'EG', domain: string = 'fikrafarida.com'): Promise<Product[]> {
   if (!BASE_URL) {
     throw new Error('API URL is not configured');
   }
-
-  // const effectiveCountryCode: string = countryCode || 'EG';
-
   const params = new URLSearchParams({
-    CountryCode: 'EG',
-    domain,
-  } as Record<string, string>);
-
-  const url = `${BASE_URL}/api/Store/Products?${params.toString()}`;
-
+    CountryCode: countryCode,
+    domain: domain,
+  });
+  const url = `${BASE_URL}/endpoint/api/Store/Products?${params.toString()}`;
   try {
     const response = await fetch(url, {
       method: 'POST',
       next: { revalidate: 3600 }, // Cache for 1 hour
     });
-
     if (!response.ok) {
       throw new Error(`Failed to fetch products: ${response.statusText}`);
     }
-
     const data = await response.json();
-
     // Transform the Media URLs
     return data
       .map((product: Product) => ({
@@ -98,6 +137,8 @@ export async function getProducts(countryCode?: string, domain: string = 'fikraf
         })),
       }))
       .sort((a: Product, b: Product) => {
+        // Sort by rank in ascending order (lower rank first)
+        // If rank is undefined or null, treat it as highest rank (put at end)
         const rankA = a.rank ?? Number.MAX_VALUE;
         const rankB = b.rank ?? Number.MAX_VALUE;
         return rankA - rankB;
