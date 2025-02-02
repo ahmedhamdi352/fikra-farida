@@ -5,24 +5,24 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const MEDIA_URL = 'https://fikrafarida.com/media/site/';
 const PRODUCT_MEDIA_URL = 'https://fikrafarida.com/Media/Products/';
 
-async function getUserCountry(): Promise<string> {
-  try {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
-    const response = await fetch(`${origin}/api/country`);
-    const data = await response.json();
-    return data.countryCode;
-  } catch (error) {
-    console.error('Error detecting country:', error);
-    return 'EG';
-  }
-}
+// async function getUserCountry(): Promise<string> {
+//   try {
+//     const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+//     const response = await fetch(`${origin}/api/country`);
+//     const data = await response.json();
+//     return data.countryCode;
+//   } catch (error) {
+//     console.error('Error detecting country:', error);
+//     return 'EG';
+//   }
+// }
 
 export async function getSiteData(countryCode?: string, domain: string = 'fikrafarida.com'): Promise<SiteData> {
   if (!BASE_URL) {
     throw new Error('API URL is not configured');
   }
 
-  const effectiveCountryCode: string = countryCode || (await getUserCountry());
+  const effectiveCountryCode: string = countryCode || 'EG';
 
   const params = new URLSearchParams({
     CountryCode: effectiveCountryCode,
@@ -66,7 +66,7 @@ export async function getProducts(countryCode?: string, domain: string = 'fikraf
     throw new Error('API URL is not configured');
   }
 
-  const effectiveCountryCode: string = countryCode || (await getUserCountry());
+  const effectiveCountryCode: string = countryCode || 'EG';
 
   const params = new URLSearchParams({
     CountryCode: effectiveCountryCode,
