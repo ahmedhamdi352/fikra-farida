@@ -1,14 +1,20 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useCart } from 'context/CartContext';
 
-const CartIcon = () => {
+export const CartIcon = () => {
+  const router = useRouter();
   const { items } = useCart();
   const count = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <div className="relative">
-      <button className="hover:text-gray-300 p-2 rounded-full">
+      <button 
+        onClick={() => router.push('/checkout')}
+        className="hover:text-gray-300 p-2 rounded-full hover:bg-gray-800/50 transition-colors"
+        aria-label="View Cart"
+      >
         <span className="sr-only">Cart</span>
         <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="vuesax/outline/shopping-cart">
@@ -22,12 +28,10 @@ const CartIcon = () => {
         </svg>
       </button>
       {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-          {count > 99 ? '99+' : count}
+        <span className="absolute -top-1 -right-1 bg-yellow-500 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+          {count}
         </span>
       )}
     </div>
   );
 };
-
-export default CartIcon;

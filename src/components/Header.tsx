@@ -10,7 +10,7 @@ import { cn } from "utils";
 import { useAuth } from 'context/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeSwitcher from './ThemeSwitcher';
-import CartIcon from './CartIcon';
+import {CartIcon} from './CartIcon';
 import { SiteData } from 'services/api.service';
 import { usePathname } from 'next/navigation';
 

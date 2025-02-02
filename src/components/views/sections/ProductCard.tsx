@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
     if (isInCart) {
       removeFromCart(product.id);
     } else {
-      addToCart(product);
+      addToCart(product, selectedColorIndex);
     }
     // Reset animation state after animation completes
     setTimeout(() => setIsAnimating(false), 300);

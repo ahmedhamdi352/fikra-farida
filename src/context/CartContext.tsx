@@ -5,13 +5,15 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 interface CartItem extends Product {
   quantity: number;
+  selectedColorIndex: number;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, colorIndex?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
+  updateColor: (productId: string, colorIndex: number) => void;
   clearCart: () => void;
 }
 
@@ -47,7 +49,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isInitialized]);
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, colorIndex = 0) => {
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.id === product.id);
 
@@ -59,7 +61,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         );
       }
 
-      return [...currentItems, { ...product, quantity: 1 }];
+      return [...currentItems, { ...product, quantity: 1, selectedColorIndex: colorIndex }];
     });
   };
 
@@ -74,6 +76,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           ? { ...item, quantity: Math.max(0, quantity) }
           : item
       ).filter(item => item.quantity > 0) // Remove items with quantity 0
+    );
+  };
+
+  const updateColor = (productId: string, colorIndex: number) => {
+    setItems(currentItems =>
+      currentItems.map(item =>
+        item.id === productId
+          ? { ...item, selectedColorIndex: colorIndex }
+          : item
+      )
     );
   };
 
@@ -93,6 +105,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        updateColor,
         clearCart,
       }}
     >
