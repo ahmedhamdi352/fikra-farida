@@ -39,7 +39,7 @@ export async function getSiteData(countryCode: string = 'EG', domain: string = '
     domain: domain,
   });
 
-  const url = `${BASE_URL}/endpoint/api/Store/SiteData?${params.toString()}`;
+  const url = `${BASE_URL}/api/Store/SiteData?${params.toString()}`;
 
   try {
     const response = await fetch(url, {
@@ -81,7 +81,7 @@ export async function getProducts(countryCode: string = 'EG', domain: string = '
     domain: domain,
   });
 
-  const url = `${BASE_URL}/endpoint/api/Store/Products?${params.toString()}`;
+  const url = `${BASE_URL}/api/Store/Products?${params.toString()}`;
 
   try {
     const response = await fetch(url, {
@@ -96,20 +96,22 @@ export async function getProducts(countryCode: string = 'EG', domain: string = '
     const data = await response.json();
 
     // Transform the Media URLs
-    return data.map((product: Product) => ({
-      ...product,
-      Media: product.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
-      colors: product.colors.map(color => ({
-        ...color,
-        Media: color.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
-      })),
-    })).sort((a: Product, b: Product) => {
-      // Sort by rank in ascending order (lower rank first)
-      // If rank is undefined or null, treat it as highest rank (put at end)
-      const rankA = a.rank ?? Number.MAX_VALUE;
-      const rankB = b.rank ?? Number.MAX_VALUE;
-      return rankA - rankB;
-    });
+    return data
+      .map((product: Product) => ({
+        ...product,
+        Media: product.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
+        colors: product.colors.map(color => ({
+          ...color,
+          Media: color.Media.map(media => `${PRODUCT_MEDIA_URL}${media}`),
+        })),
+      }))
+      .sort((a: Product, b: Product) => {
+        // Sort by rank in ascending order (lower rank first)
+        // If rank is undefined or null, treat it as highest rank (put at end)
+        const rankA = a.rank ?? Number.MAX_VALUE;
+        const rankB = b.rank ?? Number.MAX_VALUE;
+        return rankA - rankB;
+      });
   } catch (error) {
     console.error('Error fetching products:', error);
     throw error;

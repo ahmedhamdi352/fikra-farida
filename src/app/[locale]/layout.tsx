@@ -11,6 +11,8 @@ import { getSiteData } from '../actions';
 import HeaderWrapper from 'components/HeaderWrapper';
 import FooterWrapper from 'components/FooterWrapper';
 import { CartProvider } from 'context/CartContext';
+import { AuthProvider } from 'context/AuthContext';
+import QueryProvider from 'providers/query-provider';
 
 type Props = {
   children: React.ReactNode;
@@ -54,29 +56,33 @@ export default async function LocaleLayout(props: Props) {
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans antialiased" suppressHydrationWarning>
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <ThemeProvider>
-            <CartProvider>
-              <div className="relative flex min-h-screen flex-col">
-                <HeaderWrapper initialData={siteData} />
-                <main className="flex-1 pt-[72px]">{children}</main>
-                <FooterWrapper initialData={siteData} />
-                <ToastContainer
-                  position={locale === 'ar' ? 'top-left' : 'top-right'}
-                  autoClose={1000}
-                  hideProgressBar={false}
-                  newestOnTop
-                  closeOnClick
-                  rtl={locale === 'ar'}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                  theme="colored"
-                />
-              </div>
-            </CartProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <AuthProvider>
+              <NextIntlClientProvider messages={messages} locale={locale}>
+                <CartProvider>
+                  <div className="relative flex min-h-screen flex-col">
+                    <HeaderWrapper initialData={siteData} />
+                    <main className="flex-1 pt-[72px]">{children}</main>
+                    <FooterWrapper initialData={siteData} />
+                    <ToastContainer
+                      position={locale === 'ar' ? 'top-left' : 'top-right'}
+                      autoClose={5000}
+                      hideProgressBar={false}
+                      newestOnTop
+                      closeOnClick
+                      rtl={locale === 'ar'}
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                      theme="colored"
+                    />
+                  </div>
+                </CartProvider>
+              </NextIntlClientProvider>
+            </AuthProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

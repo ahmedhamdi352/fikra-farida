@@ -9,10 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
-import { useApi } from 'hooks';
-import { LoginCredentials, } from 'services/api.service';
-import { authApi } from 'services/api.service';
-
+import { useLoginMutation } from 'hooks';
 
 interface LoginFormData {
   email: string;
@@ -25,8 +22,7 @@ const schema = yup.object().shape({
 });
 
 export default function LoginForm() {
-  const { execute: login, data: loginData, isLoading } = useApi<LoginCredentials>();
-
+  const { isLoading, onLogin } = useLoginMutation();
   const [rememberMe, setRememberMe] = useState(false);
   const t = useTranslations('auth');
 
@@ -38,18 +34,13 @@ export default function LoginForm() {
     mode: 'onBlur'
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      await login(() => authApi.login({ email: data.email, password: data.password }));
-      console.log(loginData);
-    } catch (err) {
-      console.error(err)
-    }
+  const onSubmit = (data: LoginFormData) => {
+    onLogin(data);
   };
 
   return (
     <div className="min-h-[70vh] lg:min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8  bg-white shadow-2xl dark:bg-black/20 dark:backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
+      <div className="max-w-md w-full space-y-8 bg-white shadow-2xl dark:bg-black/20 dark:backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
         <div className="flex flex-col items-center">
           <Image
             src={fikraLogo}
@@ -117,26 +108,15 @@ export default function LoginForm() {
             </div>
           </div>
 
-
           <div>
             <button
               type="submit"
               disabled={isLoading}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-[var(--main-color1)] hover:bg-[var(--liner-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--main-color1)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Loading...' : t('login.submit')}
+              {isLoading ? t('login.submitting') : t('login.submit')}
             </button>
           </div>
-
-          {/* <div className="text-center text-sm">
-            <span >{t('login.noAccount')} </span>
-            <Link
-              href="/register"
-              className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]"
-            >
-              {t('login.signUp')}
-            </Link>
-          </div> */}
         </form>
       </div>
     </div>

@@ -6,7 +6,7 @@ export async function ProductsSection() {
   const products = await getProducts();
 
   return (
-    <section className="py-12">
+    <section className="py-12" id='product-section'>
       <div className="container mx-auto px-4 flex flex-col items-center justify-center">
         <h2 className="text-h2 font-bold text-center mb-12">
           Make Yourself <span className="text-yellow-500">Special</span> With

@@ -2,7 +2,8 @@
 
 import { AxiosError } from 'axios';
 import { ApiError } from '../types/api.types';
-import { toast, ToastOptions } from 'react-toastify';
+import { ToastOptions } from 'react-toastify';
+import SnackbarUtils from 'utils/SnackbarUtils';
 
 interface ValidationErrors {
   [key: string]: string[];
@@ -30,17 +31,6 @@ interface ErrorConfig {
   toastOptions?: Partial<ToastOptions>;
 }
 
-const defaultToastOptions: ToastOptions = {
-  position: 'bottom-right',
-  autoClose: 5000,
-  hideProgressBar: true,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: 'colored',
-};
-
 export class ErrorService {
   private static instance: ErrorService;
 
@@ -59,7 +49,6 @@ export class ErrorService {
       return {
         type: ErrorType.NETWORK_ERROR,
         messageKey: 'errors.network',
-        // toastOptions: { autoClose: false },
       };
     }
 
@@ -67,7 +56,6 @@ export class ErrorService {
       return {
         type: ErrorType.NETWORK_ERROR,
         messageKey: 'errors.network',
-        // toastOptions: { autoClose: false },
       };
     }
 
@@ -77,7 +65,7 @@ export class ErrorService {
         messageKey: 'errors.validation',
         error,
         toastOptions: {
-          autoClose: 7000, // Give more time to read validation errors
+          autoClose: 7000,
         },
       };
     }
@@ -123,7 +111,6 @@ export class ErrorService {
         return {
           type: ErrorType.SERVER_ERROR,
           messageKey: 'errors.server',
-          // toastOptions: { autoClose: false },
         };
 
       default:
@@ -167,8 +154,7 @@ export class ErrorService {
     const errorConfig = this.getErrorConfig(error);
     const message = this.getErrorMessage(errorConfig);
 
-    toast.error(message, {
-      ...defaultToastOptions,
+    SnackbarUtils.error(message, {
       ...errorConfig.toastOptions,
     });
 

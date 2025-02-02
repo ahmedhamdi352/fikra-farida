@@ -20,41 +20,58 @@ class ApiService {
     return ApiService.instance;
   }
 
-  private async request<T>(method: string, url: string, data?: unknown): Promise<T> {
+  private async request<T>(method: string, url: string, data?: unknown): Promise<ApiResponse<T>> {
     try {
-      const response = await axiosInstance({
+      const config = {
         method,
         url,
         ...(method === 'GET' ? { params: data } : { data }),
-      });
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const response = await axiosInstance(config);
+
+      // Return the response data directly as it already matches our ApiResponse structure
       return response.data;
     } catch (error) {
-      // if (error instanceof AxiosError) {
-      //   errorService.handleError(error);
-      //   throw error;
-      // }
-      throw error;
+      console.error('API Error:', error);
+      if (error instanceof AxiosError) {
+        const apiError = error.response?.data || {
+          sucess: false,
+          errorcode: error.response?.status || 500,
+          message: error.message,
+        };
+        return apiError;
+      }
+      return {
+        sucess: false,
+        errorcode: 500,
+        message: error instanceof Error ? error.message : 'An unknown error occurred',
+      };
     }
   }
 
   // Generic GET request
   public async get<T>(url: string, params?: RequestParams): Promise<ApiResponse<T>> {
-    return this.request<ApiResponse<T>>('GET', url, params);
+    return this.request<T>('GET', url, params);
   }
 
   // Generic POST request
   public async post<T, D = unknown>(url: string, data: D): Promise<ApiResponse<T>> {
-    return this.request<ApiResponse<T>>('POST', url, data);
+    return this.request<T>('POST', url, data);
   }
 
   // Generic PUT request
   public async put<T, D = unknown>(url: string, data: D): Promise<ApiResponse<T>> {
-    return this.request<ApiResponse<T>>('PUT', url, data);
+    return this.request<T>('PUT', url, data);
   }
 
   // Generic DELETE request
   public async delete<T>(url: string): Promise<ApiResponse<T>> {
-    return this.request<ApiResponse<T>>('DELETE', url);
+    return this.request<T>('DELETE', url);
   }
 
   // Generic paginated GET request
@@ -139,11 +156,16 @@ export interface SiteData {
   updateDate: string;
 }
 
+export interface LoginResponse {
+  token: string;
+  expire_date: string;
+}
+
 export const authApi = {
   login: (credentials: LoginCredentials) =>
-    apiService.post<{ token: string }, LoginCredentials>('/api/Auth/login', credentials),
+    apiService.post<LoginResponse, LoginCredentials>('/endpoint/api/Auth/login', credentials),
   forgetPassword: (forgetData: ForgetData) =>
-    apiService.post<{ token: string }, ForgetData>('/api/Account/ResetPassword', forgetData),
+    apiService.post<{ token: string }, ForgetData>('/endpoint/api/Account/ResetPassword', forgetData),
   register: (userData: UserData) => apiService.post<{ userId: string }, UserData>('/auth/register', userData),
   refreshToken: (token: string) => apiService.post<{ token: string }, { token: string }>('/auth/refresh', { token }),
 };

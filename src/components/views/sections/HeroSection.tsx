@@ -52,9 +52,12 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 animate-rotateIn">
-              <button className="bg-yellow-400 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors">
+              <Link
+                href='/products'
+                className="bg-yellow-400 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+              >
                 {t('hero.buttonForProducts')}
-              </button>
+              </Link>
               <Link
                 href='/teams'
                 className="border border-yellow-400 text-yellow-400 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition-colors flex items-center gap-2">

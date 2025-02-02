@@ -6,11 +6,14 @@ import { errorService } from '../services/error.service';
 
 // Define base API configuration
 const baseConfig: AxiosRequestConfig = {
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://api.your-domain.com',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Access-Control-Allow-Origin': '*',
   },
+  withCredentials: false // Changed to false since we're using '*' for Allow-Origin
 };
 
 // Create axios instance

@@ -1,8 +1,11 @@
 // Generic API Response type
 export interface ApiResponse<T> {
-  data: T;
+  sucess: boolean;
+  errorcode: number;
   message: string;
-  status: number;
+  data?: T;
+  token?: string;
+  expire_date?: string;
 }
 
 // Error Response type
@@ -22,13 +25,6 @@ export interface PaginatedResponse<T> {
   page: number;
   limit: number;
   totalPages: number;
-}
-
-// Common response types
-export interface TokenResponse {
-  token: string;
-  refreshToken: string;
-  expiresIn: number;
 }
 
 // API Status type

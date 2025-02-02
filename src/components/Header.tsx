@@ -1,17 +1,18 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client"
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl';
+import { cn } from "utils";
+import { useAuth } from 'context/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeSwitcher from './ThemeSwitcher';
 import CartIcon from './CartIcon';
 import { SiteData } from 'services/api.service';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation'
-import { useLocale, useTranslations } from 'next-intl';
-import { cn } from "utils";
 
 interface HeaderProps {
   siteData: SiteData;
@@ -30,6 +31,7 @@ const Header = ({ siteData }: HeaderProps) => {
   const t = useTranslations('common');
   const router = useRouter()
   const locale = useLocale();
+  const { isAuthenticated, logout } = useAuth();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -89,11 +91,15 @@ const Header = ({ siteData }: HeaderProps) => {
 
   const scrollToHowItWorks = (e: React.MouseEvent) => {
     e.preventDefault();
-    const section = document.getElementById('how-it-works');
+    setMobileMenuOpen(false);
+
     if (pathname === '/') {
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-      }
+      setTimeout(() => {
+        const section = document.getElementById('how-it-works');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     } else {
       router.push('/#how-it-works');
     }
@@ -101,6 +107,12 @@ const Header = ({ siteData }: HeaderProps) => {
 
   const switchLocale = (newLocale: string) => {
     document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000`;
+    router.refresh();
+  };
+
+  const handleLogout = async () => {
+    logout();
+    router.push('/login');
     router.refresh();
   };
 
@@ -188,7 +200,7 @@ const Header = ({ siteData }: HeaderProps) => {
 
           {/* Icons Section */}
           <div className="flex items-center space-x-4">
-            <Link href="/login" className="hover:text-gray-300 p-2 rounded-full">
+            <Link href={isAuthenticated ? "/profile" : "/login"} className="hover:text-gray-300 p-2 rounded-full">
               <span className="sr-only">Login</span>
               <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="vuesax/outline/frame">
@@ -198,7 +210,6 @@ const Header = ({ siteData }: HeaderProps) => {
                   </g>
                 </g>
               </svg>
-
             </Link>
             <ThemeSwitcher />
             <CartIcon />
@@ -303,10 +314,7 @@ const Header = ({ siteData }: HeaderProps) => {
                     <a
                       href="/#how-it-works"
                       className="relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden text-gray-200 group"
-                      onClick={(e) => {
-                        scrollToHowItWorks(e);
-                        setMobileMenuOpen(false);
-                      }}
+                      onClick={scrollToHowItWorks}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
                         <path opacity="0.4" d="M2.6665 16L15.5228 22.4282C15.6977 22.5156 15.7852 22.5593 15.8769 22.5765C15.9582 22.5918 16.0415 22.5918 16.1228 22.5765C16.2145 22.5593 16.302 22.5156 16.4769 22.4282L29.3332 16M2.6665 22.6667L15.5228 29.0948C15.6977 29.1823 15.7852 29.226 15.8769 29.2432C15.9582 29.2585 16.0415 29.2585 16.1228 29.2432C16.2145 29.226 16.302 29.1823 16.4769 29.0948L29.3332 22.6667" stroke="#F2CD5C" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -316,13 +324,50 @@ const Header = ({ siteData }: HeaderProps) => {
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
                     </a>
                     <div className="mt-auto flex flex-col space-y-5">
+                      {isAuthenticated ? (
+                        <button
+                          onClick={() => {
+                            handleLogout();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="flex items-center justify-between w-full px-4 py-3 rounded-lg border border-white/20 text-white"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span className="text-[18px]">{t('nav.logout')}</span>
+                          </div>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      ) : (
+                        <Link
+                          href="/login"
+                          className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span className="text-[18px]">{t('nav.login')}</span>
+                          </div>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                      )}
                       <button
                         onClick={() => switchLocale(locale === 'en' ? 'ar' : 'en')}
-                        className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white">
+                        className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white"
+                      >
                         <div className="flex items-center space-x-3">
                           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="language">
-                              <path id="icon" d="M15.9998 29.3337C14.1776 29.3337 12.4554 28.9837 10.8332 28.2837C9.21095 27.5837 7.79428 26.6281 6.58317 25.417C5.37206 24.2059 4.4165 22.7892 3.7165 21.167C3.0165 19.5448 2.6665 17.8225 2.6665 16.0003C2.6665 14.1559 3.0165 12.4281 3.7165 10.817C4.4165 9.20588 5.37206 7.79477 6.58317 6.58366C7.79428 5.37255 9.21095 4.41699 10.8332 3.71699C12.4554 3.01699 14.1776 2.66699 15.9998 2.66699C17.8443 2.66699 19.5721 3.01699 21.1832 3.71699C22.7943 4.41699 24.2054 5.37255 25.4165 6.58366C26.6276 7.79477 27.5832 9.20588 28.2832 10.817C28.9832 12.4281 29.3332 14.1559 29.3332 16.0003C29.3332 17.8225 28.9832 19.5448 28.2832 21.167C27.5832 22.7892 26.6276 24.2059 25.4165 25.417C24.2054 26.6281 22.7943 27.5837 21.1832 28.2837C19.5721 28.9837 17.8443 29.3337 15.9998 29.3337ZM15.9998 26.6003C16.5776 25.8003 17.0776 24.967 17.4998 24.1003C17.9221 23.2337 18.2665 22.3114 18.5332 21.3337H13.4665C13.7332 22.3114 14.0776 23.2337 14.4998 24.1003C14.9221 24.967 15.4221 25.8003 15.9998 26.6003ZM12.5332 26.067C12.1332 25.3337 11.7832 24.5725 11.4832 23.7837C11.1832 22.9948 10.9332 22.1781 10.7332 21.3337H6.79984C7.44428 22.4448 8.24984 23.4114 9.2165 24.2337C10.1832 25.0559 11.2887 25.667 12.5332 26.067ZM19.4665 26.067C20.7109 25.667 21.8165 25.0559 22.7832 24.2337C23.7498 23.4114 24.5554 22.4448 25.1998 21.3337H21.2665C21.0665 22.1781 20.8165 22.9948 20.5165 23.7837C20.2165 24.5725 19.8665 25.3337 19.4665 26.067ZM5.6665 18.667H10.1998C10.1332 18.2225 10.0832 17.7837 10.0498 17.3503C10.0165 16.917 9.99984 16.467 9.99984 16.0003C9.99984 15.5337 10.0165 15.0837 10.0498 14.6503C10.0832 14.217 10.1332 13.7781 10.1998 13.3337H5.6665C5.55539 13.7781 5.47206 14.217 5.4165 14.6503C5.36095 15.0837 5.33317 15.5337 5.33317 16.0003C5.33317 16.467 5.36095 16.917 5.4165 17.3503C5.47206 17.7837 5.55539 18.2225 5.6665 18.667ZM12.8665 18.667H19.1332C19.1998 18.2225 19.2498 17.7837 19.2832 17.3503C19.3165 16.917 19.3332 16.467 19.3332 16.0003C19.3332 15.5337 19.3165 15.0837 19.2832 14.6503C19.2498 14.217 19.1998 13.7781 19.1332 13.3337H12.8665C12.7998 13.7781 12.7498 14.217 12.7165 14.6503C12.6832 15.0837 12.6665 15.5337 12.6665 16.0003C12.6665 16.467 12.6832 16.917 12.7165 17.3503C12.7498 17.7837 12.7998 18.2225 12.8665 18.667ZM21.7998 18.667H26.3332C26.4443 18.2225 26.5276 17.7837 26.5832 17.3503C26.6387 16.917 26.6665 16.467 26.6665 16.0003C26.6665 15.5337 26.6387 15.0837 26.5832 14.6503C26.5276 14.217 26.4443 13.7781 26.3332 13.3337H21.7998C21.8665 13.7781 21.9165 14.217 21.9498 14.6503C21.9832 15.0837 21.9998 15.5337 21.9998 16.0003C21.9998 16.467 21.9832 16.917 21.9498 17.3503C21.9165 17.7837 21.8665 18.2225 21.7998 18.667ZM21.2665 10.667H25.1998C24.5554 9.55588 23.7498 8.58921 22.7832 7.76699C21.8165 6.94477 20.7109 6.33366 19.4665 5.93366C19.8665 6.66699 20.2165 7.4281 20.5165 8.21699C20.8165 9.00588 21.0665 9.82255 21.2665 10.667ZM13.4665 10.667H18.5332C18.2665 9.68921 17.9221 8.76699 17.4998 7.90033C17.0776 7.03366 16.5776 6.20033 15.9998 5.40033C15.4221 6.20033 14.9221 7.03366 14.4998 7.90033C14.0776 8.76699 13.7332 9.68921 13.4665 10.667ZM6.79984 10.667H10.7332C10.9332 9.82255 11.1832 9.00588 11.4832 8.21699C11.7832 7.4281 12.1332 6.66699 12.5332 5.93366C11.2887 6.33366 10.1832 6.94477 9.2165 7.76699C8.24984 8.58921 7.44428 9.55588 6.79984 10.667Z" fill="white" />
+                              <path id="icon" d="M2.6665 16L15.5228 22.4282C15.6977 22.5156 15.7852 22.5593 15.8769 22.5765C15.9582 22.5918 16.0415 22.5918 16.1228 22.5765C16.2145 22.5593 16.302 22.5156 16.4769 22.4282L29.3332 16M2.6665 22.6667L15.5228 29.0948C15.6977 29.1823 15.7852 29.226 15.8769 29.2432C15.9582 29.2585 16.0415 29.2585 16.1228 29.2432C16.2145 29.226 16.302 29.1823 16.4769 29.0948L29.3332 22.6667" stroke="#F2CD5C" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+                              <path d="M16.4769 2.90494C16.302 2.81749 16.2145 2.77376 16.1228 2.75655C16.0415 2.74131 15.9582 2.74131 15.8769 2.75655C15.7852 2.77376 15.6977 2.81749 15.5228 2.90494L2.6665 9.33309L15.5228 15.7612C15.6977 15.8487 15.7852 15.8924 15.8769 15.9096C15.9582 15.9249 16.0415 15.9249 16.1228 15.9096C16.2145 15.8924 16.302 15.8487 16.4769 15.7612L29.3332 9.33309L16.4769 2.90494Z" stroke="white" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
                             </g>
                           </svg>
 
@@ -332,23 +377,6 @@ const Header = ({ siteData }: HeaderProps) => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </button>
-
-
-                      <Link
-                        href="/login"
-                        className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <div className="flex items-center space-x-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                          <span className="text-[18px]">{t('nav.login')}</span>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </Link>
                     </div>
                   </nav>
                 </div>

@@ -6,7 +6,9 @@
       "products": "المنتجات",
       "blogs": "المدونات",
       "howItUse": "كيف يعمل",
-      "login": "تسجيل الدخول"
+      "login": "تسجيل الدخول",
+      "logout":"تسجيل الخروج",
+      "profile":"الملف الشخصي"
     },
     "footer": {
       "contact": "اتصل بنا",
@@ -174,6 +176,12 @@
       "title": "نسيت كلمة المرور",
       "submit": "إرسال",
       "rememberPassword": "هل تتذكر كلمة المرور الخاصة بك؟"
+    },
+    "reset":{
+      "title":"استعادة كلمة المرور الخاصة بك",
+      "submit":"استعادة",
+      "confirmPasswordPlaceholder":"تأكيد كلمة المرور الجديدة",
+      "newPasswordPlaceholder":"كلمة المرور الجديدة"
     }
   }
 }

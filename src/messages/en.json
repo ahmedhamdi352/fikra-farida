@@ -6,7 +6,9 @@
       "products": "Products",
       "blogs": "Blogs",
       "howItUse": "How It Use",
-      "login": "Login"
+      "login": "Login",
+      "logout": "Logout",
+      "profile": "Profile"
     },
     "footer": {
       "contact": "contact",
@@ -178,6 +180,12 @@
       "title": "Forget Your Password",
       "submit": "Submit",
       "rememberPassword": "Do you remember your password?"
+    },
+    "reset":{
+      "title":"Reset Your Password",
+      "submit":"Reset",
+      "confirmPasswordPlaceholder":"Confirm New Password",
+      "newPasswordPlaceholder":"New Password"
     }
   }
 }

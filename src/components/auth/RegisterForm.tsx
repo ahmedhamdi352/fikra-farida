@@ -8,11 +8,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
+import { useRegisterMutation } from 'hooks';
 
 interface RegisterFormData {
   username: string;
   fullName: string;
-  phoneNumber: string;
+  phoneNumber1: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -21,7 +22,7 @@ interface RegisterFormData {
 const schema = yup.object().shape({
   username: yup.string().required('Username is required'),
   fullName: yup.string().required('Full name is required'),
-  phoneNumber: yup.string().required('Phone number is required'),
+  phoneNumber1: yup.string().required('Phone number is required'),
   email: yup.string().required('Email is required').email('Invalid email format'),
   password: yup.string()
     .required('Password is required')
@@ -33,23 +34,18 @@ const schema = yup.object().shape({
 
 export default function RegisterForm() {
   const t = useTranslations('auth');
+  const { isLoading, onRegister } = useRegisterMutation();
 
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting }
   } = useForm<RegisterFormData>({
     resolver: yupResolver(schema),
-    mode: 'onBlur'
+    mode: 'onChange'
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    try {
-      // TODO: Implement registration logic
-      console.log(data);
-    } catch (error) {
-      console.error('Registration error:', error);
-    }
+    await onRegister(data);
   };
 
   return (
@@ -97,7 +93,7 @@ export default function RegisterForm() {
 
             <TextInput
               control={control}
-              name="phoneNumber"
+              name="phoneNumber1"
               type="tel"
               placeholder={t('register.phonePlaceholder')}
               icon={
@@ -147,10 +143,10 @@ export default function RegisterForm() {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading}
             className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? 'Registering...' : t('register.submit')}
+            {isLoading ? 'Registering...' : t('register.submit')}
           </button>
 
           <div className="text-center text-sm mt-4">
