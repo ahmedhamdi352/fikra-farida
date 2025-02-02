@@ -38,7 +38,7 @@ export default function ContactFormFields() {
 
   const onSubmit = async (data: ContactFormData) => {
     try {
-      console.log('Form data:', data);
+      console.log('Form data:test', data);
       // Add your form submission logic here
     } catch (error) {
       console.error('Error submitting form:', error);
