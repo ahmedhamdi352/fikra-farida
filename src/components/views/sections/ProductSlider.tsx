@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
-import { Product } from 'app/actions';
+import { Product } from 'types';
 import { ProductCard } from './ProductCard';
 
 interface ProductSliderProps {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Product } from 'app/actions';
+import { Product } from 'types';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface CartItem extends Product {
@@ -50,7 +50,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (product: Product) => {
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.id === product.id);
-      
+
       if (existingItem) {
         return currentItems.map(item =>
           item.id === product.id

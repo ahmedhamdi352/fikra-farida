@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Product } from 'app/actions';
+import { Product } from 'types';
 import ShoppingCard from 'assets/icons/ShoppingProduct.svg';
 import { useCart } from 'context/CartContext';
 

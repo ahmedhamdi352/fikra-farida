@@ -1,43 +1,33 @@
 import { SiteData } from 'services/api.service';
+import { Product } from 'types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const MEDIA_URL = 'https://fikrafarida.com/media/site/';
 const PRODUCT_MEDIA_URL = 'https://fikrafarida.com/Media/Products/';
 
-interface ProductColor {
-  name: string;
-  value: string;
-  url: string;
-  Media: string[];
-  updateDate: string;
-  rank: number;
+async function getUserCountry(): Promise<string> {
+  try {
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+    const response = await fetch(`${origin}/api/country`);
+    const data = await response.json();
+    return data.countryCode;
+  } catch (error) {
+    console.error('Error detecting country:', error);
+    return 'EG';
+  }
 }
 
-export interface Product {
-  id: string;
-  name: string;
-  arName: string;
-  description?: string;
-  arDescription: string;
-  price: string;
-  finalPrice: string;
-  Media: string[];
-  updateDate: string;
-  rank: number;
-  label?: string;
-  colors: ProductColor[];
-}
-
-export async function getSiteData(countryCode: string = 'EG', domain: string = 'fikrafarida.com'): Promise<SiteData> {
+export async function getSiteData(countryCode?: string, domain: string = 'fikrafarida.com'): Promise<SiteData> {
   if (!BASE_URL) {
     throw new Error('API URL is not configured');
   }
 
-  // Create query params
+  const effectiveCountryCode: string = countryCode || (await getUserCountry());
+
   const params = new URLSearchParams({
-    CountryCode: countryCode,
-    domain: domain,
-  });
+    CountryCode: effectiveCountryCode,
+    domain,
+  } as Record<string, string>);
 
   const url = `${BASE_URL}/api/Store/SiteData?${params.toString()}`;
 
@@ -71,15 +61,17 @@ export async function getSiteData(countryCode: string = 'EG', domain: string = '
   }
 }
 
-export async function getProducts(countryCode: string = 'EG', domain: string = 'fikrafarida.com'): Promise<Product[]> {
+export async function getProducts(countryCode?: string, domain: string = 'fikrafarida.com'): Promise<Product[]> {
   if (!BASE_URL) {
     throw new Error('API URL is not configured');
   }
 
+  const effectiveCountryCode: string = countryCode || (await getUserCountry());
+
   const params = new URLSearchParams({
-    CountryCode: countryCode,
-    domain: domain,
-  });
+    CountryCode: effectiveCountryCode,
+    domain,
+  } as Record<string, string>);
 
   const url = `${BASE_URL}/api/Store/Products?${params.toString()}`;
 
@@ -106,8 +98,6 @@ export async function getProducts(countryCode: string = 'EG', domain: string = '
         })),
       }))
       .sort((a: Product, b: Product) => {
-        // Sort by rank in ascending order (lower rank first)
-        // If rank is undefined or null, treat it as highest rank (put at end)
         const rankA = a.rank ?? Number.MAX_VALUE;
         const rankB = b.rank ?? Number.MAX_VALUE;
         return rankA - rankB;

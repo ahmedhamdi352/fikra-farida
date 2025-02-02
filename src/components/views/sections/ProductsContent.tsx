@@ -1,6 +1,6 @@
 'use client';
 
-import { Product } from 'app/actions';
+import { Product } from 'types';
 import { ProductCard } from './ProductCard';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -52,7 +52,7 @@ export function ProductsContent({ products, totalPages }: ProductsContentProps) 
         </div>
         <div className="border border-[var(--main-color1)] rounded-[5px] p-6 mb-8">
           {/* Products Grid */}
-          <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-2  lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {displayedProducts.map((product, index) => (
               <div key={`index-${index}`} className="w-full">
                 <ProductCard product={product} />
