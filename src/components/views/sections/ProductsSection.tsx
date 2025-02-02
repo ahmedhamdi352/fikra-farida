@@ -1,9 +1,17 @@
 import { getProducts } from 'app/actions';
 import { ProductSlider } from './ProductSlider';
 import { Button } from 'components';
+import { Product } from 'types';
 
 export async function ProductsSection() {
-  const products = await getProducts('EG');
+  let products: Product[] = [];
+  try {
+    products = await getProducts('EG');
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    // Return empty array to show no products state
+    products = [];
+  }
 
   return (
     <section className="py-12" id='product-section'>

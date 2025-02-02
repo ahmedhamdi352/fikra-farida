@@ -25,7 +25,26 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   if (!locales.includes(locale)) notFound();
 
-  const siteConfig = await getSiteData('EG');
+  let siteConfig;
+  try {
+    siteConfig = await getSiteData('EG');
+  } catch (error) {
+    console.error('Error fetching site data:', error);
+    siteConfig = {
+      name: 'Fikra Farida',
+      description: 'test',
+      siteLogo: '',
+      siteIcon: '',
+      email: '',
+      phone: '',
+      address: '',
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      youtube: '',
+      whatsapp: '',
+    };
+  }
 
   return {
     title: {
@@ -50,8 +69,37 @@ export default async function LocaleLayout(props: Props) {
     notFound();
   }
 
-  // Fetch site data server-side
-  const siteData = await getSiteData('EG');
+  let siteData;
+  try {
+    siteData = await getSiteData('EG');
+  } catch (error) {
+    console.error('Error fetching site data:', error);
+    siteData = {
+      name: 'Fikra Farida',
+      code: 'EG',
+      domain: 'fikrafarida.com',
+      currency: 'EGP',
+      siteLogo: '',
+      siteName: 'Fikra Farida',
+      contactLocation: '',
+      contactEmail: '',
+      contactPhone: '',
+      contactFacebook: '',
+      contactWhatsapp: '',
+      contactTiktok: '',
+      contactInstagram: '',
+      contactX: null,
+      contactSnapchat: null,
+      connectUser1: null,
+      connectUser2: null,
+      reviewMedia1: null,
+      reviewMedia2: null,
+      reviewMedia3: null,
+      reviewMedia4: null,
+      reviewMedia5: null,
+      updateDate: new Date().toISOString()
+    };
+  }
 
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>

@@ -1,9 +1,16 @@
 import { getProducts } from 'app/actions';
 import { ProductsContent } from 'components/views/sections/ProductsContent';
-
+import { Product } from 'types';
 
 export default async function ProductsPage() {
-  const products = await getProducts('EG');
+  let products: Product[] = [];
+  try {
+    products = await getProducts('EG');
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    // Return empty array to show no products state
+    products = [];
+  }
 
   const totalPages = Math.ceil(products.length / 9); // Maximum items per page
 
