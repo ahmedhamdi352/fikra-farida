@@ -25,7 +25,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   if (!locales.includes(locale)) notFound();
 
-  const siteConfig = await getSiteData();
+  const siteConfig = await getSiteData('EG');
 
   return {
     title: {
@@ -51,7 +51,7 @@ export default async function LocaleLayout(props: Props) {
   }
 
   // Fetch site data server-side
-  const siteData = await getSiteData();
+  const siteData = await getSiteData('EG');
 
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
