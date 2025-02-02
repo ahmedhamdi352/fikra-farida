@@ -22,10 +22,10 @@ export async function getSiteData(countryCode?: string, domain: string = 'fikraf
     throw new Error('API URL is not configured');
   }
 
-  const effectiveCountryCode: string = countryCode || 'EG';
+  // const effectiveCountryCode: string = countryCode || 'EG';
 
   const params = new URLSearchParams({
-    CountryCode: effectiveCountryCode,
+    CountryCode: 'EG',
     domain,
   } as Record<string, string>);
 
@@ -66,10 +66,10 @@ export async function getProducts(countryCode?: string, domain: string = 'fikraf
     throw new Error('API URL is not configured');
   }
 
-  const effectiveCountryCode: string = countryCode || 'EG';
+  // const effectiveCountryCode: string = countryCode || 'EG';
 
   const params = new URLSearchParams({
-    CountryCode: effectiveCountryCode,
+    CountryCode: 'EG',
     domain,
   } as Record<string, string>);
 
