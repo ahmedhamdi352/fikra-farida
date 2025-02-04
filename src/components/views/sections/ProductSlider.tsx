@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { Product } from 'types';
 import { ProductCard } from './ProductCard';
+import { useParams } from 'next/navigation';
 
 interface ProductSliderProps {
   products: Product[];
@@ -14,6 +15,9 @@ export function ProductSlider({ products }: ProductSliderProps) {
   const firstSixProducts = products.slice(0, 6);
   const itemsPerPage = 3;
   const totalPages = Math.ceil(firstSixProducts.length / itemsPerPage);
+  const params = useParams();
+  const locale = params.locale as string;
+  const isRTL = locale === 'ar';
 
   const nextSlide = () => {
     setCurrentIndex((prev) => {
@@ -34,12 +38,20 @@ export function ProductSlider({ products }: ProductSliderProps) {
   };
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => setCurrentIndex(prev =>
-      prev === firstSixProducts.length - 1 ? 0 : prev + 1
-    ),
-    onSwipedRight: () => setCurrentIndex(prev =>
-      prev === 0 ? firstSixProducts.length - 1 : prev - 1
-    ),
+    onSwipedLeft: () => {
+      if (isRTL) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    },
+    onSwipedRight: () => {
+      if (isRTL) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    },
     trackMouse: true,
     trackTouch: true,
     preventScrollOnSwipe: true,
@@ -51,10 +63,17 @@ export function ProductSlider({ products }: ProductSliderProps) {
     <div className="relative max-w-full">
       <button
         onClick={prevSlide}
-        className="hidden md:block absolute md:left-10 xl:left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 hover:bg-black hover:bg-opacity-50 transition-colors"
+        className={`hidden md:block absolute ${isRTL ? 'md:right-10 xl:right-0 translate-x-12' : 'md:left-10 xl:left-0 -translate-x-12'} top-1/2 -translate-y-1/2 z-10 hover:bg-black hover:bg-opacity-50 transition-colors`}
         aria-label="Previous products"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="51" viewBox="0 0 50 51" fill="none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="50"
+          height="51"
+          viewBox="0 0 50 51"
+          fill="none"
+          className={isRTL ? 'rotate-180' : ''}
+        >
           <path d="M29.1667 35.9168L18.75 25.5002L29.1667 15.0835V35.9168Z" fill="#FEC400" />
         </svg>
       </button>
@@ -64,7 +83,7 @@ export function ProductSlider({ products }: ProductSliderProps) {
         <div
           className="flex transition-transform duration-300 ease-in-out"
           style={{
-            transform: `translateX(-${currentIndex * 100}%)`,
+            transform: `translateX(${isRTL ? '' : '-'}${currentIndex * 100}%)`,
           }}
         >
           {/* First Page */}
@@ -96,10 +115,10 @@ export function ProductSlider({ products }: ProductSliderProps) {
           <div
             className="flex transition-transform duration-300 ease-in-out w-full"
             style={{
-              transform: `translateX(-${currentIndex * 40}%)`,
+              transform: `translateX(${isRTL ? '' : '-'}${currentIndex * 40}%)`,
             }}
           >
-            <div className="flex w-[600%]">
+            <div className={`flex w-[600%] ${isRTL ? 'flex-row-reverse' : ''}`}>
               {firstSixProducts.map((product) => (
                 <div
                   key={product.id}
@@ -120,10 +139,17 @@ export function ProductSlider({ products }: ProductSliderProps) {
       {/* Next Arrow - Hidden on mobile */}
       <button
         onClick={nextSlide}
-        className="hidden md:block absolute md:right-10 xl:right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 hover:bg-black hover:bg-opacity-50 transition-colors"
+        className={`hidden md:block absolute ${isRTL ? 'md:left-10 xl:left-0 -translate-x-12' : 'md:right-10 xl:right-0 translate-x-12'} top-1/2 -translate-y-1/2 z-10 hover:bg-black hover:bg-opacity-50 transition-colors`}
         aria-label="Next products"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="51" viewBox="0 0 50 51" fill="none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="50"
+          height="51"
+          viewBox="0 0 50 51"
+          fill="none"
+          className={isRTL ? 'rotate-180' : ''}
+        >
           <path d="M20.8333 35.9168V15.0835L31.2499 25.5002L20.8333 35.9168Z" fill="#FEC400" />
         </svg>
       </button>

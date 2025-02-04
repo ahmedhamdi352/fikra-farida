@@ -6,6 +6,7 @@ import { Product } from 'types';
 import ShoppingCard from 'assets/icons/ShoppingProduct.svg';
 import { useCart } from 'context/CartContext';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 interface ProductCardProps {
   product: Product;
@@ -16,6 +17,8 @@ export function ProductCard({ product }: ProductCardProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const selectedColor = product.colors[selectedColorIndex];
   const { addToCart, removeFromCart, items } = useCart();
+  const params = useParams();
+  const locale = params.locale as string;
 
   const isInCart = items.some(item => item.id === product.id);
 
@@ -50,8 +53,16 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
             {/* Product Label */}
             {product.label && (
-              <div className="absolute left-0 top-2 z-10">
-                <div className="bg-[#FEC400] text-white text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 rounded-r-full font-medium">
+              <div className="absolute left-5 top-1 md:left-10 md:top-3 z-10">
+                <div className="relative bg-transparent text-white text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold">
+                  <span
+                    className="absolute inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
+                    style={{
+                      height: "clamp(30px, 5vw, 50px)",
+                      width: "clamp(120px, 20vw, 200px)",
+                      transform: locale === 'en' ? "translate(-20%, -10px)" : "translate(20%, -10px)",
+                    }}
+                  ></span>
                   {product.label}
                 </div>
               </div>
@@ -80,7 +91,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex-1 min-w-0 mb-2 md:mb-3">
               <h2 className="text-[10px] md:text-sm text-gray-300 mb-0.5 truncate">{product.id}</h2>
               <div className="text-xs md:text-base font-medium md:line-clamp-2 truncate md:leading-normal">
-                {product.name}
+                {locale === 'ar' ? product.arName || product.name : product.name}
               </div>
             </div>
             <button

@@ -5,7 +5,7 @@ import { ProductCard } from './ProductCard';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useParams } from 'next/navigation'
 
 interface ProductsContentProps {
   products: Product[];
@@ -15,6 +15,8 @@ interface ProductsContentProps {
 export function ProductsContent({ products, totalPages }: ProductsContentProps) {
   const t = useTranslations('products');
   const searchParams = useSearchParams()
+  const params = useParams();
+  const locale = params.locale as string;
   const [isMobile, setIsMobile] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -71,7 +73,12 @@ export function ProductsContent({ products, totalPages }: ProductsContentProps) 
                   }`}
                 aria-label="Previous page"
               >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg 
+                  className={`w-6 h-6 ${locale === 'ar' ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
@@ -97,7 +104,12 @@ export function ProductsContent({ products, totalPages }: ProductsContentProps) 
                   }`}
                 aria-label="Next page"
               >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg 
+                  className={`w-6 h-6 ${locale === 'ar' ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
