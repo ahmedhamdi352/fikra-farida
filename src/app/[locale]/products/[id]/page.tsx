@@ -45,10 +45,10 @@ export default async function ProductDetailsPage({ params }: ProductDetailsPageP
   const resolvedParams = await params;
   const products = await getProducts();
   try {
-    if (!Array.isArray(products) || products.length === 0) {
-      console.error('No products returned from API');
-      notFound();
-    }
+    // if (!Array.isArray(products) || products.length === 0) {
+    //   console.error('No products returned from API');
+    //   // notFound();
+    // }
 
     return <ProductDetails products={products} id={resolvedParams.id} params={resolvedParams} />;
   } catch (error) {
