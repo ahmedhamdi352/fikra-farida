@@ -26,9 +26,14 @@ export async function generateMetadata({ params }: ProductDetailsPageProps) {
 export async function generateStaticParams() {
   try {
     const products = await getProducts();
-    return products.map((product) => ({
-      id: product.id,
-    }));
+    const locales = ['en', 'ar']; // Add all supported locales
+
+    return products.flatMap((product) =>
+      locales.map((locale) => ({
+        locale,
+        id: product.id,
+      }))
+    );
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];

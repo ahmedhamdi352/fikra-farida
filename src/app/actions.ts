@@ -77,15 +77,13 @@ export async function getProducts(countryCode?: string): Promise<Product[]> {
   try {
     const response = await fetch(url, {
       method: 'POST',
-      cache: 'no-store',
+      next: { revalidate: 3600 }, // Cache for 1 hour
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
         Origin: 'https://www.fikrafarida.com',
         Referer: 'https://www.fikrafarida.com/',
       },
-      credentials: 'include',
-      mode: 'cors',
     });
 
     if (!response.ok) {
