@@ -19,6 +19,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const { addToCart, removeFromCart, items } = useCart();
+  const locale = params?.locale as string;
 
   useEffect(() => {
     if (products?.length > 0) {
@@ -107,13 +108,21 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <div className="absolute top-4 left-4 z-10 flex gap-2">
-              {product.label && (
-                <div className="bg-[#FEC400] text-white text-xs px-3 py-1.5 rounded-full font-medium">
+            {product.label && (
+              <div className="absolute left-8 rtl:right-8 top-5 md:left-10 md:top-3 z-10">
+                <div className="relative bg-transparent text-white text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold">
+                  <span
+                    className="absolute inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
+                    style={{
+                      height: "clamp(30px, 15vw, 50px)",
+                      width: "clamp(120px, 30vw, 200px)",
+                      transform: locale === 'en' ? "translate(-20%, -10px)" : "translate(20%, -10px)",
+                    }}
+                  ></span>
                   {product.label}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
             <Image
               src={selectedColor.Media[selectedImageIndex]}
               alt={`${params?.locale === 'en' ? product.name : product.arName} - View ${selectedImageIndex + 1}`}
@@ -124,12 +133,15 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
             />
             {/* Mobile Swipe Navigation */}
             <div className="absolute inset-x-0 bottom-5 flex justify-center gap-2 lg:hidden">
-              {selectedColor.Media.map((_, index) => (
+              {(locale === 'ar' ? [...selectedColor.Media].reverse() : selectedColor.Media).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setSelectedImageIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${selectedImageIndex === index ? 'bg-[#FEC400] w-4' : 'bg-gray-400'
+                  onClick={() => setSelectedImageIndex(locale === 'ar' ? selectedColor.Media.length - 1 - index : index)}
+                  className={`w-2 h-2 rounded-full transition-all ${selectedImageIndex === (locale === 'ar' ? selectedColor.Media.length - 1 - index : index)
+                      ? 'bg-[#FEC400] w-4'
+                      : 'bg-gray-400'
                     }`}
+                  aria-label={`View image ${index + 1}`}
                 />
               ))}
             </div>
@@ -141,9 +153,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
               <button
                 key={index}
                 onClick={() => setSelectedImageIndex(index)}
-                className={`relative w-24 h-24 rounded-lg overflow-hidden bg-black/30 border-2 transition-all duration-300 ${selectedImageIndex === index
-                  ? 'border-[#FEC400] scale-110 shadow-lg z-10'
-                  : 'border-transparent hover:border-gray-600'
+                className={`relative w-24 h-24 rounded-lg overflow-hidden bg-black/30 border-2 transition-all duration-300 ${selectedImageIndex === index ? 'border-[#FEC400] scale-110 shadow-lg z-10' : 'border-transparent hover:border-gray-600'
                   }`}
               >
                 <Image
