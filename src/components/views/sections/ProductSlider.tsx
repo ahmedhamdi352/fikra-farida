@@ -34,16 +34,24 @@ export function ProductSlider({ products }: ProductSliderProps) {
   };
 
   const handlers = useSwipeable({
-    onSwipedLeft: nextSlide,
-    onSwipedRight: prevSlide,
-    trackMouse: true
+    onSwipedLeft: () => setCurrentIndex(prev =>
+      prev === firstSixProducts.length - 1 ? 0 : prev + 1
+    ),
+    onSwipedRight: () => setCurrentIndex(prev =>
+      prev === 0 ? firstSixProducts.length - 1 : prev - 1
+    ),
+    trackMouse: true,
+    trackTouch: true,
+    preventScrollOnSwipe: true,
+    delta: 10,
+    swipeDuration: 500,
   });
 
   return (
-    <div className="relative">
+    <div className="relative max-w-full">
       <button
         onClick={prevSlide}
-        className="hidden md:block absolute md:left-10 xl:left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10  hover:bg-black hover:bg-opacity-50 transition-colors"
+        className="hidden md:block absolute md:left-10 xl:left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 hover:bg-black hover:bg-opacity-50 transition-colors"
         aria-label="Previous products"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="51" viewBox="0 0 50 51" fill="none">
@@ -79,30 +87,40 @@ export function ProductSlider({ products }: ProductSliderProps) {
         </div>
       </div>
 
-      {/* Mobile View - Single item with swipe */}
-      <div className="md:hidden">
-        <div {...handlers} className="relative overflow-hidden">
+      {/* Mobile View with Swipe */}
+      <div className="block md:hidden w-full">
+        <div
+          {...handlers}
+          className="overflow-hidden w-full"
+        >
           <div
-            className="flex transition-transform duration-300 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}vw)` }}
+            className="flex transition-transform duration-300 ease-in-out w-full"
+            style={{
+              transform: `translateX(-${currentIndex * 40}%)`,
+            }}
           >
-            {firstSixProducts.map((product) => (
-              <div
-                key={product.id}
-                className="w-[100vw] flex-none px-4"
-              >
-                <ProductCard product={product} />
-              </div>
-            ))}
+            <div className="flex w-[600%]">
+              {firstSixProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="w-[16.666%] h-full"
+                >
+                  <div className="px-4 h-full">
+                    <div className="h-full flex flex-col">
+                      <ProductCard product={product} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
       </div>
 
       {/* Next Arrow - Hidden on mobile */}
       <button
         onClick={nextSlide}
-        className="hidden md:block absolute md:right-10 xl:right-0  top-1/2 -translate-y-1/2 translate-x-12 z-10  hover:bg-black hover:bg-opacity-50 transition-colors"
+        className="hidden md:block absolute md:right-10 xl:right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 hover:bg-black hover:bg-opacity-50 transition-colors"
         aria-label="Next products"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="50" height="51" viewBox="0 0 50 51" fill="none">

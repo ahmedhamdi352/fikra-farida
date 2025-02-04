@@ -65,13 +65,13 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
     const isRightSwipe = distance < -50;
 
     if (isLeftSwipe) {
-      setSelectedImageIndex(prev => 
+      setSelectedImageIndex(prev =>
         prev < selectedColor.Media.length - 1 ? prev + 1 : 0
       );
     }
 
     if (isRightSwipe) {
-      setSelectedImageIndex(prev => 
+      setSelectedImageIndex(prev =>
         prev > 0 ? prev - 1 : selectedColor.Media.length - 1
       );
     }
@@ -101,7 +101,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
         {/* Left Side - Product Images */}
         <div className="flex-1">
           {/* Main Image */}
-          <div 
+          <div
             className="relative aspect-square rounded-lg overflow-hidden bg-black/30 mb-4"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -123,14 +123,13 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
               draggable={false}
             />
             {/* Mobile Swipe Navigation */}
-            <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2 lg:hidden">
+            <div className="absolute inset-x-0 bottom-5 flex justify-center gap-2 lg:hidden">
               {selectedColor.Media.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    selectedImageIndex === index ? 'bg-[#FEC400] w-4' : 'bg-gray-400'
-                  }`}
+                  className={`w-2 h-2 rounded-full transition-all ${selectedImageIndex === index ? 'bg-[#FEC400] w-4' : 'bg-gray-400'
+                    }`}
                 />
               ))}
             </div>
@@ -191,24 +190,25 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           </div>
 
           {/* Colors */}
-          <div className="mb-6">
-            <div className="flex justify-between items-center">
-              <h3 className="text-sm font-medium">Colors</h3>
-              <div className="flex gap-3">
-                {product.colors.map((color, index) => (
-                  <button
-                    key={color.name}
-                    onClick={() => setSelectedColorIndex(index)}
-                    className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColorIndex === index ? 'border-[#FEC400] scale-110' : 'border-white'
-                      }`}
-                    style={{ backgroundColor: color.value }}
-                    title={color.name}
-                  />
-                ))}
+          {product.colors.length > 1 && (
+            <div className="mb-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-medium">Colors</h3>
+                <div className="flex gap-3">
+                  {product.colors.map((color, index) => (
+                    <button
+                      key={color.name}
+                      onClick={() => setSelectedColorIndex(index)}
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColorIndex === index ? 'border-[#FEC400] scale-110' : 'border-white'
+                        }`}
+                      style={{ backgroundColor: color.value }}
+                      title={color.name}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-
+          )}
           {/* Model Selection */}
           <div className="mb-6">
             <div className="flex justify-between items-center">

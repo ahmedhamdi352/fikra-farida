@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: ProductDetailsPageProps) {
 
   if (!product) {
     return {
-      title: 'Product Not Found',
+      title: 'fikra farida product',
     };
   }
 
