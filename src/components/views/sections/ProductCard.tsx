@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Product } from 'types';
 import ShoppingCard from 'assets/icons/ShoppingProduct.svg';
 import { useCart } from 'context/CartContext';
+import Link from 'next/link';
 
 interface ProductCardProps {
   product: Product;
@@ -23,14 +24,14 @@ export function ProductCard({ product }: ProductCardProps) {
     if (isInCart) {
       removeFromCart(product.id);
     } else {
-      addToCart(product, selectedColorIndex);
+      addToCart(product, 1, selectedColorIndex); // Default to quantity 1 for quick add from card
     }
     // Reset animation state after animation completes
     setTimeout(() => setIsAnimating(false), 300);
   };
 
   return (
-    <div className="bg-transparent rounded-lg overflow-hidden relative group">
+    <Link href={`/products/${product.id}`} className="bg-transparent rounded-lg overflow-hidden relative group">
       {/* Cart Status Indicator */}
       {isInCart && (
         <div className="absolute top-4 right-2 z-10">
@@ -137,6 +138,6 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

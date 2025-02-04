@@ -5,7 +5,7 @@ import { Product } from 'types';
 export default async function ProductsPage() {
   let products: Product[] = [];
   try {
-    products = await getProducts('EG');
+    products = await getProducts();
   } catch (error) {
     console.error('Error fetching products:', error);
     // Return empty array to show no products state

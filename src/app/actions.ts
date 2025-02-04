@@ -61,7 +61,7 @@ export async function getSiteData(countryCode?: string, domain: string = 'fikraf
   }
 }
 
-export async function getProducts(countryCode?: string, domain: string = 'fikrafarida.com'): Promise<Product[]> {
+export async function getProducts(countryCode?: string): Promise<Product[]> {
   if (!BASE_URL) {
     throw new Error('API URL is not configured');
   }
@@ -70,7 +70,6 @@ export async function getProducts(countryCode?: string, domain: string = 'fikraf
 
   const params = new URLSearchParams({
     CountryCode: effectiveCountryCode,
-    domain,
   } as Record<string, string>);
 
   const url = `${BASE_URL}/api/Store/Products?${params.toString()}`;
@@ -78,7 +77,15 @@ export async function getProducts(countryCode?: string, domain: string = 'fikraf
   try {
     const response = await fetch(url, {
       method: 'POST',
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Origin: 'https://www.fikrafarida.com',
+        Referer: 'https://www.fikrafarida.com/',
+      },
+      credentials: 'include',
+      mode: 'cors',
     });
 
     if (!response.ok) {
@@ -126,6 +133,7 @@ export async function getProducts(countryCode?: string, domain: string = 'fikraf
 //       throw new Error(`Failed to fetch products: ${response.statusText}`);
 //     }
 //     const data = await response.json();
+//     console.log('API Response Data:', data);
 //     // Transform the Media URLs
 //     return data
 //       .map((product: Product) => ({
