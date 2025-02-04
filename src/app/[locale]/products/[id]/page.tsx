@@ -1,4 +1,4 @@
-// import { notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getProducts } from '../../../actions';
 import { ProductDetails } from './ProductDetails';
 
@@ -23,32 +23,27 @@ export async function generateMetadata({ params }: ProductDetailsPageProps) {
   };
 }
 
-export async function generateStaticParams() {
-  try {
-    const products = await getProducts();
-    const locales = ['en', 'ar']; // Add all supported locales
-
-    return products.flatMap((product) =>
-      locales.map((locale) => ({
-        locale,
-        id: product.id,
-      }))
-    );
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
+// export async function generateStaticParams() {
+//   try {
+//     const products = await getProducts();
+//     return products.map((product) => ({
+//       id: product.id,
+//     }));
+//   } catch (error) {
+//     console.error('Error generating static params:', error);
+//     return [];
+//   }
+// }
 
 export default async function ProductDetailsPage({ params }: ProductDetailsPageProps) {
 
   const resolvedParams = await params;
   const products = await getProducts();
   try {
-    // if (!Array.isArray(products) || products.length === 0) {
-    //   console.error('No products returned from API');
-    //   // notFound();
-    // }
+    if (!Array.isArray(products) || products.length === 0) {
+      console.error('No products returned from API');
+      notFound();
+    }
 
     return <ProductDetails products={products} id={resolvedParams.id} params={resolvedParams} />;
   } catch (error) {
