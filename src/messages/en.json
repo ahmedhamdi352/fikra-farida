@@ -187,5 +187,29 @@
       "confirmPasswordPlaceholder":"Confirm New Password",
       "newPasswordPlaceholder":"New Password"
     }
+  },
+  "Payment": {
+    "personalInformation": "Personal Information",
+    "fullName": "Full Name",
+    "email": "E-Mail",
+    "deliveryInformation": "Delivery Information",
+    "country": "Country",
+    "city": "City",
+    "governorate": "Governorate",
+    "address": "Address",
+    "phone": "Phone",
+    "note": "Note",
+    "paymentInformation": "Payment Information",
+    "secureTransaction": "All transactions are secure and encrypted.",
+    "card": "Card",
+    "wallet": "Wallet",
+    "cardNumber": "Card Number",
+    "cardName": "Card Name",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "discount": "Discount",
+    "total": "Total",
+    "pay": "Pay Now"
   }
 }

@@ -3,6 +3,7 @@
 import { Product } from 'types';
 import Image from 'next/image';
 import { useCart } from 'context/CartContext';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface ProductDetailsProps {
@@ -20,6 +21,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart, removeFromCart, items } = useCart();
   const locale = params?.locale as string;
+  const router = useRouter();
 
   useEffect(() => {
     if (products?.length > 0) {
@@ -29,7 +31,6 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
       setSelectedImageIndex(0); // Reset image index when product changes
     }
   }, [products, id]);
-  console.log(product)
 
   const isInCart = items.some(item => item.id === product?.id);
 
@@ -138,8 +139,8 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                   key={index}
                   onClick={() => setSelectedImageIndex(locale === 'ar' ? selectedColor.Media.length - 1 - index : index)}
                   className={`w-2 h-2 rounded-full transition-all ${selectedImageIndex === (locale === 'ar' ? selectedColor.Media.length - 1 - index : index)
-                      ? 'bg-[#FEC400] w-4'
-                      : 'bg-gray-400'
+                    ? 'bg-[#FEC400] w-4'
+                    : 'bg-gray-400'
                     }`}
                   aria-label={`View image ${index + 1}`}
                 />
@@ -262,7 +263,19 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
             >
               {isInCart ? 'Remove from Cart' : 'Add to Cart'}
             </button>
-            <button className="flex-1 py-3 bg-[#FEC400] text-white rounded-lg">
+            <button
+              onClick={() => {
+                if (!isInCart) {
+                  addToCart(
+                    product,
+                    quantity,
+                    selectedColorIndex
+                  );
+                }
+                router.push('/checkout');
+              }}
+              className="flex-1 py-3 bg-[#FEC400] text-white rounded-lg"
+            >
               Buy Now
             </button>
           </div>

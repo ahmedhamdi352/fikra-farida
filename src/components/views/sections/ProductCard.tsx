@@ -49,7 +49,7 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Image Section */}
-        <div className="relative w-full pt-[100%] bg-white">
+        <div className="relative w-full pt-[100%] md:pt-[60%] bg-white">
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
             {/* Product Label */}
             {product.label && (
