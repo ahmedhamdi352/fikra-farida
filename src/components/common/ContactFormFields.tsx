@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useContactUsMutation } from 'hooks';
 
 import * as yup from 'yup';
 import TextInput from '../forms/text-input';
@@ -26,23 +27,27 @@ const schema = yup.object().shape({
 
 export default function ContactFormFields() {
   const t = useTranslations('contact');
+  const { isLoading, onContactUs } = useContactUsMutation();
+
 
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting }
   } = useForm<ContactFormData>({
     resolver: yupResolver(schema),
     mode: 'onBlur'
   });
 
   const onSubmit = async (data: ContactFormData) => {
-    try {
-      console.log('Form data:test', data);
-      // Add your form submission logic here
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
+    onContactUs({
+      token: process.env.NEXT_PUBLIC_EMAIL_TOKEN as string,
+      to: 'contact@fikrafarida.com',
+      subject: `${data.fullName} | From Firka Farida Contact us`,
+      body: `My phone number: ${data.phone}
+               My Email: ${data.email}
+               My company: ${data.company}
+               My message: ${data.message}`,
+    })
   };
 
   return (
@@ -110,10 +115,10 @@ export default function ContactFormFields() {
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isLoading}
         className="w-full py-4 bg-[var(--main-color1)] text-white rounded-lg hover:bg-[#e08616] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isSubmitting ? 'Submitting...' : t('form.submit')}
+        {isLoading ? 'Submitting...' : t('form.submit')}
       </button>
     </form>
   );

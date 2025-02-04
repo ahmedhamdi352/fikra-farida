@@ -7,13 +7,13 @@ export default class SnackbarUtils {
   private static showToast<T>(type: ToastType, message: string, callback?: () => void, options?: ToastOptions<T>) {
     toast[type]<T>(message, {
       position: 'top-right',
-      autoClose: 3000,
+      autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      ...options
+      ...options,
     });
     if (callback) {
       setTimeout(callback, 2000);
