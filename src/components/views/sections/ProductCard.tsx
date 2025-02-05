@@ -114,7 +114,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Rating */}
-          <div className="flex items-center gap-0.5 mb-2 md:mb-3">
+          {/* <div className="flex items-center gap-0.5 mb-2 md:mb-3">
             {Array.from({ length: 3 }).map((_, index) => (
               <svg key={index} className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="#FEC400">
                 <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
@@ -125,7 +125,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
               </svg>
             ))}
-          </div>
+          </div> */}
 
           {/* Price and Actions */}
           <div className="flex items-center justify-between mt-auto">

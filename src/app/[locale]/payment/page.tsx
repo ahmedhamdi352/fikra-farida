@@ -320,7 +320,7 @@ const PaymentPage = () => {
         {/* Right Column - Order Summary */}
         <div className="hidden lg:block rounded-[10px] bg-[rgba(217,217,217,0.05)] p-6 space-y-4 shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px] max-h-[calc(100vh-4rem)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
           <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
-          <div className="flex-1 overflow-y-auto my-4 pr-2 scrollbar-thin scrollbar-thumb-[#FEC400] scrollbar-track-transparent">
+          <div className="flex-1 overflow-y-auto my-4 p-2 scrollbar-thin scrollbar-thumb-[#FEC400] scrollbar-track-transparent">
             {items.map((item) => {
               const price = parseFloat(item.finalPrice || item.price);
               const selectedColor = item.colors[item.selectedColorIndex];

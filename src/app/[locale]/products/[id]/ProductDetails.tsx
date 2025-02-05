@@ -218,7 +218,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
             <h1 className="text-2xl lg:text-3xl font-bold mb-4">
               {params?.locale === 'en' ? product.name : product.arName}
             </h1>
-            <div className="flex flex-col gap-4">
+            {/* <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -240,7 +240,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                   <span className="text-gray-400 line-through">{product.price}</span>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Colors */}
@@ -349,9 +349,9 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           <button className="px-4 py-2 border-b-2 border-[#FEC400] text-[#FEC400]">
             Description
           </button>
-          <button className="px-4 py-2 text-gray-400">
+          {/* <button className="px-4 py-2 text-gray-400">
             Review
-          </button>
+          </button> */}
         </div>
         <div className="prose prose-invert max-w-none py-6">
           <p className="text-gray-400 text-sm lg:text-base">
