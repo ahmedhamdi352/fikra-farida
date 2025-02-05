@@ -11,9 +11,8 @@ interface CartItem extends Product {
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product, quantity?: number, colorIndex?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  updateColor: (productId: string, colorIndex: number) => void;
+  removeFromCart: (productId: string, colorIndex: number) => void;
+  updateQuantity: (productId: string, colorIndex: number, quantity: number) => void;
   clearCart: () => void;
 }
 
@@ -51,12 +50,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (product: Product, quantity = 1, colorIndex = 0) => {
     setItems(currentItems => {
-      const existingItem = currentItems.find(item => item.id === product.id);
+      const existingItem = currentItems.find(
+        item => item.id === product.id && item.selectedColorIndex === colorIndex
+      );
 
       if (existingItem) {
         return currentItems.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+          item.id === product.id && item.selectedColorIndex === colorIndex
+            ? { ...item, quantity }
             : item
         );
       }
@@ -65,25 +66,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setItems(currentItems => currentItems.filter(item => item.id !== productId));
-  };
-
-  const updateQuantity = (productId: string, quantity: number) => {
-    setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === productId
-          ? { ...item, quantity: Math.max(0, quantity) }
-          : item
-      ).filter(item => item.quantity > 0) // Remove items with quantity 0
+  const removeFromCart = (productId: string, colorIndex: number) => {
+    setItems(prevItems => 
+      prevItems.filter(item => 
+        !(item.id === productId && item.selectedColorIndex === colorIndex)
+      )
     );
   };
 
-  const updateColor = (productId: string, colorIndex: number) => {
-    setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === productId
-          ? { ...item, selectedColorIndex: colorIndex }
+  const updateQuantity = (productId: string, colorIndex: number, quantity: number) => {
+    setItems(prevItems =>
+      prevItems.map(item =>
+        item.id === productId && item.selectedColorIndex === colorIndex
+          ? { ...item, quantity: Math.max(1, quantity) }
           : item
       )
     );
@@ -105,7 +100,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         addToCart,
         removeFromCart,
         updateQuantity,
-        updateColor,
         clearCart,
       }}
     >

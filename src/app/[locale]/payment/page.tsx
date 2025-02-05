@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import TextInput from 'components/forms/text-input';
 import TextArea from 'components/forms/text-area';
+import Link from 'next/link'
 
 interface PaymentFormData {
   fullName: string;
@@ -345,32 +346,41 @@ const PaymentPage = () => {
                       )}
                     </div>
 
-                    <div className="flex-1">
+                    <Link href={`/products/${item.id}`} className="flex-1">
                       <p className="text-[#FEC400] text-sm mb-1">{item.id}</p>
                       <h3 className="text-lg font-semibold mb-2">
                         {locale === 'en' ? item.name : item.arName}
                       </h3>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">{(price * item.quantity).toFixed(2)} EGP</span>
-                        {item.finalPrice && (
-                          <span className="text-gray-400 line-through text-sm">
-                            {(parseFloat(item.price) * item.quantity).toFixed(2)} EGP
-                          </span>
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold">{(price * item.quantity).toFixed(2)} EGP</span>
+                          {item.finalPrice && (
+                            <span className="text-gray-400 line-through text-sm">
+                              {(parseFloat(item.price) * item.quantity).toFixed(2)} EGP
+                            </span>
+                          )}
+                        </div>
+                        {item.colors.length > 1 && (
+                          <div
+                            className="w-5 h-5 rounded-full border border-[#FEC400] scale-110"
+                            style={{ backgroundColor: selectedColor.value }}
+                            title={selectedColor.name}
+                          />
                         )}
                       </div>
 
-                    </div>
+                    </Link>
 
                     <div className="flex items-center gap-2 bg-black/20 rounded-lg p-1 h-fit">
                       <button
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item.id, item.selectedColorIndex, Math.max(1, item.quantity - 1))}
                         className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                       >
                         -
                       </button>
                       <span className="w-8 text-center">{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity + 1)}
                         className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                       >
                         +

@@ -19,7 +19,8 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart, removeFromCart, items } = useCart();
+  const [originalQuantity, setOriginalQuantity] = useState(1);
+  const { addToCart, removeFromCart, items, updateQuantity } = useCart();
   const locale = params?.locale as string;
   const router = useRouter();
 
@@ -29,23 +30,65 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
       const foundProduct = products.find(p => p.id === decodedId);
       setProduct(foundProduct || null);
       setSelectedImageIndex(0); // Reset image index when product changes
-    }
-  }, [products, id]);
 
-  const isInCart = items.some(item => item.id === product?.id);
+      // Set quantity from cart if item exists with current color
+      const cartItem = items.find(item =>
+        item.id === decodedId &&
+        item.selectedColorIndex === selectedColorIndex
+      );
+      if (cartItem) {
+        setQuantity(cartItem.quantity);
+        setOriginalQuantity(cartItem.quantity);
+      } else {
+        setQuantity(1);
+        setOriginalQuantity(1);
+      }
+    }
+  }, [products, id, items, selectedColorIndex]);
+
+  const isInCart = items.some(item =>
+    item.id === product?.id &&
+    item.selectedColorIndex === selectedColorIndex
+  );
+  const hasQuantityChanged = quantity !== originalQuantity;
 
   const handleCartClick = () => {
     if (!product) return;
 
     if (isInCart) {
-      removeFromCart(product.id);
+      removeFromCart(product.id, selectedColorIndex);
+      setQuantity(1);
+      setOriginalQuantity(1);
     } else {
       addToCart(product, quantity, selectedColorIndex);
+      setOriginalQuantity(quantity);
+    }
+  };
+
+  const handleUpdateCart = () => {
+    if (!product) return;
+    updateQuantity(product.id, selectedColorIndex, quantity);
+    setOriginalQuantity(quantity);
+  };
+
+  const handleColorChange = (index: number) => {
+    setSelectedColorIndex(index);
+    // Reset quantity when switching colors unless it's in cart
+    const cartItem = items.find(
+      item => item.id === product?.id && item.selectedColorIndex === index
+    );
+    if (cartItem) {
+      setQuantity(cartItem.quantity);
+      setOriginalQuantity(cartItem.quantity);
+    } else {
+      setQuantity(1);
+      setOriginalQuantity(1);
     }
   };
 
   const handleQuantityChange = (delta: number) => {
-    setQuantity(prev => Math.max(1, prev + delta));
+    const newQuantity = Math.max(1, quantity + delta);
+    setQuantity(newQuantity);
   };
 
   const [touchStart, setTouchStart] = useState(0);
@@ -99,12 +142,12 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="flex flex-col lg:flex-row gap-12">
+      <div className="flex flex-col lg:flex-row lg:gap-12 gap-2">
         {/* Left Side - Product Images */}
         <div className="flex-1">
           {/* Main Image */}
           <div
-            className="relative aspect-square rounded-lg overflow-hidden bg-white mb-4"
+            className="relative aspect-square lg:h-[500px] rounded-lg overflow-hidden bg-white mb-4"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -206,16 +249,25 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
               <div className="flex justify-between items-center">
                 <h3 className="text-sm font-medium">Colors</h3>
                 <div className="flex gap-3">
-                  {product.colors.map((color, index) => (
-                    <button
-                      key={color.name}
-                      onClick={() => setSelectedColorIndex(index)}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${selectedColorIndex === index ? 'border-[#FEC400] scale-110' : 'border-white'
-                        }`}
-                      style={{ backgroundColor: color.value }}
-                      title={color.name}
-                    />
-                  ))}
+                  {product.colors.map((color, index) => {
+                    const colorInCart = items.some(
+                      item => item.id === product.id && item.selectedColorIndex === index
+                    );
+                    return (
+                      <button
+                        key={color.name}
+                        onClick={() => handleColorChange(index)}
+                        className={`relative w-8 h-8 rounded-full border-2 transition-all ${selectedColorIndex === index ? 'border-[#FEC400] scale-110' : 'border-white'
+                          }`}
+                        style={{ backgroundColor: color.value }}
+                        title={color.name}
+                      >
+                        {colorInCart && (
+                          <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -256,13 +308,22 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
 
           {/* Action Buttons */}
           <div className="flex gap-4">
-            <button
-              onClick={handleCartClick}
-              className={`flex-1 py-3 ${isInCart ? 'bg-red-500' : 'bg-[#FEC400]'
-                } text-white rounded-lg transition-colors`}
-            >
-              {isInCart ? 'Remove from Cart' : 'Add to Cart'}
-            </button>
+            {isInCart && hasQuantityChanged ? (
+              <button
+                onClick={handleUpdateCart}
+                className="flex-1 py-3 bg-green-500 text-white rounded-lg transition-colors"
+              >
+                Update Cart
+              </button>
+            ) : (
+              <button
+                onClick={handleCartClick}
+                className={`flex-1 py-3 ${isInCart ? 'bg-red-500' : 'bg-[#FEC400]'}
+                  text-white rounded-lg transition-colors`}
+              >
+                {isInCart ? 'Remove from Cart' : 'Add to Cart'}
+              </button>
+            )}
             <button
               onClick={() => {
                 if (!isInCart) {

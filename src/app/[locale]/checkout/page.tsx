@@ -8,7 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 
 export default function CheckoutPage() {
-  const { items, removeFromCart, updateQuantity, updateColor } = useCart();
+  const { items, removeFromCart, updateQuantity } = useCart();
   const [discountCode, setDiscountCode] = useState('');
   const [total, setTotal] = useState(0);
   const params = useParams();
@@ -48,7 +48,7 @@ export default function CheckoutPage() {
           </div>
           <div className="hidden lg:block w-full h-[1px] bg-[rgba(254,196,0,0.50)] mb-8"></div>
 
-          <div className="max-h-[calc(100vh-16rem)] h-auto overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="max-h-[calc(70vh-19rem)] h-auto overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
             {items.map((item) => {
               const price = parseFloat(item.finalPrice || item.price);
               const selectedColor = item.colors[item.selectedColorIndex];
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
                   className="bg-gradient-to-tr from-[rgba(217,217,217,0.05)] from-[4.53%] to-[rgba(115,115,115,0.05)] to-[92.45%] backdrop-blur-[10px] border border-white/10 rounded-lg p-4 mb-4 relative"
                 >
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(item.id, item.selectedColorIndex)}
                     className={`absolute top-0 ${locale === 'ar' ? 'left-1' : 'right-1'} flex items-center justify-center w-6 h-6 hover:bg-black text-[#FEC400] rounded-md`}
                   >
                     ×
@@ -95,18 +95,11 @@ export default function CheckoutPage() {
                         </div>
                         {item.colors.length > 1 && (
                           <div className="flex items-center gap-2 mt-4">
-                            {item.colors.map((color, index) => (
-                              <button
-                                key={color.name}
-                                onClick={() => updateColor(item.id, index)}
-                                className={`w-5 h-5 rounded-full border transition-all ${index === item.selectedColorIndex
-                                  ? 'border-[#FEC400]  scale-[1.2] origin-center'
-                                  : 'border-white'
-                                  }`}
-                                style={{ backgroundColor: color.value }}
-                                title={color.name}
-                              />
-                            ))}
+                            <div
+                              className="w-5 h-5 rounded-full border border-[#FEC400] scale-[1.2] origin-center"
+                              style={{ backgroundColor: selectedColor.value }}
+                              title={selectedColor.name}
+                            />
                           </div>
                         )}
                       </div>
@@ -114,14 +107,14 @@ export default function CheckoutPage() {
                     <div className="flex items-center justify-end">
                       <div className="flex items-center gap-2 bg-black/20 rounded-lg p-1">
                         <button
-                          onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                          onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity - 1)}
                           className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                         >
                           -
                         </button>
                         <span className="w-8 text-center">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity + 1)}
                           className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                         >
                           +
@@ -152,18 +145,11 @@ export default function CheckoutPage() {
                         <h3 className="text-lg font-semibold">{item.name}</h3>
                         {item.colors.length > 1 && (
                           <div className="flex items-center gap-2 mt-2">
-                            {item.colors.map((color, index) => (
-                              <button
-                                key={color.name}
-                                onClick={() => updateColor(item.id, index)}
-                                className={`w-5 h-5 rounded-full border transition-all ${index === item.selectedColorIndex
-                                  ? 'border-[#FEC400] scale-110'
-                                  : 'border-white'
-                                  }`}
-                                style={{ backgroundColor: color.value }}
-                                title={color.name}
-                              />
-                            ))}
+                            <div
+                              className="w-5 h-5 rounded-full border border-[#FEC400] scale-110"
+                              style={{ backgroundColor: selectedColor.value }}
+                              title={selectedColor.name}
+                            />
                           </div>
                         )}
                       </div>
@@ -171,14 +157,14 @@ export default function CheckoutPage() {
                     <div className="text-white">{price.toFixed(2)}</div>
                     <div className="flex items-center gap-2 rounded-lg p-1">
                       <button
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity - 1)}
                         className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                       >
                         -
                       </button>
                       <span className="w-8 text-center">{item.quantity}</span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity + 1)}
                         className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                       >
                         +
