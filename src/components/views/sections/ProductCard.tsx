@@ -20,7 +20,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const params = useParams();
   const locale = params.locale as string;
 
-  const isInCart = items.some(item => item.id === product.id);
+  const isInCart = items.some(item =>
+    item.id === product?.id &&
+    item.selectedColorIndex === selectedColorIndex
+  );
 
   const handleCartClick = (e: React.MouseEvent) => {
     e.preventDefault();
