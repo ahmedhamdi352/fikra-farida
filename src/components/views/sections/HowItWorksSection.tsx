@@ -42,7 +42,7 @@ export default function HowItWorksSection() {
               className="object-contain"
             />
             <h2 className="font-bold capitalize" style={{ lineHeight: 'normal' }}>
-              <span className="text-h2">{t("howItWork.headTitle")}</span>
+              <span className="text-h2">{t("howItWork.headTitle")}{" "}</span>
               <span className="text-[#FEC400] text-h2">{t("howItWork.headTitle2")}</span>
               <span className="text-h2"> !</span>
             </h2>

@@ -28,7 +28,7 @@ interface PaymentFormData {
 
 const schema = yup.object().shape({
   fullName: yup.string().required('Full name is required'),
-  email: yup.string().required('Email is required').email('Invalid email format'),
+  email: yup.string().optional().email('Invalid email format'),
   country: yup.string().required('Country is required'),
   city: yup.string().required('City is required'),
   governorate: yup.string().required('Governorate is required'),

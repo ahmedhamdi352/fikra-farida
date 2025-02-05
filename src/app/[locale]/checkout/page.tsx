@@ -38,7 +38,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-auto py-12">
-      <div className="flex flex-col gap-8 min-h-[calc(100vh-8rem)]">
+      <div className="flex flex-col gap-8 ">
         <div className="flex-1">
           <div className="hidden lg:grid grid-cols-5 gap-4 mb-4">
             <div className="col-span-2">PRODUCT NAME</div>
@@ -48,7 +48,7 @@ export default function CheckoutPage() {
           </div>
           <div className="hidden lg:block w-full h-[1px] bg-[rgba(254,196,0,0.50)] mb-8"></div>
 
-          <div className="h-[calc(100vh-16rem)] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="max-h-[calc(100vh-16rem)] h-auto overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
             {items.map((item) => {
               const price = parseFloat(item.finalPrice || item.price);
               const selectedColor = item.colors[item.selectedColorIndex];

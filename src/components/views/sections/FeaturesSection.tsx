@@ -52,9 +52,13 @@ export default function FeaturesSection() {
   return (
     <section className="py-8 text-[#FEC400]">
       <div className="container mx-auto px-4">
-        <h2 className="whitespace-nowrap text-[12px] sm:text-[24px] md:text-[36px] lg:text-[48px] font-normal text-center mb-12 relative flex items-center justify-center gap-2 lg:gap-4">
+        <h2 className=" text-h3 whitespace-nowrap font-normal text-center mb-12 relative flex items-center justify-center gap-2 lg:gap-4">
           <span className="inline-block border-t border-[#FEC400] w-8 sm:w-12 lg:w-16"></span>
-          {t('features.special')} <span className="text-[#FEC400] text-[16px] sm:text-[32px] md:text-[48px] lg:text-[64px] font-bold">{t('features.features')}</span> {t('features.grow')}
+          {t('features.special')}
+          <span className="text-[#FEC400] text-h2 font-bold">
+            {t('features.features')}
+          </span>
+          {t('features.grow')}
           <span className="inline-block border-t border-[#FEC400] w-8 sm:w-12 lg:w-16"></span>
         </h2>
 

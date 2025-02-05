@@ -130,6 +130,7 @@
     "form": {
       "fullName": "Full Name",
       "company": "Company Name",
+      "employeesNumber":"Your Employees Number",
       "email": "Email Address",
       "phone": "Phone Number",
       "message": "Write something here...",

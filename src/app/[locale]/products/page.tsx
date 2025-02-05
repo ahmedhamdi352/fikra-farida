@@ -12,7 +12,7 @@ export default async function ProductsPage() {
     products = [];
   }
 
-  const totalPages = Math.ceil(products.length / 9); // Maximum items per page
+  const totalPages = Math.ceil(products.length / 20); // Maximum items per page
 
   return (
     <ProductsContent

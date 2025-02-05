@@ -2,7 +2,6 @@
 
 import { Product } from 'types';
 import { ProductCard } from './ProductCard';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSearchParams, useParams } from 'next/navigation'
@@ -13,23 +12,10 @@ interface ProductsContentProps {
 }
 
 export function ProductsContent({ products, totalPages }: ProductsContentProps) {
-  const t = useTranslations('products');
   const searchParams = useSearchParams()
   const params = useParams();
   const locale = params.locale as string;
-  const [isMobile, setIsMobile] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   useEffect(() => {
     const page = searchParams.get('page')
@@ -38,20 +24,13 @@ export function ProductsContent({ products, totalPages }: ProductsContentProps) 
   }, [searchParams])
 
   // Recalculate items per page based on screen size
-  const itemsPerPage = isMobile ? 6 : 9;
+  const itemsPerPage = 20
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedProducts = products.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-h1 font-bold text-[var(--main-color1)] mb-2">
-            Our products
-          </h1>
-          <p className="text-gray-400">{t('subtitle')}</p>
-        </div>
         <div className="border border-[var(--main-color1)] rounded-[5px] p-6 mb-8">
           {/* Products Grid */}
           <div className="grid grid-cols-2  lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -73,10 +52,10 @@ export function ProductsContent({ products, totalPages }: ProductsContentProps) 
                   }`}
                 aria-label="Previous page"
               >
-                <svg 
-                  className={`w-6 h-6 ${locale === 'ar' ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className={`w-6 h-6 ${locale === 'ar' ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -104,10 +83,10 @@ export function ProductsContent({ products, totalPages }: ProductsContentProps) 
                   }`}
                 aria-label="Next page"
               >
-                <svg 
-                  className={`w-6 h-6 ${locale === 'ar' ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className={`w-6 h-6 ${locale === 'ar' ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

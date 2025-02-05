@@ -10,9 +10,10 @@ import { cn } from "utils";
 import { useAuth } from 'context/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeSwitcher from './ThemeSwitcher';
-import {CartIcon} from './CartIcon';
+import { CartIcon } from './CartIcon';
 import { SiteData } from 'services/api.service';
 import { usePathname } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 
 interface HeaderProps {
   siteData: SiteData;
@@ -28,6 +29,7 @@ interface HeaderProps {
 
 const Header = ({ siteData }: HeaderProps) => {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const t = useTranslations('common');
   const router = useRouter()
   const locale = useLocale();
@@ -241,8 +243,13 @@ const Header = ({ siteData }: HeaderProps) => {
               <div className="min-h-screen flex items-start pt-[20%] justify-center">
                 <div
                   ref={menuRef}
-                  className={`relative w-[95%] p-4 h-[550px] bg-[#292929] rounded-3xl overflow-hidden transition-transform ease-out duration-500 ${isMobileMenuOpen ? 'animate-slideDown' : ''
-                    }`}
+                  className={cn(
+                    'relative w-[95%] p-4 h-[650px] bg-[#292929] rounded-3xl overflow-hidden transition-transform ease-out duration-500 shadow-xl',
+                    {
+                      'animate-slideDown': isMobileMenuOpen,
+                      'bg-white': theme === 'light',
+                    }
+                  )}
                 >
                   {/* Close Button */}
                   <button
@@ -323,7 +330,73 @@ const Header = ({ siteData }: HeaderProps) => {
                       <span className="relative z-10 text-[18px]">{t('nav.howItUse')}</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
                     </a>
-                    <div className="mt-auto flex flex-col space-y-5">
+
+                    <div className='flex items-center justify-center gap-8'>
+                      <button
+                        onClick={() => {
+                          switchLocale(locale === 'en' ? 'ar' : 'en');
+                        }}
+                        className="flex items-center justify-between px-8 py-3 rounded-lg border border-white/20 text-white"
+                      >
+                        <div className="flex items-center space-x-5">
+                          <svg className="w-5 h-5"
+                            viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g id="language">
+                              <path id="icon" d="M2.6665 16L15.5228 22.4282C15.6977 22.5156 15.7852 22.5593 15.8769 22.5765C15.9582 22.5918 16.0415 22.5918 16.1228 22.5765C16.2145 22.5593 16.302 22.5156 16.4769 22.4282L29.3332 16M2.6665 22.6667L15.5228 29.0948C15.6977 29.1823 15.7852 29.226 15.8769 29.2432C15.9582 29.2585 16.0415 29.2585 16.1228 29.2432C16.2145 29.226 16.302 29.1823 16.4769 29.0948L29.3332 22.6667" stroke="#F2CD5C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M16.4769 2.90494C16.302 2.81749 16.2145 2.77376 16.1228 2.75655C16.0415 2.74131 15.9582 2.74131 15.8769 2.75655C15.7852 2.77376 15.6977 2.81749 15.5228 2.90494L2.6665 9.33309L15.5228 15.7612C15.6977 15.8487 15.7852 15.8924 15.8769 15.9096C15.9582 15.9249 16.0415 15.9249 16.1228 15.9096C16.2145 15.8924 16.302 15.8487 16.4769 15.7612L29.3332 9.33309L16.4769 2.90494Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </g>
+                          </svg>
+
+                          <span className="text-[18px]">{locale === 'en' ? 'العربية' : 'English'}</span>
+                        </div>
+
+                      </button>
+                      <button
+                        onClick={() => {
+                          toggleTheme();
+                          setMobileMenuOpen(false)
+                        }}
+                        className="flex items-center justify-between px-10 py-3 rounded-lg border border-white/20 text-white"
+                      >
+                        <div className="flex items-center space-x-5">
+                          {theme === 'light' ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="#ffff"
+                              className="w-5 h-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+                              />
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                              />
+                            </svg>
+                          )}
+
+                          <span className="text-[18px]">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+                        </div>
+
+                      </button>
+                    </div>
+                    <div className="absolute bottom-10 left-0 right-0 w-[90%] mx-auto" >
                       {isAuthenticated ? (
                         <button
                           onClick={() => {
@@ -359,24 +432,7 @@ const Header = ({ siteData }: HeaderProps) => {
                           </svg>
                         </Link>
                       )}
-                      <button
-                        onClick={() => switchLocale(locale === 'en' ? 'ar' : 'en')}
-                        className="flex items-center justify-between px-4 py-3 rounded-lg border border-white/20 text-white"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g id="language">
-                              <path id="icon" d="M2.6665 16L15.5228 22.4282C15.6977 22.5156 15.7852 22.5593 15.8769 22.5765C15.9582 22.5918 16.0415 22.5918 16.1228 22.5765C16.2145 22.5593 16.302 22.5156 16.4769 22.4282L29.3332 16M2.6665 22.6667L15.5228 29.0948C15.6977 29.1823 15.7852 29.226 15.8769 29.2432C15.9582 29.2585 16.0415 29.2585 16.1228 29.2432C16.2145 29.226 16.302 29.1823 16.4769 29.0948L29.3332 22.6667" stroke="#F2CD5C" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
-                              <path d="M16.4769 2.90494C16.302 2.81749 16.2145 2.77376 16.1228 2.75655C16.0415 2.74131 15.9582 2.74131 15.8769 2.75655C15.7852 2.77376 15.6977 2.81749 15.5228 2.90494L2.6665 9.33309L15.5228 15.7612C15.6977 15.8487 15.7852 15.8924 15.8769 15.9096C15.9582 15.9249 16.0415 15.9249 16.1228 15.9096C16.2145 15.8924 16.302 15.8487 16.4769 15.7612L29.3332 9.33309L16.4769 2.90494Z" stroke="white" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </g>
-                          </svg>
 
-                          <span className="text-[18px]">{locale === 'en' ? 'العربية' : 'English'}</span>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
                     </div>
                   </nav>
                 </div>

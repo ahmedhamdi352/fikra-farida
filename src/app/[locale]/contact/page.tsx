@@ -39,7 +39,7 @@ export default function ContactPage() {
             </div>
 
             {/* Info Side */}
-            <div className="lg:pl-12 flex flex-col justify-center">
+            <div className="hidden lg:pl-12 lg:flex flex-col justify-center">
               <div className="mb-8">
                 <h3 className="text-[var(--main-color1)] text-xl font-semibold mb-4">
                   {t('info.title')}

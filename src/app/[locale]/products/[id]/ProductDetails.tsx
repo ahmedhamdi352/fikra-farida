@@ -104,7 +104,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
         <div className="flex-1">
           {/* Main Image */}
           <div
-            className="relative aspect-square rounded-lg overflow-hidden bg-black/30 mb-4"
+            className="relative aspect-square rounded-lg overflow-hidden bg-white mb-4"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
