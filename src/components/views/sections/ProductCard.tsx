@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
     e.preventDefault();
     setIsAnimating(true);
     if (isInCart) {
-      removeFromCart(product.id);
+      removeFromCart(product.id, selectedColorIndex);
     } else {
       addToCart(product, 1, selectedColorIndex);
     }
