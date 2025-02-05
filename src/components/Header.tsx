@@ -261,7 +261,7 @@ const Header = ({ siteData }: HeaderProps) => {
                     </svg>
                   </button>
 
-                  <nav className="h-full mt-[35px] p-4 flex flex-col space-y-3">
+                  <nav className="h-full mt-[35px] p-4 flex flex-col space-y-7">
                     <Link
                       href="/"
                       className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname === '/'
@@ -396,7 +396,7 @@ const Header = ({ siteData }: HeaderProps) => {
 
                       </button>
                     </div>
-                    <div className="absolute bottom-10 left-0 right-0 w-[90%] mx-auto" >
+                    <div className="space-x-4" >
                       {isAuthenticated ? (
                         <button
                           onClick={() => {
