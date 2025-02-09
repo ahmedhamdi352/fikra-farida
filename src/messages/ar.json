@@ -184,5 +184,23 @@
       "confirmPasswordPlaceholder":"تأكيد كلمة المرور الجديدة",
       "newPasswordPlaceholder":"كلمة المرور الجديدة"
     }
+  },
+  "Payment": {
+    "paymentSuccessful": "تمت عملية الدفع بنجاح",
+    "paymentFailed": "فشلت عملية الدفع",
+    "paymentCancelled": "تم إلغاء عملية الدفع",
+    "cashPaymentSuccessMessage": "تم تأكيد طلبك للدفع عند الاستلام بنجاح",
+    "onlinePaymentSuccessMessage": "تمت معالجة دفعتك عبر الإنترنت بنجاح",
+    "paymentFailureMessage": "حدث خطأ أثناء معالجة الدفع",
+    "paymentCancelMessage": "تم إلغاء عملية الدفع الخاصة بك",
+    "invalidPayment": "دفع غير صالح",
+    "orderDetails": "تفاصيل الطلب",
+    "orderNumber": "رقم الطلب",
+    "amount": "المبلغ",
+    "paymentMethod": "طريقة الدفع",
+    "transactionId": "رقم العملية",
+    "cashOnDelivery": "الدفع عند الاستلام",
+    "tryAgain": "حاول مرة أخرى",
+    "backToHome": "العودة للرئيسية"
   }
 }

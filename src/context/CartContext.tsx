@@ -67,8 +67,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const removeFromCart = (productId: string, colorIndex: number) => {
-    setItems(prevItems => 
-      prevItems.filter(item => 
+    setItems(prevItems =>
+      prevItems.filter(item =>
         !(item.id === productId && item.selectedColorIndex === colorIndex)
       )
     );

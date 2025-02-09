@@ -10,6 +10,10 @@ import TextInput from 'components/forms/text-input';
 import TextArea from 'components/forms/text-area';
 import Link from 'next/link'
 import { PhoneInput } from 'components/forms/phone-input';
+import { useState } from 'react';
+import { FaMoneyBillWave } from 'react-icons/fa';
+import { useCreateOrderMutation } from 'hooks';
+import { OrderPayloadForCreateDto } from 'types';
 
 interface PaymentFormData {
   fullName: string;
@@ -20,12 +24,7 @@ interface PaymentFormData {
   address: string;
   phone: string;
   note: string;
-  paymentMethod: 'card' | 'wallet';
-  cardNumber: string;
-  cardExpiry: string;
-  cvv: string;
-  cardName: string;
-  walletPhone: string;
+  paymentMethod: 'cash' | 'online';
 }
 
 const schema = yup.object().shape({
@@ -37,39 +36,18 @@ const schema = yup.object().shape({
   address: yup.string().required('Address is required'),
   phone: yup.string().required('Phone is required'),
   note: yup.string().default(''),
-  paymentMethod: yup.string().oneOf(['card', 'wallet'] as const).required(),
-  cardNumber: yup.string().when('paymentMethod', {
-    is: 'card',
-    then: (schema) => schema.required('Card number is required'),
-    otherwise: (schema) => schema.default('')
-  }),
-  cardExpiry: yup.string().when('paymentMethod', {
-    is: 'card',
-    then: (schema) => schema.required('Card expiry is required'),
-    otherwise: (schema) => schema.default('')
-  }),
-  cvv: yup.string().when('paymentMethod', {
-    is: 'card',
-    then: (schema) => schema.required('CVV is required'),
-    otherwise: (schema) => schema.default('')
-  }),
-  cardName: yup.string().when('paymentMethod', {
-    is: 'card',
-    then: (schema) => schema.required('Card name is required'),
-    otherwise: (schema) => schema.default('')
-  }),
-  walletPhone: yup.string().when('paymentMethod', {
-    is: 'wallet',
-    then: (schema) => schema.required('Wallet phone number is required'),
-    otherwise: (schema) => schema.default('')
-  })
+  paymentMethod: yup.string().oneOf(['cash', 'online'] as const).required('Payment method is required'),
 }) as yup.ObjectSchema<PaymentFormData>;
 
 const PaymentPage = () => {
   const t = useTranslations('Payment');
   const { items, updateQuantity } = useCart();
+  const { isLoading, onCreateOrder } = useCreateOrderMutation()
   const params = useParams();
   const locale = params.locale as string;
+
+  const [isLoadingOnline, setIsLoadingOnline] = useState(false);
+  const [error, setError] = useState('');
 
   const {
     control,
@@ -77,9 +55,8 @@ const PaymentPage = () => {
     watch,
   } = useForm<PaymentFormData>({
     resolver: yupResolver(schema),
-    mode: 'onBlur',
     defaultValues: {
-      paymentMethod: 'card'
+      paymentMethod: 'online'
     }
   });
 
@@ -88,12 +65,94 @@ const PaymentPage = () => {
   const total = items.reduce((sum, item) => sum + (parseFloat(item.finalPrice || item.price) * item.quantity), 0);
   const shippingCost = 349;
   const finalTotal = total + shippingCost;
+  const subtotal = total - shippingCost;
+  const discount = 0;
 
-  const onSubmit = (data: PaymentFormData) => {
-    console.log(data);
-    // Handle payment submission
+  console.log(items)
+
+  const onSubmit = async (data: PaymentFormData) => {
+    try {
+      // Prepare order data
+      const orderData: OrderPayloadForCreateDto = {
+        total: finalTotal,
+        subTotal: subtotal,
+        discount: discount,
+        shipping: shippingCost,
+        activeStep: 3,
+        totalItems: items.length,
+        status: paymentMethod === 'cash' ? 'success' : 'pending',
+        items: items.map(item => ({
+          name: item.name,
+          colors: item.colors[item.selectedColorIndex].name,
+          price: parseFloat(item.finalPrice || item.price),
+          quantity: item.quantity
+        })),
+        billing: {
+          name: data.fullName,
+          address: data.address,
+          phoneNumber: data.phone,
+          email: data.email
+        },
+        countryCode: locale,
+        domain: window.location.hostname
+      };
+
+      if (paymentMethod === 'cash') {
+        // For cash payment, just create the order
+        await onCreateOrder(orderData);
+      } else {
+        // For online payment, first create the order then initiate payment
+        setIsLoadingOnline(true);
+
+        // Create order first
+        const orderResponse = await onCreateOrder(orderData);
+
+        if (!orderResponse?.orderId) {
+          throw new Error(t('orderCreationFailed'));
+        }
+
+        // Then initiate online payment
+        const response = await fetch('/api/kashier/initiate-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: finalTotal,
+            currency: 'EGP',
+            orderId: orderResponse.orderId,
+            email: data.email,
+            firstName: data.fullName.split(' ')[0],
+            lastName: data.fullName.split(' ').slice(1).join(' '),
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Payment failed');
+        }
+
+        const result = await response.json();
+
+        if (result.redirectUrl) {
+          // Redirect to Kashier's payment page
+          window.location.href = result.redirectUrl;
+        } else if (result.error) {
+          throw new Error(result.error);
+        } else {
+          throw new Error('Invalid payment response');
+        }
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Payment failed. Please try again.');
+      }
+    } finally {
+      setIsLoadingOnline(false);
+    }
   };
-
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -120,6 +179,11 @@ const PaymentPage = () => {
           </div>
 
           <form noValidate id="payment-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
+              </div>
+            )}
             <section className="space-y-4">
               <h2 className="text-xl font-semibold">{t('personalInformation')}</h2>
               <TextInput
@@ -213,114 +277,71 @@ const PaymentPage = () => {
               <h2 className="text-xl font-semibold">{t('paymentInformation')}</h2>
               <p className="text-sm text-gray-400">{t('secureTransaction')}</p>
 
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <label
-                    className={`flex items-center gap-2 p-3 border rounded-md cursor-pointer ${paymentMethod === 'card' ? 'border-[#FEC400]' : 'border-gray-600'}`}
-                  >
-                    <input
-                      type="radio"
-                      {...control.register('paymentMethod')}
-                      value="card"
-                      className="hidden"
-                    />
-                    <span className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'card' ? 'bg-[#FEC400] border-[#FEC400]' : 'border-gray-600'}`} />
-                    {t('card')}
-                  </label>
-                  <label
-                    className={`flex items-center gap-2 p-3 border rounded-md cursor-pointer ${paymentMethod === 'wallet' ? 'border-[#FEC400]' : 'border-gray-600'}`}
-                  >
-                    <input
-                      type="radio"
-                      {...control.register('paymentMethod')}
-                      value="wallet"
-                      className="hidden"
-                    />
-                    <span className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'wallet' ? 'bg-[#FEC400] border-[#FEC400]' : 'border-gray-600'}`} />
-                    {t('wallet')}
-                  </label>
-                </div>
+              <div className="space-y-2">
 
-                {paymentMethod === 'card' && (
-                  <div className="space-y-4">
-                    <TextInput
-                      control={control}
-                      name="cardNumber"
-                      placeholder={t('cardNumber')}
-                      icon={
-                        <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v6z" />
-                        </svg>
-                      }
-                    />
-                    <div className="grid grid-cols-2 gap-4">
-                      <TextInput
-                        control={control}
-                        name="cardExpiry"
-                        placeholder="MM/YY"
-                        icon={
-                          <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                          </svg>
-                        }
-                      />
-                      <TextInput
-                        control={control}
-                        name="cvv"
-                        placeholder="CVV"
-                        icon={
-                          <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
-                          </svg>
-                        }
-                      />
-                    </div>
-                    <TextInput
-                      control={control}
-                      name="cardName"
-                      placeholder={t('cardName')}
-                      icon={
-                        <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                        </svg>
-                      }
-                    />
+                <label
+                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'online'
+                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                    : 'border-gray-600 hover:border-[#FEC400]/50'
+                    }`}
+                >
+                  <input
+                    type="radio"
+                    {...control.register('paymentMethod')}
+                    value="online"
+                    className="hidden"
+                  />
+                  <div className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'online'
+                    ? 'border-[#FEC400]'
+                    : 'border-gray-600'
+                    }`}>
+                    {paymentMethod === 'online' && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />
+                    )}
                   </div>
-                )}
-
-                {paymentMethod === 'wallet' && (
-                  <div className="space-y-4">
-                    {/* <TextInput
-                      control={control}
-                      name="walletPhone"
-                      type="tel"
-                      placeholder={t('walletPhone')}
-                      icon={
-                        <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                        </svg>
-                      }
-                    /> */}
-
-
-                    <PhoneInput
-                      name="walletPhone"
-                      control={control}
-                      required
-                      defaultCountry="eg"
-                      placeholder={t('walletPhone')}
-                    />
+                  <span className="text-gray-300">{t('onlinePayment')}</span>
+                  <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
+                    <Image src="/visa.png" alt="Visa" width={35} height={22} className="object-contain" />
+                    <Image src="/mastercard.png" alt="Mastercard" width={35} height={22} className="object-contain" />
+                    <Image src="/mada.png" alt="Mada" width={35} height={22} className="object-contain" />
                   </div>
-                )}
+                </label>
+
+                <label
+                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'cash'
+                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                    : 'border-gray-600 hover:border-[#FEC400]/50'
+                    }`}
+                >
+                  <input
+                    type="radio"
+                    {...control.register('paymentMethod')}
+                    value="cash"
+                    className="hidden"
+                  />
+                  <div className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'cash'
+                    ? 'border-[#FEC400]'
+                    : 'border-gray-600'
+                    }`}>
+                    {paymentMethod === 'cash' && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />
+                    )}
+                  </div>
+                  <span className="text-gray-300">{t('cashOnDelivery')}</span>
+                  <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
+                    <FaMoneyBillWave className="text-[#FEC400] text-2xl" />
+                  </div>
+                </label>
               </div>
             </section>
           </form>
           <button
             type="submit"
             form="payment-form"
-            className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors lg:hidden"
+            disabled={isLoading || isLoadingOnline}
+            className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors disabled:bg-gray-400"
           >
-            {t('pay')} {finalTotal.toFixed(2)} EGP
+            {(isLoading || isLoadingOnline) ? t('processing') : t('pay')} {finalTotal.toFixed(2)} EGP
           </button>
         </div>
 
@@ -418,9 +439,10 @@ const PaymentPage = () => {
           <button
             type="submit"
             form="payment-form"
-            className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors"
+            disabled={isLoading || isLoadingOnline}
+            className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors disabled:bg-gray-400"
           >
-            {t('pay')}
+            {(isLoading || isLoadingOnline) ? t('processing') : t('pay')} {finalTotal.toFixed(2)} EGP
           </button>
         </div>
       </div>
