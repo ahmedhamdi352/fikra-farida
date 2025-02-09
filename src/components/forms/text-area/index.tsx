@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Control, Controller, FieldError, Path } from 'react-hook-form';
+import { Control, Controller, FieldError, Path, PathValue } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
+import { useLocale } from 'next-intl';
 
 export type TextAreaProps<T extends FieldValues = FieldValues> = Omit<React.ComponentPropsWithoutRef<'textarea'>, 'name'> & {
   name: Path<T>;
@@ -29,12 +30,27 @@ export default function TextArea<TFieldValues extends FieldValues = FieldValues>
   rows = 4,
   ...rest
 }: TextAreaProps<TFieldValues>) {
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
+
+  const handlePlaceholder = (placeholder?: string) => {
+    if (!placeholder) return '';
+    return isRTL ? `\u202B${placeholder}` : placeholder;
+  };
+
   return (
     <Controller<TFieldValues>
       key={name}
       name={name}
       control={control}
       render={({ field: { value, onChange, onBlur, ref }, fieldState: { error } }) => {
+        const onChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+          onChange(event.target.value as PathValue<string, string>);
+          if (typeof rest.onChange === 'function') {
+            rest.onChange(event);
+          }
+        };
+
         return (
           <div className="relative w-full">
             {label && (
@@ -42,20 +58,19 @@ export default function TextArea<TFieldValues extends FieldValues = FieldValues>
                 {label}
               </label>
             )}
-            <div className="relative">
+            <div className="relative flex gap-5">
               {icon && (
-                <span className="absolute top-4 left-0 flex items-start pl-3 text-yellow-500">
+                <span className={`absolute top-4 ${isRTL ? 'right-3' : 'left-3'} text-yellow-500`}>
                   {icon}
                 </span>
               )}
               <textarea
                 id={name}
                 rows={rows}
-                placeholder={placeholder}
-                className={`w-full ${icon ? 'pl-10' : 'pl-4'
-                  } pr-4 py-3 bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-yellow-500'} text-white placeholder-gray-400 resize-none ${className}`}
+                placeholder={handlePlaceholder(placeholder)}
+                className={`w-full ${icon ? (isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4') : 'px-4'} py-4 bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-yellow-500'} text-white placeholder-gray-400 ${className}`}
                 value={value ?? ''}
-                onChange={onChange}
+                onChange={onChangeHandler}
                 onBlur={event => {
                   if (typeof rest.onBlur === 'function') {
                     rest.onBlur(event);

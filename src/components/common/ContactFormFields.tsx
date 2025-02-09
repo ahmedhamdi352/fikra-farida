@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useContactUsMutation } from 'hooks';
-
+import { PhoneInput } from 'components/forms/phone-input'
 import * as yup from 'yup';
 import TextInput from '../forms/text-input';
 import TextArea from '../forms/text-area'; // Import TextArea component
@@ -54,7 +54,7 @@ export default function ContactFormFields() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 sm:gap-4 lg:gap-6 w-full">
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 sm:gap-4 lg:gap-6 w-full">
       <TextInput
         control={control}
         name="fullName"
@@ -105,16 +105,14 @@ export default function ContactFormFields() {
         }
       />
 
-      <TextInput
-        control={control}
+      <PhoneInput
         name="phone"
-        type="number"
-        placeholder={t('form.phone')}
-        icon={
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 33" fill="none">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M21.4084 29.674C17.1508 28.4655 13.1336 26.1851 9.78471 22.8362C6.43586 19.4874 4.15539 15.4701 2.94695 11.2125C2.93978 11.1872 2.93267 11.1622 2.92562 11.1374C2.72894 10.4454 2.57643 9.90875 2.57424 9.1729C2.57173 8.33187 2.84574 7.27821 3.25765 6.54495C3.96602 5.28393 5.48704 3.66786 6.80081 3.00336C7.93593 2.42922 9.27646 2.42922 10.4116 3.00336C11.5346 3.57136 12.7852 4.84278 13.4824 5.91512C14.3444 7.24091 14.3444 8.95007 13.4824 10.2758C13.2515 10.6311 12.9222 10.9598 12.54 11.3414C12.421 11.4602 12.29 11.546 12.377 11.7272C13.2407 13.5263 14.4187 15.2137 15.913 16.708C17.4072 18.2022 19.0947 19.3802 20.8937 20.2439C21.0813 20.334 21.1552 20.2055 21.2796 20.0809C21.6611 19.6987 21.9898 19.3695 22.3451 19.1385C23.6709 18.2765 25.38 18.2765 26.7058 19.1385C27.7495 19.817 29.054 21.0951 29.6176 22.2093C30.1917 23.3445 30.1917 24.685 29.6176 25.8201C28.9531 27.1339 27.337 28.6549 26.076 29.3633C25.3427 29.7752 24.289 30.0492 23.448 30.0467C22.7122 30.0445 22.1755 29.892 21.4835 29.6953C21.4587 29.6882 21.4337 29.6811 21.4084 29.674Z" fill="#F4DD94" />
-          </svg>
-        }
+        label="Phone Number"
+        type="tel"
+        control={control}
+        required
+        defaultCountry="eg"
+        placeholder="Enter your phone number"
       />
 
       <TextArea

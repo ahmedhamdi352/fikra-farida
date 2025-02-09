@@ -152,6 +152,11 @@
   dependencies:
     tslib "2"
 
+"@heroicons/react@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.2.0.tgz#0c05124af50434a800773abec8d3af6a297d904b"
+  integrity sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==
+
 "@hookform/resolvers@3.10.0":
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.10.0.tgz#7bfd18113daca4e57e27e1205b7d5a2d371aa59a"
@@ -2725,6 +2730,11 @@ react-hook-form@7.54.2:
   version "7.54.2"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.54.2.tgz#8c26ed54c71628dff57ccd3c074b1dd377cfb211"
   integrity sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==
+
+react-international-phone@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/react-international-phone/-/react-international-phone-4.5.0.tgz#901da544760da9b23e0a1945053cac977ff2cd97"
+  integrity sha512-wjwHv+VfiwM49B5/6El4Z5vZKmf3ILpUeiOCI9X+b0Dq4g5nL8gROcwCdVcTXywxznbDSoxSassBX3i9tPZX6g==
 
 react-intersection-observer@9.14.1:
   version "9.14.1"

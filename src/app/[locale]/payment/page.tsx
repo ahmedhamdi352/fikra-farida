@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import TextInput from 'components/forms/text-input';
 import TextArea from 'components/forms/text-area';
 import Link from 'next/link'
+import { PhoneInput } from 'components/forms/phone-input';
 
 interface PaymentFormData {
   fullName: string;
@@ -118,7 +119,7 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          <form id="payment-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form noValidate id="payment-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <section className="space-y-4">
               <h2 className="text-xl font-semibold">{t('personalInformation')}</h2>
               <TextInput
@@ -188,16 +189,13 @@ const PaymentPage = () => {
                   </svg>
                 }
               />
-              <TextInput
-                control={control}
+
+              <PhoneInput
                 name="phone"
-                type="tel"
-                placeholder={t('phone')}
-                icon={
-                  <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                  </svg>
-                }
+                control={control}
+                required
+                defaultCountry="eg"
+                placeholder="Phone Number"
               />
               <TextArea
                 control={control}
@@ -292,7 +290,7 @@ const PaymentPage = () => {
 
                 {paymentMethod === 'wallet' && (
                   <div className="space-y-4">
-                    <TextInput
+                    {/* <TextInput
                       control={control}
                       name="walletPhone"
                       type="tel"
@@ -302,6 +300,15 @@ const PaymentPage = () => {
                           <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
                         </svg>
                       }
+                    /> */}
+
+
+                    <PhoneInput
+                      name="walletPhone"
+                      control={control}
+                      required
+                      defaultCountry="eg"
+                      placeholder={t('walletPhone')}
                     />
                   </div>
                 )}
