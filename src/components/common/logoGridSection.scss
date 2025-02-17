@@ -12,11 +12,29 @@ $animationSpeed: 40s;
 }
 
 @keyframes scroll-rtl {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(250px * 7));
+  }
+}
+
+@keyframes scroll-reverse {
+  0% {
+    transform: translateX(calc(-250px * 7));
+  }
   100% {
     transform: translateX(0);
   }
+}
+
+@keyframes scroll-reverse-rtl {
   0% {
-    transform: translateX(calc(-250px * 7));
+    transform: translateX(calc(250px * 7));
+  }
+  100% {
+    transform: translateX(0);
   }
 }
 
@@ -28,10 +46,6 @@ $animationSpeed: 40s;
   width: auto;
 
   &:dir(rtl) {
-    &::before,
-    &::after {
-      // background: linear-gradient(to left, rgba(255, 255, 255, 1), transparent);
-    }
     .v-slide-track {
       animation: scroll-rtl $animationSpeed linear infinite;
     }
@@ -44,7 +58,6 @@ $animationSpeed: 40s;
     top: 0;
     width: 75px;
     height: 100%;
-    // background: linear-gradient(to right, rgba(255, 255, 255, 1), transparent);
     z-index: 1;
 
     @include mixins.respond(tab-land) {
@@ -71,11 +84,11 @@ $animationSpeed: 40s;
 .v-slider-reverse {
   &:dir(rtl) {
     .v-slide-track {
-      animation: scroll $animationSpeed linear infinite;
+      animation: scroll-reverse-rtl $animationSpeed linear infinite;
     }
   }
 
   .v-slide-track {
-    animation: scroll-rtl $animationSpeed linear infinite;
+    animation: scroll-reverse $animationSpeed linear infinite;
   }
 }

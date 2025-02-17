@@ -98,12 +98,16 @@
       "egypt": "Egypt",
       "saudiArabia": "Saudi Arabia",
       "uae": "United Arab Emirates"
+    },
+    "products": {
+      "headTitle": "Make Yourself",
+      "special": "Make Yourself",
+      "with": "with",
+      "ourProducts": "Our Products",
+      "allProducts": "All Products"
     }
   },
-  "products": {
-    "title": "Make Yourself",
-    "subtitle":""
-  },
+
   "blogs": {
     "title": "SHARE ANY THING",
     "titleMore": "& MORE",
@@ -157,13 +161,17 @@
   "auth": {
     "login": {
       "welcome": "Welcome Back",
-      "emailPlaceholder": "E-Mail",
-      "passwordPlaceholder": "Enter your Password",
-      "rememberMe": "Remember me",
-      "forgotPassword": "Forgot Password",
-      "submit": "Login",
-      "noAccount": "don't have an account ?",
-      "signUp": "let's join us now!"
+      "emailPlaceholder": "Email",
+      "passwordPlaceholder": "Password",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Invalid email format",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 6 characters"
+      }
     },
     "register": {
       "title": "Create Your Account Now",
@@ -190,46 +198,65 @@
     }
   },
   "Payment": {
+    "orderSummary": "Order Summary",
     "personalInformation": "Personal Information",
     "fullName": "Full Name",
-    "email": "E-Mail",
+    "email": "Email",
     "deliveryInformation": "Delivery Information",
     "country": "Country",
     "city": "City",
     "governorate": "Governorate",
     "address": "Address",
-    "phone": "Phone",
-    "note": "Note",
+    "phone": "Phone Number",
+    "note": "Note (Optional)",
     "paymentInformation": "Payment Information",
-    "secureTransaction": "All transactions are secure and encrypted.",
-    "card": "Card",
-    "wallet": "Wallet",
-    "cardNumber": "Card Number",
-    "cardName": "Card Name",
-    "orderSummary": "Order Summary",
+    "secureTransaction": "Your transaction is secure with us",
+    "onlinePayment": "Online Payment",
+    "cashOnDelivery": "Cash on Delivery",
+    "processing": "Processing...",
+    "pay": "Pay",
+    "orderCreationFailed": "Failed to create order. Please try again.",
     "subtotal": "Subtotal",
     "shipping": "Shipping",
-    "discount": "Discount",
     "total": "Total",
-    "pay": "Pay Now",
-    "paymentSuccessful": "Payment Successful",
-    "cashPaymentSuccessMessage": "Your order has been successfully confirmed for cash on delivery.",
-    "onlinePaymentSuccessMessage": "Thank you! Your payment has been received successfully and your order will be processed soon.",
-    "paymentSuccessMessage": "Thank you! Your payment has been received successfully and your order will be processed soon.",
-    "paymentFailed": "Payment Failed",
-    "paymentFailureMessage": "Sorry, we couldn't process your payment. Please try again or use a different payment method.",
-    "paymentCancelled": "Payment Cancelled",
-    "paymentCancelMessage": "You have cancelled the payment. You can try again when you're ready.",
-    "tryAgain": "Try Again",
-    "returnToPayment": "Return to Payment",
-    "backToHome": "Back to Home",
-    "invalidPayment": "Invalid Payment",
-    "orderDetails": "Order Details",
-    "orderNumber": "Order Number",
-    "amount": "Amount",
-    "paymentMethod": "Payment Method",
-    "transactionId": "Transaction ID",
-    "cashOnDelivery":"Cash on Delivery",
-    "onlinePayment":"Online Payment"
+    "noImage": "No image",
+    "cartEmpty": "Your Cart is Empty",
+    "cartEmptyMessage": "Looks like you haven't added anything to your cart yet.",
+    "browseProducts": "Browse Products",
+    "validation": {
+      "fullNameRequired": "Full name is required",
+      "invalidEmail": "Invalid email format",
+      "countryRequired": "Country is required",
+      "cityRequired": "City is required",
+      "governorateRequired": "Governorate is required",
+      "addressRequired": "Address is required",
+      "phoneRequired": "Phone number is required",
+      "paymentMethodRequired": "Please select a payment method"
+    }
+  },
+  "products":{
+    "colors":"Colors",
+    "model":"Model",
+    "quantity":"Quantity",
+    "updateCart":"Update Cart",
+    "addToCart":"Add to Cart",
+    "removeFromCart":"Remove from Cart",
+    "buyNow":"Buy Now",
+    "description":"Description"
+  },
+  "checkout": {
+    "yourCartIsEmpty": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "productName": "PRODUCT NAME",
+    "unitPrice": "UNIT PRICE",
+    "quantity": "QUANTITY",
+    "total": "TOTAL",
+    "noImage": "No image",
+    "discountCode": "Discount Code",
+    "apply": "Apply",
+    "subtotal": "Subtotal :",
+    "shipping": "Shipping :",
+    "totalAmount": "Total :",
+    "checkout": "Checkout"
   }
 }

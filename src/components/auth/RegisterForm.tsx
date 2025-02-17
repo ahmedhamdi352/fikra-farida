@@ -148,7 +148,7 @@ export default function RegisterForm() {
             {isLoading ? 'Registering...' : t('register.submit')}
           </button>
 
-          <div className="text-center text-sm mt-4">
+          <div className="flex justify-between text-center text-sm mt-4">
             <span className="text-white">{t('register.haveAccount')} </span>
             <Link href="/login" className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]">
               {t('register.login')}

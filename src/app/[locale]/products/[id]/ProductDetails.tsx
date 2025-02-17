@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useCart } from 'context/CartContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ProductDetailsProps {
   products: Product[];
@@ -23,6 +24,8 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   const { addToCart, removeFromCart, items, updateQuantity } = useCart();
   const locale = params?.locale as string;
   const router = useRouter();
+  const t = useTranslations('products');
+
 
   useEffect(() => {
     if (products?.length > 0) {
@@ -218,36 +221,13 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
             <h1 className="text-2xl lg:text-3xl font-bold mb-4">
               {params?.locale === 'en' ? product.name : product.arName}
             </h1>
-            {/* <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <svg
-                      key={star}
-                      className={`w-4 h-4 ${star <= 3 ? 'text-[#FEC400]' : 'text-gray-400'}`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <span className="text-sm text-gray-400">(3.4 customer reviews)</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-xl lg:text-2xl font-bold">{product.finalPrice}</span>
-                {product.price !== product.finalPrice && (
-                  <span className="text-gray-400 line-through">{product.price}</span>
-                )}
-              </div>
-            </div> */}
           </div>
 
           {/* Colors */}
           {product.colors.length > 1 && (
             <div className="mb-6">
               <div className="flex justify-between items-center">
-                <h3 className="text-sm font-medium">Colors</h3>
+                <h3 className="text-sm font-medium">{t('colors')}</h3>
                 <div className="flex gap-3">
                   {product.colors.map((color, index) => {
                     const colorInCart = items.some(
@@ -275,7 +255,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           {/* Model Selection */}
           <div className="mb-6">
             <div className="flex justify-between items-center">
-              <h3 className="text-sm font-medium">Model</h3>
+              <h3 className="text-sm font-medium">{t('model')}</h3>
               <div>
                 <button className="px-4 py-2 rounded-full bg-[#FEC400] text-sm">
                   {product.id}
@@ -287,7 +267,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           {/* Quantity */}
           <div className="mb-8">
             <div className="flex justify-between items-center">
-              <h3 className="text-sm font-medium">Quantity</h3>
+              <h3 className="text-sm font-medium">{t('quantity')}</h3>
               <div className="flex items-center bg-black/20 rounded-lg p-1">
                 <button
                   onClick={() => handleQuantityChange(-1)}
@@ -313,7 +293,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                 onClick={handleUpdateCart}
                 className="flex-1 py-3 bg-green-500 text-white rounded-lg transition-colors"
               >
-                Update Cart
+                {t('updateCart')}
               </button>
             ) : (
               <button
@@ -321,7 +301,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                 className={`flex-1 py-3 ${isInCart ? 'bg-red-500' : 'bg-[#FEC400]'}
                   text-white rounded-lg transition-colors`}
               >
-                {isInCart ? 'Remove from Cart' : 'Add to Cart'}
+                {isInCart ? t('removeFromCart') : t('addToCart')}
               </button>
             )}
             <button
@@ -337,7 +317,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
               }}
               className="flex-1 py-3 bg-[#FEC400] text-white rounded-lg"
             >
-              Buy Now
+              {t('buyNow')}
             </button>
           </div>
         </div>
@@ -347,7 +327,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
       <div className="mt-8 lg:mt-12 text-white">
         <div className="flex border-b border-gray-700">
           <button className="px-4 py-2 border-b-2 border-[#FEC400] text-[#FEC400]">
-            Description
+            {t('description')}
           </button>
           {/* <button className="px-4 py-2 text-gray-400">
             Review

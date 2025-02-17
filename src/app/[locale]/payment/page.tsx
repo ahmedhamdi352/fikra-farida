@@ -27,18 +27,6 @@ interface PaymentFormData {
   paymentMethod: 'cash' | 'online';
 }
 
-const schema = yup.object().shape({
-  fullName: yup.string().required('Full name is required'),
-  email: yup.string().optional().email('Invalid email format'),
-  country: yup.string().required('Country is required'),
-  city: yup.string().required('City is required'),
-  governorate: yup.string().required('Governorate is required'),
-  address: yup.string().required('Address is required'),
-  phone: yup.string().required('Phone is required'),
-  note: yup.string().default(''),
-  paymentMethod: yup.string().oneOf(['cash', 'online'] as const).required('Payment method is required'),
-}) as yup.ObjectSchema<PaymentFormData>;
-
 const PaymentPage = () => {
   const t = useTranslations('Payment');
   const { items, updateQuantity } = useCart();
@@ -48,6 +36,18 @@ const PaymentPage = () => {
 
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
+
+  const schema = yup.object().shape({
+    fullName: yup.string().required(t('validation.fullNameRequired')),
+    email: yup.string().optional().email(t('validation.invalidEmail')),
+    country: yup.string().required(t('validation.countryRequired')),
+    city: yup.string().required(t('validation.cityRequired')),
+    governorate: yup.string().required(t('validation.governorateRequired')),
+    address: yup.string().required(t('validation.addressRequired')),
+    phone: yup.string().required(t('validation.phoneRequired')),
+    note: yup.string().default(''),
+    paymentMethod: yup.string().oneOf(['cash', 'online'] as const).required(t('validation.paymentMethodRequired')),
+  }) as yup.ObjectSchema<PaymentFormData>;
 
   const {
     control,
@@ -68,7 +68,27 @@ const PaymentPage = () => {
   const subtotal = total - shippingCost;
   const discount = 0;
 
-  console.log(items)
+  if (items.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-8 min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-6 max-w-md mx-auto">
+          <div className="bg-[rgba(217,217,217,0.05)] p-8 rounded-lg shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px]">
+            <svg className="w-20 h-20 mx-auto mb-6 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+            <h2 className="text-2xl font-semibold mb-4">{t('cartEmpty')}</h2>
+            <p className="text-gray-400 mb-8">{t('cartEmptyMessage')}</p>
+            <Link
+              href={`/products`}
+              className="inline-block py-3 px-6 bg-[#FEC400] text-black font-semibold rounded-lg hover:bg-[#FEC400]/90 transition-colors"
+            >
+              {t('browseProducts')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const onSubmit = async (data: PaymentFormData) => {
     try {
@@ -163,16 +183,16 @@ const PaymentPage = () => {
             <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
             <div className="space-y-2">
               <div className="flex justify-between items-center text-[#FEC400]">
-                <span>Subtotal :</span>
+                <span>{t('subtotal')} :</span>
                 <span className="text-white">{(total - shippingCost).toFixed(2)} EGP</span>
               </div>
               <div className="flex justify-between items-center text-[#FEC400]">
-                <span>Shipping :</span>
+                <span>{t('shipping')} :</span>
                 <span className="text-white">{shippingCost.toFixed(2)} EGP</span>
               </div>
               <div className="h-[1px] bg-white/10 my-2"></div>
               <div className="flex justify-between items-center text-[#FEC400]">
-                <span>Total :</span>
+                <span>{t('total')} :</span>
                 <span className="text-white text-xl font-medium">{finalTotal.toFixed(2)} EGP</span>
               </div>
             </div>
@@ -259,7 +279,7 @@ const PaymentPage = () => {
                 control={control}
                 required
                 defaultCountry="eg"
-                placeholder="Phone Number"
+                placeholder={t('phone')}
               />
               <TextArea
                 control={control}
@@ -369,7 +389,7 @@ const PaymentPage = () => {
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-100 flex items-center justify-center rounded-lg">
-                          <span className="text-gray-400 text-sm">No image</span>
+                          <span className="text-gray-400 text-sm">{t('noImage')}</span>
                         </div>
                       )}
                     </div>
@@ -422,28 +442,28 @@ const PaymentPage = () => {
 
           <div className="border-t border-[rgba(217,217,217,0.50)] pt-4 space-y-2 mt-auto">
             <div className="flex justify-between items-center text-[#FEC400]">
-              <span>Subtotal :</span>
+              <span>{t('subtotal')} :</span>
               <span className="text-white">{(total - shippingCost).toFixed(2)} EGP</span>
             </div>
             <div className="flex justify-between items-center text-[#FEC400]">
-              <span>Shipping :</span>
+              <span>{t('shipping')} :</span>
               <span className="text-white">{shippingCost.toFixed(2)} EGP</span>
             </div>
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center text-[#FEC400]">
-              <span>Total :</span>
+              <span>{t('total')} :</span>
               <span className="text-white text-xl font-medium">{finalTotal.toFixed(2)} EGP</span>
             </div>
           </div>
 
-          <button
+          {/* <button
             type="submit"
             form="payment-form"
             disabled={isLoading || isLoadingOnline}
             className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors disabled:bg-gray-400"
           >
             {(isLoading || isLoadingOnline) ? t('processing') : t('pay')} {finalTotal.toFixed(2)} EGP
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

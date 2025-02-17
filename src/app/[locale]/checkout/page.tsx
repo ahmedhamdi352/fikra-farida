@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useCart } from 'context/CartContext';
-import { Button } from 'components';
 import { useParams, useRouter } from 'next/navigation';
-
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export default function CheckoutPage() {
   const { items, removeFromCart, updateQuantity } = useCart();
@@ -13,6 +13,8 @@ export default function CheckoutPage() {
   const [total, setTotal] = useState(0);
   const params = useParams();
   const router = useRouter();
+  const t = useTranslations('checkout');
+  const tPayment = useTranslations('Payment');
 
   const locale = params.locale as string;
   const shipping = 349;
@@ -27,10 +29,21 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="rounded-lg p-6 text-white text-center">
-          <h2 className="text-xl font-semibold mb-4">Your cart is empty</h2>
-          <Button href="/products">Continue Shopping</Button>
+      <div className="container mx-auto px-4 py-8 min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-6 max-w-md mx-auto">
+          <div className="bg-[rgba(217,217,217,0.05)] p-8 rounded-lg shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px]">
+            <svg className="w-20 h-20 mx-auto mb-6 text-[#FEC400]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+            <h2 className="text-2xl font-semibold mb-4">{tPayment('cartEmpty')}</h2>
+            <p className="text-gray-400 mb-8">{tPayment('cartEmptyMessage')}</p>
+            <Link
+              href={`/products`}
+              className="inline-block py-3 px-6 bg-[#FEC400] text-black font-semibold rounded-lg hover:bg-[#FEC400]/90 transition-colors"
+            >
+              {tPayment('browseProducts')}
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -41,10 +54,10 @@ export default function CheckoutPage() {
       <div className="flex flex-col gap-8 ">
         <div className="flex-1">
           <div className="hidden lg:grid grid-cols-5 gap-4 mb-4">
-            <div className="col-span-2">PRODUCT NAME</div>
-            <div>UNIT PRICE</div>
-            <div>QUANTITY</div>
-            <div>TOTAL</div>
+            <div className="col-span-2">{t('productName')}</div>
+            <div>{t('unitPrice')}</div>
+            <div>{t('quantity')}</div>
+            <div>{t('total')}</div>
           </div>
           <div className="hidden lg:block w-full h-[1px] bg-[rgba(254,196,0,0.50)] mb-8"></div>
 
@@ -78,7 +91,7 @@ export default function CheckoutPage() {
                           />
                         ) : (
                           <div className="w-full h-full bg-gray-100 flex items-center justify-center rounded-lg">
-                            <span className="text-gray-400 text-sm">No image</span>
+                            <span className="text-gray-400 text-sm">{t('noImage')}</span>
                           </div>
                         )}
                       </div>
@@ -130,19 +143,19 @@ export default function CheckoutPage() {
                         {selectedColor?.Media[0] ? (
                           <Image
                             src={selectedColor.Media[0]}
-                            alt={item.name}
+                            alt={locale === 'en' ? item.name : item.arName}
                             fill
                             className="object-contain rounded-lg"
                           />
                         ) : (
                           <div className="w-full h-full bg-gray-100 flex items-center justify-center rounded-lg">
-                            <span className="text-gray-400 text-sm">No image</span>
+                            <span className="text-gray-400 text-sm">{t('noImage')}</span>
                           </div>
                         )}
                       </div>
                       <div>
                         <p className="text-[#FEC400] text-sm mb-1">{item.id}</p>
-                        <h3 className="text-lg font-semibold">{item.name}</h3>
+                        <h3 className="text-lg font-semibold">{locale === 'en' ? item.name : item.arName}</h3>
                         {item.colors.length > 1 && (
                           <div className="flex items-center gap-2 mt-2">
                             <div
@@ -170,7 +183,7 @@ export default function CheckoutPage() {
                         +
                       </button>
                     </div>
-                    <div >{(price * item.quantity).toFixed(2)}</div>
+                    <div>{(price * item.quantity).toFixed(2)}</div>
                   </div>
                 </div>
               );
@@ -182,28 +195,28 @@ export default function CheckoutPage() {
           <div className="flex items-center gap-4 mb-6 w-full">
             <input
               type="text"
-              placeholder="Discount Code"
+              placeholder={t('discountCode')}
               value={discountCode}
               onChange={(e) => setDiscountCode(e.target.value)}
               className="bg-[rgba(217,217,217,0.05)] border border-white/10 rounded-lg px-4 py-3  flex-1 min-w-0 focus:outline-none focus:ring-1 focus:ring-[var(--main-color1)] focus:border-transparent placeholder:text-gray-400"
             />
             <button className="shrink-0 px-6 py-3 rounded-lg bg-[#4A4A4A]  hover:bg-[#4A4A4A]/90 transition-colors">
-              Apply
+              {t('apply')}
             </button>
           </div>
 
           <div className="space-y-4 text-[#FEC400]">
             <div className="flex justify-between items-center">
-              <span>Subtotal :</span>
+              <span>{t('subtotal')}</span>
               <span className="text-white">{(total - shipping).toFixed(2)} </span>
             </div>
             <div className="flex justify-between items-center">
-              <span>Shipping :</span>
+              <span>{t('shipping')}</span>
               <span className="text-white">{shipping.toFixed(2)} </span>
             </div>
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center">
-              <span>Total :</span>
+              <span>{t('totalAmount')}</span>
               <span className="text-white text-xl font-medium">{total.toFixed(2)} </span>
             </div>
           </div>
@@ -211,7 +224,7 @@ export default function CheckoutPage() {
           <button
             onClick={() => router.push('/payment')}
             className="w-full mt-8 py-4 bg-[#FEC400] text-black text-lg font-medium hover:bg-[#FEC400]/90 rounded-lg">
-            Checkout
+            {t('checkout')}
           </button>
         </div>
       </div>

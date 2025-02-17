@@ -41,20 +41,6 @@ export default function PartnersSection() {
           <div className="flex-1 max-w-full lg:max-w-[50%]">
             <LogoGridSection images={[weImg, winnersImg, sevenImg, qatariImg, midbankImg, harvestImg, aldawaaImg, afaqImg]} />
 
-            {/* {[weImg, winnersImg, sevenImg, qatariImg, midbankImg, harvestImg, aldawaaImg, afaqImg].map((img, index) => (
-              <div
-                key={index}
-                className="bg-white opacity-70 rounded-xl p-6 aspect-square flex items-center justify-center hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg"
-              >
-                <Image
-                  src={img}
-                  alt={`Partner ${index + 1}`}
-                  width={120}
-                  height={80}
-                  className="object-contain"
-                />
-              </div>
-            ))} */}
           </div>
         </div>
       </div>

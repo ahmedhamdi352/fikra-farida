@@ -12,6 +12,7 @@ export type TextInputProps<T extends FieldValues = FieldValues> = Omit<React.Com
   label?: string;
   placeholder?: string;
   icon?: React.ReactNode;
+  endIcon?: React.ReactNode;
   className?: string;
   type?: string;
 };
@@ -24,6 +25,7 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
   disabled,
   className = '',
   icon,
+  endIcon,
   placeholder,
   ...rest
 }: TextInputProps<TFieldValues>) {
@@ -69,7 +71,7 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
                 type={type}
                 id={name}
                 placeholder={handlePlaceholder(placeholder)}
-                className={`w-full ${icon ? (isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4') : 'px-4'} py-4 bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-yellow-500'} text-white placeholder-gray-400 ${className}`}
+                className={`w-full ${icon ? (isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4') : 'px-4'} ${endIcon ? (isRTL ? 'pl-12' : 'pr-12') : ''} py-4 bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-yellow-500'} text-white placeholder-gray-400 ${className}`}
                 value={type !== 'file' ? value ?? '' : undefined}
                 onChange={onChangeHandler}
                 onBlur={event => {
@@ -82,6 +84,11 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
                 ref={ref}
                 {...rest}
               />
+              {endIcon && (
+                <span className={`absolute inset-y-0 ${isRTL ? 'left-3' : 'right-3'} flex items-center ${isRTL ? 'pr-3 mr-10' : 'pr-3 ml-10'} text-yellow-500`}>
+                  {endIcon}
+                </span>
+              )}
             </div>
             {error?.message && (
               <p className="mt-1 text-sm text-red-500">

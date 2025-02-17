@@ -7,8 +7,8 @@
       "blogs": "المدونات",
       "howItUse": "كيف يعمل",
       "login": "تسجيل الدخول",
-      "logout":"تسجيل الخروج",
-      "profile":"الملف الشخصي"
+      "logout": "تسجيل الخروج",
+      "profile": "الملف الشخصي"
     },
     "footer": {
       "contact": "اتصل بنا",
@@ -22,7 +22,7 @@
       "submit": "إرسال",
       "subscribeTitle": "اشترك في نشرتنا النصية",
       "subscribe": "اشترك",
-      "readMore":"اقرأ المزيد"
+      "readMore": "اقرأ المزيد"
     }
   },
   "errors": {
@@ -98,6 +98,13 @@
       "egypt": "مصر",
       "saudiArabia": "المملكة العربية السعودية",
       "uae": "الإمارات العربية المتحدة"
+    },
+    "products": {
+      "headTitle": "اجعل نفسك",
+      "special": "مميزاً",
+      "with": "مع",
+      "ourProducts": "منتجاتنا",
+      "allProducts": "جميع المنتجات"
     }
   },
   "about": {
@@ -126,7 +133,7 @@
     "form": {
       "fullName": "الاسم الكامل",
       "company": "الشركة",
-      "employeesNumber":"عدد الموظفين",
+      "employeesNumber": "عدد الموظفين",
       "email": "البريد الإلكتروني",
       "phone": "رقم الهاتف",
       "message": "اكتب رسالتك هنا...",
@@ -156,10 +163,17 @@
       "emailPlaceholder": "البريد الإلكتروني",
       "passwordPlaceholder": "كلمة المرور",
       "rememberMe": "تذكرني",
-      "forgotPassword": "نسيت كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
       "submit": "تسجيل الدخول",
+      "submitting": "جاري تسجيل الدخول...",
       "noAccount": "ليس لديك حساب؟",
-      "signUp": "انضم إلينا الآن!"
+      "signUp": "انضم إلينا الآن!",
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordMin": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل"
+      }
     },
     "register": {
       "title": "أنشئ حسابك الآن",
@@ -178,11 +192,11 @@
       "submit": "إرسال",
       "rememberPassword": "هل تتذكر كلمة المرور الخاصة بك؟"
     },
-    "reset":{
-      "title":"استعادة كلمة المرور الخاصة بك",
-      "submit":"استعادة",
-      "confirmPasswordPlaceholder":"تأكيد كلمة المرور الجديدة",
-      "newPasswordPlaceholder":"كلمة المرور الجديدة"
+    "reset": {
+      "title": "استعادة كلمة المرور الخاصة بك",
+      "submit": "استعادة",
+      "confirmPasswordPlaceholder": "تأكيد كلمة المرور الجديدة",
+      "newPasswordPlaceholder": "كلمة المرور الجديدة"
     }
   },
   "Payment": {
@@ -201,6 +215,65 @@
     "transactionId": "رقم العملية",
     "cashOnDelivery": "الدفع عند الاستلام",
     "tryAgain": "حاول مرة أخرى",
-    "backToHome": "العودة للرئيسية"
+    "backToHome": "العودة للرئيسية",
+    "orderSummary": "ملخص الطلب",
+    "personalInformation": "المعلومات الشخصية",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "deliveryInformation": "معلومات التوصيل",
+    "country": "الدولة",
+    "city": "المدينة",
+    "governorate": "المحافظة",
+    "address": "العنوان",
+    "phone": "رقم الهاتف",
+    "note": "ملاحظات (اختياري)",
+    "paymentInformation": "معلومات الدفع",
+    "secureTransaction": "معاملتك آمنة معنا",
+    "onlinePayment": "الدفع الإلكتروني",
+    "processing": "جاري المعالجة...",
+    "pay": "ادفع",
+    "orderCreationFailed": "فشل في إنشاء الطلب. يرجى المحاولة مرة أخرى.",
+    "subtotal": "المجموع الفرعي",
+    "shipping": "الشحن",
+    "total": "المجموع الكلي",
+    "noImage": "لا توجد صورة",
+    "cartEmpty": "سلة التسوق فارغة",
+    "cartEmptyMessage": "يبدو أنك لم تضف أي منتجات إلى سلة التسوق بعد.",
+    "browseProducts": "تصفح المنتجات",
+    "validation": {
+      "fullNameRequired": "الاسم الكامل مطلوب",
+      "invalidEmail": "صيغة البريد الإلكتروني غير صحيحة",
+      "countryRequired": "الدولة مطلوبة",
+      "cityRequired": "المدينة مطلوبة",
+      "governorateRequired": "المحافظة مطلوبة",
+      "addressRequired": "العنوان مطلوب",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "paymentMethodRequired": "يرجى اختيار طريقة الدفع"
+    }
+  },
+  "products": {
+    "colors": "الالوان",
+    "model": "الموديل",
+    "quantity": "الكمية",
+    "updateCart": "تحديث السلة",
+    "addToCart": "إضافة إلى السلة",
+    "removeFromCart": "إزالة من السلة",
+    "buyNow": "اشتري الآن",
+    "description": "الوصف"
+  },
+  "checkout": {
+    "yourCartIsEmpty": "عربة التسوق فارغة",
+    "continueShopping": "متابعة التسوق",
+    "productName": "اسم المنتج",
+    "unitPrice": "سعر الوحدة",
+    "quantity": "الكمية",
+    "total": "الإجمالي",
+    "noImage": "لا توجد صورة",
+    "discountCode": "رمز الخصم",
+    "apply": "تطبيق",
+    "subtotal": "المجموع الفرعي :",
+    "shipping": "الشحن :",
+    "totalAmount": "الإجمالي :",
+    "checkout": "إتمام الشراء"
   }
 }

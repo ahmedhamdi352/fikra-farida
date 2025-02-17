@@ -1,14 +1,20 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
+import { useTranslations } from 'next-intl';
 
-interface ButtonProps {
+type ButtonProps = {
   href?: string;
   onClick?: () => void;
-  children: React.ReactNode;
   className?: string;
   withArrow?: boolean;
-}
+  translationNamespace?: string;
+} & (
+    | { translationKey: string; children?: never }
+    | { translationKey?: never; children: React.ReactNode }
+  );
 
 export const Button: React.FC<ButtonProps> = ({
   href,
@@ -16,7 +22,10 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   className,
   withArrow = false,
+  translationKey,
+  translationNamespace = 'common',
 }) => {
+  const t = useTranslations(translationNamespace);
   const baseStyles = "inline-flex items-center justify-between px-8 py-3 rounded-[10px] hover:opacity-80 transition-all w-full sm:w-auto capitalize";
   const gradientBorderStyles = "relative border border-transparent [border-image-source:linear-gradient(90deg,#F1911B,#FEC400,#8B5410)] [border-image-slice:1]";
   const textStyles = "text-center font-poppins text-[20px] font-semibold leading-[23px]";
@@ -28,8 +37,10 @@ export const Button: React.FC<ButtonProps> = ({
   );
 
   const content = (
-    <div className='flex gap:4 justify-center items-center'>
-      <span className={textStyles}>{children}</span>
+    <div className='flex gap-4 justify-between items-center'>
+      <span className={textStyles}>
+        {translationKey ? t(translationKey) : children}
+      </span>
       {withArrow && <Arrow />}
     </div>
   );

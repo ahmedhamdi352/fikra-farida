@@ -14,13 +14,18 @@ interface ForgetPasswordFormData {
   email: string;
 }
 
-const schema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email format'),
-});
+
 
 export default function ForgetPasswordForm() {
   const t = useTranslations('auth');
   const { isLoading, onForgetPassword } = useForgetPasswordMutation();
+
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .required(t('login.validation.emailRequired'))
+      .email(t('login.validation.emailInvalid')),
+  });
 
   const {
     control,
