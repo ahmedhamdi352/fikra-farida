@@ -11,23 +11,35 @@ import Select from 'components/forms/select';
 import TextArea from 'components/forms/text-area';
 import Link from 'next/link'
 import { PhoneInput } from 'components/forms/phone-input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { useCreateOrderMutation } from 'hooks';
 import { OrderPayloadForCreateDto } from 'types';
 import { useSiteData } from 'context/SiteContext';
-import { getCityNames } from 'assets/constants/cities';
+import { getCityNames, type EgyptCity } from 'assets/constants/cities';
+import { getShippingPrice, getZoneInfo } from 'assets/constants/shipping';
 
 interface PaymentFormData {
   fullName: string;
   email: string;
-  country: string;
-  city: string;
-  address: string;
   phone: string;
-  note: string;
-  paymentMethod: 'cash' | 'online';
+  address: string;
+  city: EgyptCity;
+  country: string;
+  notes?: string;
+  paymentMethod: 'online' | 'cash';
 }
+
+const schema = yup.object().shape({
+  fullName: yup.string().required('Full name is required'),
+  email: yup.string().email('Invalid email').required('Email is required'),
+  phone: yup.string().required('Phone is required'),
+  address: yup.string().required('Address is required'),
+  city: yup.string<EgyptCity>().required('City is required'),
+  country: yup.string().required('Country is required'),
+  notes: yup.string(),
+  paymentMethod: yup.string().oneOf(['online', 'cash']).required(),
+}) satisfies yup.ObjectSchema<PaymentFormData>;
 
 const PaymentPage = () => {
   const t = useTranslations('Payment');
@@ -39,17 +51,7 @@ const PaymentPage = () => {
 
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
-
-  const schema = yup.object().shape({
-    fullName: yup.string().required(t('validation.fullNameRequired')),
-    email: yup.string().optional().email(t('validation.invalidEmail')),
-    country: yup.string().required(t('validation.countryRequired')),
-    city: yup.string().required(t('validation.cityRequired')),
-    address: yup.string().required(t('validation.addressRequired')),
-    phone: yup.string().required(t('validation.phoneRequired')),
-    note: yup.string().default(''),
-    paymentMethod: yup.string().oneOf(['cash', 'online'] as const).required(t('validation.paymentMethodRequired')),
-  }) as yup.ObjectSchema<PaymentFormData>;
+  const [shippingInfo, setShippingInfo] = useState<{ zoneName: string; price: number } | null>(null);
 
   const {
     control,
@@ -65,11 +67,35 @@ const PaymentPage = () => {
 
   const paymentMethod = watch('paymentMethod');
 
-  const total = items.reduce((sum, item) => sum + (parseFloat(item.finalPrice || item.price) * item.quantity), 0);
-  const shippingCost = 349;
-  const finalTotal = total + shippingCost;
-  const subtotal = total - shippingCost;
+  const selectedCity = watch('city');
+  useEffect(() => {
+    if (selectedCity) {
+      setShippingInfo(getZoneInfo(selectedCity));
+    } else {
+      setShippingInfo(null);
+    }
+  }, [selectedCity]);
+
+  const total = items.reduce((sum, item) => {
+    const itemPrice = parseFloat(item.finalPrice || item.price);
+    const itemTotal = itemPrice * item.quantity;
+    return sum + itemTotal;
+  }, 0);
+
+  const subtotal = total;
+  const shippingCost = shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity);
+  const finalTotal = subtotal + shippingCost;
   const discount = 0;
+  console.log(
+    'finalTotal',
+    finalTotal,
+    'subtotal',
+    subtotal,
+    'shippingCost',
+    shippingCost,
+    'discount',
+    discount
+  )
 
   if (items.length === 0) {
     return (
@@ -187,16 +213,16 @@ const PaymentPage = () => {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('subtotal')} :</span>
-                <span className="text-white">{(total - shippingCost).toFixed(2)} EGP</span>
+                <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
               </div>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('shipping')} :</span>
-                <span className="text-white">{shippingCost.toFixed(2)} EGP</span>
+                <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
               </div>
               <div className="h-[1px] bg-white/10 my-2"></div>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('total')} :</span>
-                <span className="text-white text-xl font-medium">{finalTotal.toFixed(2)} EGP</span>
+                <span className=" text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
               </div>
             </div>
           </div>
@@ -257,6 +283,7 @@ const PaymentPage = () => {
                       <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
                     </svg>
                   }
+                  required
                 />
               </div>
               <TextInput
@@ -280,7 +307,7 @@ const PaymentPage = () => {
               />
               <TextArea
                 control={control}
-                name="note"
+                name="notes"
                 placeholder={t('note')}
                 icon={
                   <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
@@ -440,16 +467,16 @@ const PaymentPage = () => {
           <div className="border-t border-[rgba(217,217,217,0.50)] pt-4 space-y-2 mt-auto">
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('subtotal')} :</span>
-              <span className="text-white">{(total - shippingCost).toFixed(2)} EGP</span>
+              <span >{(subtotal).toFixed(2)} {siteData.currency}</span>
             </div>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('shipping')} :</span>
-              <span className="text-white">{shippingCost.toFixed(2)} EGP</span>
+              <span >{shippingCost.toFixed(2)} {siteData.currency}</span>
             </div>
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('total')} :</span>
-              <span className="text-white text-xl font-medium">{finalTotal.toFixed(2)} EGP</span>
+              <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
             </div>
           </div>
 
@@ -463,7 +490,7 @@ const PaymentPage = () => {
           </button> */}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -17,15 +17,16 @@ export default function CheckoutPage() {
   const tPayment = useTranslations('Payment');
 
   const locale = params.locale as string;
-  const shipping = 349;
 
   useEffect(() => {
-    const subtotal = items.reduce((acc, item) => {
-      const price = parseFloat(item.finalPrice || item.price);
-      return acc + price * item.quantity;
+    const total = items.reduce((sum, item) => {
+      const itemPrice = parseFloat(item.finalPrice || item.price);
+      const itemTotal = itemPrice * item.quantity;
+      return sum + itemTotal;
     }, 0);
-    setTotal(subtotal + shipping);
-  }, [items, shipping]);
+    const subtotal = total;
+    setTotal(subtotal);
+  }, [items]);
 
   if (items.length === 0) {
     return (
@@ -200,7 +201,7 @@ export default function CheckoutPage() {
               onChange={(e) => setDiscountCode(e.target.value)}
               className="bg-[rgba(217,217,217,0.05)] border border-white/10 rounded-lg px-4 py-3  flex-1 min-w-0 focus:outline-none focus:ring-1 focus:ring-[var(--main-color1)] focus:border-transparent placeholder:text-gray-400"
             />
-            <button className="shrink-0 px-6 py-3 rounded-lg bg-[#4A4A4A]  hover:bg-[#4A4A4A]/90 transition-colors">
+            <button className="shrink-0 px-6 py-3 rounded-lg text-black bg-[var(--main-color1)] hover:bg-transparent hover:text-white border border-[var(--main-color1)] transition-colors">
               {t('apply')}
             </button>
           </div>
@@ -208,12 +209,9 @@ export default function CheckoutPage() {
           <div className="space-y-4 text-[#FEC400]">
             <div className="flex justify-between items-center">
               <span>{t('subtotal')}</span>
-              <span className="text-white">{(total - shipping).toFixed(2)} </span>
+              <span className="text-white">{(total).toFixed(2)} </span>
             </div>
-            <div className="flex justify-between items-center">
-              <span>{t('shipping')}</span>
-              <span className="text-white">{shipping.toFixed(2)} </span>
-            </div>
+
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center">
               <span>{t('totalAmount')}</span>
