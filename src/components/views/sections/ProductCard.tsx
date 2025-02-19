@@ -42,20 +42,12 @@ export function ProductCard({ product }: ProductCardProps) {
       className="block bg-transparent rounded-lg shadow-xl overflow-hidden relative group h-full"
     >
       <div className="flex flex-col h-full">
-        {/* Cart Status Indicator */}
-        {isInCart && (
-          <div className=" hidden md:absolute top-2 right-2 z-10">
-            <div className="bg-[#FEC400]  text-[10px] md:text-xs px-2 py-0.5 rounded-full animate-fadeIn">
-              In Cart
-            </div>
-          </div>
-        )}
 
         {/* Image Section */}
         <div className="relative w-full pt-[100%] md:pt-[60%] bg-white">
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
             {/* Product Labels */}
-            <div className="absolute left-5 rtl:right-5 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
+            <div className="absolute left-2 rtl:right-2 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
               {product.Category1 && product.Category1.IsLabel && (
                 <div
                   className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
