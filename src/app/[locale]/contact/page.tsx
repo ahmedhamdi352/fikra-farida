@@ -1,11 +1,7 @@
 
 import { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import ContactFormFields from 'components/common/ContactFormFields';
-import phoneIcon from 'assets/icons/phone.svg'
-import pinIcon from 'assets/icons/pin.svg'
-import emailIcon from 'assets/icons/mail.svg'
+import { ContactFormFields, ContactInfo } from 'components';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Fikra Farida',
@@ -39,60 +35,8 @@ export default function ContactPage() {
             </div>
 
             {/* Info Side */}
-            <div className="hidden lg:pl-12 lg:flex flex-col justify-center">
-              <div className="mb-8">
-                <h3 className="text-[var(--main-color1)] text-xl font-semibold mb-4">
-                  {t('info.title')}
-                </h3>
-                <p className="text-white/80">
-                  {t('info.subtitle')}
-                </p>
-              </div>
+            <ContactInfo />
 
-              <div className="space-y-6">
-                <div className="flex flex-col items-start justify-start gap-4">
-                  <div className="text-[var(--main-color1)]">
-                    <a
-                      href={`tel:${t('info.phone.value')}`}
-                      className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
-                    >
-                      <Image src={phoneIcon} alt="Phone" width={30} height={30} />
-                      <div>
-                        <p className="text-white font-bold text-[20px]">
-                          {t('info.phone.label')}
-                        </p>
-                        <span className="truncate text-[16px]">{t('info.phone.value')}</span>
-                      </div>
-                    </a>
-                  </div>
-
-                  <div className="text-[var(--main-color1)]">
-                    <a
-                      href={`mailto:${t('info.email.value')}`}
-                      className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
-                    >
-                      <Image src={emailIcon} alt="Phone" width={60} height={60} />
-                      <div>
-                        <p className="text-white font-bold text-[20px]">
-                          {t('info.email.label')}
-                        </p>
-                        <span className="truncate text-[16px]">{t('info.email.value')}</span>
-                      </div>
-                    </a>
-                  </div>
-
-                  <div
-                    className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
-                  >
-                    <Image src={pinIcon} alt="Phone" width={30} height={30} />
-                    <div>
-                      <span className="truncate text-[var(--main-color1)] font-bold text-[16px]">{t('info.location.value')}</span>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

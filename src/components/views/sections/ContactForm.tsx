@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import contactBg from 'assets/images/contactBg.png';
-import ContactFormFields from 'components/common/ContactFormFields';
+import { ContactFormFields } from 'components';
 
 export default function ContactForm() {
   const t = useTranslations('contact');

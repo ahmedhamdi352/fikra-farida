@@ -6,7 +6,7 @@ const API_KEY = process.env.KASHIER_API_KEY!;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Verify webhook signature
     const signature = request.headers.get('x-kashier-signature');
     if (!signature) {
@@ -15,10 +15,7 @@ export async function POST(request: NextRequest) {
 
     // Calculate expected signature
     const payload = JSON.stringify(body);
-    const expectedSignature = crypto
-      .createHmac('sha256', API_KEY)
-      .update(payload)
-      .digest('hex');
+    const expectedSignature = crypto.createHmac('sha256', API_KEY).update(payload).digest('hex');
 
     // Verify signature
     if (signature !== expectedSignature) {
@@ -26,15 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle different payment statuses
-    const { status, orderId, amount, currency } = body;
-
-    // Log payment status
-    console.log('Payment webhook received:', {
-      status,
-      orderId,
-      amount: amount / 100, // Convert back from piasters to main currency
-      currency,
-    });
+    const { status } = body;
 
     // Here you can update your database or perform other actions based on the payment status
     switch (status) {
@@ -48,7 +37,7 @@ export async function POST(request: NextRequest) {
         // Payment pending
         break;
       default:
-        console.log('Unknown payment status:', status);
+        console.info('Unknown payment status:', status);
     }
 
     return NextResponse.json({ success: true });

@@ -13,6 +13,7 @@ import FooterWrapper from 'components/FooterWrapper';
 import { CartProvider } from 'context/CartContext';
 import { AuthProvider } from 'context/AuthContext';
 import QueryProvider from 'providers/query-provider';
+import { SiteProvider } from 'context/SiteContext';
 
 type Props = {
   children: React.ReactNode;
@@ -109,23 +110,25 @@ export default async function LocaleLayout(props: Props) {
             <AuthProvider>
               <NextIntlClientProvider messages={messages} locale={locale}>
                 <CartProvider>
-                  <div className="relative flex min-h-screen flex-col">
-                    <HeaderWrapper initialData={siteData} />
-                    <main className="flex-1 pt-[72px]">{children}</main>
-                    <FooterWrapper initialData={siteData} />
-                    <ToastContainer
-                      position={locale === 'ar' ? 'top-left' : 'top-right'}
-                      autoClose={5000}
-                      hideProgressBar={false}
-                      newestOnTop
-                      closeOnClick
-                      rtl={locale === 'ar'}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                      theme="colored"
-                    />
-                  </div>
+                  <SiteProvider initialData={siteData}>
+                    <div className="relative flex min-h-screen flex-col">
+                      <HeaderWrapper initialData={siteData} />
+                      <main className="flex-1 pt-[72px]">{children}</main>
+                      <FooterWrapper initialData={siteData} />
+                      <ToastContainer
+                        position={locale === 'ar' ? 'top-left' : 'top-right'}
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop
+                        closeOnClick
+                        rtl={locale === 'ar'}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"
+                      />
+                    </div>
+                  </SiteProvider>
                 </CartProvider>
               </NextIntlClientProvider>
             </AuthProvider>

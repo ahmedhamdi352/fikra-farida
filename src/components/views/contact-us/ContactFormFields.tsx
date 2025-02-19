@@ -6,8 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useContactUsMutation } from 'hooks';
 import { PhoneInput } from 'components/forms/phone-input'
 import * as yup from 'yup';
-import TextInput from '../forms/text-input';
-import TextArea from '../forms/text-area'; // Import TextArea component
+import TextInput from '../../forms/text-input';
+import TextArea from '../../forms/text-area'; // Import TextArea component
 
 interface ContactFormData {
   fullName: string;

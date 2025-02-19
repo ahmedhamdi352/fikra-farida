@@ -68,14 +68,14 @@ const Footer = ({ siteData }: FooterProps) => {
               <div className="space-y-4">
                 <a
                   href={`tel:${siteData.contactPhone}`}
-                  className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
+                  className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[300px] overflow-hidden text-ellipsis"
                 >
                   <Image src={phoneIcon} alt="Phone" width={24} height={24} />
                   <span className="truncate">{siteData.contactPhone}</span>
                 </a>
                 <a
                   href={`mailto:${siteData.contactEmail}`}
-                  className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
+                  className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[300px] overflow-hidden text-ellipsis"
                 >
                   <Image src={emailIcon} alt="Email" width={24} height={24} />
                   <span className="truncate">{siteData.contactEmail}</span>
@@ -154,14 +154,14 @@ const Footer = ({ siteData }: FooterProps) => {
             <div className="space-y-6">
               <a
                 href={`tel:${siteData.contactPhone}`}
-                className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
+                className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[300px] overflow-hidden text-ellipsis"
               >
                 <Image src={phoneIcon} alt="Phone" width={24} height={24} />
                 <span className="truncate">{siteData.contactPhone}</span>
               </a>
               <a
                 href={`mailto:${siteData.contactEmail}`}
-                className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[200px] overflow-hidden text-ellipsis"
+                className="flex items-center gap-3 hover:text-[var(--main-color1)] transition-colors max-w-[300px] overflow-hidden text-ellipsis"
               >
                 <Image src={emailIcon} alt="Email" width={24} height={24} />
                 <span className="truncate">{siteData.contactEmail}</span>
