@@ -1,3 +1,5 @@
+'use client';
+
 import { Control, Controller, FieldError, Path, } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
 import 'react-international-phone/style.css';
@@ -10,6 +12,7 @@ import {
   PhoneInputProps,
 } from 'react-international-phone';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 type PhoneFieldProps<T extends FieldValues = FieldValues> = Omit<React.ComponentPropsWithoutRef<'input'>, 'name'> &
   PhoneInputProps & {
@@ -38,6 +41,8 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
   placeholder,
   ...rest
 }: PhoneFieldProps<TFieldValues>) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const countriesOptions = () => {
     if (onlyCountries) {
       const countries = defaultCountries.filter(country => {
@@ -84,41 +89,45 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
             <div className="relative flex w-full">
               <div className="relative w-full">
                 <div className="absolute inset-y-0 left-0 flex items-center z-10">
-                  <div className="relative group">
+                  <div className="relative">
                     <button
                       type="button"
                       disabled={disabled || disableDropdown}
+                      onClick={() => setIsOpen(!isOpen)}
                       className={`h-full min-w-[120px] flex items-center gap-2 px-4 text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${error ? 'text-red-500' : ''}`}
                     >
                       <div className="flex items-center gap-3">
                         <FlagImage iso2={country.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
                         <span className="text-base">+{country.dialCode}</span>
                       </div>
-                      <ChevronDownIcon className="h-5 w-5 text-white/70 ml-2" />
+                      <ChevronDownIcon className={`h-5 w-5 text-white/70 ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
                     {/* Custom Dropdown */}
-                    <div className="hidden group-focus-within:block absolute top-[calc(100%+8px)] left-0 w-[280px] max-h-[320px] overflow-y-auto bg-[#1a1a1a] rounded-xl border border-yellow-500/20 shadow-xl z-50 py-2">
-                      {countriesOptions()?.map(c => {
-                        const countryData = parseCountry(c);
-                        return (
-                          <button
-                            key={countryData.iso2}
-                            type="button"
-                            onClick={() => {
-                              setCountry(countryData.iso2);
-                              // Update form value when country changes
-                              const currentValue = inputValue.replace(/^\+\d+\s/, '').replace(/[^\d]/g, '');
-                              onChange(`+${countryData.dialCode}${currentValue}`);
-                            }}
-                            className={`flex items-center gap-3 w-full py-3 px-4 hover:bg-white/5 text-left text-sm transition-colors ${country.iso2 === countryData.iso2 ? 'bg-white/10' : ''}`}
-                          >
-                            <FlagImage iso2={countryData.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
-                            <span className="text-white text-base font-medium">{countryData.name}</span>
-                            <span className="text-gray-400 ml-auto text-base">+{countryData.dialCode}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
+                    {isOpen && (
+                      <div className="absolute top-[calc(100%+8px)] left-0 w-[280px] max-h-[320px] overflow-y-auto bg-[#1a1a1a] rounded-xl border border-yellow-500/20 shadow-xl z-50 py-2">
+                        {countriesOptions()?.map(c => {
+                          const countryData = parseCountry(c);
+                          return (
+                            <button
+                              key={countryData.iso2}
+                              type="button"
+                              onClick={() => {
+                                setCountry(countryData.iso2);
+                                setIsOpen(false);
+                                // Update form value when country changes
+                                const currentValue = inputValue.replace(/^\+\d+\s/, '').replace(/[^\d]/g, '');
+                                onChange(`+${countryData.dialCode}${currentValue}`);
+                              }}
+                              className={`flex items-center gap-3 w-full py-3 px-4 hover:bg-white/5 text-left text-sm transition-colors ${country.iso2 === countryData.iso2 ? 'bg-white/10' : ''}`}
+                            >
+                              <FlagImage iso2={countryData.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
+                              <span className="text-white text-base font-medium">{countryData.name}</span>
+                              <span className="text-gray-400 ml-auto text-base">+{countryData.dialCode}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <input
