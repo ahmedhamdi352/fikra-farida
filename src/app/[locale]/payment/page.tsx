@@ -21,7 +21,6 @@ interface PaymentFormData {
   email: string;
   country: string;
   city: string;
-  governorate: string;
   address: string;
   phone: string;
   note: string;
@@ -44,7 +43,6 @@ const PaymentPage = () => {
     email: yup.string().optional().email(t('validation.invalidEmail')),
     country: yup.string().required(t('validation.countryRequired')),
     city: yup.string().required(t('validation.cityRequired')),
-    governorate: yup.string().required(t('validation.governorateRequired')),
     address: yup.string().required(t('validation.addressRequired')),
     phone: yup.string().required(t('validation.phoneRequired')),
     note: yup.string().default(''),
@@ -233,7 +231,7 @@ const PaymentPage = () => {
 
             <section className="space-y-4">
               <h2 className="text-xl font-semibold">{t('deliveryInformation')}</h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <TextInput
                   control={control}
                   name="country"
@@ -254,16 +252,7 @@ const PaymentPage = () => {
                     </svg>
                   }
                 />
-                <TextInput
-                  control={control}
-                  name="governorate"
-                  placeholder={t('governorate')}
-                  icon={
-                    <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                    </svg>
-                  }
-                />
+
               </div>
               <TextInput
                 control={control}
