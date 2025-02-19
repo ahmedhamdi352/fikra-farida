@@ -44,7 +44,7 @@ export default function HeroSection() {
             <h1 className="text-h1 font-bold  w-full  mb-6 animate-fadeInLeft">
               {t('hero.headTitle')}
             </h1>
-            <h2 className="text-h2 font-bold  w-full text-yellow-400 mb-8 animate-fadeInRight">
+            <h2 className="text-h2 font-bold  w-full text-[--main-color1] mb-8 animate-fadeInRight">
               {t('hero.subtitle')}
             </h2>
             <p className="text-body  mb-8 max-w-3xl w-full mx-auto animate-scaleIn">
@@ -54,13 +54,13 @@ export default function HeroSection() {
             <div className="flex flex-wrap justify-center gap-4 animate-rotateIn">
               <Link
                 href='/products'
-                className="bg-yellow-400 text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+                className="bg-[--main-color1] text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
               >
                 {t('hero.buttonForProducts')}
               </Link>
               <Link
                 href='/teams'
-                className="border border-yellow-400 text-yellow-400 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition-colors flex items-center gap-2">
+                className="border border-[--main-color1] text-[--main-color1] px-8 py-3 rounded-lg font-semibold hover:bg-[--main-color1] hover:text-black transition-colors flex items-center gap-2">
                 {t('hero.buttonForTeams')}
                 <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

@@ -39,13 +39,13 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="block bg-transparent rounded-lg overflow-hidden relative group h-full"
+      className="block bg-transparent rounded-lg shadow-xl overflow-hidden relative group h-full"
     >
       <div className="flex flex-col h-full">
         {/* Cart Status Indicator */}
         {isInCart && (
           <div className=" hidden md:absolute top-2 right-2 z-10">
-            <div className="bg-[#FEC400] text-white text-[10px] md:text-xs px-2 py-0.5 rounded-full animate-fadeIn">
+            <div className="bg-[#FEC400]  text-[10px] md:text-xs px-2 py-0.5 rounded-full animate-fadeIn">
               In Cart
             </div>
           </div>
@@ -57,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {/* Product Label */}
             {product.label && (
               <div className="absolute left-5 top-1 md:left-10 md:top-3 z-10">
-                <div className="relative bg-transparent text-white text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold">
+                <div className="relative bg-transparent  text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold">
                   <span
                     className="absolute inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
                     style={{
@@ -88,11 +88,11 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 flex flex-col text-white p-2.5 md:p-4 rounded-b-[10px] border border-white/10 shadow-xl bg-gradient-to-tr from-[rgba(217,217,217,0.05)] from-[4.53%] to-[rgba(115,115,115,0.05)] to-[92.45%] backdrop-blur-[10px]">
+        <div className="flex-1 flex flex-col  p-2.5 md:p-4 rounded-b-[10px] border border-white/10 shadow-xl bg-gradient-to-tr from-[rgba(217,217,217,0.05)] from-[4.53%] to-[rgba(115,115,115,0.05)] to-[92.45%] backdrop-blur-[10px]">
           {/* Header */}
           <div className='flex justify-between items-start gap-2'>
             <div className="flex-1 min-w-0 mb-2 md:mb-3">
-              <h2 className="text-[10px] md:text-sm text-gray-300 mb-0.5 truncate">{product.id}</h2>
+              <h2 className="text-[10px] md:text-sm text-gray-400 mb-0.5 truncate">{product.id}</h2>
               <div className="text-xs md:text-base font-medium md:line-clamp-2 truncate md:leading-normal">
                 {locale === 'ar' ? product.arName || product.name : product.name}
               </div>
