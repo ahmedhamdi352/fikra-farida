@@ -8,6 +8,7 @@ import { PhoneInput } from 'components/forms/phone-input'
 import * as yup from 'yup';
 import TextInput from '../../forms/text-input';
 import TextArea from '../../forms/text-area'; // Import TextArea component
+import { useSiteData } from 'context/SiteContext';
 
 interface ContactFormData {
   fullName: string;
@@ -30,8 +31,7 @@ const schema = yup.object().shape({
 export default function ContactFormFields() {
   const t = useTranslations('contact');
   const { isLoading, onContactUs } = useContactUsMutation();
-
-
+  const siteData = useSiteData();
   const {
     control,
     handleSubmit,
@@ -111,7 +111,7 @@ export default function ContactFormFields() {
         type="tel"
         control={control}
         required
-        defaultCountry="eg"
+        defaultCountry={siteData.code.toLocaleLowerCase() || 'eg'}
         placeholder="Enter your phone number"
       />
 

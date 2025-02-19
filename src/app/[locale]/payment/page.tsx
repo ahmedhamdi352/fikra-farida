@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { useCreateOrderMutation } from 'hooks';
 import { OrderPayloadForCreateDto } from 'types';
+import { useSiteData } from 'context/SiteContext';
 
 interface PaymentFormData {
   fullName: string;
@@ -33,6 +34,7 @@ const PaymentPage = () => {
   const { isLoading, onCreateOrder } = useCreateOrderMutation()
   const params = useParams();
   const locale = params.locale as string;
+  const siteData = useSiteData();
 
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
@@ -278,8 +280,9 @@ const PaymentPage = () => {
                 name="phone"
                 control={control}
                 required
-                defaultCountry="eg"
+                defaultCountry={siteData.code.toLocaleLowerCase() || 'eg'}
                 placeholder={t('phone')}
+                disableDropdown={true}
               />
               <TextArea
                 control={control}
