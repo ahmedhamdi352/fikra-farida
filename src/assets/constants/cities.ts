@@ -1,0 +1,40 @@
+export const egyptCities = {
+  Cairo: 'Cairo',
+  Alexandria: 'Alexandria',
+  Giza: 'Giza',
+  'Shubra El Kheima': 'Shubra El Kheima',
+  'Port Said': 'Port Said',
+  Suez: 'Suez',
+  Luxor: 'Luxor',
+  Asyut: 'Asyut',
+  Mansoura: 'Mansoura',
+  Tanta: 'Tanta',
+  Aswan: 'Aswan',
+  Fayoum: 'Fayoum',
+  Zagazig: 'Zagazig',
+  Ismailia: 'Ismailia',
+  'Kafr El Sheikh': 'Kafr El Sheikh',
+  Minya: 'Minya',
+  Damietta: 'Damietta',
+  'Beni Suef': 'Beni Suef',
+  Qena: 'Qena',
+  Sohag: 'Sohag',
+  Hurghada: 'Hurghada',
+  '6th of October City': '6th of October City',
+  'Shibin El Kom': 'Shibin El Kom',
+  Banha: 'Banha',
+  Arish: 'Arish',
+  'Marsa Matruh': 'Marsa Matruh',
+  'Badr City': 'Badr City',
+  'Obour City': 'Obour City',
+  '10th of Ramadan City': '10th of Ramadan City',
+  'Sadat City': 'Sadat City',
+  'New Cairo': 'New Cairo',
+  Helwan: 'Helwan',
+  'Sheikh Zayed City': 'Sheikh Zayed City',
+} as const;
+
+export type EgyptCity = keyof typeof egyptCities;
+
+// Helper function to get all city names
+export const getCityNames = () => Object.keys(egyptCities);

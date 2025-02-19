@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import TextInput from 'components/forms/text-input';
+import Select from 'components/forms/select';
 import TextArea from 'components/forms/text-area';
 import Link from 'next/link'
 import { PhoneInput } from 'components/forms/phone-input';
@@ -15,6 +16,7 @@ import { FaMoneyBillWave } from 'react-icons/fa';
 import { useCreateOrderMutation } from 'hooks';
 import { OrderPayloadForCreateDto } from 'types';
 import { useSiteData } from 'context/SiteContext';
+import { getCityNames } from 'assets/constants/cities';
 
 interface PaymentFormData {
   fullName: string;
@@ -56,7 +58,8 @@ const PaymentPage = () => {
   } = useForm<PaymentFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      paymentMethod: 'online'
+      paymentMethod: 'online',
+      country: siteData.name
     }
   });
 
@@ -236,23 +239,25 @@ const PaymentPage = () => {
                   control={control}
                   name="country"
                   placeholder={t('country')}
+                  disabled
                   icon={
                     <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                     </svg>
                   }
                 />
-                <TextInput
+
+                <Select
                   control={control}
                   name="city"
                   placeholder={t('city')}
+                  options={getCityNames().map(city => ({ value: city, label: city }))}
                   icon={
                     <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
                     </svg>
                   }
                 />
-
               </div>
               <TextInput
                 control={control}
