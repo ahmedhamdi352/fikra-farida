@@ -8,8 +8,8 @@ export default function ProductsHeader() {
   return (
     <>
       <h2 className="text-h2 font-bold text-center mb-12">
-        {t('products.headTitle')} <span className="text-yellow-500">{t('products.special')}</span> {t('products.with')}
-        <p className="font-bold text-h1">{t('products.ourProducts')}</p>
+        {t('products.headTitle')} <span className="text-[var(--main-color1)]">{t('products.special')}</span> {t('products.with')}
+        <p className="font-bold text-h1 text-[var(--main-color1)]">{t('products.ourProducts')}</p>
       </h2>
 
 
