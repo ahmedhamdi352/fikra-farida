@@ -7,6 +7,16 @@ interface ProductColor {
   rank: number;
 }
 
+interface Category {
+  PK: number;
+  Name: string;
+  NameAr: string;
+  Code: string;
+  LabelColorCode: string;
+  IsLabel: boolean;
+  IsActive: boolean;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -20,4 +30,8 @@ export interface Product {
   rank: number;
   label?: string;
   colors: ProductColor[];
+  Category1?: Category | null;
+  Category2?: Category | null;
+  Category3?: Category | null;
+  Category4?: Category | null;
 }

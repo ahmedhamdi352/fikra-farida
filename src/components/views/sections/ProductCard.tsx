@@ -54,22 +54,26 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Image Section */}
         <div className="relative w-full pt-[100%] md:pt-[60%] bg-white">
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
-            {/* Product Label */}
-            {product.label && (
-              <div className="absolute left-5 top-1 md:left-10 md:top-3 z-10">
-                <div className="relative bg-transparent  text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold">
-                  <span
-                    className="absolute inset-0 -z-10 bg-[url('/brush.svg')] bg-no-repeat bg-contain"
-                    style={{
-                      height: "clamp(30px, 5vw, 50px)",
-                      width: "clamp(120px, 20vw, 200px)",
-                      transform: locale === 'en' ? "translate(-20%, -10px)" : "translate(20%, -10px)",
-                    }}
-                  ></span>
-                  {product.label}
+            {/* Product Labels */}
+            <div className="absolute left-5 rtl:right-5 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
+              {product.Category1 && product.Category1.IsLabel && (
+                <div
+                  className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
+                  style={{ backgroundColor: `#${product.Category1.LabelColorCode}` }}
+                >
+                  {locale === 'en' ? product.Category1.Name : product.Category1.NameAr}
                 </div>
-              </div>
-            )}
+              )}
+
+              {product.Category2 && product.Category2.IsLabel && (
+                <div
+                  className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
+                  style={{ backgroundColor: `#${product.Category2.LabelColorCode}` }}
+                >
+                  {locale === 'en' ? product.Category2.Name : product.Category2.NameAr}
+                </div>
+              )}
+            </div>
 
             {selectedColor?.Media[0] ? (
               <Image

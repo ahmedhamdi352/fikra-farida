@@ -210,7 +210,7 @@ const PaymentPage = () => {
         <div className="space-y-6">
           <div className="lg:hidden rounded-[10px] bg-[rgba(217,217,217,0.05)] p-6 space-y-4 shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px] mb-6">
             <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('subtotal')} :</span>
                 <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
@@ -220,7 +220,7 @@ const PaymentPage = () => {
                 <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
               </div>
               <div className="h-[1px] bg-white/10 my-2"></div>
-              <div className="flex justify-between items-center text-[#FEC400]">
+              <div className="flex justify-between items-center  text-[#FEC400]">
                 <span>{t('total')} :</span>
                 <span className=" text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
               </div>
