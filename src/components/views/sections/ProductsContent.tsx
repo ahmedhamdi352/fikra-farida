@@ -22,7 +22,6 @@ export function ProductsContent({ products }: ProductsContentProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<string>('');
   const { onGetCategories, getSelectOptions, isLoading: isCategoriesLoading } = useGetAllCategoriesMutation();
 
   useEffect(() => {
@@ -38,21 +37,10 @@ export function ProductsContent({ products }: ProductsContentProps) {
   const itemsPerPage = 20;
   const startIndex = (currentPage - 1) * itemsPerPage;
 
-  // Filter out special categories (New Product and Free Shipping) from dropdown
-  const categoryOptions = getSelectOptions(locale);
-  const dropdownOptions = categoryOptions.filter(
-    option => !['NewProduct', 'Free Shipping'].includes(option.value)
-  );
-
-  // Get special filter options
-  const specialFilters = categoryOptions.filter(
-    option => ['NewProduct', 'Free Shipping'].includes(option.value)
-  );
-
   // Filter products based on selected filter
-  const filteredProducts = selectedFilter
+  const filteredProducts = selectedCategory
     ? products.filter(product =>
-      product.Categories.some(cat => cat.Code === selectedFilter)
+      product.Categories.some(cat => cat.Code === selectedCategory)
     )
     : products;
 
@@ -62,19 +50,12 @@ export function ProductsContent({ products }: ProductsContentProps) {
   // Reset to page 1 when filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedFilter]);
+  }, [selectedCategory]);
 
   const displayedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleFilterClick = (filterCode: string) => {
-    setSelectedFilter(currentFilter => currentFilter === filterCode ? '' : filterCode);
-    // Clear dropdown selection when special filter is selected
-    setSelectedCategory('');
-  };
-
   const handleCategorySelect = (categoryCode: string) => {
     setSelectedCategory(categoryCode);
-    setSelectedFilter(categoryCode); // Update the main filter
     setIsOpen(false);
   };
 
@@ -85,7 +66,7 @@ export function ProductsContent({ products }: ProductsContentProps) {
         {!isCategoriesLoading && <div className="mb-8 flex flex-wrap items-center gap-4">
           {/* Categories Dropdown */}
           <div
-            className="relative"
+            className="relative w-1/2"
             onBlur={(e) => {
               if (!e.currentTarget.contains(e.relatedTarget)) {
                 setIsOpen(false);
@@ -103,7 +84,7 @@ export function ProductsContent({ products }: ProductsContentProps) {
             >
               <span className="truncate">
                 {selectedCategory
-                  ? categoryOptions.find(opt => opt.value === selectedCategory)?.label
+                  ? getSelectOptions(locale).find(opt => opt.value === selectedCategory)?.label
                   : isCategoriesLoading
                     ? t('loading')
                     : t('allCategories')
@@ -137,7 +118,7 @@ export function ProductsContent({ products }: ProductsContentProps) {
                   >
                     {t('allCategories')}
                   </button>
-                  {dropdownOptions.map((option) => (
+                  {getSelectOptions(locale).map((option) => (
                     <button
                       key={option.value}
                       className={`w-full text-left px-4 py-2 text-sm hover:bg-[var(--main-color1)] hover:text-black transition-colors duration-150
@@ -151,25 +132,6 @@ export function ProductsContent({ products }: ProductsContentProps) {
               </div>
             )}
           </div>
-
-          {/* Special Filter Buttons */}
-          <div className="flex gap-2 flex-wrap">
-            {specialFilters.map((filter) => (
-              <button
-                key={filter.value}
-                onClick={() => handleFilterClick(filter.value)}
-                className={`h-[42px] px-4 rounded-lg border transition-colors duration-200
-                  ${selectedFilter === filter.value
-                    ? 'bg-[var(--main-color1)] text-black border-[var(--main-color1)]'
-                    : 'border-[var(--main-color1)] text-white hover:bg-[var(--main-color1)] hover:text-black'
-                  }`}
-              >
-                {filter.label}
-              </button>
-            ))}
-          </div>
-
-
         </div>}
 
         {/* Results count */}
