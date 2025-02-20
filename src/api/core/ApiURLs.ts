@@ -5,4 +5,5 @@ export const ApiURLs = {
   register: '/api/Account/Register',
   contact: '/api/Email/Send',
   order: '/api/ShoppingOrder/add',
+  catergories: '/api/Store/Categories',
 } as const;

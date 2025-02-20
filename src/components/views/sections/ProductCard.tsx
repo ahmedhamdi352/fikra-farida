@@ -48,23 +48,18 @@ export function ProductCard({ product }: ProductCardProps) {
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
             {/* Product Labels */}
             <div className="absolute left-2 rtl:right-2 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
-              {product.Category1 && product.Category1.IsLabel && (
-                <div
-                  className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
-                  style={{ backgroundColor: `#${product.Category1.LabelColorCode}` }}
-                >
-                  {locale === 'en' ? product.Category1.Name : product.Category1.NameAr}
-                </div>
-              )}
-
-              {product.Category2 && product.Category2.IsLabel && (
-                <div
-                  className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
-                  style={{ backgroundColor: `#${product.Category2.LabelColorCode}` }}
-                >
-                  {locale === 'en' ? product.Category2.Name : product.Category2.NameAr}
-                </div>
-              )}
+              {product.Categories
+                .filter(category => category.IsLabel)
+                .slice(0, 2)
+                .map((category) => (
+                  <div
+                    key={category.PK}
+                    className={`px-2 py-1 rounded-full text-xs font-medium`}
+                    style={{ backgroundColor: category.LabelColorCode }}
+                  >
+                    {locale === 'en' ? category.Name : category.NameAr}
+                  </div>
+                ))}
             </div>
 
             {selectedColor?.Media[0] ? (

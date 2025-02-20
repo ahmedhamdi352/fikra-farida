@@ -259,7 +259,12 @@
     "addToCart": "إضافة إلى السلة",
     "removeFromCart": "إزالة من السلة",
     "buyNow": "اشتري الآن",
-    "description": "الوصف"
+    "description": "الوصف",
+    "allCategories": "كل الفئات",
+    "showing": "يعرض",
+    "results": "منتج",
+    "noProductsTitle": "لم يتم العثور على منتجات",
+    "noProductsMessage": "حاول تعديل عوامل التصفية أو معايير البحث"
   },
   "checkout": {
     "yourCartIsEmpty": "عربة التسوق فارغة",

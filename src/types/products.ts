@@ -30,8 +30,5 @@ export interface Product {
   rank: number;
   label?: string;
   colors: ProductColor[];
-  Category1?: Category | null;
-  Category2?: Category | null;
-  Category3?: Category | null;
-  Category4?: Category | null;
+  Categories: Category[];
 }

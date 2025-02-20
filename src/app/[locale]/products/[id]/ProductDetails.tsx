@@ -157,23 +157,18 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           >
             {/* Product Labels */}
             <div className="absolute left-5 rtl:right-5 top-5 md:left-5 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
-              {product.Category1 && product.Category1.IsLabel && (
-                <div
-                  className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
-                  style={{ backgroundColor: `#${product.Category1.LabelColorCode}` }}
-                >
-                  {locale === 'en' ? product.Category1.Name : product.Category1.NameAr}
-                </div>
-              )}
-
-              {product.Category2 && product.Category2.IsLabel && (
-                <div
-                  className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
-                  style={{ backgroundColor: `#${product.Category2.LabelColorCode}` }}
-                >
-                  {locale === 'en' ? product.Category2.Name : product.Category2.NameAr}
-                </div>
-              )}
+              {product.Categories
+                .filter(category => category.IsLabel)
+                .slice(0, 2)
+                .map((category) => (
+                  <div
+                    key={category.PK}
+                    className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
+                    style={{ backgroundColor: category.LabelColorCode }}
+                  >
+                    {locale === 'en' ? category.Name : category.NameAr}
+                  </div>
+                ))}
             </div>
             <Image
               src={selectedColor.Media[selectedImageIndex]}

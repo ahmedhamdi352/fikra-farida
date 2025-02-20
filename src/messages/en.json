@@ -242,7 +242,12 @@
     "addToCart":"Add to Cart",
     "removeFromCart":"Remove from Cart",
     "buyNow":"Buy Now",
-    "description":"Description"
+    "description":"Description",
+    "allCategories":"All Categories",
+    "showing": "Showing",
+    "results": "products",
+    "noProductsTitle": "No products found",
+    "noProductsMessage": "Try adjusting your filters or search criteria"
   },
   "checkout": {
     "yourCartIsEmpty": "Your cart is empty",
