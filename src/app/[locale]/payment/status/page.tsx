@@ -26,7 +26,7 @@ interface PaymentDetails {
 export default function PaymentStatusPage() {
   const t = useTranslations('Payment');
   const searchParams = useSearchParams();
-  const [isValid, setIsValid] = useState(false);
+  // const [isValid, setIsValid] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
   const { clearCart } = useCart();
 
@@ -66,7 +66,7 @@ export default function PaymentStatusPage() {
 
     // For cash payments or successful online payments, consider them valid
     // For online payments, you should implement proper signature validation
-    setIsValid(mode === 'CASH' || Boolean(signature));
+    // setIsValid(mode === 'CASH' || Boolean(signature));
 
     // Clear cart if payment is successful
     if (paymentStatus === 'SUCCESS') {
@@ -108,24 +108,24 @@ export default function PaymentStatusPage() {
 
   const { icon, title, message, orderDetails } = getStatusConfig();
 
-  if (!isValid) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="max-w-md w-full shadow-2xl bg-transparent rounded-lg p-8 text-center">
-          <BiErrorCircle className="text-red-500 text-6xl mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-4">
-            {t('invalidPayment')}
-          </h1>
-          <Link
-            href="/"
-            className="inline-block bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors w-full"
-          >
-            {t('backToHome')}
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // if (!isValid) {
+  //   return (
+  //     <div className="min-h-screen flex items-center justify-center px-4">
+  //       <div className="max-w-md w-full shadow-2xl bg-transparent rounded-lg p-8 text-center">
+  //         <BiErrorCircle className="text-red-500 text-6xl mx-auto mb-4" />
+  //         <h1 className="text-2xl font-bold text-white mb-4">
+  //           {t('invalidPayment')}
+  //         </h1>
+  //         <Link
+  //           href="/"
+  //           className="inline-block bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors w-full"
+  //         >
+  //           {t('backToHome')}
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-[100vh] flex items-center justify-center px-4">

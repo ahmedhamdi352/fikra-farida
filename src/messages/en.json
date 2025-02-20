@@ -232,7 +232,22 @@
       "addressRequired": "Address is required",
       "phoneRequired": "Phone number is required",
       "paymentMethodRequired": "Please select a payment method"
-    }
+    },
+    "paymentSuccessful": "Payment Successful!",
+    "cashPaymentSuccessMessage": "Your order has been placed successfully. We will contact you soon to confirm the delivery.",
+    "onlinePaymentSuccessMessage": "Your payment has been processed successfully. We will process your order shortly.",
+    "paymentFailed": "Payment Failed",
+    "paymentFailureMessage": "We couldn't process your payment. Please try again or choose a different payment method.",
+    "paymentCancelled": "Payment Cancelled",
+    "paymentCancelMessage": "Your payment was cancelled. Please try again when you're ready.",
+    "invalidPayment": "Invalid Payment",
+    "orderDetails": "Order Details",
+    "orderNumber": "Order Number",
+    "amount": "Amount",
+    "paymentMethod": "Payment Method",
+    "transactionId": "Transaction ID",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home"
   },
   "products":{
     "colors":"Colors",
