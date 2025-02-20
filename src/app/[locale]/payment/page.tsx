@@ -167,13 +167,13 @@ const PaymentPage = () => {
             orderId: orderResponse.orderId,
             email: data.email,
             firstName: data.fullName.split(' ')[0],
-            lastName: data.fullName.split(' ').slice(1).join(' '),
+            lastName: data.fullName.split(' ').slice(1).join(' ') || data.fullName.split(' ')[0], // Fallback if no last name
           }),
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || 'Payment failed');
+          throw new Error(errorData.error || t('paymentFailed'));
         }
 
         const result = await response.json();
