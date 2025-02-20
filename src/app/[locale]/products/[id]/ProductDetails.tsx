@@ -55,8 +55,12 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   );
   const hasQuantityChanged = quantity !== originalQuantity;
 
+  const isOutOfStock = product?.Categories.some(
+    category => category.Code === 'Out of Stock'
+  );
+
   const handleCartClick = () => {
-    if (!product) return;
+    if (!product || isOutOfStock) return;
 
     if (isInCart) {
       removeFromCart(product.id, selectedColorIndex);
@@ -69,7 +73,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   };
 
   const handleUpdateCart = () => {
-    if (!product) return;
+    if (!product || isOutOfStock) return;
     updateQuantity(product.id, selectedColorIndex, quantity);
     setOriginalQuantity(quantity);
   };
@@ -271,14 +275,18 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
               <div className="flex items-center bg-black/20 rounded-lg p-1">
                 <button
                   onClick={() => handleQuantityChange(-1)}
-                  className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
+                  className={`text-[#FEC400] w-8 h-8 flex items-center justify-center rounded ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black/20'
+                    }`}
+                  disabled={isOutOfStock}
                 >
                   -
                 </button>
                 <span className="w-8 text-center">{quantity}</span>
                 <button
                   onClick={() => handleQuantityChange(1)}
-                  className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
+                  className={`text-[#FEC400] w-8 h-8 flex items-center justify-center rounded ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black/20'
+                    }`}
+                  disabled={isOutOfStock}
                 >
                   +
                 </button>
@@ -291,7 +299,9 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
             {isInCart && hasQuantityChanged ? (
               <button
                 onClick={handleUpdateCart}
-                className="flex-1 py-3 bg-green-500 text-white rounded-lg transition-colors"
+                className={`flex-1 py-3 bg-green-500 text-white rounded-lg transition-colors ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                disabled={isOutOfStock}
               >
                 {t('updateCart')}
               </button>
@@ -299,26 +309,30 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
               <button
                 onClick={handleCartClick}
                 className={`flex-1 py-3 ${isInCart ? 'bg-red-500' : 'bg-[#FEC400]'}
-                  text-white rounded-lg transition-colors`}
+                  text-white rounded-lg transition-colors ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isOutOfStock}
               >
-                {isInCart ? t('removeFromCart') : t('addToCart')}
+                {isOutOfStock ? t('outOfStock') : isInCart ? t('removeFromCart') : t('addToCart')}
               </button>
             )}
-            <button
-              onClick={() => {
-                if (!isInCart) {
-                  addToCart(
-                    product,
-                    quantity,
-                    selectedColorIndex
-                  );
-                }
-                router.push('/checkout');
-              }}
-              className="flex-1 py-3 bg-[#FEC400] text-white rounded-lg"
-            >
-              {t('buyNow')}
-            </button>
+            {!isOutOfStock && (
+              <button
+                onClick={() => {
+                  if (isOutOfStock) return;
+                  if (!isInCart) {
+                    addToCart(
+                      product,
+                      quantity,
+                      selectedColorIndex
+                    );
+                  }
+                  router.push('/checkout');
+                }}
+                className='flex-1 py-3 bg-[#FEC400] text-white rounded-lg'
+              >
+                {t('buyNow')}
+              </button>
+            )}
           </div>
         </div>
       </div>

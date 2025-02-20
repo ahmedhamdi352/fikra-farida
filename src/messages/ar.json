@@ -221,11 +221,11 @@
     "paymentFailed": "فشلت عملية الدفع. يرجى المحاولة مرة أخرى."
   },
   "products": {
-    "colors": "الالوان",
+    "colors": "الألوان",
     "model": "الموديل",
     "quantity": "الكمية",
     "updateCart": "تحديث السلة",
-    "addToCart": "إضافة إلى السلة",
+    "addToCart": "أضف إلى السلة",
     "removeFromCart": "إزالة من السلة",
     "buyNow": "اشتري الآن",
     "description": "الوصف",
@@ -233,7 +233,8 @@
     "showing": "يعرض",
     "results": "منتج",
     "noProductsTitle": "لم يتم العثور على منتجات",
-    "noProductsMessage": "حاول تعديل عوامل التصفية أو معايير البحث"
+    "noProductsMessage": "حاول تعديل عوامل التصفية أو معايير البحث",
+    "outOfStock": "نفذت الكمية"
   },
   "checkout": {
     "yourCartIsEmpty": "عربة التسوق فارغة",

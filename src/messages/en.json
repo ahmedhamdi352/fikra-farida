@@ -262,7 +262,8 @@
     "showing": "Showing",
     "results": "products",
     "noProductsTitle": "No products found",
-    "noProductsMessage": "Try adjusting your filters or search criteria"
+    "noProductsMessage": "Try adjusting your filters or search criteria",
+    "outOfStock": "Out of Stock"
   },
   "checkout": {
     "yourCartIsEmpty": "Your cart is empty",

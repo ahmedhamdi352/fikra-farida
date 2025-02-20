@@ -20,6 +20,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const params = useParams();
   const locale = params.locale as string;
 
+  const isOutOfStock = product.Categories.some(
+    category => category.Code === 'Out of Stock'
+  );
+
   const isInCart = items.some(item =>
     item.id === product?.id &&
     item.selectedColorIndex === selectedColorIndex
@@ -27,6 +31,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const handleCartClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    if (isOutOfStock) return;
+
     setIsAnimating(true);
     if (isInCart) {
       removeFromCart(product.id, selectedColorIndex);
@@ -92,16 +98,20 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
             <button
               onClick={handleCartClick}
-              className="relative flex-shrink-0 transition-all duration-300 hover:scale-110 p-1.5 hover:bg-white/5 rounded-full -mt-1"
-              title={isInCart ? 'Remove from cart' : 'Add to cart'}
+              className={`relative flex-shrink-0 transition-all duration-300 p-1.5 rounded-full -mt-1 ${isOutOfStock
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:scale-110 hover:bg-white/5'
+                }`}
+              title={isOutOfStock ? 'Out of stock' : isInCart ? 'Remove from cart' : 'Add to cart'}
+              disabled={isOutOfStock}
             >
-              {isInCart && (
+              {isInCart && !isOutOfStock && (
                 <span className="absolute -top-1 -right-1 w-2 md:w-2.5 h-2 md:h-2.5 bg-[#FEC400] rounded-full animate-fadeIn" />
               )}
               <Image
                 src={ShoppingCard}
-                alt={isInCart ? 'Remove from cart' : 'Add to cart'}
-                className="w-4 md:w-5 h-4 md:h-5 transition-transform duration-300"
+                alt={isOutOfStock ? 'Out of stock' : isInCart ? 'Remove from cart' : 'Add to cart'}
+                className={`w-4 md:w-5 h-4 md:h-5 transition-transform duration-300 ${isOutOfStock ? 'opacity-50' : ''}`}
               />
             </button>
           </div>
