@@ -82,20 +82,15 @@ const PaymentPage = () => {
     return sum + itemTotal;
   }, 0);
 
+  const hasFreeShipping = items.some(item =>
+    item.Categories?.some(cat => cat.Code === 'Free Shipping')
+  );
+
   const subtotal = total;
-  const shippingCost = shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity);
+  const shippingCost = hasFreeShipping ? 0 : (shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity));
   const finalTotal = subtotal + shippingCost;
   const discount = 0;
-  console.log(
-    'finalTotal',
-    finalTotal,
-    'subtotal',
-    subtotal,
-    'shippingCost',
-    shippingCost,
-    'discount',
-    discount
-  )
+
 
   if (items.length === 0) {
     return (
@@ -215,10 +210,12 @@ const PaymentPage = () => {
                 <span>{t('subtotal')} :</span>
                 <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
               </div>
-              <div className="flex justify-between items-center text-[#FEC400]">
-                <span>{t('shipping')} :</span>
-                <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
-              </div>
+              {!hasFreeShipping && (
+                <div className="flex justify-between items-center text-[#FEC400]">
+                  <span>{t('shipping')} :</span>
+                  <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
+                </div>
+              )}
               <div className="h-[1px] bg-white/10 my-2"></div>
               <div className="flex justify-between items-center  text-[#FEC400]">
                 <span>{t('total')} :</span>
@@ -469,10 +466,12 @@ const PaymentPage = () => {
               <span>{t('subtotal')} :</span>
               <span >{(subtotal).toFixed(2)} {siteData.currency}</span>
             </div>
-            <div className="flex justify-between items-center text-[#FEC400]">
-              <span>{t('shipping')} :</span>
-              <span >{shippingCost.toFixed(2)} {siteData.currency}</span>
-            </div>
+            {!hasFreeShipping && (
+              <div className="flex justify-between items-center text-[#FEC400]">
+                <span>{t('shipping')} :</span>
+                <span >{shippingCost.toFixed(2)} {siteData.currency}</span>
+              </div>
+            )}
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('total')} :</span>
