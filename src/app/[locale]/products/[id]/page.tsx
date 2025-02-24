@@ -23,17 +23,6 @@ export async function generateMetadata({ params }: ProductDetailsPageProps) {
   };
 }
 
-// export async function generateStaticParams() {
-//   try {
-//     const products = await getProducts();
-//     return products.map((product) => ({
-//       id: product.id,
-//     }));
-//   } catch (error) {
-//     console.error('Error generating static params:', error);
-//     return [];
-//   }
-// }
 
 export default async function ProductDetailsPage({ params }: ProductDetailsPageProps) {
 

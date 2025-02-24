@@ -75,7 +75,7 @@ export function ProductsContent({ products }: ProductsContentProps) {
           >
             <button
               type="button"
-              className={`w-full md:w-64 h-[42px] px-4 rounded-lg text-white border border-[var(--main-color1)]
+              className={`w-full md:w-64 h-[42px] px-4 rounded-lg  border border-[var(--main-color1)]
                 hover:border-[var(--main-color1)] transition-colors duration-200 flex items-center justify-between
                 focus:outline-none focus:ring-2 focus:ring-[var(--main-color1)] focus:ring-opacity-50
                 ${isOpen ? 'border-[var(--main-color1)]' : ''}`}
@@ -102,7 +102,7 @@ export function ProductsContent({ products }: ProductsContentProps) {
 
             {/* Dropdown Menu */}
             {isOpen && (
-              <div className="absolute z-50 w-full mt-1 bg-[#3C3C3B] border border-[var(--main-color1)] rounded-lg shadow-lg max-h-60 overflow-auto">
+              <div className="absolute z-50 w-full mt-1 dark:bg-[#3C3C3B] bg-white border border-[var(--main-color1)] rounded-lg shadow-lg max-h-60 overflow-auto">
                 <div
                   className="py-1"
                   role="menu"

@@ -17,7 +17,7 @@ export default function InfoSection() {
         <h3 className="text-[var(--main-color1)] text-xl font-semibold mb-4">
           {t('info.title')}
         </h3>
-        <p className="text-white/80">
+        <p className="dark:text-white/80">
           {t('info.subtitle')}
         </p>
       </div>
@@ -31,7 +31,7 @@ export default function InfoSection() {
             >
               <Image src={phoneIcon} alt="Phone" width={30} height={30} />
               <div>
-                <p className="text-white font-bold text-[20px]">
+                <p className="font-bold text-[20px]">
                   {t('info.phone.label')}
                 </p>
                 <span className="truncate text-[16px]">{siteData.contactPhone}</span>
@@ -46,7 +46,7 @@ export default function InfoSection() {
             >
               <Image src={emailIcon} alt="Phone" width={30} height={30} />
               <div>
-                <p className="text-white font-bold text-[20px]">
+                <p className="font-bold text-[20px]">
                   {t('info.email.label')}
                 </p>
                 <span className="truncate text-[16px]">{siteData.contactEmail}</span>

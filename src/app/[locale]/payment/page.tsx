@@ -340,7 +340,7 @@ const PaymentPage = () => {
                       <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />
                     )}
                   </div>
-                  <span className="text-gray-300">{t('onlinePayment')}</span>
+                  <span className="text-gray-500">{t('onlinePayment')}</span>
                   <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
                     <Image src="/visa.png" alt="Visa" width={35} height={22} className="object-contain" />
                     <Image src="/mastercard.png" alt="Mastercard" width={35} height={22} className="object-contain" />
@@ -368,7 +368,7 @@ const PaymentPage = () => {
                       <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />
                     )}
                   </div>
-                  <span className="text-gray-300">{t('cashOnDelivery')}</span>
+                  <span className="text-gray-500">{t('cashOnDelivery')}</span>
                   <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
                     <FaMoneyBillWave className="text-[#FEC400] text-2xl" />
                   </div>
@@ -440,14 +440,14 @@ const PaymentPage = () => {
 
                     </Link>
 
-                    <div className="flex items-center gap-2 bg-black/20 rounded-lg p-1 h-fit">
+                    <div className="flex items-center gap-2 bg-black/50 dark:bg-white/20 rounded-lg p-1 h-fit">
                       <button
                         onClick={() => updateQuantity(item.id, item.selectedColorIndex, Math.max(1, item.quantity - 1))}
                         className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
                       >
                         -
                       </button>
-                      <span className="w-8 text-center">{item.quantity}</span>
+                      <span className="w-8 text-center text-white">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity + 1)}
                         className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"

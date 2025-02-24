@@ -192,7 +192,7 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        <div className="w-full self-end lg:w-[500px] h-fit sticky top-8 bg-gradient-to-tr from-[rgba(217,217,217,0.05)] from-[4.53%] to-[rgba(115,115,115,0.05)] to-[92.45%] backdrop-blur-[10px] border border-white/10 rounded-lg p-6">
+        <div className="w-full self-end lg:w-[500px] h-fit sticky top-8 card-container p-6">
           <div className="flex items-center gap-4 mb-6 w-full">
             <input
               type="text"
@@ -201,7 +201,7 @@ export default function CheckoutPage() {
               onChange={(e) => setDiscountCode(e.target.value)}
               className="bg-[rgba(217,217,217,0.05)] border border-white/10 rounded-lg px-4 py-3  flex-1 min-w-0 focus:outline-none focus:ring-1 focus:ring-[var(--main-color1)] focus:border-transparent placeholder:text-gray-400"
             />
-            <button className="shrink-0 px-6 py-3 rounded-lg text-black bg-[var(--main-color1)] hover:bg-transparent hover:text-white border border-[var(--main-color1)] transition-colors">
+            <button className="shrink-0 px-6 py-3 rounded-lg text-black bg-[var(--main-color1)] hover:bg-transparent  dark:hover:text-white border border-[var(--main-color1)] transition-colors">
               {t('apply')}
             </button>
           </div>
@@ -209,13 +209,13 @@ export default function CheckoutPage() {
           <div className="space-y-4 text-[#FEC400]">
             <div className="flex justify-between items-center">
               <span>{t('subtotal')}</span>
-              <span className="text-white">{(total).toFixed(2)} </span>
+              <span className="dark:text-white text-black">{(total).toFixed(2)} </span>
             </div>
 
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center">
               <span>{t('totalAmount')}</span>
-              <span className="text-white text-xl font-medium">{total.toFixed(2)} </span>
+              <span className="dark:text-white text-black text-xl font-medium">{total.toFixed(2)} </span>
             </div>
           </div>
 

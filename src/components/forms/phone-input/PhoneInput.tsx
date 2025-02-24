@@ -94,22 +94,22 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                       type="button"
                       disabled={disabled || disableDropdown}
                       onClick={() => setIsOpen(!isOpen)}
-                      className={`h-full min-w-[120px] flex items-center gap-2 px-4 text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${error ? 'text-red-500' : ''}`}
+                      className={`h-full min-w-[120px] flex items-center gap-2 px-4 text-black dark:text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${error ? 'text-red-500' : ''}`}
                     >
                       <div className="flex items-center gap-3">
                         <FlagImage iso2={country.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
                         <span className="text-base">+{country.dialCode}</span>
                       </div>
-                      <ChevronDownIcon className={`h-5 w-5 text-white/70 ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDownIcon className={`h-5 w-5 text-black dark:text-white/70 ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
                     {/* Custom Dropdown */}
                     {isOpen && (
-                      <div className="absolute top-[calc(100%+8px)] left-0 w-[280px] max-h-[320px] overflow-y-auto bg-[#1a1a1a] rounded-xl border border-yellow-500/20 shadow-xl z-50 py-2">
-                        {countriesOptions()?.map(c => {
-                          const countryData = parseCountry(c);
+                      <div className="absolute top-full left-0 mt-1 w-full max-h-60 overflow-auto bg-[#F5F5F5] dark:bg-black/90 backdrop-blur-sm rounded-lg shadow-lg z-50">
+                        {countriesOptions().map((option, index) => {
+                          const countryData = parseCountry(option);
                           return (
                             <button
-                              key={countryData.iso2}
+                              key={index}
                               type="button"
                               onClick={() => {
                                 setCountry(countryData.iso2);
@@ -118,11 +118,11 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                                 const currentValue = inputValue.replace(/^\+\d+\s/, '').replace(/[^\d]/g, '');
                                 onChange(`+${countryData.dialCode}${currentValue}`);
                               }}
-                              className={`flex items-center gap-3 w-full py-3 px-4 hover:bg-white/5 text-left text-sm transition-colors ${country.iso2 === countryData.iso2 ? 'bg-white/10' : ''}`}
+                              className="w-full flex items-center gap-3 px-4 py-2 text-black dark:text-white hover:bg-gray-200 dark:hover:bg-black/50"
                             >
                               <FlagImage iso2={countryData.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
-                              <span className="text-white text-base font-medium">{countryData.name}</span>
-                              <span className="text-gray-400 ml-auto text-base">+{countryData.dialCode}</span>
+                              <span className="text-black dark:text-white text-base font-medium">{countryData.name}</span>
+                              <span className="text-gray-400 dark:text-gray-500 ml-auto text-base">+{countryData.dialCode}</span>
                             </button>
                           );
                         })}
@@ -134,15 +134,12 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                   type="tel"
                   id={name}
                   placeholder={placeholder}
-                  className={`block w-full rounded-xl border bg-[rgba(0,0,0,0.25)] ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-yellow-500 border-yellow-500/20'} pl-[140px] pr-4 py-4 text-white placeholder-gray-400 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base`}
-                  value={inputValue.replace(/^\+\d+\s/, '')}
+                  className={`w-full pl-[130px] pr-4 py-4 bg-[#F5F5F5] dark:bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${
+                    error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-[var(--main-color1)]'
+                  } text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400`}
+                  value={inputValue}
                   onChange={handleInputChange}
-                  onBlur={event => {
-                    if (typeof rest.onBlur === 'function') {
-                      rest.onBlur(event);
-                    }
-                    onBlur();
-                  }}
+                  onBlur={onBlur}
                   disabled={disabled}
                   ref={ref}
                   {...rest}

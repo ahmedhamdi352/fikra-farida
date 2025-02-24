@@ -82,7 +82,7 @@ export default async function BlogDetails({
       </div>
 
       <div className="container mx-auto px-4">
-        <div className="border border-[var(--main-color1)] rounded-[5px] p-6 mb-8 bg-black/30">
+        <div className="card-container">
           <div className="flex items-center">
             <span className="inline-block border-t-2 border-[var(--main-color1)] w-4"></span>
             <span className="text-[var(--main-color1)] text-sm mx-2">Recently Added</span>

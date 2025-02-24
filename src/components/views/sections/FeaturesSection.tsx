@@ -93,7 +93,7 @@ export default function FeaturesSection() {
             {features[selectedFeature].description.map((item, index) => (
               <li key={index} className="flex items-start">
                 <span className="text-[#FEC400] mr-3 text-lg">•</span>
-                <p className="text-gray-300">{item}</p>
+                <p className="dark:text-gray-300 text-gray-600">{item}</p>
               </li>
             ))}
           </ul>

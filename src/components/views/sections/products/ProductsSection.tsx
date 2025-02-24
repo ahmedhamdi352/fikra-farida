@@ -23,7 +23,7 @@ export async function ProductsSection() {
           <Button
             href="/products"
             withArrow
-            className="relative group px-8 py-3 text-white rounded-[10px] bg-transparent border-2 border-transparent hover:opacity-100 transition-colors"
+            className="relative group px-8 py-3  rounded-[10px] bg-transparent border-2 border-transparent hover:opacity-100 transition-colors"
             translationKey="products.allProducts"
             translationNamespace="home"
           />

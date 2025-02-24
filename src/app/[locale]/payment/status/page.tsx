@@ -132,23 +132,23 @@ export default function PaymentStatusPage() {
       <div className="max-w-md w-full bg-white/20 shadow-2xl rounded-lg p-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">{icon}</div>
-          <h1 className="text-2xl font-bold text-white mb-4">{title}</h1>
+          <h1 className="text-2xl font-bold  mb-4">{title}</h1>
           <p className="text-gray-400">{message}</p>
         </div>
 
         {orderDetails && (
           <div className="border-t border-gray-700 pt-6 mb-8">
-            <h2 className="text-lg font-semibold text-white mb-4">
+            <h2 className="text-lg font-semibold  mb-4">
               {t('orderDetails')}
             </h2>
             <div className="space-y-3">
               <div className="flex justify-between">
                 <span className="text-gray-400">{t('orderNumber')}</span>
-                <span className="text-white">{paymentDetails.merchantOrderId}</span>
+                <span>{paymentDetails.merchantOrderId}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">{t('amount')}</span>
-                <span className="text-white">
+                <span>
                   {(Number(paymentDetails.amount) / 100).toLocaleString('en-US', {
                     style: 'currency',
                     currency: paymentDetails.currency
@@ -158,19 +158,19 @@ export default function PaymentStatusPage() {
               {paymentDetails.mode === 'CASH' ? (
                 <div className="flex justify-between">
                   <span className="text-gray-400">{t('paymentMethod')}</span>
-                  <span className="text-white">{t('cashOnDelivery')}</span>
+                  <span >{t('cashOnDelivery')}</span>
                 </div>
               ) : paymentDetails.cardBrand && (
                 <div className="flex justify-between">
                   <span className="text-gray-400">{t('paymentMethod')}</span>
-                  <span className="text-white">
+                  <span >
                     {paymentDetails.cardBrand} {paymentDetails.maskedCard}
                   </span>
                 </div>
               )}
               <div className="flex justify-between">
                 <span className="text-gray-400">{t('transactionId')}</span>
-                <span className="text-white">{paymentDetails.transactionId}</span>
+                <span >{paymentDetails.transactionId}</span>
               </div>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function PaymentStatusPage() {
           )}
           <Link
             href="/"
-            className="inline-block bg-transparent border border-[#FEC400] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
+            className="inline-block bg-transparent border border-[#FEC400] text-black font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
           >
             {t('backToHome')}
           </Link>

@@ -56,7 +56,7 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
           <button
             type="submit"
             disabled={isSubmitting}
-            className="shrink-0 bg-[#FEC400] text-white text-sm sm:text-base font-semibold leading-normal capitalize px-4 sm:px-8 py-2 rounded-[10px] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            className="shrink-0 bg-[#FEC400] text-black text-sm sm:text-base font-semibold leading-normal capitalize px-4 sm:px-8 py-2 rounded-[10px] hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
           >
             {isSubmitting ? 'Subscribing...' : t('actions.subscribe')}
           </button>

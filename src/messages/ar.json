@@ -172,7 +172,8 @@
         "emailRequired": "البريد الإلكتروني مطلوب",
         "emailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
         "passwordRequired": "كلمة المرور مطلوبة",
-        "passwordMin": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل"
+        "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+        "passwordMatch": "كلمات المرور غير متطابقة"
       }
     },
     "register": {
@@ -180,12 +181,22 @@
       "usernamePlaceholder": "اسم المستخدم",
       "fullNamePlaceholder": "الاسم الكامل",
       "phonePlaceholder": "رقم الهاتف",
-      "emailPlaceholder": "بريدك الإلكتروني",
+      "emailPlaceholder": "البريد الإلكتروني",
       "passwordPlaceholder": "كلمة المرور",
       "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
       "submit": "إنشاء حساب",
-      "haveAccount": "لديك حساب بالفعل؟",
-      "login": "تسجيل الدخول"
+      "haveAccount": "هل لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول",
+      "validation": {
+        "usernameRequired": "اسم المستخدم مطلوب",
+        "fullNameRequired": "الاسم الكامل مطلوب",
+        "phoneRequired": "رقم الهاتف مطلوب",
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+        "passwordMatch": "كلمات المرور غير متطابقة"
+      }
     },
     "forget": {
       "title": "نسيت كلمة المرور",

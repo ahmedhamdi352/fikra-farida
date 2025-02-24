@@ -183,7 +183,17 @@
       "confirmPasswordPlaceholder": "Confirm Password",
       "submit": "SIGN UP",
       "haveAccount": "Already have an account?",
-      "login": "Login here"
+      "login": "Login here",
+      "validation": {
+        "usernameRequired": "Username is required",
+        "fullNameRequired": "Full name is required",
+        "phoneRequired": "Phone number is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Invalid email format",
+        "passwordRequired": "Password is required",
+        "passwordMin": "Password must be at least 6 characters",
+        "passwordMatch": "Passwords must match"
+      }
     },
     "forget": {
       "title": "Forget Your Password",

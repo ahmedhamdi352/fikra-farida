@@ -13,6 +13,7 @@ import SnapchatIcon from 'assets/social-media/Snapchat.png'
 import TwitterIcon from 'assets/social-media/TwitterX.png'
 import WhatsappIcon from 'assets/social-media/WhatsApp.png'
 import { useTranslations } from 'next-intl';
+import { useTheme } from './ThemeProvider';
 
 interface FooterProps {
   siteData: SiteData;
@@ -20,6 +21,7 @@ interface FooterProps {
 
 const Footer = ({ siteData }: FooterProps) => {
   const t = useTranslations('common');
+  const { theme } = useTheme();
 
   const socialLinks = [
     { href: siteData.contactWhatsapp, icon: WhatsappIcon, alt: 'WhatsApp' },
@@ -33,7 +35,8 @@ const Footer = ({ siteData }: FooterProps) => {
 
   return (
     <footer
-      style={{ background: 'var(--FOOTER)' }}
+      className={`${theme === 'light' ? 'bg-black text-white' : ''}`}
+      style={{ background: theme === 'dark' ? 'var(--FOOTER)' : undefined }}
     >
       {/* Mobile Layout */}
       <div className="lg:hidden container mx-auto px-4 py-4">

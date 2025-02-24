@@ -10,6 +10,8 @@ import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
 import { useLoginMutation } from 'hooks';
+import { useSiteData } from 'context/SiteContext';
+import { useTheme } from '../ThemeProvider';
 
 interface LoginFormData {
   email: string;
@@ -18,6 +20,8 @@ interface LoginFormData {
 
 export default function LoginForm() {
   const { isLoading, onLogin } = useLoginMutation();
+  const siteData = useSiteData();
+  const { theme } = useTheme();
   const t = useTranslations('auth.login');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -46,14 +50,14 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-[70vh] lg:min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white shadow-2xl dark:bg-black/20 dark:backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
+      <div className="max-w-md w-full space-y-8 card-container">
         <div className="flex flex-col items-center">
           <Image
-            src={fikraLogo}
+            src={siteData?.siteLogo || fikraLogo}
             alt="Fikra Farida"
-            width={180}
+            width={80}
             height={60}
-            className="mb-6"
+            className={`mb-6 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
             priority
           />
           <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">

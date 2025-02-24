@@ -9,23 +9,31 @@ import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
 import { useResetPasswordMutation } from 'hooks';
 import { useSearchParams } from 'next/navigation';
+import { useSiteData } from 'context/SiteContext';
+import { useTheme } from '../ThemeProvider';
 
 interface ResetPasswordFormData {
   password: string;
   confirmPassword: string;
 }
 
-const schema = yup.object().shape({
-  password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
-  confirmPassword: yup.string()
-    .required('Please confirm your password')
-    .oneOf([yup.ref('password')], 'Passwords must match'),
-});
-
 export default function ResetPasswordForm() {
   const t = useTranslations('auth');
+  const siteData = useSiteData();
+  const { theme } = useTheme();
   const searchParams = useSearchParams();
   const { isLoading, onResetPassword } = useResetPasswordMutation();
+
+  const schema = yup.object().shape({
+    password: yup
+      .string()
+      .required(t('login.validation.passwordRequired'))
+      .min(8, t('login.validation.passwordMin')),
+    confirmPassword: yup
+      .string()
+      .required(t('login.validation.passwordRequired'))
+      .oneOf([yup.ref('password')], t('login.validation.passwordMatch')),
+  });
 
   const {
     control,
@@ -50,14 +58,14 @@ export default function ResetPasswordForm() {
 
   return (
     <div className="min-h-[70vh] lg:min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-black/20 backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
+      <div className="max-w-md w-full space-y-8 card-container">
         <div className="flex flex-col items-center">
           <Image
-            src={fikraLogo}
+            src={siteData?.siteLogo || fikraLogo}
             alt="Fikra Farida"
-            width={180}
+            width={80}
             height={60}
-            className="mb-6"
+            className={`mb-6 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
             priority
           />
           <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">

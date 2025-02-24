@@ -154,7 +154,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
         <div className="flex-1">
           {/* Main Image */}
           <div
-            className="relative aspect-square lg:h-[500px] rounded-lg overflow-hidden bg-white mb-4"
+            className="relative aspect-square lg:h-[500px] rounded-lg overflow-hidden bg-white shadow-2xl  mb-4"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
@@ -219,7 +219,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
         </div>
 
         {/* Right Side - Product Info */}
-        <div className="flex-1 text-white">
+        <div className="flex-1">
           {/* Title and Rating */}
           <div className="mb-6">
             <h1 className="text-2xl lg:text-3xl font-bold mb-4">
@@ -272,7 +272,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           <div className="mb-8">
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-medium">{t('quantity')}</h3>
-              <div className="flex items-center bg-black/20 rounded-lg p-1">
+              <div className="flex items-center bg-black/70 dark:bg-black/20 rounded-lg p-1">
                 <button
                   onClick={() => handleQuantityChange(-1)}
                   className={`text-[#FEC400] w-8 h-8 flex items-center justify-center rounded ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black/20'
@@ -281,7 +281,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                 >
                   -
                 </button>
-                <span className="w-8 text-center">{quantity}</span>
+                <span className="w-8 text-center  text-white">{quantity}</span>
                 <button
                   onClick={() => handleQuantityChange(1)}
                   className={`text-[#FEC400] w-8 h-8 flex items-center justify-center rounded ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black/20'
@@ -348,7 +348,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
           </button> */}
         </div>
         <div className="prose prose-invert max-w-none py-6">
-          <p className="text-gray-400 text-sm lg:text-base">
+          <p className="dark:text-gray-400 text-gray-600 text-sm lg:text-base">
             {params?.locale === 'en' ? product.description : product.arDescription}
           </p>
         </div>

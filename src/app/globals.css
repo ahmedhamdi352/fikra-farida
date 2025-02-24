@@ -4,14 +4,14 @@
 
 @layer base {
   :root {
-    --background: rgba(245, 245, 245, 0.6);
+    --background: '#F3F3F3';
     --foreground: rgba(38, 38, 38, 0.9);
     --font-poppins: 'Poppins', sans-serif;
     --font-quicksand: 'Quicksand', sans-serif;
     --liner-primary: #f1911b;
     --liner-gradient-start: #fec400;
     --liner-gradient-end: #8b5410;
-    --main-color1: #f09000;
+    --main-color1: #E6A100; /* Darker gold that's more readable on light backgrounds */
     --FOOTER: linear-gradient(239deg, rgba(12, 13, 13, 0.5) 29.09%, rgba(41, 47, 54, 0.5) 109.67%);
     --small-text: #f4dd94;
   }
@@ -139,5 +139,22 @@
 
   .animate-bounce-once {
     animation: bounce 0.3s ease-in-out;
+  }
+}
+
+@layer components {
+  .card-container {
+    @apply rounded-[15px] p-8 bg-white shadow-2xl border border-[#F4DD94]/50
+    dark:bg-black/20 dark:backdrop-blur-sm dark:border-[#F1911B]/20;
+  }
+
+  .card-container-sm {
+    @apply rounded-[15px] p-4 bg-white shadow-2xl border border-[#F4DD94]/50
+    dark:bg-black/20 dark:backdrop-blur-sm dark:border-[#F1911B]/20;
+  }
+
+  .card-container-lg {
+    @apply rounded-[15px] p-12 bg-white shadow-2xl border border-[#F4DD94]/50
+    dark:bg-black/20 dark:backdrop-blur-sm dark:border-[#F1911B]/20;
   }
 }

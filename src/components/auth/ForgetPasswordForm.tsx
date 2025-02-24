@@ -9,7 +9,8 @@ import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
 import { useForgetPasswordMutation } from 'hooks';
-
+import { useSiteData } from 'context/SiteContext';
+import { useTheme } from '../ThemeProvider';
 interface ForgetPasswordFormData {
   email: string;
 }
@@ -19,7 +20,8 @@ interface ForgetPasswordFormData {
 export default function ForgetPasswordForm() {
   const t = useTranslations('auth');
   const { isLoading, onForgetPassword } = useForgetPasswordMutation();
-
+  const siteData = useSiteData();
+  const { theme } = useTheme();
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -43,14 +45,14 @@ export default function ForgetPasswordForm() {
 
   return (
     <div className="min-h-[70vh] lg:min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-black/20 backdrop-blur-sm p-8 rounded-2xl border border-[#F1911B]/20">
+      <div className="max-w-md w-full space-y-8 card-container">
         <div className="flex flex-col items-center">
           <Image
-            src={fikraLogo}
+            src={siteData?.siteLogo || fikraLogo}
             alt="Fikra Farida"
-            width={180}
+            width={80}
             height={60}
-            className="mb-6"
+            className={`mb-6 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
             priority
           />
           <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">
@@ -80,8 +82,8 @@ export default function ForgetPasswordForm() {
             {isLoading ? 'Loading...' : t('forget.submit')}
           </button>
 
-          <div className="text-center text-sm mt-4">
-            <span className="text-white">{t('forget.rememberPassword')} </span>
+          <div className="flex text-start text-sm mt-4 gap-8">
+            <span className='h4'>{t('forget.rememberPassword')} </span>
             <Link href="/login" className="font-medium text-[var(--main-color1)] hover:text-[var(--liner-primary)]">
               {t('register.login')}
             </Link>

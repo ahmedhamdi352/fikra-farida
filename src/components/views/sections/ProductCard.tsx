@@ -50,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="flex flex-col h-full">
 
         {/* Image Section */}
-        <div className="relative w-full pt-[100%] md:pt-[60%] bg-white">
+        <div className="relative w-full pt-[100%] md:pt-[60%] rounded-t-[15px]  bg-white shadow-2xl border border-[#F4DD94]/50">
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
             {/* Product Labels */}
             <div className="absolute left-2 rtl:right-2 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
@@ -87,7 +87,9 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 flex flex-col  p-2.5 md:p-4 rounded-b-[10px] border border-white/10 shadow-xl bg-gradient-to-tr from-[rgba(217,217,217,0.05)] from-[4.53%] to-[rgba(115,115,115,0.05)] to-[92.45%] backdrop-blur-[10px]">
+        <div className="flex-1 flex flex-col p-2.5 md:p-4 rounded-b-[10px]
+          bg-white border-t border-[#F4DD94]/20 shadow-lg
+          dark:border dark:border-white/10 dark:shadow-xl dark:bg-gradient-to-tr dark:from-[rgba(217,217,217,0.05)] dark:from-[4.53%] dark:to-[rgba(115,115,115,0.05)] dark:to-[92.45%] dark:backdrop-blur-[10px] dark:bg-white/5">
           {/* Header */}
           <div className='flex justify-between items-start gap-2'>
             <div className="flex-1 min-w-0 mb-2 md:mb-3">
