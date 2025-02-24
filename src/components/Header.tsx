@@ -19,13 +19,13 @@ interface HeaderProps {
   siteData: SiteData;
 }
 
-// const OfferBanner = () => {
-//   return (
-//     <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-red-800 via-grey-100 to-black text-white text-center p-2 z-10">
-//       <div className="font-bold text-body whitespace-nowrap animate-marquee">🎉 Special Offer: Discount up to 10%! 🎉 🎉 Special Offer: Discount up to 10%! 🎉 🎉 Special Offer: Discount up to 10%! 🎉</div>
-//     </div>
-//   );
-// };
+const OfferBanner = ({ title }: { title: string | null }) => {
+  return (
+    <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-700 via-grey-200 to-gray-700 text-white text-center p-2 z-10">
+      <div className="font-bold text-body whitespace-nowrap animate-marquee">🎉 {title} 🎉 🎉 </div>
+    </div>
+  );
+};
 
 const Header = ({ siteData }: HeaderProps) => {
   const pathname = usePathname();
@@ -120,9 +120,9 @@ const Header = ({ siteData }: HeaderProps) => {
 
   return (
     <>
-      {/* <OfferBanner /> */}
+      <OfferBanner title={siteData.siteNews} />
       <header
-        className={`fixed top-0 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${isVisible
+        className={`fixed top-8 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${isVisible
           ? 'translate-y-0 opacity-100'
           : '-translate-y-full opacity-0'
           }`}

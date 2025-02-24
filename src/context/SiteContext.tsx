@@ -25,6 +25,7 @@ interface SiteData {
   reviewMedia3: string | null;
   reviewMedia4: string | null;
   reviewMedia5: string | null;
+  siteNews: string | null;
   updateDate: string;
 }
 

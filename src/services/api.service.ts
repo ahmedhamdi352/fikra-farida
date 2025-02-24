@@ -154,6 +154,7 @@ export interface SiteData {
   reviewMedia4: string | null;
   reviewMedia5: string | null;
   updateDate: string;
+  siteNews: string | null;
 }
 
 export interface LoginResponse {
