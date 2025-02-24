@@ -98,6 +98,7 @@ export default async function LocaleLayout(props: Props) {
       reviewMedia3: null,
       reviewMedia4: null,
       reviewMedia5: null,
+      siteNews: null,
       updateDate: new Date().toISOString()
     };
   }
