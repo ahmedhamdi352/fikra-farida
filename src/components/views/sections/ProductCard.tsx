@@ -53,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="relative w-full pt-[100%] md:pt-[60%] rounded-t-[15px]  bg-white shadow-2xl border border-[#F4DD94]/50">
           <div className={`absolute inset-0 transition-transform duration-300 ${isAnimating ? 'animate-bounce-once' : ''}`}>
             {/* Product Labels */}
-            <div className="absolute left-2 rtl:right-2 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
+            <div className=" absolute left-2 rtl:right-2 rtl:left-auto md:left-2 md:rtl:right-2 md:rtl:left-auto top-1 md:top-3 z-10 inline-flex items-center space-x-1 rtl:space-x-reverse">
 
               {product.Categories
                 .filter(category => category.IsLabel)
@@ -61,7 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 .map((category) => (
                   <div
                     key={category.PK}
-                    className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
+                    className="text-[7px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
                     // className={`px-2 py-1 rounded-full text-xs font-medium`}
                     style={{ backgroundColor: category.LabelColorCode }}
                   >

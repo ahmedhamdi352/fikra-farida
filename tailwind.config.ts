@@ -105,8 +105,8 @@ const config: Config = {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         marquee: {
-          from: { transform: 'translateX(70%)' },
-          to: { transform: 'translateX(-70%)' },
+          from: { transform: 'translateX(100%)' },
+          to: { transform: 'translateX(-100%)' },
         },
       },
       animation: {
