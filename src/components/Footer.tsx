@@ -35,7 +35,7 @@ const Footer = ({ siteData }: FooterProps) => {
 
   return (
     <footer
-      className={`${theme === 'light' ? 'bg-black text-white' : ''}`}
+      className={`${theme === 'light' ? 'bg-black/85 text-white' : ''}`}
       style={{ background: theme === 'dark' ? 'var(--FOOTER)' : undefined }}
     >
       {/* Mobile Layout */}

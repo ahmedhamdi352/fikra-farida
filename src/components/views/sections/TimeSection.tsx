@@ -1,3 +1,4 @@
+'use client'
 import file from 'assets/icons/file-heart.svg'
 import repeat from 'assets/icons/repeat.svg'
 import send from 'assets/icons/send.svg'
@@ -5,9 +6,11 @@ import wallet from 'assets/icons/wallet.svg'
 import corner from 'assets/icons/corner.svg'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import { useTheme } from 'components/ThemeProvider'
 
 export default function TimeSection() {
   const t = useTranslations('contact');
+  const { theme } = useTheme();
 
   const cards = [
     {
@@ -48,10 +51,10 @@ export default function TimeSection() {
       <div className="container mx-auto px-4">
         <div className="container mx-auto px-4 mb-12 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-            <span className="text-white">{t('header.title.part1')} </span>
+            <span >{t('header.title.part1')} </span>
             <span className="text-[var(--main-color1)]">{t('header.title.part2')}</span>
           </h1>
-          <p className="text-white/80 text-lg font-semibold">
+          <p className="dark:text-white/80 text-gray-500 text-lg font-semibold">
             {t('header.subtitle')}
           </p>
         </div>
@@ -67,7 +70,7 @@ export default function TimeSection() {
                       <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
                       <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
                       <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
-                      <span className="w-6 h-6 rounded-full bg-[#FEC400]/30 flex items-center justify-center text-white text-sm">+1</span>
+                      <span className="w-6 h-6 rounded-full bg-[#FEC400]/30 flex items-center justify-center text-sm">+1</span>
                     </div>
                     <h3 className="text-[32px] leading-[40px] font-semibold text-black mb-4">{card.title}</h3>
                     <p className="text-black text-[32px] leading-[48px] font-semibold">{card.description}</p>
@@ -81,9 +84,9 @@ export default function TimeSection() {
               {cards.slice(0, 1).concat(cards.slice(2, 3)).map((card, index) => (
                 <div key={index} className="text-center p-4 rounded-[15px]">
                   <div className="mb-4">
-                    <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className="mx-auto" />
+                    <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className={`mx-auto ${theme === 'dark' ? 'invert brightness-0 invert' : 'brightness-0'}`} />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">{card.title}</h3>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-4">{card.title}</h3>
                   <p className="text-gray-400 text-sm">{card.description}</p>
                 </div>
               ))}
@@ -94,9 +97,9 @@ export default function TimeSection() {
               {cards.slice(3, 5).map((card, index) => (
                 <div key={index} className="text-center p-4 rounded-[15px]">
                   <div className="mb-4">
-                    <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className="mx-auto" />
+                    <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className={`mx-auto ${theme === 'dark' ? 'invert brightness-0 invert' : 'brightness-0'}`} />
                   </div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">{card.title}</h3>
+                  <h3 className="text-xl lg:text-2xl font-bold mb-4">{card.title}</h3>
                   <p className="text-gray-400 text-sm">{card.description}</p>
                 </div>
               ))}
@@ -106,9 +109,9 @@ export default function TimeSection() {
             <div className="w-full">
               <div className="text-center p-4 rounded-[15px]">
                 <div className="mb-4">
-                  <Image src={cards[5].icon} alt={`${cards[5].title} icon`} width={32} height={32} className="mx-auto" />
+                  <Image src={cards[5].icon} alt={`${cards[5].title} icon`} width={32} height={32} className={`mx-auto ${theme === 'dark' ? 'invert brightness-0 invert' : 'brightness-0'}`} />
                 </div>
-                <h3 className="text-xl lg:text-2xl font-bold text-white mb-4">{cards[5].title}</h3>
+                <h3 className="text-xl lg:text-2xl font-bold mb-4">{cards[5].title}</h3>
                 <p className="text-gray-400 text-sm">{cards[5].description}</p>
               </div>
             </div>
@@ -130,7 +133,7 @@ export default function TimeSection() {
                       <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
                       <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
                       <div className="w-8 h-8 rounded-full bg-[#FEC400]/30"></div>
-                      <span className="w-6 h-6 rounded-full bg-[#FEC400]/30 flex items-center justify-center text-white text-sm">+1</span>
+                      <span className="w-6 h-6 rounded-full bg-[#FEC400]/30 flex items-center justify-center  text-sm">+1</span>
                     </div>
                     <h3 className="text-[32px] leading-[40px] font-semibold text-black mb-4">{card.title}</h3>
                     <p className="text-black text-[32px] leading-[48px] font-semibold">{card.description}</p>
@@ -138,9 +141,9 @@ export default function TimeSection() {
                 ) : (
                   <>
                     <div className="mb-4">
-                      <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className="mx-auto" />
+                      <Image src={card.icon} alt={`${card.title} icon`} width={32} height={32} className={`mx-auto ${theme === 'dark' ? 'invert brightness-0 invert' : 'brightness-0'}`} />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
+                    <h3 className="text-2xl font-bold mb-4">{card.title}</h3>
                     <p className="text-gray-400">{card.description}</p>
                   </>
                 )}
