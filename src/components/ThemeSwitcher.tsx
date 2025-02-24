@@ -7,7 +7,7 @@ export default function ThemeSwitcher() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-md dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
+      className="hidden lg:block  p-2 rounded-md dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
       aria-label="Toggle theme"
     >
       {theme === 'light' ? (

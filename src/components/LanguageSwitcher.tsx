@@ -18,7 +18,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={() => switchLocale(locale === 'en' ? 'ar' : 'en')}
-      className="hidden lg:block px-3 py-1 bg-gradient-to-tr from-[#F1911B] via-[rgba(254,196,0,0.90)] to-[#F1911B] text-black rounded hover:bg-yellow-500"
+      className="px-3 py-1 bg-gradient-to-tr from-[#F1911B] via-[rgba(254,196,0,0.90)] to-[#F1911B] text-black rounded hover:bg-yellow-500"
     >
       {locale === 'en' ? 'AR' : 'EN'}
     </button>
