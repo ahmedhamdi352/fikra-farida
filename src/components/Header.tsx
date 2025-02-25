@@ -21,9 +21,11 @@ interface HeaderProps {
 
 const OfferBanner = ({ title }: { title: string | null }) => {
   return (
-    <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-700 via-grey-200 to-gray-700 text-white text-center p-2 z-10">
-      <div className="font-bold text-body whitespace-nowrap animate-marquee">🎉 {title} 🎉 🎉 </div>
-    </div>
+    <Link href='/products'>
+      <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-700 via-grey-200 to-gray-700 text-white text-center p-2 z-10">
+        <div className="font-bold text-body whitespace-nowrap animate-marquee">🎉 {title} 🎉 🎉 </div>
+      </div>
+    </Link>
   );
 };
 
