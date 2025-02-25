@@ -30,16 +30,7 @@ interface PaymentFormData {
   paymentMethod: 'online' | 'cash';
 }
 
-const schema = yup.object().shape({
-  fullName: yup.string().required('Full name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  phone: yup.string().required('Phone is required'),
-  address: yup.string().required('Address is required'),
-  city: yup.string<EgyptCity>().required('City is required'),
-  country: yup.string().required('Country is required'),
-  notes: yup.string(),
-  paymentMethod: yup.string().oneOf(['online', 'cash']).required(),
-}) satisfies yup.ObjectSchema<PaymentFormData>;
+
 
 const PaymentPage = () => {
   const t = useTranslations('Payment');
@@ -52,6 +43,17 @@ const PaymentPage = () => {
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
   const [shippingInfo, setShippingInfo] = useState<{ zoneName: string; price: number } | null>(null);
+
+  const schema = yup.object().shape({
+    fullName: yup.string().required(t('validation.fullNameRequired')),
+    email: yup.string().email(t('validation.invalidEmail')).required(t('validation.emailRequired')),
+    phone: yup.string().required(t('validation.phoneRequired')),
+    address: yup.string().required(t('validation.addressRequired')),
+    city: yup.string<EgyptCity>().required(t('validation.cityRequired')),
+    country: yup.string().required(t('validation.countryRequired')),
+    notes: yup.string(),
+    paymentMethod: yup.string().oneOf(['online', 'cash']).required(t('validation.paymentMethodRequired')),
+  }) satisfies yup.ObjectSchema<PaymentFormData>;
 
   const {
     control,
@@ -199,7 +201,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:py-10">
         {/* Left Column - Form */}
         <div className="space-y-6">
@@ -289,7 +291,7 @@ const PaymentPage = () => {
                 placeholder={t('address')}
                 icon={
                   <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
                 }
               />

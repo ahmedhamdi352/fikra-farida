@@ -119,7 +119,7 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-end">
-                      <div className="flex items-center gap-2 bg-black/20 rounded-lg p-1">
+                      <div className="flex items-center gap-2 text-white bg-black/50 dark:bg-white/20 rounded-lg p-1">
                         <button
                           onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity - 1)}
                           className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
@@ -169,17 +169,17 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     <div className="text-white">{price.toFixed(2)}</div>
-                    <div className="flex items-center gap-2 rounded-lg p-1">
+                    <div className="flex items-center gap-2  rounded-lg p-1">
                       <button
                         onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity - 1)}
-                        className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
+                        className="text-[#FEC400] w-8 h-8 flex items-center justify-center  bg-black/50 dark:bg-white/20 hover:bg-black/20 rounded"
                       >
                         -
                       </button>
                       <span className="w-8 text-center">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.selectedColorIndex, item.quantity + 1)}
-                        className="text-[#FEC400] w-8 h-8 flex items-center justify-center hover:bg-black/20 rounded"
+                        className="text-[#FEC400] w-8 h-8 flex items-center justify-center  bg-black/50 dark:bg-white/20 hover:bg-black/20 rounded"
                       >
                         +
                       </button>

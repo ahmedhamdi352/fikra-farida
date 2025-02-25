@@ -235,6 +235,7 @@
     "browseProducts": "Browse Products",
     "validation": {
       "fullNameRequired": "Full name is required",
+      "emailRequired": "Email is required",
       "invalidEmail": "Invalid email format",
       "countryRequired": "Country is required",
       "cityRequired": "City is required",
