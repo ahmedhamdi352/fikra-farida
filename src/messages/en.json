@@ -164,7 +164,7 @@
       "emailPlaceholder": "Email",
       "passwordPlaceholder": "Password",
       "forgotPassword": "Forgot password?",
-      "submit": "Sign in",
+      "submit": "Login",
       "submitting": "Signing in...",
       "validation": {
         "emailRequired": "Email is required",

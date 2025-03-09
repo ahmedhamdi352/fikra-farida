@@ -21,6 +21,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [originalQuantity, setOriginalQuantity] = useState(1);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const { addToCart, removeFromCart, items, updateQuantity } = useCart();
   const locale = params?.locale as string;
   const router = useRouter();
@@ -339,18 +340,31 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
 
       {/* Description Section */}
       <div className="mt-8 lg:mt-12 text-white">
-        <div className="flex border-b border-gray-700">
-          <button className="px-4 py-2 border-b-2 border-[#FEC400] text-[#FEC400]">
-            {t('description')}
-          </button>
-          {/* <button className="px-4 py-2 text-gray-400">
-            Review
-          </button> */}
+        <div className="flex justify-between items-center border-b border-gray-700 relative">
+          <div className="flex items-center relative z-10">
+            <button
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              className="flex gap-8 px-2 py-2 border-b-2 border-[#FEC400] text-[#FEC400]">
+              {t('description')}
+
+              <svg
+                className={`w-6 h-6 transform transition-transform ${isDescriptionExpanded ? 'rotate-45' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+          </div>
+
         </div>
-        <div className="prose prose-invert max-w-none py-6">
-          <p className="dark:text-gray-400 text-gray-600 text-sm lg:text-base">
-            {params?.locale === 'en' ? product.description : product.arDescription}
-          </p>
+        <div className={`transition-all duration-300 overflow-hidden ${isDescriptionExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="prose prose-invert max-w-none py-6">
+            <p className="dark:text-gray-400 text-gray-600 text-sm lg:text-base">
+              {params?.locale === 'en' ? product.description : product.arDescription}
+            </p>
+          </div>
         </div>
       </div>
     </div>

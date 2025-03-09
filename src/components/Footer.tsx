@@ -58,9 +58,9 @@ const Footer = ({ siteData }: FooterProps) => {
           </div>
 
           {/* Second Row: Pages and Contact */}
-          <div className="flex justify-between gap-8">
+          <div className="flex justify-between ">
             {/* Pages Section */}
-            <div className="space-y-6 flex-1">
+            <div className="space-y-6 flex-1 max-w-[170px]">
               <h2 className="text-[var(--main-color1)] text-xl font-semibold">{t('footer.pages')}</h2>
               <FooterNavigation />
             </div>
@@ -85,7 +85,7 @@ const Footer = ({ siteData }: FooterProps) => {
                 </a>
                 <div className="flex items-center gap-3">
                   <Image src={pinIcon} alt="Location" width={24} height={24} />
-                  <span>EGYPT</span>
+                  <span>{siteData.name}</span>
                 </div>
                 {/* Social Media Icons */}
                 <div className="flex items-center  gap-4">

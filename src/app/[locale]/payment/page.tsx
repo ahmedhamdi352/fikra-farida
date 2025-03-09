@@ -21,7 +21,7 @@ import { getShippingPrice, getZoneInfo } from 'assets/constants/shipping';
 
 interface PaymentFormData {
   fullName: string;
-  email: string;
+  email?: string;
   phone: string;
   address: string;
   city: EgyptCity;
@@ -46,7 +46,7 @@ const PaymentPage = () => {
 
   const schema = yup.object().shape({
     fullName: yup.string().required(t('validation.fullNameRequired')),
-    email: yup.string().email(t('validation.invalidEmail')).required(t('validation.emailRequired')),
+    email: yup.string().email(t('validation.invalidEmail')).optional(),
     phone: yup.string().required(t('validation.phoneRequired')),
     address: yup.string().required(t('validation.addressRequired')),
     city: yup.string<EgyptCity>().required(t('validation.cityRequired')),
@@ -137,7 +137,7 @@ const PaymentPage = () => {
           name: data.fullName,
           address: data.address,
           phoneNumber: data.phone,
-          email: data.email
+          email: data?.email || ''
         },
         countryCode: locale,
         domain: window.location.hostname

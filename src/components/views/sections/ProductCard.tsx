@@ -61,8 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 .map((category) => (
                   <div
                     key={category.PK}
-                    className="text-[7px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
-                    // className={`px-2 py-1 rounded-full text-xs font-medium`}
+                    className="text-[6px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
                     style={{ backgroundColor: category.LabelColorCode }}
                   >
                     {locale === 'en' ? category.Name : category.NameAr}

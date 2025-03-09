@@ -62,7 +62,7 @@ export const getShippingPrice = (city: EgyptCity): number => {
   const zone = Object.values(shippingZones).find(zone => zone.cities.includes(city));
 
   // Return the zone price or a default price if city not found in any zone
-  return zone?.price || 150;
+  return zone?.price || 50;
 };
 
 // Helper function to get zone information for a city
@@ -73,7 +73,7 @@ export const getZoneInfo = (city: EgyptCity) => {
   if (!zone) {
     return {
       zoneName: 'Other Areas',
-      price: 150,
+      price: 50,
     };
   }
 
