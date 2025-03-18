@@ -242,8 +242,11 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                       <button
                         key={color.name}
                         onClick={() => handleColorChange(index)}
-                        className={`relative w-8 h-8 rounded-full border-2 transition-all ${selectedColorIndex === index ? 'border-[#FEC400] scale-110' : 'border-white'
-                          }`}
+                        className={`relative w-8 h-8 rounded-full transition-all 
+                          ${selectedColorIndex === index ? 'ring-2 ring-[#FEC400] scale-110' : 'ring-1 ring-gray-200'} 
+                          ${color.value.toLowerCase() === '#ffffff' || color.value.toLowerCase() === 'white' 
+                            ? 'ring-1 ring-gray-300 border border-gray-200' 
+                            : 'border border-transparent'}`}
                         style={{ backgroundColor: color.value }}
                         title={color.name}
                       >

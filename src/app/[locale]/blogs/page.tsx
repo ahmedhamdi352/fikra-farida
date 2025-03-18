@@ -36,7 +36,6 @@ export default function BlogsPage() {
     <main className="container mx-auto px-4 py-12">
       <div className="mb-8">
         <h1 className="text-[var(--main-color1)]  text-h1 font-bold  tracking-[0.12px] md:tracking-normal uppercase">{t('headTitle')}</h1>
-        <h2 className="lg:text-[var(--main-color1)]  text-h2 font-bold leading-[150%] lg:leading-[105%] tracking-[0.12px] lg:tracking-normal uppercase mb-6">{t("title")}{" "}{t("titleMore")} </h2>
         <p className="lg:max-w-[50%] text-[var(--small-text)] text-body  font-normal">
           {t("description")}
         </p>

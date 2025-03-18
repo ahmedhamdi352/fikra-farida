@@ -62,7 +62,7 @@ export default function CheckoutPage() {
           </div>
           <div className="hidden lg:block w-full h-[1px] bg-[rgba(254,196,0,0.50)] mb-8"></div>
 
-          <div className="max-h-[calc(70vh-10rem)] h-auto overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="max-h-[calc(70vh-10rem)] h-auto overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full border border-[--main-color1] rounded-lg p-4">
             {items.map((item) => {
               const price = parseFloat(item.finalPrice || item.price);
               const selectedColor = item.colors[item.selectedColorIndex];

@@ -11,7 +11,8 @@
     --liner-primary: #f1911b;
     --liner-gradient-start: #fec400;
     --liner-gradient-end: #8b5410;
-    --main-color1: #E6A100; /* Darker gold that's more readable on light backgrounds */
+    /* --main-color1: #E6A100;  */
+    --main-color1: #FEC400;
     --FOOTER: linear-gradient(239deg, rgba(12, 13, 13, 0.5) 29.09%, rgba(41, 47, 54, 0.5) 109.67%);
     --small-text: #f4dd94;
   }

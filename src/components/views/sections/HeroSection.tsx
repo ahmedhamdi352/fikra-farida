@@ -1,11 +1,15 @@
+'use client'
+
 import Image from 'next/image'
 import { useLocale, useTranslations } from 'next-intl'
 import homeBg from 'assets/images/homePageBackground.png'
 import Link from 'next/link'
 import { cn } from 'utils'
+import { useSiteData } from 'context/SiteContext'
 export default function HeroSection() {
   const t = useTranslations('home')
   const locale = useLocale();
+  const siteData = useSiteData();
 
   return (
     <section className="animate-fadeIn relative min-h-fit lg:min-h-[90vh] flex items-center">
@@ -69,8 +73,8 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <video
-            src="/c12_site_2.mp4"
+          {siteData.reviewMedia1 && <video
+            src={siteData.reviewMedia1}
             muted
             autoPlay
             loop
@@ -78,7 +82,7 @@ export default function HeroSection() {
             width={400}
             height={400}
             className="max-h-fit lg:w-[35%] max-w-full rounded-lg shadow-lg bg-transparent"
-          />
+          />}
         </div>
 
       </div>
