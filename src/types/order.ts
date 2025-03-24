@@ -26,6 +26,14 @@ export interface OrderPayloadForCreateDto {
   domain: string;
 }
 
+export interface ApplyDiscountParams {
+  discountCode: string;
+  totalPrice: number;
+  isCash: boolean;
+  countryCode: string;
+  domain: string;
+}
+
 export interface ResultOrderForReadDto extends OrderPayloadForCreateDto {
   orderId: string;
 }
@@ -40,4 +48,25 @@ export interface CreateOrderDto {
   billing: BillingInfo;
   countryCode: string;
   domain: string;
+}
+
+interface Discount {
+  DiscountId: number;
+  Name: string;
+  Code: string;
+  Amount: number;
+  IsPercentage: boolean;
+  StartDate: string;
+  EndDate: string;
+  Description: string | null;
+  IsActive: boolean;
+  ApplyTo: number;
+}
+
+export interface DiscountResponse {
+  isValid: boolean;
+  message: string | null;
+  priceAfterDiscount: number;
+  totalDiscount: number;
+  discount: Discount;
 }

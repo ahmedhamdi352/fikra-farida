@@ -211,7 +211,8 @@
   },
   "Payment": {
     "paymentSuccessful": "تمت عملية الدفع بنجاح!",
-    "cashPaymentSuccessMessage": "تم تأكيد طلبك بنجاح. سنتواصل معك قريباً لتأكيد التوصيل.",
+    "cashPaymentSuccessful":"تم تأكيد طلبك بنجاح.",
+    "cashPaymentSuccessMessage": "سنتواصل معك قريباً لتأكيد التوصيل.",
     "onlinePaymentSuccessMessage": "تمت معالجة الدفع بنجاح. سنقوم بمعالجة طلبك قريباً.",
     "paymentFailureMessage": "لم نتمكن من معالجة الدفع. يرجى المحاولة مرة أخرى أو اختيار طريقة دفع مختلفة.",
     "paymentCancelled": "تم إلغاء الدفع",
@@ -250,6 +251,7 @@
     "cartEmptyMessage": "لا توجد منتجات في سلة التسوق الخاصة بك",
     "browseProducts": "تصفح المنتجات",
     "orderCreationFailed": "فشل في إنشاء الطلب. يرجى المحاولة مرة أخرى.",
+    "discount":"خصم",
     "validation": {
       "fullNameRequired": "الاسم الكامل مطلوب",
       "emailRequired": "البريد الإلكتروني مطلوب",

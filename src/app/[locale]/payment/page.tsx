@@ -13,7 +13,7 @@ import Link from 'next/link'
 import { PhoneInput } from 'components/forms/phone-input';
 import { useState, useEffect } from 'react';
 import { FaMoneyBillWave } from 'react-icons/fa';
-import { useCreateOrderMutation } from 'hooks';
+import { useCreateOrderMutation, useApplyDiscountMutation } from 'hooks';
 import { OrderPayloadForCreateDto } from 'types';
 import { useSiteData } from 'context/SiteContext';
 import { getCityNames, type EgyptCity } from 'assets/constants/cities';
@@ -30,12 +30,16 @@ interface PaymentFormData {
   paymentMethod: 'online' | 'cash';
 }
 
-
+interface DiscountFormData {
+  discountCode: string;
+}
 
 const PaymentPage = () => {
   const t = useTranslations('Payment');
+  const tCheckOut = useTranslations('checkout');
   const { items, updateQuantity } = useCart();
   const { isLoading, onCreateOrder } = useCreateOrderMutation()
+  const { onApplyDiscount, isLoading: isApplyingDiscount } = useApplyDiscountMutation();
   const params = useParams();
   const locale = params.locale as string;
   const siteData = useSiteData();
@@ -43,6 +47,12 @@ const PaymentPage = () => {
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
   const [shippingInfo, setShippingInfo] = useState<{ zoneName: string; price: number } | null>(null);
+
+  const [discountError, setDiscountError] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState<{
+    priceAfterDiscount: number;
+    totalDiscount: number;
+  } | null>(null);
 
   const schema = yup.object().shape({
     fullName: yup.string().required(t('validation.fullNameRequired')),
@@ -64,6 +74,15 @@ const PaymentPage = () => {
     defaultValues: {
       paymentMethod: 'online',
       country: siteData.name
+    }
+  });
+
+  const {
+    handleSubmit: handleDiscountSubmit,
+    control: discountControl,
+  } = useForm<DiscountFormData>({
+    defaultValues: {
+      discountCode: ''
     }
   });
 
@@ -90,31 +109,35 @@ const PaymentPage = () => {
 
   const subtotal = total;
   const shippingCost = hasFreeShipping ? 0 : (shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity));
-  const finalTotal = subtotal + shippingCost;
-  const discount = 0;
+  const finalTotal = appliedDiscount ? appliedDiscount.priceAfterDiscount + shippingCost : subtotal + shippingCost;
+  // const discount = appliedDiscount?.totalDiscount || 0;
 
+  const onDiscountSubmit = async (data: DiscountFormData) => {
+    try {
+      const response = await onApplyDiscount({
+        discountCode: data.discountCode,
+        totalPrice: subtotal,
+        isCash: paymentMethod === 'cash',
+        countryCode: siteData.code,
+        domain: siteData.domain
+      });
 
-  if (items.length === 0) {
-    return (
-      <div className="container mx-auto px-4 py-8 min-h-[60vh] flex items-center justify-center">
-        <div className="text-center space-y-6 max-w-md mx-auto">
-          <div className="bg-[rgba(217,217,217,0.05)] p-8 rounded-lg shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px]">
-            <svg className="w-20 h-20 mx-auto mb-6 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-            </svg>
-            <h2 className="text-2xl font-semibold mb-4">{t('cartEmpty')}</h2>
-            <p className="text-gray-400 mb-8">{t('cartEmptyMessage')}</p>
-            <Link
-              href={`/products`}
-              className="inline-block py-3 px-6 bg-[#FEC400] text-black font-semibold rounded-lg hover:bg-[#FEC400]/90 transition-colors"
-            >
-              {t('browseProducts')}
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      if (response.isValid) {
+        setAppliedDiscount({
+          priceAfterDiscount: response.priceAfterDiscount,
+          totalDiscount: response.totalDiscount
+        });
+        setDiscountError('');
+      } else {
+        setDiscountError(response.message || t('invalidDiscount'));
+        setAppliedDiscount(null);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setDiscountError(t('invalidDiscount'));
+      setAppliedDiscount(null);
+    }
+  };
 
   const onSubmit = async (data: PaymentFormData) => {
     try {
@@ -122,7 +145,7 @@ const PaymentPage = () => {
       const orderData: OrderPayloadForCreateDto = {
         total: finalTotal,
         subTotal: subtotal,
-        discount: discount,
+        discount: appliedDiscount?.totalDiscount || 0,
         shipping: shippingCost,
         activeStep: 3,
         totalItems: items.length,
@@ -200,6 +223,28 @@ const PaymentPage = () => {
     }
   };
 
+  if (items.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-8 min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-6 max-w-md mx-auto">
+          <div className="bg-[rgba(217,217,217,0.05)] p-8 rounded-lg shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px]">
+            <svg className="w-20 h-20 mx-auto mb-6 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+            <h2 className="text-2xl font-semibold">{t('cartEmpty')}</h2>
+            <p className="text-gray-400 mb-8">{t('cartEmptyMessage')}</p>
+            <Link
+              href={`/products`}
+              className="inline-block py-3 px-6 bg-[#FEC400] text-black font-semibold rounded-lg hover:bg-[#FEC400]/90 transition-colors"
+            >
+              {t('browseProducts')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:py-10">
@@ -208,10 +253,35 @@ const PaymentPage = () => {
           <div className="lg:hidden rounded-[10px] bg-[rgba(217,217,217,0.05)] p-6 space-y-4 shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px] mb-6">
             <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
             <div className="space-y-3">
+              <form onSubmit={handleDiscountSubmit(onDiscountSubmit)} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <TextInput
+                    control={discountControl}
+                    name="discountCode"
+                    placeholder={tCheckOut('discountCode')}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isApplyingDiscount}
+                    className="p-4 bg-[#FEC400] text-black font-medium rounded-lg hover:bg-[#FEC400]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    {isApplyingDiscount ? tCheckOut('applying') : tCheckOut('apply')}
+                  </button>
+                </div>
+                {discountError && (
+                  <p className="text-red-500 text-sm">{discountError}</p>
+                )}
+              </form>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('subtotal')} :</span>
                 <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
               </div>
+              {appliedDiscount && (
+                <div className="flex justify-between items-center text-green-500">
+                  <span>{t('discount')} :</span>
+                  <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                </div>
+              )}
               {!hasFreeShipping && (
                 <div className="flex justify-between items-center text-[#FEC400]">
                   <span>{t('shipping')} :</span>
@@ -219,9 +289,9 @@ const PaymentPage = () => {
                 </div>
               )}
               <div className="h-[1px] bg-white/10 my-2"></div>
-              <div className="flex justify-between items-center  text-[#FEC400]">
+              <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('total')} :</span>
-                <span className=" text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+                <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
               </div>
             </div>
           </div>
@@ -464,10 +534,36 @@ const PaymentPage = () => {
           </div>
 
           <div className="border-t border-[rgba(217,217,217,0.50)] pt-4 space-y-2 mt-auto">
+            {/* Discount Form */}
+            <form onSubmit={handleDiscountSubmit(onDiscountSubmit)} className="space-y-2">
+              <div className="flex items-center gap-2">
+                <TextInput
+                  control={discountControl}
+                  name="discountCode"
+                  placeholder={tCheckOut('discountCode')}
+                />
+                <button
+                  type="submit"
+                  disabled={isApplyingDiscount}
+                  className="px-4 py-4 bg-[#FEC400] text-black font-medium rounded-lg hover:bg-[#FEC400]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                >
+                  {isApplyingDiscount ? tCheckOut('applying') : tCheckOut('apply')}
+                </button>
+              </div>
+              {discountError && (
+                <p className="text-red-500 text-sm">{discountError}</p>
+              )}
+            </form>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('subtotal')} :</span>
               <span >{(subtotal).toFixed(2)} {siteData.currency}</span>
             </div>
+            {appliedDiscount && (
+              <div className="flex justify-between items-center text-green-500">
+                <span>{t('discount')} :</span>
+                <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+              </div>
+            )}
             {!hasFreeShipping && (
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('shipping')} :</span>
@@ -481,14 +577,6 @@ const PaymentPage = () => {
             </div>
           </div>
 
-          {/* <button
-            type="submit"
-            form="payment-form"
-            disabled={isLoading || isLoadingOnline}
-            className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors disabled:bg-gray-400"
-          >
-            {(isLoading || isLoadingOnline) ? t('processing') : t('pay')} {finalTotal.toFixed(2)} EGP
-          </button> */}
         </div>
       </div>
     </div >

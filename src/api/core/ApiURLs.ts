@@ -6,4 +6,5 @@ export const ApiURLs = {
   contact: '/api/Email/Send',
   order: '/api/ShoppingOrder/add',
   catergories: '/api/Store/Categories',
+  discount: '/api/discount', // Updated to use our proxy endpoint
 } as const;

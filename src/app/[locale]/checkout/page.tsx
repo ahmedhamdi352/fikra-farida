@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export default function CheckoutPage() {
   const { items, removeFromCart, updateQuantity } = useCart();
-  const [discountCode, setDiscountCode] = useState('');
+  // const [discountCode, setDiscountCode] = useState('');
   const [total, setTotal] = useState(0);
   const params = useParams();
   const router = useRouter();
@@ -193,7 +193,7 @@ export default function CheckoutPage() {
         </div>
 
         <div className="w-full self-end lg:w-[500px] h-fit sticky top-8 card-container p-6">
-          <div className="flex items-center gap-4 mb-6 w-full">
+          {/* <div className="flex items-center gap-4 mb-6 w-full">
             <input
               type="text"
               placeholder={t('discountCode')}
@@ -204,17 +204,17 @@ export default function CheckoutPage() {
             <button className="shrink-0 px-6 py-3 rounded-lg text-black bg-[var(--main-color1)] hover:bg-transparent  dark:hover:text-white border border-[var(--main-color1)] transition-colors">
               {t('apply')}
             </button>
-          </div>
+          </div> */}
 
           <div className="space-y-4 text-[#FEC400]">
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
               <span>{t('subtotal')}</span>
               <span className="dark:text-white text-black">{(total).toFixed(2)} </span>
-            </div>
+            </div> */}
 
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center">
-              <span>{t('totalAmount')}</span>
+              <span>{t('subtotal')}</span>
               <span className="dark:text-white text-black text-xl font-medium">{total.toFixed(2)} </span>
             </div>
           </div>

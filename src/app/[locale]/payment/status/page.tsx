@@ -6,7 +6,6 @@ import { BiErrorCircle } from 'react-icons/bi';
 import { TiCancel } from 'react-icons/ti';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useCart } from 'context/CartContext';
 
 interface PaymentDetails {
   paymentStatus: string;
@@ -26,10 +25,7 @@ interface PaymentDetails {
 export default function PaymentStatusPage() {
   const t = useTranslations('Payment');
   const searchParams = useSearchParams();
-  // const [isValid, setIsValid] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
-  const { clearCart } = useCart();
-
   useEffect(() => {
     // Get all query parameters
     const params = Object.fromEntries(searchParams.entries());
@@ -64,15 +60,7 @@ export default function PaymentStatusPage() {
       signature
     });
 
-    // For cash payments or successful online payments, consider them valid
-    // For online payments, you should implement proper signature validation
-    // setIsValid(mode === 'CASH' || Boolean(signature));
-
-    // Clear cart if payment is successful
-    if (paymentStatus === 'SUCCESS') {
-      clearCart();
-    }
-  }, [searchParams, clearCart]);
+  }, [searchParams]);
 
   if (!paymentDetails) {
     return null;
@@ -83,7 +71,7 @@ export default function PaymentStatusPage() {
       case 'SUCCESS':
         return {
           icon: <BsCheckCircleFill className="text-[#FEC400] text-6xl" />,
-          title: t('paymentSuccessful'),
+          title: paymentDetails.mode === 'CASH' ? t('cashPaymentSuccessful') : t('paymentSuccessful'),
           message: paymentDetails.mode === 'CASH'
             ? t('cashPaymentSuccessMessage')
             : t('onlinePaymentSuccessMessage'),
@@ -107,25 +95,6 @@ export default function PaymentStatusPage() {
   };
 
   const { icon, title, message, orderDetails } = getStatusConfig();
-
-  // if (!isValid) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center px-4">
-  //       <div className="max-w-md w-full shadow-2xl bg-transparent rounded-lg p-8 text-center">
-  //         <BiErrorCircle className="text-red-500 text-6xl mx-auto mb-4" />
-  //         <h1 className="text-2xl font-bold text-white mb-4">
-  //           {t('invalidPayment')}
-  //         </h1>
-  //         <Link
-  //           href="/"
-  //           className="inline-block bg-gray-700 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors w-full"
-  //         >
-  //           {t('backToHome')}
-  //         </Link>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="min-h-[100vh] flex items-center justify-center px-4">
@@ -168,10 +137,12 @@ export default function PaymentStatusPage() {
                   </span>
                 </div>
               )}
-              <div className="flex justify-between">
-                <span className="text-gray-400">{t('transactionId')}</span>
-                <span >{paymentDetails.transactionId}</span>
-              </div>
+              {paymentDetails.mode !== 'CASH' && (
+                <div className="flex justify-between">
+                  <span className="text-gray-400">{t('transactionId')}</span>
+                  <span >{paymentDetails.transactionId}</span>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -180,14 +151,16 @@ export default function PaymentStatusPage() {
           {paymentDetails.paymentStatus === 'FAILED' && (
             <Link
               href="/payment"
-              className="inline-block bg-[#FEC400] text-black font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
+              locale={searchParams.get('locale') || 'ar'}
+              className="inline-block bg-[#FEC400] font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
             >
               {t('tryAgain')}
             </Link>
           )}
           <Link
             href="/"
-            className="inline-block bg-transparent border border-[#FEC400] text-black font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
+            locale={searchParams.get('locale') || 'ar'}
+            className="inline-block bg-transparent border border-[#FEC400] font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
           >
             {t('backToHome')}
           </Link>

@@ -88,7 +88,7 @@ export default function Select<TFieldValues extends FieldValues = FieldValues>({
                         setIsOpen(false);
                       }}
                       // className={`w-full ${icon ? (isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4') : 'px-4'} py-4 bg-[#F5F5F5] dark:bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-[var(--main-color1)]'} text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${className}`}
-                      className={`w-full text-left py-3 px-4 hover:bg-white/5 transition-colors ${option.value === value ? 'text-[var(--main-color1)]' : 'dar:text-white text-black'
+                      className={`w-full text-left py-3 px-4 hover:bg-white/5 transition-colors ${option.value === value ? 'text-[var(--main-color1)]' : 'dark:text-white text-black'
                         }`}
                     >
                       {option.label}

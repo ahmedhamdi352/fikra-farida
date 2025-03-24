@@ -232,6 +232,7 @@
     "cartEmpty": "Your Cart is Empty",
     "cartEmptyMessage": "Looks like you haven't added anything to your cart yet.",
     "browseProducts": "Browse Products",
+    "discount": "Discount",
     "validation": {
       "fullNameRequired": "Full name is required",
       "emailRequired": "Email is required",
@@ -244,7 +245,8 @@
       "paymentMethodRequired": "Please select a payment method"
     },
     "paymentSuccessful": "Payment Successful!",
-    "cashPaymentSuccessMessage": "Your order has been placed successfully. We will contact you soon to confirm the delivery.",
+    "cashPaymentSuccessful":"Your order has been placed successfully.",
+    "cashPaymentSuccessMessage": "We will contact you soon to confirm the delivery.",
     "onlinePaymentSuccessMessage": "Your payment has been processed successfully. We will process your order shortly.",
     "paymentFailed": "Payment Failed",
     "paymentFailureMessage": "We couldn't process your payment. Please try again or choose a different payment method.",
