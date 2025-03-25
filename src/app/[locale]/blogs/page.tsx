@@ -56,8 +56,8 @@ export default function BlogsPage() {
                 className="object-cover"
               />
             </div>
-            <h2 className="text-[#FEC400] font-semibold text-h3  md:font-medium md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
-            <p className="[font-feature-settings:'liga'_off] text-body mb-6">{firstBlog.description}</p>
+            <h2 className="text-[#FEC400]  text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
+            <p className="text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{firstBlog.description}</p>
             <div className="hidden lg:block self-start w-[55%]">
               <Button href={`/blogs/${firstBlog.id}`} withArrow>
                 {tCommon("actions.readMore")}
@@ -82,8 +82,8 @@ export default function BlogsPage() {
                     className="object-cover "
                   />
                 </div>
-                <h2 className="text-[#FEC400] font-poppins text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{blog.title}</h2>
-                <p className="font-poppins text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{blog.description}</p>
+                <h2 className="text-[#FEC400]  text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{blog.title}</h2>
+                <p className="text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{blog.description}</p>
                 <div className="hidden lg:block self-start w-[55%]">
                   <Button href={`/blogs/${blog.id}`} withArrow>
                     {tCommon("actions.readMore")}

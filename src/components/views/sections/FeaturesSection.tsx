@@ -18,33 +18,27 @@ export default function FeaturesSection() {
       icon: premium,
       title: t('features.premium'),
       description: [
-        'Advanced tool No need to bother in case of changing the phone number or email or losing any of your information, you can easily update it.',
-        'It works with iPhone or Android even with older versions you can use QR code scanning.',
-        'With one swipe you can share all your information, phone numbers, Social Media, important files, even your custom links and more.',
-        'Flexible, You don\'t need an app and Other people do not need to have the App or have access to our products in order to share your information with them.',
-        'The ability to add one link and direct people to it.'
+        t('features.premium1'),
+        t('features.premium2'),
+        t('features.premium3'),
+        t('features.premium4'),
+        t('features.premium5')
       ]
     },
     {
       icon: security,
       title: t('features.secure'),
       description: [
-        'End-to-end encryption for all your data',
-        'Secure storage of personal information',
-        'Two-factor authentication available',
-        'Regular security audits and updates',
-        'Complete control over data sharing'
+        t('features.secure1'),
+        t('features.secure2'),
       ]
     },
     {
       icon: environment,
       title: t('features.environmentSaving'),
       description: [
-        'Reduces paper waste from traditional business cards',
-        'Eco-friendly digital solution',
-        'Promotes sustainable networking practices',
-        'Minimizes carbon footprint',
-        'Supports green initiative'
+        t('features.environmentSaving1'),
+        t('features.environmentSaving2')
       ]
     }
   ];
@@ -91,8 +85,8 @@ export default function FeaturesSection() {
         <div className="bg-[rgba(244,221,148,0.25)] shadow-[4px_4px_4px_0px_rgba(254,196,0,0.25)] backdrop-blur-[25px] p-8 rounded-[15px] border border-white border-opacity-50">
           <ul className="space-y-4">
             {features[selectedFeature].description.map((item, index) => (
-              <li key={index} className="flex items-start">
-                <span className="text-[#FEC400] mr-3 text-lg">•</span>
+              <li key={index} className="flex items-start gap-3">
+                <span className="text-[#FEC400] text-lg">•</span>
                 <p className="dark:text-gray-300 text-gray-600">{item}</p>
               </li>
             ))}
