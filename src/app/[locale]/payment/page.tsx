@@ -56,7 +56,12 @@ const PaymentPage = () => {
 
   const schema = yup.object().shape({
     fullName: yup.string().required(t('validation.fullNameRequired')),
-    email: yup.string().email(t('validation.invalidEmail')).optional(),
+    email: yup.string().email(t('validation.invalidEmail'))
+      .when('paymentMethod', {
+        is: 'online',
+        then: (schema) => schema.required(t('validation.emailRequired')),
+        otherwise: (schema) => schema.optional()
+      }),
     phone: yup.string().required(t('validation.phoneRequired')),
     address: yup.string().required(t('validation.addressRequired')),
     city: yup.string<EgyptCity>().required(t('validation.cityRequired')),
