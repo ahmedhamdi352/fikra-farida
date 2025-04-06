@@ -8,6 +8,9 @@ interface OrderItem {
 interface BillingInfo {
   name: string;
   address: string;
+  city: string;
+  country: string;
+  governorate: string;
   phoneNumber: string;
   email: string;
 }

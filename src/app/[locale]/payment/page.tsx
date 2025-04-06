@@ -26,6 +26,7 @@ interface PaymentFormData {
   address: string;
   city: EgyptCity;
   country: string;
+  governorate: string;
   notes?: string;
   paymentMethod: 'online' | 'cash';
 }
@@ -66,6 +67,7 @@ const PaymentPage = () => {
     address: yup.string().required(t('validation.addressRequired')),
     city: yup.string<EgyptCity>().required(t('validation.cityRequired')),
     country: yup.string().required(t('validation.countryRequired')),
+    governorate: yup.string().required(t('validation.governorateRequired')),
     notes: yup.string(),
     paymentMethod: yup.string().oneOf(['online', 'cash']).required(t('validation.paymentMethodRequired')),
   }) satisfies yup.ObjectSchema<PaymentFormData>;
@@ -164,6 +166,9 @@ const PaymentPage = () => {
         billing: {
           name: data.fullName,
           address: data.address,
+          governorate: data.governorate,
+          city: data.city,
+          country: data.country,
           phoneNumber: data.phone,
           email: data?.email || ''
         },
@@ -362,6 +367,16 @@ const PaymentPage = () => {
               </div>
               <TextInput
                 control={control}
+                name="governorate"
+                placeholder={t('governorate')}
+                icon={
+                  <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
+                  </svg>
+                }
+              />
+              <TextInput
+                control={control}
                 name="address"
                 placeholder={t('address')}
                 icon={
@@ -424,6 +439,7 @@ const PaymentPage = () => {
                     <Image src="/mada.png" alt="Mada" width={35} height={22} className="object-contain" />
                   </div>
                 </label>
+                <p className="text-sm">{t('onlineOptions')}</p>
 
                 <label
                   className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'cash'

@@ -230,6 +230,7 @@
     "note": "Note (Optional)",
     "paymentInformation": "Payment Information",
     "secureTransaction": "Your transaction is secure with us",
+    "onlineOptions":"Pay with a Card, Wallet, and Installment",
     "onlinePayment": "Online Payment",
     "cashOnDelivery": "Cash on Delivery",
     "processing": "Processing...",

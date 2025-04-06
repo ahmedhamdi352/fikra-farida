@@ -19,7 +19,7 @@ export default function ContactPage() {
           <span >{t('header.title.part1')} </span>
           <span className="text-[var(--main-color1)]">{t('header.title.part2')}</span>
         </h1>
-        <p className=" text-lg font-semibold">
+        <p className="text-lg font-semibold">
           {t('header.subtitle')}
         </p>
       </div>

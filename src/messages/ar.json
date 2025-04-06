@@ -243,6 +243,7 @@
     "deliveryInformation": "معلومات التوصيل",
     "paymentInformation": "معلومات الدفع",
     "secureTransaction": "معاملة آمنة",
+    "onlineOptions":"ادفع بواسطة الكارت او المحفظة او التقسيط",
     "onlinePayment": "الدفع الإلكتروني",
     "fullName": "الاسم الكامل",
     "email": "البريد الإلكتروني",

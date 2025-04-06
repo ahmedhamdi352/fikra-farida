@@ -7,36 +7,38 @@ import { Button } from 'components/ui/Button';
 import { Newsletter } from 'components/Newsletter';
 import { useTranslations } from 'next-intl';
 
-const blogs = [
-  {
-    id: 1,
-    title: 'Digital Transformation and Vision 2030: Toward an Integrated Digital Future',
-    description: 'Digital transformation is the process of integrating digital technology into all aspects of life, whether at the government level, private sector, or among individuals. This transformation aims to enhance performance, streamline processes, and make services more effective and efficient.',
-    image: blog1,
-  },
-  {
-    id: 2,
-    title: 'Why Should I Switch from Traditional to Digital Business Cards?',
-    description: 'In the evolving business world, the NFC-enabled digital business card is one of the most significant innovations that have changed how we exchange information. Unlike traditional paper business cards, which can easily be lost or damaged, the NFC-enabled digital card allows for instant data transfer just by bringing the smartphone close to it.',
-    image: blog2,
-  },
-  {
-    id: 3,
-    title: 'How Digital Business Cards Can Help Develop Professional Relationships',
-    description: "In today's fast-paced technological era, adopting modern tools to enhance communication and build professional relationships is essential. While traditional business cards have been a staple in professional...",
-    image: blog3,
-  },
-];
 
 export default function BlogsPage() {
-  const [firstBlog, ...otherBlogs] = blogs;
   const t = useTranslations('blogs');
   const tCommon = useTranslations('common');
+
+  const blogs = [
+    {
+      id: 1,
+      title: 'Digital Transformation and Vision 2030: Toward an Integrated Digital Future',
+      description: 'Digital transformation is the process of integrating digital technology into all aspects of life, whether at the government level, private sector, or among individuals. This transformation aims to enhance performance, streamline processes, and make services more effective and efficient.',
+      image: blog1,
+    },
+    {
+      id: 2,
+      title: 'Why Should I Switch from Traditional to Digital Business Cards?',
+      description: 'In the evolving business world, the NFC-enabled digital business card is one of the most significant innovations that have changed how we exchange information. Unlike traditional paper business cards, which can easily be lost or damaged, the NFC-enabled digital card allows for instant data transfer just by bringing the smartphone close to it.',
+      image: blog2,
+    },
+    {
+      id: 3,
+      title: 'How Digital Business Cards Can Help Develop Professional Relationships',
+      description: "In today's fast-paced technological era, adopting modern tools to enhance communication and build professional relationships is essential. While traditional business cards have been a staple in professional...",
+      image: blog3,
+    },
+  ];
+
+  const [firstBlog, ...otherBlogs] = blogs;
   return (
     <main className="container mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-[var(--main-color1)]  text-h1 font-bold  tracking-[0.12px] md:tracking-normal uppercase">{t('headTitle')}</h1>
-        <p className="lg:max-w-[50%] text-[var(--small-text)] text-body  font-normal">
+        <h1 className="text-[var(--main-color1)] text-3xl sm:text-4xl mb-4 font-bold  tracking-[0.12px] md:tracking-normal uppercase">{t('headTitle')}</h1>
+        <p className="lg:max-w-[50%] text-[var(--small-text)] text-lg font-normal">
           {t("description")}
         </p>
       </div>

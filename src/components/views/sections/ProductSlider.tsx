@@ -110,7 +110,7 @@ export function ProductSlider({ products }: ProductSliderProps) {
       <div className="block md:hidden w-full">
         <div
           {...handlers}
-          className="overflow-hidden w-full"
+          className="overflow-hidden w-full pb-3"
         >
           <div
             className="flex transition-transform duration-300 ease-in-out w-full"
