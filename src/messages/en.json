@@ -23,7 +23,8 @@
       "subscribeTitle": "Subscribe to our newsletter",
       "subscribe": "Subscribe",
       "readMore":"Read More"
-    }
+    },
+    "loading": "Loading..."
   },
   "errors": {
     "authentication": "Your session has expired. Please login again.",

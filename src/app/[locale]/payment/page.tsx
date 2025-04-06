@@ -18,6 +18,9 @@ import { OrderPayloadForCreateDto } from 'types';
 import { useSiteData } from 'context/SiteContext';
 import { getCityNames, type EgyptCity } from 'assets/constants/cities';
 import { getShippingPrice, getZoneInfo } from 'assets/constants/shipping';
+import LoadingButton from 'components/ui/LoadingButton';
+import LoadingSpinner from 'components/ui/LoadingSpinner';
+import LoadingOverlay from 'components/ui/LoadingOverlay';
 
 interface PaymentFormData {
   fullName: string;
@@ -39,7 +42,7 @@ const PaymentPage = () => {
   const t = useTranslations('Payment');
   const tCheckOut = useTranslations('checkout');
   const { items, updateQuantity } = useCart();
-  const { isLoading, onCreateOrder } = useCreateOrderMutation()
+  const { isLoading: isCreatingOrder, onCreateOrder } = useCreateOrderMutation()
   const { onApplyDiscount, isLoading: isApplyingDiscount } = useApplyDiscountMutation();
   const params = useParams();
   const locale = params.locale as string;
@@ -88,6 +91,7 @@ const PaymentPage = () => {
     handleSubmit: handleDiscountSubmit,
     control: discountControl,
     reset: discountReset,
+    watch: watchDiscount,
   } = useForm<DiscountFormData>({
     defaultValues: {
       discountCode: ''
@@ -95,6 +99,7 @@ const PaymentPage = () => {
   });
 
   const paymentMethod = watch('paymentMethod');
+  const discountCode = watchDiscount('discountCode');
 
   // Watch for payment method changes and reset discount
   useEffect(() => {
@@ -266,6 +271,7 @@ const PaymentPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <LoadingOverlay isLoading={isCreatingOrder || isLoadingOnline || isApplyingDiscount} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:py-10">
         {/* Left Column - Form */}
         <div className="space-y-6">
@@ -445,13 +451,14 @@ const PaymentPage = () => {
                     name="discountCode"
                     placeholder={tCheckOut('discountCode')}
                   />
-                  <button
+                  <LoadingButton
                     type="submit"
-                    disabled={isApplyingDiscount}
-                    className="p-4 bg-[#FEC400] text-black font-medium rounded-lg hover:bg-[#FEC400]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                    isLoading={isApplyingDiscount}
+                    size="md"
+                    disabled={!discountCode?.trim()}
                   >
-                    {isApplyingDiscount ? tCheckOut('applying') : tCheckOut('apply')}
-                  </button>
+                    {tCheckOut('apply')}
+                  </LoadingButton>
                 </div>
                 {discountError && (
                   <p className="text-red-500 text-sm">{discountError}</p>
@@ -459,35 +466,48 @@ const PaymentPage = () => {
               </form>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('subtotal')} :</span>
-                <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
+                <span >{(subtotal).toFixed(2)} {siteData.currency}</span>
               </div>
               {appliedDiscount && (
                 <div className="flex justify-between items-center text-green-500">
                   <span>{t('discount')} :</span>
-                  <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                  <div className="flex items-center gap-2">
+                    {isApplyingDiscount ? (
+                      <LoadingSpinner size="sm" color="#22c55e" />
+                    ) : (
+                      <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                    )}
+                  </div>
                 </div>
               )}
               {!hasFreeShipping && (
                 <div className="flex justify-between items-center text-[#FEC400]">
                   <span>{t('shipping')} :</span>
-                  <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
+                  <span >{shippingCost.toFixed(2)} {siteData.currency}</span>
                 </div>
               )}
               <div className="h-[1px] bg-white/10 my-2"></div>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('total')} :</span>
-                <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+                <div className="flex items-center gap-2">
+                  {(isCreatingOrder || isLoadingOnline) ? (
+                    <LoadingSpinner size="sm" color="#FEC400" />
+                  ) : (
+                    <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-          <button
+          <LoadingButton
             type="submit"
             form="payment-form"
-            disabled={isLoading || isLoadingOnline}
-            className="w-full py-3 bg-[#FEC400] text-black font-semibold rounded-[10px] hover:bg-[#FEC400]/90 transition-colors disabled:bg-gray-400"
+            isLoading={isCreatingOrder || isLoadingOnline}
+            fullWidth
+            size="lg"
           >
-            {(isLoading || isLoadingOnline) ? t('processing') : t('pay')} {finalTotal.toFixed(2)} EGP
-          </button>
+            {t('pay')} {finalTotal.toFixed(2)} {siteData.currency}
+          </LoadingButton>
         </div>
 
         {/* Right Column - Order Summary */}
@@ -526,10 +546,10 @@ const PaymentPage = () => {
                       </h3>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold">{(price * item.quantity).toFixed(2)} EGP</span>
+                          <span className="text-lg font-bold">{(price * item.quantity).toFixed(2)} {siteData.currency}</span>
                           {item.finalPrice && (
                             <span className="text-gray-400 line-through text-sm">
-                              {(parseFloat(item.price) * item.quantity).toFixed(2)} EGP
+                              {(parseFloat(item.price) * item.quantity).toFixed(2)} {siteData.currency}
                             </span>
                           )}
                         </div>
@@ -574,13 +594,14 @@ const PaymentPage = () => {
                   name="discountCode"
                   placeholder={tCheckOut('discountCode')}
                 />
-                <button
+                <LoadingButton
                   type="submit"
-                  disabled={isApplyingDiscount}
-                  className="px-4 py-4 bg-[#FEC400] text-black font-medium rounded-lg hover:bg-[#FEC400]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  isLoading={isApplyingDiscount}
+                  size="md"
+                  disabled={!discountCode?.trim()}
                 >
-                  {isApplyingDiscount ? tCheckOut('applying') : tCheckOut('apply')}
-                </button>
+                  {tCheckOut('apply')}
+                </LoadingButton>
               </div>
               {discountError && (
                 <p className="text-red-500 text-sm">{discountError}</p>
@@ -593,7 +614,13 @@ const PaymentPage = () => {
             {appliedDiscount && (
               <div className="flex justify-between items-center text-green-500">
                 <span>{t('discount')} :</span>
-                <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                <div className="flex items-center gap-2">
+                  {isApplyingDiscount ? (
+                    <LoadingSpinner size="sm" color="#22c55e" />
+                  ) : (
+                    <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                  )}
+                </div>
               </div>
             )}
             {!hasFreeShipping && (
@@ -605,7 +632,13 @@ const PaymentPage = () => {
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('total')} :</span>
-              <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+              <div className="flex items-center gap-2">
+                {(isCreatingOrder || isLoadingOnline) ? (
+                  <LoadingSpinner size="sm" color="#FEC400" />
+                ) : (
+                  <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+                )}
+              </div>
             </div>
           </div>
 
