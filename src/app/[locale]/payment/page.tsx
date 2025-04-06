@@ -87,6 +87,7 @@ const PaymentPage = () => {
   const {
     handleSubmit: handleDiscountSubmit,
     control: discountControl,
+    reset: discountReset,
   } = useForm<DiscountFormData>({
     defaultValues: {
       discountCode: ''
@@ -94,6 +95,14 @@ const PaymentPage = () => {
   });
 
   const paymentMethod = watch('paymentMethod');
+
+  // Watch for payment method changes and reset discount
+  useEffect(() => {
+    setAppliedDiscount(null);
+    setDiscountError('');
+    discountReset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentMethod]);
 
   const selectedCity = watch('city');
   useEffect(() => {
@@ -260,53 +269,9 @@ const PaymentPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:py-10">
         {/* Left Column - Form */}
         <div className="space-y-6">
-          <div className="lg:hidden rounded-[10px] bg-[rgba(217,217,217,0.05)] p-6 space-y-4 shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px] mb-6">
-            <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
-            <div className="space-y-3">
-              <form onSubmit={handleDiscountSubmit(onDiscountSubmit)} className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <TextInput
-                    control={discountControl}
-                    name="discountCode"
-                    placeholder={tCheckOut('discountCode')}
-                  />
-                  <button
-                    type="submit"
-                    disabled={isApplyingDiscount}
-                    className="p-4 bg-[#FEC400] text-black font-medium rounded-lg hover:bg-[#FEC400]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                  >
-                    {isApplyingDiscount ? tCheckOut('applying') : tCheckOut('apply')}
-                  </button>
-                </div>
-                {discountError && (
-                  <p className="text-red-500 text-sm">{discountError}</p>
-                )}
-              </form>
-              <div className="flex justify-between items-center text-[#FEC400]">
-                <span>{t('subtotal')} :</span>
-                <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
-              </div>
-              {appliedDiscount && (
-                <div className="flex justify-between items-center text-green-500">
-                  <span>{t('discount')} :</span>
-                  <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
-                </div>
-              )}
-              {!hasFreeShipping && (
-                <div className="flex justify-between items-center text-[#FEC400]">
-                  <span>{t('shipping')} :</span>
-                  <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
-                </div>
-              )}
-              <div className="h-[1px] bg-white/10 my-2"></div>
-              <div className="flex justify-between items-center text-[#FEC400]">
-                <span>{t('total')} :</span>
-                <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
-              </div>
-            </div>
-          </div>
 
-          <form noValidate id="payment-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+
+          <form noValidate id="payment-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
             {error && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                 {error}
@@ -347,7 +312,7 @@ const PaymentPage = () => {
                   disabled
                   icon={
                     <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
                   }
                 />
@@ -469,6 +434,52 @@ const PaymentPage = () => {
               </div>
             </section>
           </form>
+
+          <div className="lg:hidden rounded-[10px] bg-[rgba(217,217,217,0.05)] p-6 space-y-4 shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px] mb-6">
+            <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
+            <div className="space-y-3">
+              <form onSubmit={handleDiscountSubmit(onDiscountSubmit)} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <TextInput
+                    control={discountControl}
+                    name="discountCode"
+                    placeholder={tCheckOut('discountCode')}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isApplyingDiscount}
+                    className="p-4 bg-[#FEC400] text-black font-medium rounded-lg hover:bg-[#FEC400]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    {isApplyingDiscount ? tCheckOut('applying') : tCheckOut('apply')}
+                  </button>
+                </div>
+                {discountError && (
+                  <p className="text-red-500 text-sm">{discountError}</p>
+                )}
+              </form>
+              <div className="flex justify-between items-center text-[#FEC400]">
+                <span>{t('subtotal')} :</span>
+                <span>{(subtotal).toFixed(2)} {siteData.currency}</span>
+              </div>
+              {appliedDiscount && (
+                <div className="flex justify-between items-center text-green-500">
+                  <span>{t('discount')} :</span>
+                  <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                </div>
+              )}
+              {!hasFreeShipping && (
+                <div className="flex justify-between items-center text-[#FEC400]">
+                  <span>{t('shipping')} :</span>
+                  <span>{shippingCost.toFixed(2)} {siteData.currency}</span>
+                </div>
+              )}
+              <div className="h-[1px] bg-white/10 my-2"></div>
+              <div className="flex justify-between items-center text-[#FEC400]">
+                <span>{t('total')} :</span>
+                <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+              </div>
+            </div>
+          </div>
           <button
             type="submit"
             form="payment-form"
