@@ -61,7 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 .map((category) => (
                   <div
                     key={category.PK}
-                    className="text-[6px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
+                    className="text-[6px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold text-white rounded-md"
                     style={{ backgroundColor: category.LabelColorCode }}
                   >
                     {locale === 'en' ? category.Name : category.NameAr}
@@ -151,10 +151,10 @@ export function ProductCard({ product }: ProductCardProps) {
                       e.preventDefault();
                       setSelectedColorIndex(index);
                     }}
-                    className={`w-3.5 h-3.5 md:w-4 md:h-4 rounded-full transition-all 
-                      ${selectedColorIndex === index ? 'ring-2 ring-[#FEC400] scale-110' : 'ring-1 ring-gray-200'} 
-                      ${color.value.toLowerCase() === '#ffffff' || color.value.toLowerCase() === 'white' 
-                        ? 'ring-1 ring-gray-300 border border-gray-200' 
+                    className={`w-3.5 h-3.5 md:w-4 md:h-4 rounded-full transition-all
+                      ${selectedColorIndex === index ? 'ring-2 ring-[#FEC400] scale-110' : 'ring-1 ring-gray-200'}
+                      ${color.value.toLowerCase() === '#ffffff' || color.value.toLowerCase() === 'white'
+                        ? 'ring-1 ring-gray-300 border border-gray-200'
                         : 'border border-transparent'}`}
                     style={{ backgroundColor: color.value }}
                     title={color.name}

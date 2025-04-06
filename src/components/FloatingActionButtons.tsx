@@ -73,7 +73,7 @@ const FloatingActionButtons = ({ whatsappNumber, phoneNumber, email }: FloatingA
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 rounded-full bg-amber-500 hover:bg-amber-600 flex items-center justify-center text-white shadow-lg transform transition-transform duration-200 ${isOpen ? 'rotate-45' : ''
+        className={`w-14 h-14 rounded-full bg-gradient-to-tr from-[#F1911B] via-[rgba(254,196,0,0.90)] to-[#F1911B] flex items-center justify-center text-white shadow-lg transform transition-transform duration-200 ${isOpen ? 'rotate-45' : ''
           }`}
       >
         <BsChatDots className="w-7 h-7" />

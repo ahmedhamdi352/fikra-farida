@@ -168,7 +168,7 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                 .map((category) => (
                   <div
                     key={category.PK}
-                    className="text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
+                    className="text-white text-[10px] md:text-xs px-2 md:px-3 py-0.5 md:py-1 font-bold rounded-md"
                     style={{ backgroundColor: category.LabelColorCode }}
                   >
                     {locale === 'en' ? category.Name : category.NameAr}
@@ -242,10 +242,10 @@ export function ProductDetails({ products, id, params }: ProductDetailsProps) {
                       <button
                         key={color.name}
                         onClick={() => handleColorChange(index)}
-                        className={`relative w-8 h-8 rounded-full transition-all 
-                          ${selectedColorIndex === index ? 'ring-2 ring-[#FEC400] scale-110' : 'ring-1 ring-gray-200'} 
-                          ${color.value.toLowerCase() === '#ffffff' || color.value.toLowerCase() === 'white' 
-                            ? 'ring-1 ring-gray-300 border border-gray-200' 
+                        className={`relative w-8 h-8 rounded-full transition-all
+                          ${selectedColorIndex === index ? 'ring-2 ring-[#FEC400] scale-110' : 'ring-1 ring-gray-200'}
+                          ${color.value.toLowerCase() === '#ffffff' || color.value.toLowerCase() === 'white'
+                            ? 'ring-1 ring-gray-300 border border-gray-200'
                             : 'border border-transparent'}`}
                         style={{ backgroundColor: color.value }}
                         title={color.name}
