@@ -192,16 +192,15 @@ Start upgrading your communication method now and take advantage of the opportun
 ];
 
 interface BlogDetailsProps {
-  params: {
-    locale: string;
-    id: string;
-  };
+  params: Promise<{ locale: string; id: string }>;
 }
 
-export default function BlogDetails({ params }: BlogDetailsProps) {
-  const { locale, id } = params;
+export default async function BlogDetails(props: BlogDetailsProps) {
+  const { params } = props;
+  const { locale, id } = await params;
   const blogId = parseInt(id);
   const blog = blogs.find((blog) => blog.id === blogId);
+
 
   if (!blog) {
     return <div>Blog not found</div>;
@@ -209,7 +208,6 @@ export default function BlogDetails({ params }: BlogDetailsProps) {
 
   const content = locale === 'ar' ? blog.contentAr : blog.contentEn;
   const title = locale === 'ar' ? blog.titleAr : blog.titleEn;
-
 
   return (
     <div className="container mx-auto px-4 py-8">
