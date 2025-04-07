@@ -9,48 +9,42 @@ interface ShippingZoneData {
 // Define shipping zones with their respective prices
 export const shippingZones = {
   zone1: {
-    name: 'Cairo & Giza',
-    price: 50,
-    cities: ['Cairo', 'Giza', 'Helwan', '6th of October City', 'Sheikh Zayed City', 'New Cairo'] as EgyptCity[],
+    name: 'Cairo & Giza Area',
+    price: 55,
+    cities: ['Cairo', 'Giza', 'Alexandria'] as EgyptCity[],
   },
+
   zone2: {
-    name: 'Greater Cairo & Delta',
-    price: 75,
+    name: 'Delta Cities',
+    price: 70,
     cities: [
-      'Alexandria',
-      'Shubra El Kheima',
-      'Tanta',
-      'Mansoura',
-      'Zagazig',
-      'Damietta',
-      'Kafr El Sheikh',
+      'Al Qalyubiyah',
       'Port Said',
-      'Ismailia',
+      'Al Minufiyah',
+      'Kafr Al Shaykh',
+      'Al Gharbiyah',
       'Suez',
-      'Banha',
-      'Shibin El Kom',
-      'Badr City',
-      'Obour City',
-      '10th of Ramadan City',
-      'Sadat City',
+      'Al Sharqiyah',
+      'Al Buhairah',
+      'Ismailia',
+      'Al Dakhliyah',
+      'Damietta',
     ] as EgyptCity[],
   },
   zone3: {
-    name: 'Upper Egypt & Remote Areas',
-    price: 100,
-    cities: [
-      'Luxor',
-      'Aswan',
-      'Asyut',
-      'Fayoum',
-      'Minya',
-      'Beni Suef',
-      'Qena',
-      'Sohag',
-      'Hurghada',
-      'Arish',
-      'Marsa Matruh',
-    ] as EgyptCity[],
+    name: 'Upper Egypt',
+    price: 80,
+    cities: ['Sohag', 'Fayoum', 'Minya', 'Beni Suef', 'Asyut'] as EgyptCity[],
+  },
+  zone4: {
+    name: 'Canal Cities',
+    price: 95,
+    cities: ['Al Saha', 'Sharm El Sheikh'] as EgyptCity[],
+  },
+  zone5: {
+    name: 'Remote Cities',
+    price: 120,
+    cities: ['North Sinai', 'Qena', 'Al Wadi Al Jadid', 'Red Sea', 'Luxor', 'South Sinai', 'Matroouh'] as EgyptCity[],
   },
 } as const satisfies Record<string, ShippingZoneData>;
 
@@ -58,27 +52,37 @@ export type ShippingZone = keyof typeof shippingZones;
 
 // Helper function to get shipping price for a city
 export const getShippingPrice = (city: EgyptCity): number => {
-  // Find the zone that contains the city
-  const zone = Object.values(shippingZones).find(zone => zone.cities.includes(city));
+  for (const zone of Object.values(shippingZones)) {
+    if (zone.cities.includes(city)) {
+      return zone.price;
+    }
+  }
+  return 120; // Default price for unlisted cities
+};
 
-  // Return the zone price or a default price if city not found in any zone
-  return zone?.price || 50;
+// Helper function to get zone name for a city
+export const getZoneName = (city: EgyptCity): string => {
+  for (const zone of Object.values(shippingZones)) {
+    if (zone.cities.includes(city)) {
+      return zone.name;
+    }
+  }
+  return 'Remote Cities';
 };
 
 // Helper function to get zone information for a city
 export const getZoneInfo = (city: EgyptCity) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const zone = Object.entries(shippingZones).find(([_, zoneData]) => zoneData.cities.includes(city));
-
-  if (!zone) {
-    return {
-      zoneName: 'Other Areas',
-      price: 50,
-    };
+  for (const zone of Object.values(shippingZones)) {
+    if (zone.cities.includes(city)) {
+      return {
+        zoneName: zone.name,
+        price: zone.price,
+      };
+    }
   }
 
   return {
-    zoneName: zone[1].name,
-    price: zone[1].price,
+    zoneName: 'Remote Cities',
+    price: 120,
   };
 };
