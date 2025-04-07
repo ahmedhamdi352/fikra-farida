@@ -15,20 +15,20 @@ export default function BlogsPage() {
   const blogs = [
     {
       id: 1,
-      title: 'Digital Transformation and Vision 2030: Toward an Integrated Digital Future',
-      description: 'Digital transformation is the process of integrating digital technology into all aspects of life, whether at the government level, private sector, or among individuals. This transformation aims to enhance performance, streamline processes, and make services more effective and efficient.',
+      title: t('blog1'),
+      description: t('blog1Des'),
       image: blog1,
     },
     {
       id: 2,
-      title: 'Why Should I Switch from Traditional to Digital Business Cards?',
-      description: 'In the evolving business world, the NFC-enabled digital business card is one of the most significant innovations that have changed how we exchange information. Unlike traditional paper business cards, which can easily be lost or damaged, the NFC-enabled digital card allows for instant data transfer just by bringing the smartphone close to it.',
+      title: t('blog2'),
+      description: t('blog2Des'),
       image: blog2,
     },
     {
       id: 3,
-      title: 'How Digital Business Cards Can Help Develop Professional Relationships',
-      description: "In today's fast-paced technological era, adopting modern tools to enhance communication and build professional relationships is essential. While traditional business cards have been a staple in professional...",
+      title: t('blog3'),
+      description: t('blog3Des'),
       image: blog3,
     },
   ];
@@ -58,7 +58,7 @@ export default function BlogsPage() {
                 className="object-cover"
               />
             </div>
-            <h2 className="text-[#FEC400]  text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4">{firstBlog.title}</h2>
+            <h2 className="text-[#FEC400]  text-[12px] font-semibold leading-[150%] tracking-[0.12px] md:text-[32px] md:font-medium md:leading-[48px] md:[font-variant-numeric:lining-nums_proportional-nums] md:[font-feature-settings:'liga'_off] mb-4 self-start">{firstBlog.title}</h2>
             <p className="text-[10px] font-light leading-[12px] [font-feature-settings:'liga'_off] md:text-[24px] md:leading-[32px] mb-6 line-clamp-3">{firstBlog.description}</p>
             <div className="hidden lg:block self-start w-[55%]">
               <Button href={`/blogs/${firstBlog.id}`} withArrow>
