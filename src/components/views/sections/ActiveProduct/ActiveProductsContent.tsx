@@ -1,21 +1,21 @@
 'use client';
 
 import { Product } from 'types';
-import { ProductCard } from './ProductCard';
-import { EmptyState } from './EmptyState';
+import { ProductCard } from './ActiveProductCard';
+import { EmptyState } from '../EmptyState';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSearchParams, useParams } from 'next/navigation';
 import { useGetAllCategoriesMutation } from 'hooks';
 import { useTranslations } from 'next-intl';
+import { ProductsContent } from '../ProductsContent';
 
 interface ProductsContentProps {
   products: Product[];
   totalPages: number;
-  className?: object
 }
 
-export function ProductsContent({ products, className }: ProductsContentProps) {
+export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
   const searchParams = useSearchParams();
   const params = useParams();
   const locale = params.locale as string;
@@ -62,8 +62,9 @@ export function ProductsContent({ products, className }: ProductsContentProps) {
 
   return (
     <div className="min-h-screen">
-      <div className={`${className || ''} container mx-auto px-4 py-12`} style={className || {}}>
+      <div className="container mx-auto px-4 py-16">
         {/* Filters Section */}
+
         {!isCategoriesLoading && <div className="mb-8 flex flex-wrap items-center gap-4">
           {/* Categories Dropdown */}
           <div
@@ -135,12 +136,8 @@ export function ProductsContent({ products, className }: ProductsContentProps) {
           </div>
         </div>}
 
-        {/* Results count */}
-        <div className="text-sm text-gray-400 mb-4">
-          {t('showing')} {filteredProducts.length} {t('results')}
-        </div>
 
-        <div className="border border-[var(--main-color1)] rounded-[5px] p-6 mb-8">
+        <div className="border border-[var(--main-color1)] rounded-[5px] p-6 my-8">
           {/* Products Grid */}
           {filteredProducts.length > 0 ? (
             <>
@@ -209,6 +206,15 @@ export function ProductsContent({ products, className }: ProductsContentProps) {
           ) : (
             <EmptyState />
           )}
+        </div>
+
+        <div className="mt-12 flex flex-col gap-4">
+          <p className="text-xl text-start text-[var(--main-color1)]">Or Buy a new Product</p>
+          <ProductsContent
+            products={products}
+            totalPages={totalPages}
+            className={{ padding: 0 }}
+          />
         </div>
       </div>
     </div>

@@ -193,13 +193,14 @@
       }
     },
     "register": {
-      "title": "أنشئ حسابك الآن",
+      "title": "هيا ننضم معاً",
       "usernamePlaceholder": "اسم المستخدم",
       "fullNamePlaceholder": "الاسم الكامل",
       "phonePlaceholder": "رقم الهاتف",
       "emailPlaceholder": "البريد الإلكتروني",
       "passwordPlaceholder": "كلمة المرور",
       "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+      "selectedProduct": "المنتج المختار",
       "submit": "إنشاء حساب",
       "haveAccount": "هل لديك حساب بالفعل؟",
       "login": "تسجيل الدخول",
@@ -211,7 +212,8 @@
         "emailInvalid": "صيغة البريد الإلكتروني غير صحيحة",
         "passwordRequired": "كلمة المرور مطلوبة",
         "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-        "passwordMatch": "كلمات المرور غير متطابقة"
+        "passwordMatch": "كلمات المرور غير متطابقة",
+        "usernameEnglishOnly": "يجب أن يحتوي اسم المستخدم على أحرف إنجليزية وأرقام وأحرف خاصة فقط (@، #، $، _)"
       }
     },
     "forget": {

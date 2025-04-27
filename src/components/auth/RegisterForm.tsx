@@ -9,15 +9,13 @@ import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
 import { useRegisterMutation } from 'hooks';
-import { PhoneInput } from 'components/forms/phone-input';
 import { useSiteData } from 'context/SiteContext';
 import { useTheme } from '../ThemeProvider';
-
+import { useSearchParams } from 'next/navigation';
 
 interface RegisterFormData {
   username: string;
   fullName: string;
-  phoneNumber1: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -28,17 +26,20 @@ export default function RegisterForm() {
   const siteData = useSiteData();
   const { theme } = useTheme();
   const { isLoading, onRegister } = useRegisterMutation();
+  const searchParams = useSearchParams();
+  const productName = searchParams.get('product');
 
   const schema = yup.object().shape({
     username: yup
       .string()
-      .required(t('register.validation.usernameRequired')),
+      .required(t('register.validation.usernameRequired'))
+      .matches(
+        /^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/,
+        t('register.validation.usernameEnglishOnly')
+      ),
     fullName: yup
       .string()
       .required(t('register.validation.fullNameRequired')),
-    phoneNumber1: yup
-      .string()
-      .required(t('register.validation.phoneRequired')),
     email: yup
       .string()
       .required(t('register.validation.emailRequired'))
@@ -62,7 +63,11 @@ export default function RegisterForm() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    await onRegister(data);
+    const registrationData = {
+      ...data,
+      productId: productName || undefined
+    };
+    await onRegister(registrationData);
   };
 
   return (
@@ -80,6 +85,12 @@ export default function RegisterForm() {
           <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">
             {t('register.title')}
           </h2>
+          {productName && (
+            <div className="mt-2 text-center">
+              <p className="text-sm ">{t('register.selectedProduct')}:</p>
+              <p className="text-lg font-medium text-[var(--main-color1)]">{productName}</p>
+            </div>
+          )}
         </div>
 
         <form noValidate className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -107,16 +118,6 @@ export default function RegisterForm() {
                 </svg>
               }
             />
-
-            <PhoneInput
-              name="phoneNumber1"
-              type="tel"
-              control={control}
-              required
-              defaultCountry="eg"
-              placeholder={t('register.phonePlaceholder')}
-            />
-
 
             <TextInput
               control={control}
@@ -154,7 +155,6 @@ export default function RegisterForm() {
               }
             />
           </div>
-
 
           <button
             type="submit"

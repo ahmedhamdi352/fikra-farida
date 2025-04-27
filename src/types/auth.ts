@@ -11,8 +11,8 @@ export interface ForgetPasswordPayloadForCreateDto {
 export interface RegisterPayloadForCreateDto {
   username: string;
   fullName: string;
-  phoneNumber1: string;
   email: string;
   password: string;
   confirmPassword: string;
+  productId?: string;
 }

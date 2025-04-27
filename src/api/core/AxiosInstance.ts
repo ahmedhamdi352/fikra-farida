@@ -11,13 +11,12 @@ const instance: AxiosInstance = axios.create();
 instance.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 instance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-  const token = sessionStorage.getItem('token');
-  const parsedToken: string = token ? JSON.parse(token) : null;
-  if (parsedToken) {
-    config.headers['X-API-Key'] = parsedToken;
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['token'] = token;
   }
 
-  const storedConfig = sessionStorage.getItem('config');
+  const storedConfig = localStorage.getItem('config');
   const parsedConfig = storedConfig ? JSON.parse(storedConfig) : {};
   config.headers['Accept-Language'] = parsedConfig?.i18n || 'en';
   return config;
