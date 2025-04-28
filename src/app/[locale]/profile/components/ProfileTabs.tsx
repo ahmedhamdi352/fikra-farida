@@ -61,13 +61,13 @@ export const ProfileTabs = () => {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex items-center gap-2 text-[var(--main-color1)] relative ${tab.href === '/share'
-              ? 'after:content-[\'\'] after:absolute after:bottom-[-16px] after:left-0 after:w-full after:h-[2px] after:bg-[var(--main-color1)]'
+            className={`flex items-center gap-2  relative ${tab.href === '/share'
+              ? 'text-[var(--main-color1)] after:content-[\'\'] after:absolute after:bottom-[-16px] after:left-0 after:w-full after:h-[2px] after:bg-[var(--main-color1)]'
               : ''
               }`}
           >
             <span className="text-white">{tab.icon}</span>
-            <span className="text-white uppercase text-[12px]">{tab.label}</span>
+            <span className="uppercase text-[12px]">{tab.label}</span>
           </Link>
         ))}
       </div>

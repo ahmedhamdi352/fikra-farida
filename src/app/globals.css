@@ -16,6 +16,7 @@
     --main-color1: #FEC400;
     --FOOTER: linear-gradient(239deg, rgba(12, 13, 13, 0.5) 29.09%, rgba(41, 47, 54, 0.5) 109.67%);
     --small-text: #f4dd94;
+
   }
 
   :root.dark {
@@ -46,6 +47,7 @@
     background-repeat: no-repeat;
     background-position: center top;
     background-size: 100vw 100%;
+    background-image: url('/images/dark-theme-bg.svg');
   }
 
   body::before {
