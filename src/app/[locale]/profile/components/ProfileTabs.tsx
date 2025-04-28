@@ -55,20 +55,23 @@ export const ProfileTabs = () => {
   ];
 
   return (
-    <div className="flex items-center justify-start md:justify-between w-full md:w-1/2 gap-6 border-b border-[var(--main-color1)] p-4">
-      {tabs.map((tab) => (
-        <Link
-          key={tab.href}
-          href={tab.href}
-          className={`flex items-center gap-2 text-[var(--main-color1)] relative ${tab.href === '/share'
-            ? 'after:content-[\'\'] after:absolute after:bottom-[-16px] after:left-0 after:w-full after:h-[2px] after:bg-[var(--main-color1)]'
-            : ''
-            }`}
-        >
-          <span className="text-white">{tab.icon}</span>
-          <span className="text-white uppercase">{tab.label}</span>
-        </Link>
-      ))}
+    <div className='flex flex-col'>
+      <div className="flex items-center justify-center md:justify-between w-full md:w-1/2 gap-6  py-4">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={`flex items-center gap-2 text-[var(--main-color1)] relative ${tab.href === '/share'
+              ? 'after:content-[\'\'] after:absolute after:bottom-[-16px] after:left-0 after:w-full after:h-[2px] after:bg-[var(--main-color1)]'
+              : ''
+              }`}
+          >
+            <span className="text-white">{tab.icon}</span>
+            <span className="text-white uppercase text-[12px]">{tab.label}</span>
+          </Link>
+        ))}
+      </div>
+      <div className="w-full border border-[var(--main-color1)]"></div>
     </div>
   );
 };
