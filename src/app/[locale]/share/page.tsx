@@ -71,7 +71,7 @@ export default function SharePage() {
             <button
               onClick={() => {
                 // Assuming you have the QR code image URL or data
-                const qrCodeImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' +
+                const qrCodeImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' +
                   encodeURIComponent(`https://www.fikrafarida.com/${profileData?.username}`);
 
                 if (navigator.share) {

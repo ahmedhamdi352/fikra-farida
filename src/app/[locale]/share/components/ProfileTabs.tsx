@@ -55,20 +55,25 @@ export const ProfileTabs = () => {
   ];
 
   return (
-    <div className="flex items-center justify-start md:justify-between w-full md:w-1/2 gap-6 border-b border-[var(--main-color1)] p-4">
-      {tabs.map((tab) => (
-        <Link
-          key={tab.href}
-          href={tab.href}
-          className={`flex items-center gap-2 text-[var(--main-color1)] relative ${tab.href === '/share'
-            ? 'after:content-[\'\'] after:absolute after:bottom-[-16px] after:left-0 after:w-full after:h-[2px] after:bg-[var(--main-color1)]'
-            : ''
-            }`}
-        >
-          <span className="text-white">{tab.icon}</span>
-          <span className="text-white uppercase">{tab.label}</span>
-        </Link>
-      ))}
+    <div className="w-full border-b border-[var(--main-color1)]">
+      <div className="container mx-auto px-2">
+        <div className="flex items-center justify-between w-full">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={`flex items-center gap-1.5 py-4 px-2 text-[var(--main-color1)] relative shrink-0 ${
+                tab.href === '/share'
+                  ? 'after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[var(--main-color1)]'
+                  : ''
+              }`}
+            >
+              <span className="text-white w-4 h-4 flex items-center justify-center">{tab.icon}</span>
+              <span className="text-white uppercase text-[10px] sm:text-xs md:text-sm font-medium">{tab.label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
