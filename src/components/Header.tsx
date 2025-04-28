@@ -209,8 +209,8 @@ const Header = ({ siteData }: HeaderProps) => {
               <svg width="24" height="24" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="vuesax/outline/person">
                   <g id="person">
-                    <path id="Vector" d="M16 16.5C19.3137 16.5 22 13.8137 22 10.5C22 7.18629 19.3137 4.5 16 4.5C12.6863 4.5 10 7.18629 10 10.5C10 13.8137 12.6863 16.5 16 16.5Z" stroke="white" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path id="Vector_2" d="M26 28.5C26 23.5294 21.5228 19.5 16 19.5C10.4772 19.5 6 23.5294 6 28.5" stroke="white" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path id="Vector" d="M16 16.5C19.3137 16.5 22 13.8137 22 10.5C22 7.18629 19.3137 4.5 16 4.5C12.6863 4.5 10 7.18629 10 10.5C10 13.8137 12.6863 16.5 16 16.5Z" stroke="white" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path id="Vector_2" d="M26 28.5C26 23.5294 21.5228 19.5 16 19.5C10.4772 19.5 6 23.5294 6 28.5" stroke="white" strokeWidth="2" stroke-linecap="round" stroke-linejoin="round" />
                   </g>
                 </g>
               </svg>

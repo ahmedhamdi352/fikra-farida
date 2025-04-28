@@ -7,5 +7,6 @@ export const ApiURLs = {
   order: '/api/ShoppingOrder/add',
   catergories: '/api/Store/Categories',
   myProfile: '/api/Account/MyProfile',
+  QrCode: '/api/Media/QrCodebyUser',
   discount: '/api/discount', // Updated to use our proxy endpoint
 } as const;
