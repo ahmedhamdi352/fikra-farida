@@ -1,22 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useGetProfileQuery } from 'hooks/profile/queries';
+import { useState } from 'react';
 import Image from 'next/image';
-import LoadingOverlay from 'components/ui/LoadingOverlay';
+import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO'
 
-export default function ProfileContent() {
-  const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
+export default function ProfileContent({ profileData }: { profileData?: ProfileForReadDTO }) {
   const [collectInfo, setCollectInfo] = useState(true);
   const [directLinkMode, setDirectLinkMode] = useState(false);
-
-  useEffect(() => {
-    onGetProfile()
-  }, []);
-
-  if (isLoading) {
-    return <LoadingOverlay isLoading={isLoading} />;
-  }
 
   if (!profileData) {
     return <div>No profile data found</div>;
@@ -60,52 +50,60 @@ export default function ProfileContent() {
         <div className="my-6">
           <div className="flex items-center justify-between mb-4 px-4 py-2 rounded-lg border border-[var(--main-color1)]">
             <div className="flex items-center gap-2">
-              <span className="text-white">collect info</span>
+              <span className="text-body">collect info</span>
               <div className="relative group">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className="cursor-help">
-                  <path d="M8.00016 14.6663C11.6668 14.6663 14.6668 11.6663 14.6668 7.99967C14.6668 4.33301 11.6668 1.33301 8.00016 1.33301C4.3335 1.33301 1.3335 4.33301 1.3335 7.99967C1.3335 11.6663 4.3335 14.6663 8.00016 14.6663Z" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M8 5.33301V8.66634" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M7.99609 10.667H8.00208" stroke="#FEC400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1 bg-white text-black text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap hidden md:block">
-                  Collect visitor information
+                <div className="tooltip" data-tip="hello">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className="cursor-help">
+                    <path d="M8.00016 14.6663C11.6668 14.6663 14.6668 11.6663 14.6668 7.99967C14.6668 4.33301 11.6668 1.33301 8.00016 1.33301C4.3335 1.33301 1.3335 4.33301 1.3335 7.99967C1.3335 11.6663 4.3335 14.6663 8.00016 14.6663Z" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8 5.33301V8.66634" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7.99609 10.667H8.00208" stroke="#FEC400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => setCollectInfo(!collectInfo)}
-              className={`w-12 h-6 rounded-full relative transition-colors duration-200 ease-in-out ${collectInfo ? 'bg-[#D9D9D9]' : 'bg-[#D9D9D9]'}`}
-            >
-              <div
-                className={`absolute top-1 w-4 h-4 rounded-full transition-all duration-200 ease-in-out ${collectInfo ? 'right-1 bg-[var(--main-color1)]' : 'left-1 bg-[#7B7B7B]'
-                  }`}
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                defaultChecked={collectInfo}
+                onChange={(e) => setCollectInfo(e.target.checked)}
               />
-            </button>
+              <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                        peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
+                        after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                        after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
+                        peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]">
+              </div>
+            </label>
           </div>
 
           <div className="flex items-center justify-between mb-4 px-4 py-2 rounded-lg border border-[var(--main-color1)]">
             <div className="flex items-center gap-2">
-              <span className="text-white">Direct Link Mode</span>
+              <span className="text-body">Direct Link Mode</span>
               <div className="relative group">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className="cursor-help">
-                  <path d="M8.00016 14.6663C11.6668 14.6663 14.6668 11.6663 14.6668 7.99967C14.6668 4.33301 11.6668 1.33301 8.00016 1.33301C4.3335 1.33301 1.3335 4.33301 1.3335 7.99967C1.3335 11.6663 4.3335 14.6663 8.00016 14.6663Z" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M8 5.33301V8.66634" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M7.99609 10.667H8.00208" stroke="#FEC400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1 bg-white text-black text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap hidden md:block">
-                  Direct access to your profile
+                <div className="tooltip" data-tip="hello">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className="cursor-help">
+                    <path d="M8.00016 14.6663C11.6668 14.6663 14.6668 11.6663 14.6668 7.99967C14.6668 4.33301 11.6668 1.33301 8.00016 1.33301C4.3335 1.33301 1.3335 4.33301 1.3335 7.99967C1.3335 11.6663 4.3335 14.6663 8.00016 14.6663Z" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8 5.33301V8.66634" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7.99609 10.667H8.00208" stroke="#FEC400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => setDirectLinkMode(!directLinkMode)}
-              className={`w-12 h-6 rounded-full relative transition-colors duration-200 ease-in-out ${directLinkMode ? 'bg-[#D9D9D9]' : 'bg-[#D9D9D9]'}`}
-            >
-              <div
-                className={`absolute top-1 w-4 h-4 rounded-full transition-all duration-200 ease-in-out ${directLinkMode ? 'right-1 bg-[var(--main-color1)]' : 'left-1 bg-[#7B7B7B]'
-                  }`}
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                defaultChecked={directLinkMode}
+                onChange={(e) => setDirectLinkMode(e.target.checked)}
               />
-            </button>
+              <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                        peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
+                        after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                        after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
+                        peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]">
+              </div>
+            </label>
           </div>
         </div>
 

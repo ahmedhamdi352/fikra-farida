@@ -127,7 +127,16 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: ['light', 'dark'],
+    base: true,
+    styled: true,
+    utils: true,
+    prefix: '',
+    logs: true,
+  },
   // Enable RTL support
   future: {
     hoverOnlyWhenSupported: true,
