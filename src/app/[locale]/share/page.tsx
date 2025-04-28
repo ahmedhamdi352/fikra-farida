@@ -13,8 +13,13 @@ export default function SharePage() {
 
   useEffect(() => {
     onGetProfile()
-    onGetProfileQrCode(114)
   }, []);
+
+  useEffect(() => {
+    if (profileData?.userPk) {
+      onGetProfileQrCode(profileData?.userPk)
+    }
+  }, [profileData]);
 
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading || QrCodeLoading} />;
