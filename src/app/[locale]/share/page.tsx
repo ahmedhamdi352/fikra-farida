@@ -5,6 +5,7 @@ import { useGetProfileQuery, useGetQrCodeQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import ProfileInformation from './components/ProfileInformation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function SharePage() {
 
@@ -30,9 +31,17 @@ export default function SharePage() {
   return (
     <div className="w-full min-h-screen py-8 px-4 flex flex-col items-center">
       <div className='w-full max-w-screen-md  py-8'>
+
+        <div className="flex items-center mb-6">
+          <Link href="/profile" className="flex items-center text-[--main-color1] gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            <span className='uppercase text-h5 font-bold'>your QR Code</span>
+          </Link>
+        </div>
         <div className="card-container rounded-3xl p-6">
           <ProfileInformation profileData={profileData} withEdit={false} />
-
           <div className="flex flex-col items-center justify-center my-8">
             <Image
               src={`https://fikrafarida.com/Media/Profiles/${QrCodeData?.imagename || ''}`}
