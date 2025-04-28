@@ -23,9 +23,9 @@ export const SortableLink = ({ link }: SortableLinkProps) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    zIndex: isDragging ? 1 : 0,
+    zIndex: isDragging ? 999 : 1,
     position: 'relative' as const,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.6 : 1,
   };
 
   return (
@@ -33,17 +33,18 @@ export const SortableLink = ({ link }: SortableLinkProps) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-2xl mb-3"
+      className={`bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl mb-3  border border-[#B0A18E]
+                ${isDragging ? 'ring-2 ring-[#FEC400] shadow-lg scale-[1.02]' : ''}`}
     >
-      <div className="flex items-center px-4 py-3">
+      <div className="flex items-center px-4 py-2">
         <button
-          className="text-gray-400 hover:text-gray-300 transition-colors mr-3"
+          className="touch-none select-none -ml-1 p-1 text-[#B0A18E] hover:text-[#FEC400] active:text-[#FEC400] transition-colors mr-2
+                    md:mr-3 relative before:content-[''] before:absolute before:inset-[-8px] before:bg-transparent"
           {...listeners}
+          aria-label="Drag to reorder"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" fill="currentColor" />
-            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" fill="currentColor" />
-            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" fill="currentColor" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="transform scale-90 md:scale-100">
+            <path d="M9.4098 7.2998H9.3998M14.5998 7.2998H14.5898M9.3098 11.9998H9.2998M14.5998 11.9998H14.5898M9.4098 16.6998H9.3998M14.5998 16.6998H14.5898" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
           </svg>
         </button>
 
@@ -57,9 +58,9 @@ export const SortableLink = ({ link }: SortableLinkProps) => {
           />
         </div>
 
-        <span className="text-white text-base flex-grow">{link.title}</span>
+        <span className="text-white text-base flex-grow truncate">{link.title}</span>
 
-        <label className="relative inline-flex items-center cursor-pointer">
+        <label className="relative inline-flex items-center cursor-pointer ml-3">
           <input
             type="checkbox"
             className="sr-only peer"

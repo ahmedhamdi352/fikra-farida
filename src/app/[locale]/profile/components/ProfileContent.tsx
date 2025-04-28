@@ -1,12 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO'
 
 export default function ProfileContent({ profileData }: { profileData?: ProfileForReadDTO }) {
   const [collectInfo, setCollectInfo] = useState(true);
   const [directLinkMode, setDirectLinkMode] = useState(false);
+  const directLinkModalRef = useRef<HTMLDialogElement>(null);
+  const collectInfoModalRef = useRef<HTMLDialogElement>(null);
+
+  const handleDirectLinkModeChange = (checked: boolean) => {
+    if (checked) {
+      directLinkModalRef.current?.showModal();
+    }
+    if (!checked) {
+      setDirectLinkMode(checked);
+    }
+  };
+
+  const handleCollectInfoChange = (checked: boolean) => {
+    if (checked) {
+      collectInfoModalRef.current?.showModal();
+    }
+    if (!checked) {
+      setCollectInfo(checked);
+    }
+  };
 
   if (!profileData) {
     return <div>No profile data found</div>;
@@ -66,7 +86,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                 type="checkbox"
                 className="sr-only peer"
                 defaultChecked={collectInfo}
-                onChange={(e) => setCollectInfo(e.target.checked)}
+                onChange={(e) => handleCollectInfoChange(e.target.checked)}
               />
               <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
@@ -95,7 +115,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                 type="checkbox"
                 className="sr-only peer"
                 defaultChecked={directLinkMode}
-                onChange={(e) => setDirectLinkMode(e.target.checked)}
+                onChange={(e) => handleDirectLinkModeChange(e.target.checked)}
               />
               <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
@@ -117,6 +137,40 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
           </button>
         </div>
       </div>
+
+      {/* Collect Info Modal */}
+      <dialog ref={collectInfoModalRef} className="modal modal-backdrop">
+        <div className="modal-box rounded-[15px] border border-white bg-[#FEF3C7] backdrop-blur-[15px] transform duration-300 transition-all scale-90 opacity-0 modal-open:scale-100 modal-open:opacity-100">
+          <h3 className="text-h2 font-bold text-black mb-4">Collect Info Mode</h3>
+          <p className="text-black mb-6">
+            When Collect Info is enabled, you&apos;ll be able to gather information about your visitors, such as their name and contact details.
+          </p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button onClick={() => setCollectInfo(true)} className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none">
+                Got it
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      {/* Direct Link Mode Modal */}
+      <dialog ref={directLinkModalRef} className="modal modal-backdrop">
+        <div className="modal-box rounded-[15px] border border-white bg-[#FEF3C7] backdrop-blur-[15px] transform duration-300 transition-all scale-90 opacity-0 modal-open:scale-100 modal-open:opacity-100">
+          <h3 className="font-bold text-h2 text-black mb-4">Direct Link Mode</h3>
+          <p className="text-black mb-6">
+            When Direct Link Mode is enabled, users will be taken directly to the destination URL instead of your profile page.
+          </p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button onClick={() => setDirectLinkMode(true)} className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none">
+                Got it
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }
