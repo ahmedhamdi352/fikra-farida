@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useGetProfileQuery, useGetQrCodeQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import ProfileInformation from './components/ProfileInformation';
@@ -12,6 +12,8 @@ export default function SharePage() {
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
   const { data: QrCodeData, isLoading: QrCodeLoading, onGetProfileQrCode } = useGetQrCodeQuery();
 
+  const [offLine, setOffLine] = useState(false)
+
   useEffect(() => {
     onGetProfile()
   }, []);
@@ -22,11 +24,54 @@ export default function SharePage() {
     }
   }, [profileData]);
 
+
+  const handleAddToHomeScreen = async () => {
+    if (!QrCodeData?.imagename) {
+      alert('QR code is not available');
+      return;
+    }
+
+    const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${QrCodeData.imagename}`;
+
+    try {
+      // For iOS devices
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.platform) || 
+                   (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+
+      if (isIOS) {
+        // For iOS, we'll open the image in a new tab for saving
+        const link = document.createElement('a');
+        link.href = qrCodeUrl;
+        link.target = '_blank';
+        link.click();
+        alert('Long press on the image and select "Add to Photos" to save the QR code');
+      } else {
+        // For Android and other devices
+        const response = await fetch(qrCodeUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'qrcode.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Error downloading QR code:', error);
+      alert('Failed to download QR code. Please try again.');
+    }
+  };
+
+  // function handleOfflineMode(checked: boolean): void {
+  //   setOffLine(checked)
+  // }
+
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading || QrCodeLoading} />;
   }
 
-  console.log('QR Code Data:', QrCodeData, QrCodeData?.imagename);
 
   return (
     <div className="w-full min-h-screen py-8 px-4 flex flex-col items-center">
@@ -103,6 +148,46 @@ export default function SharePage() {
           </div>
         </div>
 
+      </div>
+      <div className="card-container w-full lg:w-[55%] rounded-3xl p-6 space-y-3">
+
+
+        <button
+          onClick={handleAddToHomeScreen}
+          className="flex items-center justify-between w-full px-2 py-4"
+        >
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12" />
+            </svg>
+            Add To Home Screen
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+        <div className="flex items-center justify-between w-full text-white px-2 py-2">
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+            Offline Sharing
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer ml-3">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={offLine}
+              onChange={(e) => setOffLine(e.target.checked)}
+            />
+            <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                        peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
+                        after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                        after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
+                        peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]">
+            </div>
+          </label>
+        </div>
       </div>
 
     </div>
