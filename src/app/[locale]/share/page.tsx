@@ -34,8 +34,8 @@ export default function SharePage() {
     const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${QrCodeData.imagename}`;
 
     try {
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.platform) || 
-                   (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.platform) ||
+        (navigator.userAgent.includes("Mac") && "ontouchend" in document);
 
       if (isIOS) {
         // Create a temporary HTML page with the QR code
@@ -73,10 +73,10 @@ export default function SharePage() {
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const url = window.URL.createObjectURL(blob);
         window.open(url, '_blank');
-        
+
         // Show instructions
         alert('To add to home screen:\n1. Tap the share button at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right');
-        
+
         // Clean up the blob URL after a delay
         setTimeout(() => window.URL.revokeObjectURL(url), 1000);
       } else {
