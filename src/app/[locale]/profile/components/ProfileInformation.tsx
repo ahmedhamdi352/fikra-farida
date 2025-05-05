@@ -6,9 +6,10 @@ import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
   withEdit?: boolean;
+  withSwitch?: boolean;
 }
 
-export default function ProfileInformation({ profileData, withEdit }: ProfileInformationProps) {
+export default function ProfileInformation({ profileData, withEdit, withSwitch }: ProfileInformationProps) {
   if (!profileData) return null;
 
   return (
@@ -38,7 +39,10 @@ export default function ProfileInformation({ profileData, withEdit }: ProfileInf
           )}
         </div>
         <div className="flex flex-col py-2">
-          <h1 className="text-lg font-semibold ">{profileData.fullname}</h1>
+          <div className='flex items-center gap-2'>
+            <h1 className="text-md font-semibold ">{profileData.fullname}</h1>
+            {withSwitch && <p className="text-gray-400 underline cursor-pointer">Switch Account</p>}
+          </div>
           <p className="text-gray-400 text-sm">{profileData.jobTitle}</p>
         </div>
       </div>
