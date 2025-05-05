@@ -33,70 +33,10 @@ export default function SharePage() {
 
     const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${QrCodeData.imagename}`;
 
-    try {
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.platform) ||
-        (navigator.userAgent.includes("Mac") && "ontouchend" in document);
-
-      if (isIOS) {
-        // Create a temporary HTML page with the QR code
-        const htmlContent = `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta name="apple-mobile-web-app-capable" content="yes">
-              <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-              <meta name="viewport" content="width=device-width, initial-scale=1">
-              <title>My QR Code</title>
-              <link rel="apple-touch-icon" href="${qrCodeUrl}">
-              <style>
-                body {
-                  margin: 0;
-                  padding: 0;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  min-height: 100vh;
-                  background: #000;
-                }
-                img {
-                  max-width: 100%;
-                  height: auto;
-                }
-              </style>
-            </head>
-            <body>
-              <img src="${qrCodeUrl}" alt="QR Code">
-            </body>
-          </html>
-        `;
-
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = window.URL.createObjectURL(blob);
-        window.open(url, '_blank');
-
-        // Show instructions
-        alert('To add to home screen:\n1. Tap the share button at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right');
-
-        // Clean up the blob URL after a delay
-        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-      } else {
-        // For Android and other devices
-        const response = await fetch(qrCodeUrl);
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'qrcode.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Error handling QR code:', error);
-      alert('Failed to process QR code. Please try again.');
-    }
+    // Redirect to the QR code page with the URL as a parameter
+    window.location.href = `/qr-code?url=${encodeURIComponent(qrCodeUrl)}`;
   };
+
 
   // function handleOfflineMode(checked: boolean): void {
   //   setOffLine(checked)
@@ -191,8 +131,8 @@ export default function SharePage() {
           className="flex items-center justify-between w-full px-2 py-4"
         >
           <div className="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 3v12" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M3 5.75C3 5.02065 3.28973 4.32118 3.80546 3.80546C4.32118 3.28973 5.02065 3 5.75 3H18.25C18.9793 3 19.6788 3.28973 20.1945 3.80546C20.7103 4.32118 21 5.02065 21 5.75V12.022C20.5323 11.7226 20.0282 11.4843 19.5 11.313V5.75C19.5 5.06 18.94 4.5 18.25 4.5H5.75C5.06 4.5 4.5 5.06 4.5 5.75V18.25C4.5 18.94 5.06 19.5 5.75 19.5H11.313C11.486 20.034 11.725 20.537 12.022 21H5.75C5.02065 21 4.32118 20.7103 3.80546 20.1945C3.28973 19.6788 3 18.9793 3 18.25V5.75ZM23 17.5C23 16.0413 22.4205 14.6424 21.3891 13.6109C20.3576 12.5795 18.9587 12 17.5 12C16.0413 12 14.6424 12.5795 13.6109 13.6109C12.5795 14.6424 12 16.0413 12 17.5C12 18.9587 12.5795 20.3576 13.6109 21.3891C14.6424 22.4205 16.0413 23 17.5 23C18.9587 23 20.3576 22.4205 21.3891 21.3891C22.4205 20.3576 23 18.9587 23 17.5ZM18 18L18.001 20.503C18.001 20.6356 17.9483 20.7628 17.8546 20.8566C17.7608 20.9503 17.6336 21.003 17.501 21.003C17.3684 21.003 17.2412 20.9503 17.1474 20.8566C17.0537 20.7628 17.001 20.6356 17.001 20.503V18H14.496C14.3634 18 14.2362 17.9473 14.1424 17.8536C14.0487 17.7598 13.996 17.6326 13.996 17.5C13.996 17.3674 14.0487 17.2402 14.1424 17.1464C14.2362 17.0527 14.3634 17 14.496 17H17V14.5C17 14.3674 17.0527 14.2402 17.1464 14.1464C17.2402 14.0527 17.3674 14 17.5 14C17.6326 14 17.7598 14.0527 17.8536 14.1464C17.9473 14.2402 18 14.3674 18 14.5V17H20.497C20.6296 17 20.7568 17.0527 20.8506 17.1464C20.9443 17.2402 20.997 17.3674 20.997 17.5C20.997 17.6326 20.9443 17.7598 20.8506 17.8536C20.7568 17.9473 20.6296 18 20.497 18H18Z" fill="white" />
             </svg>
             Add To Home Screen
           </div>
@@ -202,8 +142,19 @@ export default function SharePage() {
         </button>
         <div className="flex items-center justify-between w-full text-white px-2 py-2">
           <div className="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <g clip-path="url(#clip0_1972_9952)">
+                <path d="M11.9997 16.2803C11.4723 16.2803 10.9567 16.4367 10.5182 16.7297C10.0796 17.0227 9.73783 17.4392 9.536 17.9265C9.33416 18.4137 9.28135 18.9499 9.38425 19.4672C9.48714 19.9845 9.74112 20.4596 10.1141 20.8326C10.487 21.2055 10.9622 21.4595 11.4794 21.5624C11.9967 21.6653 12.5329 21.6125 13.0202 21.4106C13.5074 21.2088 13.9239 20.867 14.2169 20.4285C14.5099 19.9899 14.6663 19.4744 14.6663 18.9469C14.6663 18.2397 14.3854 17.5614 13.8853 17.0613C13.3852 16.5612 12.7069 16.2803 11.9997 16.2803ZM11.9997 20.2803C11.736 20.2803 11.4782 20.2021 11.2589 20.0556C11.0396 19.9091 10.8688 19.7008 10.7678 19.4572C10.6669 19.2136 10.6405 18.9455 10.692 18.6868C10.7434 18.4282 10.8704 18.1906 11.0569 18.0041C11.2433 17.8177 11.4809 17.6907 11.7396 17.6392C11.9982 17.5878 12.2663 17.6142 12.5099 17.7151C12.7536 17.816 12.9618 17.9869 13.1083 18.2062C13.2548 18.4254 13.333 18.6832 13.333 18.9469C13.333 19.3006 13.1925 19.6397 12.9425 19.8897C12.6924 20.1398 12.3533 20.2803 11.9997 20.2803Z" fill="white" />
+                <path d="M17.473 14.5665C17.5245 14.4952 17.5614 14.4145 17.5815 14.3289C17.6017 14.2434 17.6048 14.1547 17.5905 14.0679C17.5763 13.9812 17.545 13.8981 17.4985 13.8235C17.452 13.7489 17.3912 13.6842 17.3197 13.6332C16.3208 12.9168 15.1867 12.411 13.9863 12.1465L16.5663 14.7265C16.709 14.8215 16.8829 14.8579 17.0517 14.8281C17.2206 14.7983 17.3714 14.7046 17.473 14.5665Z" fill="white" />
+                <path d="M12.0331 7.14648C11.1014 7.14952 10.1724 7.24555 9.25977 7.43315L10.4198 8.59315C10.9546 8.52104 11.4935 8.48319 12.0331 8.47982C14.553 8.48083 17.0138 9.243 19.0931 10.6665C19.2389 10.75 19.4109 10.7754 19.5746 10.7376C19.7383 10.6998 19.8817 10.6015 19.9761 10.4624C20.0705 10.3234 20.1089 10.1539 20.0836 9.98774C20.0583 9.82161 19.9712 9.67115 19.8398 9.56648C17.5407 7.99195 14.8197 7.14846 12.0331 7.14648Z" fill="white" />
+                <path d="M22.3662 5.46625C19.891 3.83068 17.0628 2.80618 14.1143 2.47702C11.1658 2.14787 8.18125 2.52347 5.40625 3.57292L6.45958 4.61958C8.97011 3.76355 11.6436 3.49509 14.2742 3.8349C16.9048 4.1747 19.4223 5.1137 21.6329 6.57958C21.7806 6.67335 21.9591 6.70535 22.1301 6.66868C22.3011 6.63201 22.4509 6.52961 22.5471 6.38355C22.6433 6.23749 22.6783 6.05948 22.6444 5.88788C22.6106 5.71629 22.5107 5.56486 22.3662 5.46625Z" fill="white" />
+                <path d="M1.22656 3.16643L2.84656 4.78643C2.43323 5.0131 2.02656 5.2531 1.62656 5.51977C1.5539 5.56879 1.4916 5.63165 1.44323 5.70475C1.39486 5.77786 1.36136 5.85977 1.34464 5.94582C1.31089 6.1196 1.34755 6.29968 1.44656 6.44643C1.54558 6.59318 1.69883 6.69459 1.87262 6.72835C2.0464 6.76211 2.22648 6.72545 2.37323 6.62643C2.8399 6.3131 3.33323 5.99976 3.82656 5.76643L6.40656 8.34643C5.61781 8.69262 4.86337 9.11224 4.15323 9.59976C4.04835 9.71177 3.98532 9.85652 3.97477 10.0096C3.96422 10.1627 4.00679 10.3147 4.09531 10.44C4.18382 10.5654 4.31286 10.6563 4.46065 10.6976C4.60844 10.7388 4.76594 10.7278 4.90656 10.6664C5.69102 10.128 6.53422 9.6807 7.4199 9.3331L10.1932 12.1064C8.91604 12.3755 7.71267 12.9192 6.66656 13.6998C6.53625 13.8084 6.45224 13.9625 6.43164 14.1309C6.41103 14.2993 6.45538 14.4692 6.55566 14.606C6.65593 14.7428 6.80459 14.8363 6.97135 14.8673C7.13811 14.8984 7.31044 14.8647 7.45323 14.7731C8.5901 13.9465 9.93234 13.4483 11.3332 13.3331L18.5332 20.5331L19.4732 19.5931L2.1399 2.25977L1.22656 3.16643Z" fill="white" />
+              </g>
+              <defs>
+                <clipPath id="clip0_1972_9952">
+                  <rect width="24" height="24" fill="white" />
+                </clipPath>
+              </defs>
             </svg>
             Offline Sharing
           </div>
