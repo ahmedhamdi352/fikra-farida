@@ -34,17 +34,51 @@ export default function SharePage() {
     const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${QrCodeData.imagename}`;
 
     try {
-      // For iOS devices
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.platform) || 
                    (navigator.userAgent.includes("Mac") && "ontouchend" in document);
 
       if (isIOS) {
-        // For iOS, we'll open the image in a new tab for saving
-        const link = document.createElement('a');
-        link.href = qrCodeUrl;
-        link.target = '_blank';
-        link.click();
-        alert('Long press on the image and select "Add to Photos" to save the QR code');
+        // Create a temporary HTML page with the QR code
+        const htmlContent = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta name="apple-mobile-web-app-capable" content="yes">
+              <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>My QR Code</title>
+              <link rel="apple-touch-icon" href="${qrCodeUrl}">
+              <style>
+                body {
+                  margin: 0;
+                  padding: 0;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  min-height: 100vh;
+                  background: #000;
+                }
+                img {
+                  max-width: 100%;
+                  height: auto;
+                }
+              </style>
+            </head>
+            <body>
+              <img src="${qrCodeUrl}" alt="QR Code">
+            </body>
+          </html>
+        `;
+
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        
+        // Show instructions
+        alert('To add to home screen:\n1. Tap the share button at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right');
+        
+        // Clean up the blob URL after a delay
+        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
       } else {
         // For Android and other devices
         const response = await fetch(qrCodeUrl);
@@ -59,8 +93,8 @@ export default function SharePage() {
         window.URL.revokeObjectURL(url);
       }
     } catch (error) {
-      console.error('Error downloading QR code:', error);
-      alert('Failed to download QR code. Please try again.');
+      console.error('Error handling QR code:', error);
+      alert('Failed to process QR code. Please try again.');
     }
   };
 
