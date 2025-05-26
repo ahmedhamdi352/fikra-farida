@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { useGetConnectionQuery } from 'hooks/profile/queries/useGetConnectionQuery';
 import { useGetGroupQuery } from 'hooks/profile/queries/useGetGroupQuery';
@@ -35,6 +35,33 @@ const ConnectionsPage = () => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>(TabType.GROUPS);
   const [searchQuery, setSearchQuery] = useState('');
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+
+    // Add event listeners for both mouse and touch events
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      // Clean up the event listeners
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
+
+  const toggleMenu = (groupId: number, event: React.MouseEvent | React.TouchEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setOpenMenuId(openMenuId === groupId ? null : groupId);
+  };
 
   // Mock data - replace with actual API calls
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -156,9 +183,17 @@ const ConnectionsPage = () => {
                   <div
                     key={group.GroupId}
                     className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
+                    ref={menuRef}
                   >
                     <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-4 p-1">
-                      <button className="focus:outline-none">
+                      <button
+                        className="focus:outline-none touch-manipulation"
+                        onClick={e => toggleMenu(group.GroupId, e)}
+                        onTouchEnd={e => toggleMenu(group.GroupId, e)}
+                        aria-expanded={openMenuId === group.GroupId}
+                        aria-controls={`group-menu-${group.GroupId}`}
+                        aria-label="Group options"
+                      >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
                             d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14Z"
@@ -178,8 +213,15 @@ const ConnectionsPage = () => {
                         </svg>
                       </button>
                       <ul
-                        tabIndex={0}
-                        className="bg-[#50514E] text-white dropdown-content z-[1] menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden"
+                        id={`group-menu-${group.GroupId}`}
+                        className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${
+                          openMenuId === group.GroupId ? 'block' : 'hidden'
+                        }`}
+                        onClick={e => e.stopPropagation()}
+                        onTouchEnd={e => e.stopPropagation()}
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby={`group-options-${group.GroupId}`}
                       >
                         <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md ">
                           <button
