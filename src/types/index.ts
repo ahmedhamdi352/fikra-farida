@@ -5,3 +5,5 @@ export * from './products';
 export * from './contact';
 export * from './order';
 export * from './categories';
+export * from './groupForCreateDTO';
+export * from './groupResponse';

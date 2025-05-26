@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Fikra Farida",
-  description: "Communication between people easily and in the fastest way",
+  title: 'Fikra Farida',
+  description: 'Communication between people easily and in the fastest way',
   themeColor: '#000000',
   manifest: '/manifest.json',
   appleWebApp: {
@@ -40,11 +40,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="light">
       <head>
@@ -53,12 +49,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="Fikra Farida" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased overflow-x-hidden w-full">
-        <div className="relative w-full max-w-[100vw]">
-          {children}
-        </div>
+        <div className="relative w-full max-w-[100vw]">{children}</div>
       </body>
     </html>
   );

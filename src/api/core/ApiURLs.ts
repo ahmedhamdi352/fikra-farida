@@ -8,5 +8,7 @@ export const ApiURLs = {
   catergories: '/api/Store/Categories',
   myProfile: '/api/Account/MyProfile',
   QrCode: '/api/Media/QrCodebyUser',
+  connections: '/api/UserConnection/MyConnections',
+  groups: '/api/ConnectionGroup',
   discount: '/api/discount', // Updated to use our proxy endpoint
 } as const;
