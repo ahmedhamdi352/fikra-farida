@@ -7,14 +7,11 @@ export async function getUserCountry(): Promise<string> {
 
     // Skip IP lookup for local development IPs
     if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
-      console.log('Local development IP detected:', ip);
       return 'EG'; // Default for local development
     }
 
     const response = await fetch(`https://ipapi.co/${ip}/json/`);
     const data = await response.json();
-
-    console.log('IP Lookup Response:', { data });
 
     // Check if we got an error response
     if (data.error || !data.country_code) {

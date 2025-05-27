@@ -25,15 +25,15 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
   } = useForm<NewsletterFormData>({
     resolver: yupResolver(schema),
-    mode: 'onBlur'
+    mode: 'onBlur',
   });
 
   const onSubmit = async (data: NewsletterFormData) => {
     try {
-      console.log('Form submitted with email:', data.email);
+      console.info('Form submitted with email:', data.email);
       // Add your newsletter subscription logic here
     } catch (error) {
       console.error('Error submitting newsletter form:', error);
@@ -42,16 +42,16 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
 
   return (
     <div className="mt-8">
-      {withTitle && (
-        <p className="text-gray-300 mb-4">{t('actions.subscribeTitle')}</p>
-      )}
+      {withTitle && <p className="text-gray-300 mb-4">{t('actions.subscribeTitle')}</p>}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2 w-full">
           <input
             type="email"
             placeholder={tt('login.emailPlaceholder')}
             {...register('email')}
-            className={`flex-1 min-w-0 bg-transparent border ${errors.email ? 'border-red-500' : 'border-[#FEC400]'} rounded-[10px] px-4 py-2 text-sm sm:text-base text-white placeholder:text-[#FEC400] focus:outline-none`}
+            className={`flex-1 min-w-0 bg-transparent border ${
+              errors.email ? 'border-red-500' : 'border-[#FEC400]'
+            } rounded-[10px] px-4 py-2 text-sm sm:text-base text-white placeholder:text-[#FEC400] focus:outline-none`}
           />
           <button
             type="submit"
@@ -63,9 +63,7 @@ export const NewsletterForm: React.FC<NewsletterFormProps> = ({ withTitle = fals
         </div>
         {errors.email && (
           <div className="flex items-start">
-            <p className="text-red-500 text-sm m-0">
-              {errors.email.message}
-            </p>
+            <p className="text-red-500 text-sm m-0">{errors.email.message}</p>
           </div>
         )}
       </form>

@@ -30,6 +30,10 @@ async function updateGroup(group: { GroupId: number } & Record<string, unknown>)
   return await httpClient.put<GroupResponseDTO>(`${ApiURLs.groups}/${GroupId}`, updateData);
 }
 
+async function getGroupsById(groupId: number) {
+  return await httpClient.get<GroupResponseDTO>(`${ApiURLs.groups}/${groupId}`);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -58,5 +62,9 @@ export const ProfileService = {
   updateGroup: {
     request: updateGroup,
     mutationKey: 'update-group',
+  },
+  getGroupsById: {
+    request: getGroupsById,
+    mutationKey: 'get-groups-by-id',
   },
 };

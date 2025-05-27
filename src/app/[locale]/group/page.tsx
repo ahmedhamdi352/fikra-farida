@@ -6,10 +6,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import TextInput from 'components/forms/text-input';
 import TextArea from 'components/forms/text-area';
 import { useCreateGroupMutation, useUpdateGroupMutation } from 'hooks/profile';
-import { useRouter } from 'next/navigation';
-import { useGroupEdit } from 'contexts/GroupEditContext';
-import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import * as yup from 'yup';
+import { useGetGroupByIdQuery } from 'hooks/profile/queries/useGetGroupByIdQuery';
+import LoadingOverlay from 'components/ui/LoadingOverlay';
 
 interface GroupFormData {
   GroupName: string;
@@ -17,13 +18,27 @@ interface GroupFormData {
   Note?: string;
 }
 
+interface GroupFormData {
+  GroupName: string;
+  CompanyName: string;
+  Note?: string;
+  GroupId?: number;
+}
+
 export default function GroupPage() {
+  const searchParams = useSearchParams();
+  const groupId = searchParams.get('groupId');
+  const isEditMode = groupId !== null;
+
   const { onAddGroup, isLoading: isCreating } = useCreateGroupMutation();
   const { onUpdateGroup, isLoading: isUpdating } = useUpdateGroupMutation();
+  const {
+    data: groupData,
+    isLoading: isLoadingGroup,
+    onGetGroupById,
+  } = useGetGroupByIdQuery(isEditMode ? groupId : '');
   const router = useRouter();
-  const { groupToEdit, clearGroupToEdit } = useGroupEdit();
-  const isEditMode = !!groupToEdit;
-  const isLoading = isCreating || isUpdating;
+  const isLoading = isCreating || isUpdating || isLoadingGroup;
 
   const schema = yup.object().shape({
     GroupName: yup.string().required('Name is required'),
@@ -36,56 +51,56 @@ export default function GroupPage() {
     mode: 'onBlur',
   });
 
-  // Track if we've initialized the form
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Reset form when groupToEdit changes
   useEffect(() => {
-    if (!isInitialized) {
-      if (groupToEdit) {
-        reset({
-          GroupName: groupToEdit.GroupName,
-          CompanyName: groupToEdit.CompanyName,
-          Note: groupToEdit.Note || '',
-        });
-      } else if (isEditMode) {
-        // If we're in edit mode but don't have group data, go back
-        router.back();
-        return;
-      } else {
-        reset({
-          GroupName: '',
-          CompanyName: '',
-          Note: '',
-        });
-      }
-      setIsInitialized(true);
+    if (isEditMode) {
+      onGetGroupById();
     }
-  }, [groupToEdit, isEditMode, reset, router, isInitialized]);
+  }, [isEditMode]);
+
+  useEffect(() => {
+    if (groupData) {
+      reset({
+        GroupName: groupData.GroupName,
+        CompanyName: groupData.CompanyName,
+        Note: groupData.Note || '',
+        GroupId: Number(groupData.GroupId),
+      });
+    } else {
+      reset({
+        GroupName: '',
+        CompanyName: '',
+        Note: '',
+      });
+    }
+  }, [groupData]);
 
   const onSubmit = async (data: GroupFormData) => {
-    if (isEditMode && groupToEdit) {
+    if (isEditMode && data.GroupId) {
       await onUpdateGroup({
-        ...data,
-        GroupId: groupToEdit.GroupId,
+        GroupName: data.GroupName,
+        CompanyName: data.CompanyName,
+        Note: data.Note,
+        GroupId: Number(data.GroupId),
       });
-      clearGroupToEdit();
-      router.back();
     } else {
-      await onAddGroup(data);
-      router.back();
+      await onAddGroup({
+        GroupName: data.GroupName,
+        CompanyName: data.CompanyName,
+        Note: data.Note,
+      });
     }
+    router.back();
   };
+
+  if (isLoading) {
+    return <LoadingOverlay isLoading={isLoading} />;
+  }
 
   return (
     <div className="min-h-screen w-full py-8 px-4">
       <div className="w-full max-w-screen-md mx-auto py-8">
         <div className="flex items-center mb-6">
-          <Link
-            onClick={() => clearGroupToEdit()}
-            href="/connections"
-            className="flex items-center text-[--main-color1] gap-2"
-          >
+          <Link href="/connections" className="flex items-center text-[--main-color1] gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

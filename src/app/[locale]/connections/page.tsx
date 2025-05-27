@@ -6,7 +6,6 @@ import { useGetConnectionQuery } from 'hooks/profile/queries/useGetConnectionQue
 import { useGetGroupQuery } from 'hooks/profile/queries/useGetGroupQuery';
 import { useGetProfileQuery } from 'hooks/profile/queries/useGetProfileQuery';
 import { useDeleteGroupMutation } from 'hooks/profile/mutations';
-import { useGroupEdit } from 'contexts/GroupEditContext';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import Link from 'next/link';
 import ProfileInformation from '../profile/components/ProfileInformation';
@@ -31,7 +30,6 @@ const ConnectionsPage = () => {
   const { data: connectionsData, isLoading: connectionsLoading, onGetConnections } = useGetConnectionQuery();
   const { data: groupsData, isLoading: groupsLoading, onGetGroups } = useGetGroupQuery();
   const { onDeleteGroup, isLoading: deleteGroupLoading } = useDeleteGroupMutation();
-  const { setGroupToEdit } = useGroupEdit();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>(TabType.GROUPS);
   const [searchQuery, setSearchQuery] = useState('');
@@ -227,15 +225,9 @@ const ConnectionsPage = () => {
                           <button
                             className="px-2 py-1.5 active:bg-transparent focus:bg-transparent w-full text-left"
                             onClick={() => {
-                              setGroupToEdit({
-                                GroupId: group.GroupId,
-                                GroupName: group.GroupName,
-                                CompanyName: group.CompanyName,
-                                Note: group.Note || '',
-                                CreatedDate: group.CreatedDate,
-                                UpdatedDate: group.UpdatedDate,
-                              });
-                              router.push('/group');
+                              const searchParams = new URLSearchParams();
+                              searchParams.set('groupId', group.GroupId.toString());
+                              router.push(`/group?${searchParams.toString()}`);
                             }}
                           >
                             Edit Group
