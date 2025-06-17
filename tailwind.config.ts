@@ -64,6 +64,14 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(20px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'fade-in-fast': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'slide-up': {
+          '0%': { transform: 'translateY(100%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
         fadeInUp: {
           '0%': { opacity: '0', transform: 'translateY(50px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
@@ -111,6 +119,8 @@ const config: Config = {
       },
       animation: {
         fadeIn: 'fadeIn 0.6s ease-out forwards',
+        'fade-in-fast': 'fade-in-fast 0.3s ease-out forwards',
+        'slide-up': 'slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         fadeInUp: 'fadeInUp 1s ease-in-out forwards',
         fadeInDown: 'fadeInDown 1s ease-in-out forwards',
         fadeInLeft: 'fadeInLeft 1s ease-in-out forwards',
