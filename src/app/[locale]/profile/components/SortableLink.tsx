@@ -77,7 +77,7 @@ export const SortableLink = ({ link }: SortableLinkProps) => {
           </div>
         )}
 
-        <span className="text-white text-base flex-grow truncate">{link.title}</span>
+        <span className="text-base flex-grow truncate">{link.title}</span>
 
         <label className="relative inline-flex items-center cursor-pointer ml-3">
           <input type="checkbox" className="sr-only peer" defaultChecked={true} />
