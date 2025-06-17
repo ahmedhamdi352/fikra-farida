@@ -15,6 +15,8 @@ export default function ProfilePage() {
     onGetProfile();
   }, []);
 
+  console.log(profileData);
+
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading} />;
   }

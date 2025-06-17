@@ -10,5 +10,6 @@ export const ApiURLs = {
   QrCode: '/api/Media/QrCodebyUser',
   connections: '/api/UserConnection/MyConnections',
   groups: '/api/ConnectionGroup',
+  links: '/api/CustomLink',
   discount: '/api/discount', // Updated to use our proxy endpoint
 } as const;

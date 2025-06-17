@@ -1,6 +1,7 @@
-import { MutableRefObject } from 'react';
+import { MutableRefObject, useState } from 'react';
 import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import Image from 'next/image';
+import { useAddLinkMutation, useUpdateLinkMutation } from 'hooks/links';
 
 interface App {
   id: string;
@@ -44,6 +45,53 @@ const getButtonConfig = (
 
 const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApps, categoryRefs, profileData }) => {
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedApp, setSelectedApp] = useState<App | null>(null);
+  const [username, setUsername] = useState('');
+  const { onAddLink, isLoading: isAdding } = useAddLinkMutation();
+  const { onUpdateLink, isLoading: isUpdating } = useUpdateLinkMutation();
+  const isSubmitting = isAdding || isUpdating;
+
+  // Function to get existing link data if it exists
+  const getExistingLinkData = (appId: string): ProfileLink | undefined => {
+    if (!profileData?.links) return undefined;
+    return profileData.links.find(link => link.title.toLowerCase() === appId.toLowerCase());
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedApp) return;
+
+    try {
+      const existingLink = getExistingLinkData(selectedApp.id);
+
+      if (existingLink) {
+        await onUpdateLink({
+          pk: existingLink.pk,
+          url: username,
+          title: existingLink.title,
+          iconurl: existingLink.iconurl,
+          type: existingLink.type,
+          sort: existingLink.sort,
+        });
+      } else {
+        await onAddLink({
+          title: selectedApp.id,
+          url: username,
+          iconurl: selectedApp.iconurl,
+          type: 0,
+          sort: profileData?.links?.length || 0,
+        });
+      }
+
+      setIsModalOpen(false);
+      setSelectedApp(null);
+      setUsername('');
+    } catch (error) {
+      console.error('Error adding link:', error);
+      throw error;
+    }
+  };
 
   return (
     <div
@@ -79,7 +127,14 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
               <button
                 className="py-1 px-4 text-xs text-[--main-color1] rounded-[125px] border border-[#FEC400] bg-[rgba(254,196,0,0.20)] flex items-center justify-center gap-1"
                 onClick={() => {
-                  console.log(`${buttonConfig.type} ${app.name}`);
+                  setSelectedApp(app);
+                  const existingLink = getExistingLinkData(app.id);
+                  if (existingLink && buttonConfig.type === 'update') {
+                    setUsername(existingLink.url || '');
+                  } else {
+                    setUsername('');
+                  }
+                  setIsModalOpen(true);
                 }}
               >
                 <span>{buttonConfig.label}</span>
@@ -116,6 +171,93 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
           );
         })}
       </div>
+
+      {/* Modal for adding/updating app */}
+      {isModalOpen && selectedApp && (
+        <div className="fixed inset-0 bg-black/30 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-[#1A1A1A] rounded-lg shadow-xl max-w-md w-full p-6 relative">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            <div className="flex items-center mb-6">
+              <div className="w-12 h-12 rounded-full overflow-hidden relative flex-shrink-0 mr-4">
+                <Image
+                  src={`${baseIconsUrl}${selectedApp.iconurl}`}
+                  alt={selectedApp.name}
+                  width={48}
+                  height={48}
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="text-xl font-bold text-black dark:text-white">{selectedApp.name}</h3>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <input
+                  type="text"
+                  placeholder={`${selectedApp.name} username`}
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                  className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 bg-[--main-color1] text-black font-medium rounded-lg flex items-center justify-center"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  `Add ${selectedApp?.name}`
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
