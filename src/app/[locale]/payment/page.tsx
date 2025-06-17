@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import TextInput from 'components/forms/text-input';
 import Select from 'components/forms/select';
 import TextArea from 'components/forms/text-area';
-import Link from 'next/link'
+import Link from 'next/link';
 import { PhoneInput } from 'components/forms/phone-input';
 import { useState, useEffect } from 'react';
 import { FaMoneyBillWave } from 'react-icons/fa';
@@ -42,7 +42,7 @@ const PaymentPage = () => {
   const t = useTranslations('Payment');
   const tCheckOut = useTranslations('checkout');
   const { items, updateQuantity } = useCart();
-  const { isLoading: isCreatingOrder, onCreateOrder } = useCreateOrderMutation()
+  const { isLoading: isCreatingOrder, onCreateOrder } = useCreateOrderMutation();
   const { onApplyDiscount, isLoading: isApplyingDiscount } = useApplyDiscountMutation();
   const params = useParams();
   const locale = params.locale as string;
@@ -50,6 +50,7 @@ const PaymentPage = () => {
 
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
+
   const [shippingInfo, setShippingInfo] = useState<{ zoneName: string; price: number } | null>(null);
 
   const [discountError, setDiscountError] = useState('');
@@ -60,11 +61,13 @@ const PaymentPage = () => {
 
   const schema = yup.object().shape({
     fullName: yup.string().required(t('validation.fullNameRequired')),
-    email: yup.string().email(t('validation.invalidEmail'))
+    email: yup
+      .string()
+      .email(t('validation.invalidEmail'))
       .when('paymentMethod', {
         is: 'online',
-        then: (schema) => schema.required(t('validation.emailRequired')),
-        otherwise: (schema) => schema.optional()
+        then: schema => schema.required(t('validation.emailRequired')),
+        otherwise: schema => schema.optional(),
       }),
     phone: yup.string().required(t('validation.phoneRequired')),
     address: yup.string().required(t('validation.addressRequired')),
@@ -75,16 +78,12 @@ const PaymentPage = () => {
     paymentMethod: yup.string().oneOf(['online', 'cash']).required(t('validation.paymentMethodRequired')),
   }) satisfies yup.ObjectSchema<PaymentFormData>;
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-  } = useForm<PaymentFormData>({
+  const { control, handleSubmit, watch } = useForm<PaymentFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       paymentMethod: 'online',
-      country: siteData.name
-    }
+      country: siteData.name,
+    },
   });
 
   const {
@@ -94,8 +93,8 @@ const PaymentPage = () => {
     watch: watchDiscount,
   } = useForm<DiscountFormData>({
     defaultValues: {
-      discountCode: ''
-    }
+      discountCode: '',
+    },
   });
 
   const paymentMethod = watch('paymentMethod');
@@ -124,12 +123,10 @@ const PaymentPage = () => {
     return sum + itemTotal;
   }, 0);
 
-  const hasFreeShipping = items.some(item =>
-    item.Categories?.some(cat => cat.Code === 'Free Shipping')
-  );
+  const hasFreeShipping = items.some(item => item.Categories?.some(cat => cat.Code === 'Free Shipping'));
 
   const subtotal = total;
-  const shippingCost = hasFreeShipping ? 0 : (shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity));
+  const shippingCost = hasFreeShipping ? 0 : shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity);
   const finalTotal = appliedDiscount ? appliedDiscount.priceAfterDiscount + shippingCost : subtotal + shippingCost;
   // const discount = appliedDiscount?.totalDiscount || 0;
 
@@ -140,13 +137,13 @@ const PaymentPage = () => {
         totalPrice: subtotal,
         isCash: paymentMethod === 'cash',
         countryCode: siteData.code,
-        domain: siteData.domain
+        domain: siteData.domain,
       });
 
       if (response.isValid) {
         setAppliedDiscount({
           priceAfterDiscount: response.priceAfterDiscount,
-          totalDiscount: response.totalDiscount
+          totalDiscount: response.totalDiscount,
         });
         setDiscountError('');
       } else {
@@ -175,7 +172,7 @@ const PaymentPage = () => {
           name: item.name,
           colors: item.colors[item.selectedColorIndex].name,
           price: parseFloat(item.finalPrice || item.price),
-          quantity: item.quantity
+          quantity: item.quantity,
         })),
         billing: {
           name: data.fullName,
@@ -184,10 +181,10 @@ const PaymentPage = () => {
           city: data.city,
           country: data.country,
           phoneNumber: data.phone,
-          email: data?.email || ''
+          email: data?.email || '',
         },
         countryCode: locale,
-        domain: window.location.hostname
+        domain: window.location.hostname,
       };
 
       if (paymentMethod === 'cash') {
@@ -253,7 +250,11 @@ const PaymentPage = () => {
         <div className="text-center space-y-6 max-w-md mx-auto">
           <div className="bg-[rgba(217,217,217,0.05)] p-8 rounded-lg shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px]">
             <svg className="w-20 h-20 mx-auto mb-6 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+              />
             </svg>
             <h2 className="text-2xl font-semibold">{t('cartEmpty')}</h2>
             <p className="text-gray-400 mb-8">{t('cartEmptyMessage')}</p>
@@ -275,13 +276,9 @@ const PaymentPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:py-10">
         {/* Left Column - Form */}
         <div className="space-y-6">
-
-
           <form noValidate id="payment-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-4">
             {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {error}
-              </div>
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>
             )}
             <section className="space-y-4">
               <h2 className="text-xl font-semibold">{t('personalInformation')}</h2>
@@ -382,26 +379,20 @@ const PaymentPage = () => {
               <p className="text-sm text-gray-400">{t('secureTransaction')}</p>
 
               <div className="space-y-2">
-
                 <label
-                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'online'
-                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
-                    : 'border-gray-600 hover:border-[#FEC400]/50'
-                    }`}
+                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${
+                    paymentMethod === 'online'
+                      ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                      : 'border-gray-600 hover:border-[#FEC400]/50'
+                  }`}
                 >
-                  <input
-                    type="radio"
-                    {...control.register('paymentMethod')}
-                    value="online"
-                    className="hidden"
-                  />
-                  <div className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'online'
-                    ? 'border-[#FEC400]'
-                    : 'border-gray-600'
-                    }`}>
-                    {paymentMethod === 'online' && (
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />
-                    )}
+                  <input type="radio" {...control.register('paymentMethod')} value="online" className="hidden" />
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${
+                      paymentMethod === 'online' ? 'border-[#FEC400]' : 'border-gray-600'
+                    }`}
+                  >
+                    {paymentMethod === 'online' && <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />}
                   </div>
                   <span className="text-gray-500">{t('onlinePayment')}</span>
                   <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
@@ -413,24 +404,19 @@ const PaymentPage = () => {
                 <p className="text-sm">{t('onlineOptions')}</p>
 
                 <label
-                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'cash'
-                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
-                    : 'border-gray-600 hover:border-[#FEC400]/50'
-                    }`}
+                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${
+                    paymentMethod === 'cash'
+                      ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                      : 'border-gray-600 hover:border-[#FEC400]/50'
+                  }`}
                 >
-                  <input
-                    type="radio"
-                    {...control.register('paymentMethod')}
-                    value="cash"
-                    className="hidden"
-                  />
-                  <div className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'cash'
-                    ? 'border-[#FEC400]'
-                    : 'border-gray-600'
-                    }`}>
-                    {paymentMethod === 'cash' && (
-                      <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />
-                    )}
+                  <input type="radio" {...control.register('paymentMethod')} value="cash" className="hidden" />
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${
+                      paymentMethod === 'cash' ? 'border-[#FEC400]' : 'border-gray-600'
+                    }`}
+                  >
+                    {paymentMethod === 'cash' && <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />}
                   </div>
                   <span className="text-gray-500">{t('cashOnDelivery')}</span>
                   <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
@@ -446,11 +432,7 @@ const PaymentPage = () => {
             <div className="space-y-3">
               <form onSubmit={handleDiscountSubmit(onDiscountSubmit)} className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <TextInput
-                    control={discountControl}
-                    name="discountCode"
-                    placeholder={tCheckOut('discountCode')}
-                  />
+                  <TextInput control={discountControl} name="discountCode" placeholder={tCheckOut('discountCode')} />
                   <LoadingButton
                     type="submit"
                     isLoading={isApplyingDiscount}
@@ -460,13 +442,13 @@ const PaymentPage = () => {
                     {tCheckOut('apply')}
                   </LoadingButton>
                 </div>
-                {discountError && (
-                  <p className="text-red-500 text-sm">{discountError}</p>
-                )}
+                {discountError && <p className="text-red-500 text-sm">{discountError}</p>}
               </form>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('subtotal')} :</span>
-                <span >{(subtotal).toFixed(2)} {siteData.currency}</span>
+                <span>
+                  {subtotal.toFixed(2)} {siteData.currency}
+                </span>
               </div>
               {appliedDiscount && (
                 <div className="flex justify-between items-center text-green-500">
@@ -475,7 +457,9 @@ const PaymentPage = () => {
                     {isApplyingDiscount ? (
                       <LoadingSpinner size="sm" color="#22c55e" />
                     ) : (
-                      <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                      <span>
+                        -{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -483,17 +467,21 @@ const PaymentPage = () => {
               {!hasFreeShipping && (
                 <div className="flex justify-between items-center text-[#FEC400]">
                   <span>{t('shipping')} :</span>
-                  <span >{shippingCost.toFixed(2)} {siteData.currency}</span>
+                  <span>
+                    {shippingCost.toFixed(2)} {siteData.currency}
+                  </span>
                 </div>
               )}
               <div className="h-[1px] bg-white/10 my-2"></div>
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('total')} :</span>
                 <div className="flex items-center gap-2">
-                  {(isCreatingOrder || isLoadingOnline) ? (
+                  {isCreatingOrder || isLoadingOnline ? (
                     <LoadingSpinner size="sm" color="#FEC400" />
                   ) : (
-                    <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+                    <span className="text-xl font-medium">
+                      {finalTotal.toFixed(2)} {siteData.currency}
+                    </span>
                   )}
                 </div>
               </div>
@@ -514,7 +502,7 @@ const PaymentPage = () => {
         <div className="hidden lg:block rounded-[10px] bg-[rgba(217,217,217,0.05)] p-6 space-y-4 shadow-[0px_0px_0px_1px_rgba(217,217,217,0.50)] backdrop-blur-[25px] max-h-[calc(100vh-4rem)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-black/20 [&::-webkit-scrollbar-thumb]:bg-[#FEC400]/80 [&::-webkit-scrollbar-thumb]:rounded-full">
           <h2 className="text-xl font-semibold">{t('orderSummary')}</h2>
           <div className="flex-1 overflow-y-auto my-4 p-2 scrollbar-thin scrollbar-thumb-[#FEC400] scrollbar-track-transparent">
-            {items.map((item) => {
+            {items.map(item => {
               const price = parseFloat(item.finalPrice || item.price);
               const selectedColor = item.colors[item.selectedColorIndex];
 
@@ -541,12 +529,12 @@ const PaymentPage = () => {
 
                     <Link href={`/products/${item.id}`} className="flex-1">
                       <p className="text-[#FEC400] text-sm mb-1">{item.id}</p>
-                      <h3 className="text-lg font-semibold mb-2">
-                        {locale === 'en' ? item.name : item.arName}
-                      </h3>
+                      <h3 className="text-lg font-semibold mb-2">{locale === 'en' ? item.name : item.arName}</h3>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold">{(price * item.quantity).toFixed(2)} {siteData.currency}</span>
+                          <span className="text-lg font-bold">
+                            {(price * item.quantity).toFixed(2)} {siteData.currency}
+                          </span>
                           {item.finalPrice && (
                             <span className="text-gray-400 line-through text-sm">
                               {(parseFloat(item.price) * item.quantity).toFixed(2)} {siteData.currency}
@@ -561,7 +549,6 @@ const PaymentPage = () => {
                           />
                         )}
                       </div>
-
                     </Link>
 
                     <div className="flex items-center gap-2 bg-black/50 dark:bg-white/20 rounded-lg p-1 h-fit">
@@ -589,27 +576,18 @@ const PaymentPage = () => {
             {/* Discount Form */}
             <form onSubmit={handleDiscountSubmit(onDiscountSubmit)} className="space-y-2">
               <div className="flex items-center gap-2">
-                <TextInput
-                  control={discountControl}
-                  name="discountCode"
-                  placeholder={tCheckOut('discountCode')}
-                />
-                <LoadingButton
-                  type="submit"
-                  isLoading={isApplyingDiscount}
-                  size="md"
-                  disabled={!discountCode?.trim()}
-                >
+                <TextInput control={discountControl} name="discountCode" placeholder={tCheckOut('discountCode')} />
+                <LoadingButton type="submit" isLoading={isApplyingDiscount} size="md" disabled={!discountCode?.trim()}>
                   {tCheckOut('apply')}
                 </LoadingButton>
               </div>
-              {discountError && (
-                <p className="text-red-500 text-sm">{discountError}</p>
-              )}
+              {discountError && <p className="text-red-500 text-sm">{discountError}</p>}
             </form>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('subtotal')} :</span>
-              <span >{(subtotal).toFixed(2)} {siteData.currency}</span>
+              <span>
+                {subtotal.toFixed(2)} {siteData.currency}
+              </span>
             </div>
             {appliedDiscount && (
               <div className="flex justify-between items-center text-green-500">
@@ -618,7 +596,9 @@ const PaymentPage = () => {
                   {isApplyingDiscount ? (
                     <LoadingSpinner size="sm" color="#22c55e" />
                   ) : (
-                    <span>-{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}</span>
+                    <span>
+                      -{appliedDiscount.totalDiscount.toFixed(2)} {siteData.currency}
+                    </span>
                   )}
                 </div>
               </div>
@@ -626,25 +606,28 @@ const PaymentPage = () => {
             {!hasFreeShipping && (
               <div className="flex justify-between items-center text-[#FEC400]">
                 <span>{t('shipping')} :</span>
-                <span >{shippingCost.toFixed(2)} {siteData.currency}</span>
+                <span>
+                  {shippingCost.toFixed(2)} {siteData.currency}
+                </span>
               </div>
             )}
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center text-[#FEC400]">
               <span>{t('total')} :</span>
               <div className="flex items-center gap-2">
-                {(isCreatingOrder || isLoadingOnline) ? (
+                {isCreatingOrder || isLoadingOnline ? (
                   <LoadingSpinner size="sm" color="#FEC400" />
                 ) : (
-                  <span className="text-xl font-medium">{finalTotal.toFixed(2)} {siteData.currency}</span>
+                  <span className="text-xl font-medium">
+                    {finalTotal.toFixed(2)} {siteData.currency}
+                  </span>
                 )}
               </div>
             </div>
           </div>
-
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
