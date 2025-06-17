@@ -26,7 +26,7 @@ export default function ProfilePage() {
       <ProfileContent profileData={profileData} />
       <div className="flex items-center justify-center gap-2 mt-4">
         <Link
-          href="/add-link"
+          href="/store"
           className="inline-flex items-center whitespace-nowrap gap-2 bg-[#FEC400] text-black text-body px-6 py-3 rounded-2xl"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
