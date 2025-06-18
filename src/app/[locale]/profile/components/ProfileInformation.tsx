@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -14,6 +15,13 @@ interface ProfileInformationProps {
 export default function ProfileInformation({ profileData, withEdit, withSwitch, withBio }: ProfileInformationProps) {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted state when component mounts
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -23,11 +31,13 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    if (mounted) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [mounted]);
 
   if (!profileData) return null;
 
@@ -64,104 +74,49 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
           </button>
 
           {/* Menu Overlay */}
-          {showMenu && (
-            <>
-              {/* Backdrop */}
-              <div
-                className="fixed inset-0 z-50 bg-black bg-opacity-50 animate-fade-in-fast"
-                onClick={() => setShowMenu(false)}
-              />
+          {showMenu &&
+            mounted &&
+            createPortal(
+              <>
+                {/* Backdrop - Full screen overlay */}
+                <div
+                  className="fixed inset-0 z-[9999] bg-black bg-opacity-50 animate-fade-in-fast"
+                  onClick={() => setShowMenu(false)}
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 9999,
+                  }}
+                />
 
-              {/* Menu Panel */}
-              <div
-                ref={menuRef}
-                className="fixed bottom-0 left-0 right-0 z-50 bg-[#4A4A48] rounded-t-2xl py-6 px-4 animate-slide-up border-t border-[#FEC400]/30 max-h-[80vh] overflow-y-auto shadow-lg"
-              >
-                <div className="flex justify-center items-center mb-4">
-                  <div className="w-1/2 justify-center flex items-center border border-[#FEC400]"></div>
-                </div>
-
-                <div className="space-y-0">
-                  {/* Switch Profile */}
-                  <div className="flex items-center gap-3 p-2 hover:bg-[rgba(255,255,255,0.1)] rounded-lg cursor-pointer">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#FFF"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M17 1l4 4-4 4" />
-                        <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-                        <path d="M7 23l-4-4 4-4" />
-                        <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-                      </svg>
-                    </div>
-                    <span className="text-white text-base">Switch Profile</span>
+                {/* Menu Panel - Fixed to bottom of viewport */}
+                <div
+                  ref={menuRef}
+                  className="fixed bottom-0 left-0 right-0 z-[10000] bg-white dark:bg-[#4A4A48] rounded-t-2xl py-6 px-4 border-t border-[#FEC400]/30 shadow-lg"
+                  style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 10000,
+                    maxHeight: '80vh',
+                    overflowY: 'auto',
+                    width: '100%',
+                    margin: 0,
+                    transform: 'translateY(0)',
+                    transition: 'transform 0.3s ease-out',
+                  }}
+                >
+                  <div className="flex justify-center items-center mb-4">
+                    <div className="w-1/2 justify-center flex items-center border border-[#FEC400]"></div>
                   </div>
 
-                  {/* Edit Profile */}
-                  <div className="flex items-center gap-3 p-2 hover:bg-[rgba(255,255,255,0.1)] rounded-lg cursor-pointer">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#FFF"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                    </div>
-                    <span className="text-white text-base">Edit Profile</span>
-                  </div>
-
-                  {/* Customization */}
-                  <div className="flex items-center gap-3 p-2 hover:bg-[rgba(255,255,255,0.1)] rounded-lg cursor-pointer">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#FFF"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
-                        <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                        <path d="M12 2v2" />
-                        <path d="M12 22v-2" />
-                        <path d="m17 20.66-1-1.73" />
-                        <path d="M11 10.27 7 3.34" />
-                        <path d="m20.66 17-1.73-1" />
-                        <path d="m3.34 7 1.73 1" />
-                        <path d="M14 12h8" />
-                        <path d="M2 12h2" />
-                        <path d="m20.66 7-1.73 1" />
-                        <path d="m3.34 17 1.73-1" />
-                        <path d="m17 3.34-1 1.73" />
-                        <path d="m7 20.66-1-1.73" />
-                      </svg>
-                    </div>
-                    <span className="text-white text-base">Customization</span>
-                  </div>
-
-                  {/* Lock Profile */}
-                  <div className="flex items-center justify-between p-2 hover:bg-[rgba(255,255,255,0.1)] rounded-lg cursor-pointer">
-                    <div className="flex items-center gap-3">
+                  <div className="space-y-0">
+                    {/* Switch Profile */}
+                    <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
                       <div className="w-8 h-8 flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -169,33 +124,111 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                           height="24"
                           viewBox="0 0 24 24"
                           fill="none"
-                          stroke="#FFF"
+                          stroke="currentColor"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                          <path d="M17 1l4 4-4 4" />
+                          <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                          <path d="M7 23l-4-4 4-4" />
+                          <path d="M21 13v2a4 4 0 0 1-4 4H3" />
                         </svg>
                       </div>
-                      <span className="text-white text-base">Lock Profile</span>
+                      <div className="text-gray-700 dark:text-white">Switch Profile</div>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" className="sr-only peer" />
-                      <div
-                        className="w-10 h-5 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+
+                    {/* Edit Profile */}
+                    <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </div>
+                      <div className="text-gray-700 dark:text-white">Edit Profile</div>
+                    </div>
+
+                    {/* Customization */}
+                    <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
+                          <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                          <path d="M12 2v2" />
+                          <path d="M12 22v-2" />
+                          <path d="m17 20.66-1-1.73" />
+                          <path d="M11 10.27 7 3.34" />
+                          <path d="m20.66 17-1.73-1" />
+                          <path d="m3.34 7 1.73 1" />
+                          <path d="M14 12h8" />
+                          <path d="M2 12h2" />
+                          <path d="m20.66 7-1.73 1" />
+                          <path d="m3.34 17 1.73-1" />
+                          <path d="m17 3.34-1 1.73" />
+                          <path d="m7 20.66-1-1.73" />
+                        </svg>
+                      </div>
+                      <div className="text-gray-700 dark:text-white">Customization</div>
+                    </div>
+
+                    {/* Lock Profile */}
+                    <div className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                          </svg>
+                        </div>
+                        <div className="text-gray-700 dark:text-white">Lock Profile</div>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" className="sr-only peer" />
+                        <div
+                          className="w-10 h-5 bg-gray-200 border border-gray-300 peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
                         after:bg-white after:border after:border-gray-300 after:rounded-full after:h-4 after:w-4 after:transition-all
                         peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]"
-                      ></div>
-                    </label>
+                        ></div>
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* </div> */}
-            </>
-          )}
+              </>,
+              document.body
+            )}
         </>
       )}
       <div className="flex items-center gap-4">
