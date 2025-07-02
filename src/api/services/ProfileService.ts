@@ -34,6 +34,33 @@ async function getGroupsById(groupId: number) {
   return await httpClient.get<GroupResponseDTO>(`${ApiURLs.groups}/${groupId}`);
 }
 
+async function updateLockStatus(data: { isLocked: boolean }) {
+  return await httpClient.post<{
+    success?: boolean;
+    sucess?: boolean;
+    errorcode: number;
+    message: string;
+  }>(`${ApiURLs.lockStatus}`, data);
+}
+
+async function updateCollectInfo(data: { autoconnect: boolean }) {
+  return await httpClient.post<{
+    success?: boolean;
+    sucess?: boolean;
+    errorcode: number;
+    message: string;
+  }>(`${ApiURLs.collectInfo}`, data);
+}
+
+async function updateDirectLink(data: { directurl: string }) {
+  return await httpClient.post<{
+    success?: boolean;
+    sucess?: boolean;
+    errorcode: number;
+    message: string;
+  }>(`${ApiURLs.directLink}`, data);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -42,6 +69,10 @@ export const ProfileService = {
   getQRCode: {
     request: getQRCode,
     mutationKey: 'get-qr-code',
+  },
+  updateLockStatus: {
+    request: updateLockStatus,
+    mutationKey: 'update-lock-status',
   },
   getConnections: {
     request: getConnections,
@@ -66,5 +97,13 @@ export const ProfileService = {
   getGroupsById: {
     request: getGroupsById,
     mutationKey: 'get-groups-by-id',
+  },
+  updateCollectInfo: {
+    request: updateCollectInfo,
+    mutationKey: 'update-collect-info',
+  },
+  updateDirectLink: {
+    request: updateDirectLink,
+    mutationKey: 'update-direct-link',
   },
 };

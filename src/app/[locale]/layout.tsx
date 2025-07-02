@@ -29,7 +29,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   let siteConfig;
   try {
-    siteConfig = await getSiteData('EG');
+    siteConfig = await getSiteData();
   } catch (error) {
     console.error('Error fetching site data:', error);
     siteConfig = {
@@ -73,7 +73,7 @@ export default async function LocaleLayout(props: Props) {
 
   let siteData;
   try {
-    siteData = await getSiteData('EG');
+    siteData = await getSiteData();
   } catch (error) {
     console.error('Error fetching site data:', error);
     siteData = {

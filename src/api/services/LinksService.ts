@@ -27,7 +27,7 @@ async function updateLink(payload: Partial<LinkPayload>) {
 }
 
 async function deleteLink(pk: string | number) {
-  return await httpClient.delete(`${ApiURLs.links}/${pk}`);
+  return await httpClient.post(`${ApiURLs.links}/Delete?linkpk=${pk}`);
 }
 
 export const LinksService = {

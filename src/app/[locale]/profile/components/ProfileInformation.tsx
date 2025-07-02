@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import { useState, useRef, useEffect } from 'react';
+import { useUpdateLockStatusMutation } from 'hooks/profile/mutations';
 import { createPortal } from 'react-dom';
+import lock from 'assets/images/lock.png';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -15,6 +17,25 @@ interface ProfileInformationProps {
 export default function ProfileInformation({ profileData, withEdit, withSwitch, withBio }: ProfileInformationProps) {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const lockConfirmModalRef = useRef<HTMLDialogElement>(null);
+
+  const { onUpdateLockStatus, isLoading: isLockLoading } = useUpdateLockStatusMutation();
+
+  const handleLockToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Prevent the default toggle behavior
+    e.preventDefault();
+    // Show confirmation dialog
+    lockConfirmModalRef.current?.showModal();
+  };
+
+  const handleLockConfirm = () => {
+    // Call the API to update lock status
+    onUpdateLockStatus({ isLocked: !profileData?.isLocked });
+    // Close the dialog
+    lockConfirmModalRef.current?.close();
+    // The profile lock status will be updated via the react-query invalidation in the hook
+  };
+
   const [mounted, setMounted] = useState(false);
 
   // Set mounted state when component mounts
@@ -213,16 +234,64 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                         </div>
                         <div className="text-gray-700 dark:text-white">Lock Profile</div>
                       </div>
+                      {/* Lock Profile Toggle */}
                       <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer" />
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={profileData?.isLocked || false}
+                          onChange={handleLockToggle}
+                        />
                         <div
-                          className="w-10 h-5 bg-gray-200 border border-gray-300 peer-focus:outline-none rounded-full peer
+                          className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
-                        after:bg-white after:border after:border-gray-300 after:rounded-full after:h-4 after:w-4 after:transition-all
+                        after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
                         peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]"
                         ></div>
                       </label>
+
+                      {/* Lock Profile Dialog */}
+                      <dialog ref={lockConfirmModalRef} className="modal modal-backdrop">
+                        <div className="modal-box rounded-[15px] border border-white bg-[#FEF9E9] backdrop-blur-[15px] transform duration-300 transition-all scale-90 opacity-0 modal-open:scale-100 modal-open:opacity-100 max-w-md">
+                          <div className="flex flex-col items-center text-center">
+                            {/* Yellow line at top */}
+                            <div className="h-1 bg-[#FEC400] w-48 mb-4 rounded-full"></div>
+
+                            {/* Title */}
+                            <h3 className="font-bold text-2xl text-black mb-4">
+                              {!profileData?.isLocked ? 'Account Locked' : 'Account Unlocked'}
+                            </h3>
+
+                            {/* Lock and Key Image */}
+                            <div className="mb-4 relative">
+                              <Image src={lock} alt="Lock" width={180} height={180} />
+                            </div>
+
+                            {/* Description */}
+                            <p className="text-black mb-4 px-4">
+                              {profileData?.isLocked
+                                ? 'This account is currently unavailable. It seems that the digital card owner has disabled their profile at the moment. You can leave them a message and they will contact you when their account is reactivated.'
+                                : 'When activating this option, your profile will be locked, and no one will be able to access your data when scanning the digital card or any of your smart products. Instead, they will see a message stating that the account is currently unavailable. You can reactivate your profile at any time through the same option.'}
+                            </p>
+
+                            <div className="modal-action w-full">
+                              <form method="dialog" className="w-full flex gap-3">
+                                <button className="btn bg-gray-300 hover:bg-gray-400 text-black border-none flex-1">
+                                  Cancel
+                                </button>
+                                <button
+                                  onClick={handleLockConfirm}
+                                  className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none flex-1"
+                                  disabled={isLockLoading}
+                                >
+                                  {isLockLoading ? 'Processing...' : 'Confirm'}
+                                </button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </dialog>
                     </div>
                   </div>
                 </div>

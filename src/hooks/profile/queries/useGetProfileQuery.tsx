@@ -8,7 +8,6 @@ export function useGetProfileQuery() {
     queryFn: async () => {
       try {
         const response = await ProfileService.getProfile.request();
-        console.log(response);
         return response;
       } catch (error) {
         console.error('Profile fetch error:', error);
@@ -26,7 +25,6 @@ export function useGetProfileQuery() {
   };
 
   const { isLoading } = useIsLoadingMutation(ProfileService.getProfile.mutationKey);
-  console.log(query);
   return {
     data: query.data,
     isLoading,

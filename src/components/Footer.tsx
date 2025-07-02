@@ -3,15 +3,15 @@ import Link from 'next/link';
 import { SiteData } from 'services/api.service';
 import { NewsletterForm } from './NewsletterForm';
 import FooterNavigation from './FooterNavigation';
-import phoneIcon from 'assets/icons/phone.svg'
-import pinIcon from 'assets/icons/pin.svg'
-import emailIcon from 'assets/icons/mail.svg'
-import FacebookIcon from 'assets/social-media/Facebook.png'
-import InstagramIcon from 'assets/social-media/Instagram.png'
-import TiktokIcon from 'assets/social-media/TikTok.png'
-import SnapchatIcon from 'assets/social-media/Snapchat.png'
-import TwitterIcon from 'assets/social-media/TwitterX.png'
-import WhatsappIcon from 'assets/social-media/WhatsApp.png'
+import phoneIcon from 'assets/icons/phone.svg';
+import pinIcon from 'assets/icons/pin.svg';
+import emailIcon from 'assets/icons/mail.svg';
+import FacebookIcon from 'assets/social-media/Facebook.png';
+import InstagramIcon from 'assets/social-media/Instagram.png';
+import TiktokIcon from 'assets/social-media/TikTok.png';
+import SnapchatIcon from 'assets/social-media/Snapchat.png';
+import TwitterIcon from 'assets/social-media/TwitterX.png';
+import WhatsappIcon from 'assets/social-media/WhatsApp.png';
 import { useTranslations } from 'next-intl';
 import { useTheme } from './ThemeProvider';
 
@@ -30,7 +30,6 @@ const Footer = ({ siteData }: FooterProps) => {
     { href: siteData.contactTiktok, icon: TiktokIcon, alt: 'TikTok' },
     { href: siteData.contactSnapchat, icon: SnapchatIcon, alt: 'Snapchat' },
     { href: siteData.contactX, icon: TwitterIcon, alt: 'X (Twitter)' },
-
   ].filter(link => link.href);
 
   return (
@@ -51,9 +50,7 @@ const Footer = ({ siteData }: FooterProps) => {
                 width={140}
                 className="w-[100px] h-[100px] mt-4 lg:w-auto brightness-0 invert"
               />
-              <p className="text-gray-300 text-sm leading-relaxed mt-6">
-                {t('footer.title')}
-              </p>
+              <p className="text-gray-300 text-sm leading-relaxed mt-6">{t('footer.title')}</p>
             </div>
           </div>
 
@@ -111,9 +108,13 @@ const Footer = ({ siteData }: FooterProps) => {
         </div>
 
         <div className="mt-8 ">
-          <div className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent" style={{
-            background: 'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)'
-          }}></div>
+          <div
+            className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent"
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)',
+            }}
+          ></div>
           <p className="text-center text-sm text-gray-400">
             {new Date().getFullYear()} {siteData.siteName} . {t('footer.copyright')}
           </p>
@@ -132,9 +133,7 @@ const Footer = ({ siteData }: FooterProps) => {
               width={180}
               className="w-auto brightness-0 invert"
             />
-            <p className="text-gray-300 text-sm leading-relaxed">
-              {t('footer.title')}
-            </p>
+            <p className="text-gray-300 text-sm leading-relaxed">{t('footer.title')}</p>
             {/* Social Media Icons */}
             <div className="flex items-center gap-4 pt-4">
               {socialLinks.map((link, index) => (
@@ -153,7 +152,7 @@ const Footer = ({ siteData }: FooterProps) => {
 
           {/* Contact Column */}
           <div className="w-[40%] space-y-8">
-            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">{t("footer.contact")}</h2>
+            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">{t('footer.contact')}</h2>
             <div className="space-y-6">
               <a
                 href={`tel:${siteData.contactPhone}`}
@@ -182,7 +181,7 @@ const Footer = ({ siteData }: FooterProps) => {
 
           {/* Pages Column */}
           <div className="w-[20%] space-y-8">
-            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">{t("footer.pages")}</h2>
+            <h2 className="text-[var(--main-color1)] text-2xl font-semibold">{t('footer.pages')}</h2>
             <div className="w-fit">
               <FooterNavigation />
             </div>
@@ -191,11 +190,15 @@ const Footer = ({ siteData }: FooterProps) => {
 
         {/* Copyright */}
         <div className="mt-16 pt-8 pb-6">
-          <div className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent" style={{
-            background: 'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)'
-          }}></div>
+          <div
+            className="h-[1px] w-full mb-4 bg-gradient-to-r from-transparent via-[#FEC400] to-transparent"
+            style={{
+              background:
+                'linear-gradient(90deg, rgba(254, 196, 0, 0.00) 0%, #FEC400 47.5%, rgba(152, 117, 0, 0.00) 100%)',
+            }}
+          ></div>
           <p className="text-center text-sm text-gray-400 ">
-            {new Date().getFullYear()} {siteData.siteName} . {t("footer.copyright")}
+            {new Date().getFullYear()} {siteData.siteName} . {t('footer.copyright')}
           </p>
         </div>
       </div>

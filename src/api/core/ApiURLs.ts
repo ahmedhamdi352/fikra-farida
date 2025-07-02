@@ -12,4 +12,7 @@ export const ApiURLs = {
   groups: '/api/ConnectionGroup',
   links: '/api/CustomLink',
   discount: '/api/discount', // Updated to use our proxy endpoint
+  lockStatus: '/api/Account/UpdateLockStatus',
+  collectInfo: '/api/Account/UpdateAutoConnect',
+  directLink: '/api/Account/UpdateDirectUrl',
 } as const;

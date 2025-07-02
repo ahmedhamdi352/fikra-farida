@@ -15,6 +15,9 @@ export interface ProfileLink {
 export interface ProfileForReadDTO {
   userPk: number;
   username: string;
+  isLocked: boolean;
+  autoconnect: boolean;
+  directurl: string;
   fullname: string;
   jobTitle: string;
   bio: string;

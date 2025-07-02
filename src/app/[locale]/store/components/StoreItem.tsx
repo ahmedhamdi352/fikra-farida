@@ -1,7 +1,8 @@
 import { MutableRefObject, useState } from 'react';
 import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import Image from 'next/image';
-import { useAddLinkMutation, useUpdateLinkMutation } from 'hooks/links';
+import { useAddLinkMutation, useUpdateLinkMutation, useDeleteLinkMutation } from 'hooks/links';
+import LoadingOverlay from 'components/ui/LoadingOverlay';
 
 interface App {
   id: string;
@@ -48,9 +49,10 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [username, setUsername] = useState('');
-  const { onAddLink, isLoading: isAdding } = useAddLinkMutation();
-  const { onUpdateLink, isLoading: isUpdating } = useUpdateLinkMutation();
-  const isSubmitting = isAdding || isUpdating;
+  const { onAddLink, isLoading: isAddingLoading } = useAddLinkMutation();
+  const { onUpdateLink, isLoading: isUpdatingLoading } = useUpdateLinkMutation();
+  const { onDeleteLink, isLoading: isDeletingLoading } = useDeleteLinkMutation();
+  const isSubmittingLoading = isAddingLoading || isUpdatingLoading || isDeletingLoading;
 
   // Function to get existing link data if it exists
   const getExistingLinkData = (appId: string): ProfileLink | undefined => {
@@ -93,6 +95,9 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
     }
   };
 
+  if (isSubmittingLoading) {
+    return <LoadingOverlay isLoading={isSubmittingLoading} />;
+  }
   return (
     <div
       ref={el => {
@@ -223,10 +228,10 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmittingLoading}
                 className="w-full py-3 bg-[--main-color1] text-black font-medium rounded-lg flex items-center justify-center"
               >
-                {isSubmitting ? (
+                {isSubmittingLoading ? (
                   <span className="flex items-center">
                     <svg
                       className="animate-spin -ml-1 mr-2 h-4 w-4 text-black"
@@ -251,9 +256,33 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
                     Processing...
                   </span>
                 ) : (
-                  `Add ${selectedApp?.name}`
+                  `${getButtonConfig(selectedApp?.id || '', profileData).type === 'update' ? 'Update' : 'Add'} ${
+                    selectedApp?.name
+                  }`
                 )}
               </button>
+
+              {/* Remove button only appears for existing links */}
+              {selectedApp && getButtonConfig(selectedApp.id, profileData).type === 'update' && (
+                <div className="mt-3">
+                  <span
+                    className="block text-center text-red-500 cursor-pointer hover:underline"
+                    onClick={e => {
+                      e.preventDefault();
+                      // Find the link to delete
+                      const linkToDelete = profileData?.links?.find(
+                        link => link.title.toLowerCase() === selectedApp.id.toLowerCase()
+                      );
+                      if (linkToDelete?.pk) {
+                        onDeleteLink(linkToDelete.pk);
+                        setIsModalOpen(false); // Close modal after deletion
+                      }
+                    }}
+                  >
+                    Remove
+                  </span>
+                </div>
+              )}
             </form>
           </div>
         </div>

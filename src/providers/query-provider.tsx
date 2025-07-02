@@ -1,7 +1,7 @@
 'use client';
 
 import { QueryClient, QueryClientProvider, keepPreviousData } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// Removed ReactQueryDevtools import to hide TanStack icon
 import { type ReactNode } from 'react';
 
 interface ProvidersProps {
@@ -27,7 +27,7 @@ export default function QueryProvider({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* ReactQueryDevtools removed to hide TanStack icon */}
     </QueryClientProvider>
   );
 }

@@ -20,7 +20,6 @@ export const SortableLinkClient = ({ link }: SortableLinkClientProps) => {
   };
 
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
-  console.log(baseIconsUrl);
 
   return (
     <div
