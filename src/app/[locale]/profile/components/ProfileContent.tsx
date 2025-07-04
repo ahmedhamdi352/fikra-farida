@@ -5,6 +5,8 @@ import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import ProfileInformation from './ProfileInformation';
 import Image from 'next/image';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
+import collect from 'assets/images/collect.png';
+
 import { useUpdateCollectInfoMutation, useUpdateDirectLinkMutation } from 'hooks/profile/mutations';
 
 export default function ProfileContent({ profileData }: { profileData?: ProfileForReadDTO }) {
@@ -49,10 +51,17 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
     directLinkModalRef.current?.close();
   };
 
-  // Prevent default toggle behavior and show confirmation dialog
+  // Prevent default toggle behavior and show confirmation dialog only when enabling
   const handleCollectInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    collectInfoModalRef.current?.showModal();
+    
+    // If collect info is already enabled (trying to disable it), call API directly
+    if (profileData?.autoconnect) {
+      onUpdateCollectInfo({ autoconnect: false });
+    } else {
+      // If collect info is disabled (trying to enable it), show confirmation modal
+      collectInfoModalRef.current?.showModal();
+    }
   };
 
   // Call API to update collect info setting
@@ -229,6 +238,10 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
             <h3 className="font-bold text-2xl text-black mb-4">
               {!profileData?.autoconnect ? 'Collect Info' : 'Disable Collect Info'}
             </h3>
+
+            <div className="mb-4 relative">
+              <Image src={collect} alt="collect" width={180} height={180} />
+            </div>
 
             {/* Description */}
             <p className="text-black mb-4 px-4">
