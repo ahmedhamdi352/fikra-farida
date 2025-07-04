@@ -3,27 +3,49 @@
 import { useRef } from 'react';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import ProfileInformation from './ProfileInformation';
+import Image from 'next/image';
+import LoadingOverlay from 'components/ui/LoadingOverlay';
 import { useUpdateCollectInfoMutation, useUpdateDirectLinkMutation } from 'hooks/profile/mutations';
-// Optional: import an image for the modals if needed
-// import infoIcon from 'assets/images/info-icon.png';
 
 export default function ProfileContent({ profileData }: { profileData?: ProfileForReadDTO }) {
+  const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
+
   const directLinkModalRef = useRef<HTMLDialogElement>(null);
   const collectInfoModalRef = useRef<HTMLDialogElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Use the mutation hooks
   const { onUpdateCollectInfo, isLoading: isCollectInfoLoading } = useUpdateCollectInfoMutation();
   const { onUpdateDirectLink, isLoading: isDirectLinkLoading } = useUpdateDirectLinkMutation();
 
-  // Prevent default toggle behavior and show confirmation dialog
+  // Handle direct link mode toggle
   const handleDirectLinkModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
+    // If user already has a direct link, disable it by setting to empty string
+    if (profileData?.directurl) {
+      onUpdateDirectLink({ directurl: '' });
+    } else {
+      // If no direct link set, open the modal to choose a link
+      toggleDirectLinkMode();
+    }
+  };
+
+  // Toggle direct link mode
+  const toggleDirectLinkMode = () => {
     directLinkModalRef.current?.showModal();
+    // Reset scroll position to show the first row and column when opened
+    setTimeout(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollLeft = 0;
+        scrollContainerRef.current.scrollTop = 0;
+      }
+    }, 0);
   };
 
   // Call API to update direct link mode
-  const handleDirectLinkConfirm = () => {
-    onUpdateDirectLink({ directurl: !profileData?.directurl ? 'httpssjsjsj' : '' });
+  const handleDirectLinkConfirm = (url: string) => {
+    onUpdateDirectLink({ directurl: url });
     directLinkModalRef.current?.close();
   };
 
@@ -41,6 +63,10 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
   if (!profileData) {
     return <div>No profile data found</div>;
+  }
+
+  if (isDirectLinkLoading || isCollectInfoLoading) {
+    return <LoadingOverlay isLoading={isDirectLinkLoading || isCollectInfoLoading} />;
   }
 
   return (
@@ -104,8 +130,11 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
           </div>
 
           <div className="flex items-center justify-between mb-4 px-4 py-2 rounded-lg border border-[var(--main-color1)]">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-center">
               <span className="text-body">Direct Link Mode</span>
+
+              {/* Show the icon of the selected direct link */}
+
               <div className="relative group">
                 <div className="tooltip" data-tip="hello">
                   <svg
@@ -140,6 +169,19 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                   </svg>
                 </div>
               </div>
+              {profileData?.directurl && profileData?.links?.find(link => link.url === profileData.directurl) && (
+                <div className="w-5 h-5 rounded-full overflow-hidden relative">
+                  <Image
+                    src={`${baseIconsUrl}${
+                      profileData.links.find(link => link.url === profileData.directurl)?.iconurl
+                    }`}
+                    alt="Direct Link Icon"
+                    width={20}
+                    height={20}
+                    className="object-cover"
+                  />
+                </div>
+              )}
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -213,14 +255,14 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
       {/* Direct Link Mode Modal */}
       <dialog ref={directLinkModalRef} className="modal modal-backdrop">
-        <div className="modal-box rounded-[15px] border border-white bg-[#FEF3C7] backdrop-blur-[15px] transform duration-300 transition-all scale-90 opacity-0 modal-open:scale-100 modal-open:opacity-100">
+        <div className="modal-box max-w-md rounded-[15px] border border-white bg-[#FEF3C7] backdrop-blur-[15px] transform duration-300 transition-all scale-90 opacity-0 modal-open:scale-100 modal-open:opacity-100">
           <div className="flex flex-col items-center text-center">
             {/* Yellow line at top */}
             <div className="h-1 bg-[#FEC400] w-48 mb-4 rounded-full"></div>
 
             {/* Title */}
             <h3 className="font-bold text-2xl text-black mb-4">
-              {!profileData?.directurl ? 'Enable Direct Link Mode' : 'Disable Direct Link Mode'}
+              {!profileData?.directurl ? 'Direct Link Mode' : 'Disable Direct Link Mode'}
             </h3>
 
             {/* Description */}
@@ -230,18 +272,57 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                 : 'When Direct Link Mode is enabled, users will be taken directly to the destination URL instead of your profile page.'}
             </p>
 
-            <div className="modal-action w-full">
-              <form method="dialog" className="w-full flex gap-3">
-                <button className="btn bg-gray-300 hover:bg-gray-400 text-black border-none flex-1">Cancel</button>
+            <form method="dialog" className="w-full">
+              <div className="w-full mb-3">
+                <div className="bg-[#50514E] rounded-xl p-3 mb-4">
+                  <h4 className="text-white font-semibold text-xl mb-2 text-center">Set Direct Link</h4>
+
+                  <p className="mb-2 text-start text-white">Available Links</p>
+                  {/* Container with overflow-x-auto to enable horizontal scrolling */}
+                  <div ref={scrollContainerRef} className="overflow-x-auto max-h-[300px]">
+                    {/* Grid layout with fixed columns that will scroll horizontally together */}
+                    <div className="grid grid-cols-3 gap-2 pb-2" style={{ minWidth: '660px' }}>
+                      {/* Display all links in a single scrollable grid */}
+                      {profileData?.links?.map(link => (
+                        <div key={link.pk} className="bg-[#737373] rounded-xl border border-[#B0A18E] overflow-hidden">
+                          <div className="flex items-center p-2">
+                            <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-2">
+                              <Image
+                                src={`${baseIconsUrl}${link.iconurl}`}
+                                alt={link.title}
+                                width={32}
+                                height={32}
+                                className="object-cover"
+                              />
+                            </div>
+                            <span className="text-white text-sm truncate flex-grow">{link.title}</span>
+                            <button
+                              onClick={() => handleDirectLinkConfirm(link.url)}
+                              disabled={profileData?.directurl === link.url}
+                              className={`ml-2 px-3 py-1 text-xs font-medium rounded-md ${
+                                profileData?.directurl === link.url
+                                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                  : 'bg-[#FEC400] text-black'
+                              }`}
+                            >
+                              Set
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-center mt-4">
                 <button
-                  onClick={handleDirectLinkConfirm}
-                  className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none flex-1"
-                  disabled={isDirectLinkLoading}
+                  type="submit"
+                  className="py-2 px-8 bg-[#FEC400] hover:bg-[#FEC400]/90 text-black rounded-lg font-medium"
                 >
-                  {isDirectLinkLoading ? 'Processing...' : 'Confirm'}
+                  Confirm
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
       </dialog>
