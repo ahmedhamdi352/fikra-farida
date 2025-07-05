@@ -61,6 +61,10 @@ async function updateDirectLink(data: { directurl: string }) {
   }>(`${ApiURLs.directLink}`, data);
 }
 
+async function getOfflineQrCode(userpk: number) {
+  return await httpClient.post<ProfileQrCodeDTO>(`${ApiURLs.OfflineQrCode}?userpk=${userpk}`);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -105,5 +109,9 @@ export const ProfileService = {
   updateDirectLink: {
     request: updateDirectLink,
     mutationKey: 'update-direct-link',
+  },
+  getOfflineQrCode: {
+    request: getOfflineQrCode,
+    mutationKey: 'get-offline-qr-code',
   },
 };

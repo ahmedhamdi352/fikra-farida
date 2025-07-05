@@ -8,6 +8,7 @@ export const ApiURLs = {
   catergories: '/api/Store/Categories',
   myProfile: '/api/Account/MyProfile',
   QrCode: '/api/Media/QrCodebyUser',
+  OfflineQrCode: '/api/Media/offlinesharing',
   connections: '/api/UserConnection/MyConnections',
   groups: '/api/ConnectionGroup',
   links: '/api/CustomLink',

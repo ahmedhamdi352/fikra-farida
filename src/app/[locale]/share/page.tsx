@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useGetProfileQuery, useGetQrCodeQuery } from 'hooks/profile';
+import { useGetProfileQuery, useGetQrCodeQuery, useGetOfflineQrCodeQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import ProfileInformation from './components/ProfileInformation';
 import Image from 'next/image';
@@ -10,8 +10,11 @@ import Link from 'next/link';
 export default function SharePage() {
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
   const { data: QrCodeData, isLoading: QrCodeLoading, onGetProfileQrCode } = useGetQrCodeQuery();
+  const { data: offlineQrCodeData, isLoading: offlineQrCodeLoading, onGetOfflineQrCode } = useGetOfflineQrCodeQuery();
 
   const [offLine, setOffLine] = useState(false);
+
+  console.log(offlineQrCodeLoading);
 
   useEffect(() => {
     onGetProfile();
@@ -22,6 +25,13 @@ export default function SharePage() {
       onGetProfileQrCode(profileData?.userPk);
     }
   }, [profileData]);
+
+  // Fetch offline QR code when offLine state changes to true
+  useEffect(() => {
+    if (offLine && profileData?.userPk) {
+      onGetOfflineQrCode(profileData.userPk);
+    }
+  }, [offLine, profileData?.userPk]);
 
   const handleAddToHomeScreen = async () => {
     if (!QrCodeData?.imagename) {
@@ -35,12 +45,16 @@ export default function SharePage() {
     window.location.href = `/qr-code?url=${encodeURIComponent(qrCodeUrl)}`;
   };
 
-  // function handleOfflineMode(checked: boolean): void {
-  //   setOffLine(checked)
-  // }
+  const handleOfflineToggle = (checked: boolean): void => {
+    setOffLine(checked);
+    // If switching back to online mode, refresh regular QR code
+    if (!checked && profileData?.userPk) {
+      onGetProfileQrCode(profileData.userPk);
+    }
+  };
 
-  if (isLoading) {
-    return <LoadingOverlay isLoading={isLoading || QrCodeLoading} />;
+  if (isLoading || QrCodeLoading || offlineQrCodeLoading) {
+    return <LoadingOverlay isLoading={isLoading || QrCodeLoading || offlineQrCodeLoading} />;
   }
 
   return (
@@ -68,8 +82,10 @@ export default function SharePage() {
           <ProfileInformation profileData={profileData} withEdit={false} />
           <div className="flex flex-col items-center justify-center my-8">
             <Image
-              src={`https://fikrafarida.com/Media/Profiles/${QrCodeData?.imagename || ''}`}
-              alt="QR Code"
+              src={`https://fikrafarida.com/Media/Profiles/${
+                offLine ? offlineQrCodeData?.imagename || '' : QrCodeData?.imagename || ''
+              }`}
+              alt={offLine ? 'Offline QR Code' : 'QR Code'}
               width={300}
               height={300}
               className="border border-[var(--main-color1)] rounded-lg p-2"
@@ -200,7 +216,7 @@ export default function SharePage() {
               type="checkbox"
               className="sr-only peer"
               checked={offLine}
-              onChange={e => setOffLine(e.target.checked)}
+              onChange={e => handleOfflineToggle(e.target.checked)}
             />
             <div
               className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer

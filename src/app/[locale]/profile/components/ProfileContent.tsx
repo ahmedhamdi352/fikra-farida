@@ -54,7 +54,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
   // Prevent default toggle behavior and show confirmation dialog only when enabling
   const handleCollectInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    
+
     // If collect info is already enabled (trying to disable it), call API directly
     if (profileData?.autoconnect) {
       onUpdateCollectInfo({ autoconnect: false });
