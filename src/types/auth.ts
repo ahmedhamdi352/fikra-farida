@@ -15,4 +15,5 @@ export interface RegisterPayloadForCreateDto {
   password: string;
   confirmPassword: string;
   productId?: string;
+  key?: string;
 }

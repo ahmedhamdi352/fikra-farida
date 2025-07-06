@@ -28,22 +28,15 @@ export default function RegisterForm() {
   const { isLoading, onRegister } = useRegisterMutation();
   const searchParams = useSearchParams();
   const productName = searchParams.get('product');
+  const qrKey = searchParams.get('key');
 
   const schema = yup.object().shape({
     username: yup
       .string()
       .required(t('register.validation.usernameRequired'))
-      .matches(
-        /^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/,
-        t('register.validation.usernameEnglishOnly')
-      ),
-    fullName: yup
-      .string()
-      .required(t('register.validation.fullNameRequired')),
-    email: yup
-      .string()
-      .required(t('register.validation.emailRequired'))
-      .email(t('register.validation.emailInvalid')),
+      .matches(/^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/, t('register.validation.usernameEnglishOnly')),
+    fullName: yup.string().required(t('register.validation.fullNameRequired')),
+    email: yup.string().required(t('register.validation.emailRequired')).email(t('register.validation.emailInvalid')),
     password: yup
       .string()
       .required(t('register.validation.passwordRequired'))
@@ -54,18 +47,16 @@ export default function RegisterForm() {
       .oneOf([yup.ref('password')], t('register.validation.passwordMatch')),
   });
 
-  const {
-    control,
-    handleSubmit,
-  } = useForm<RegisterFormData>({
+  const { control, handleSubmit } = useForm<RegisterFormData>({
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   const onSubmit = async (data: RegisterFormData) => {
     const registrationData = {
       ...data,
-      productId: productName || undefined
+      productId: productName || undefined,
+      key: qrKey || undefined,
     };
     await onRegister(registrationData);
   };
@@ -82,9 +73,7 @@ export default function RegisterForm() {
             className={`mb-6 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
             priority
           />
-          <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">
-            {t('register.title')}
-          </h2>
+          <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">{t('register.title')}</h2>
           {productName && (
             <div className="mt-2 text-center">
               <p className="text-sm ">{t('register.selectedProduct')}:</p>
@@ -101,8 +90,18 @@ export default function RegisterForm() {
               type="text"
               placeholder={t('register.usernamePlaceholder')}
               icon={
-                <svg className="h-5 w-5 text-[var(--main-color1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                <svg
+                  className="h-5 w-5 text-[var(--main-color1)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
                 </svg>
               }
             />
@@ -113,8 +112,18 @@ export default function RegisterForm() {
               type="text"
               placeholder={t('register.fullNamePlaceholder')}
               icon={
-                <svg className="h-5 w-5 text-[var(--main-color1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="h-5 w-5 text-[var(--main-color1)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               }
             />
@@ -125,8 +134,18 @@ export default function RegisterForm() {
               type="email"
               placeholder={t('register.emailPlaceholder')}
               icon={
-                <svg className="h-5 w-5 text-[var(--main-color1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <svg
+                  className="h-5 w-5 text-[var(--main-color1)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
                 </svg>
               }
             />
@@ -137,8 +156,18 @@ export default function RegisterForm() {
               type="password"
               placeholder={t('register.passwordPlaceholder')}
               icon={
-                <svg className="h-5 w-5 text-[var(--main-color1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg
+                  className="h-5 w-5 text-[var(--main-color1)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
               }
             />
@@ -149,8 +178,18 @@ export default function RegisterForm() {
               type="password"
               placeholder={t('register.confirmPasswordPlaceholder')}
               icon={
-                <svg className="h-5 w-5 text-[var(--main-color1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg
+                  className="h-5 w-5 text-[var(--main-color1)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
                 </svg>
               }
             />

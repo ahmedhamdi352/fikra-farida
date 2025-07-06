@@ -7,6 +7,7 @@ export const ApiURLs = {
   order: '/api/ShoppingOrder/add',
   catergories: '/api/Store/Categories',
   myProfile: '/api/Account/MyProfile',
+  myProfileByKey: '/api/Account/ProfileByQrcode',
   QrCode: '/api/Media/QrCodebyUser',
   OfflineQrCode: '/api/Media/offlinesharing',
   connections: '/api/UserConnection/MyConnections',
@@ -16,4 +17,5 @@ export const ApiURLs = {
   lockStatus: '/api/Account/UpdateLockStatus',
   collectInfo: '/api/Account/UpdateAutoConnect',
   directLink: '/api/Account/UpdateDirectUrl',
+  linkQrCode: '/api/Account/LinkQrCode',
 } as const;

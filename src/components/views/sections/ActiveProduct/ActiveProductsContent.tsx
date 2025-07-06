@@ -30,6 +30,8 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
     setCurrentPage(page ? parseInt(page) : 1);
   }, [searchParams]);
 
+  const qrKey = searchParams.get('key');
+
   useEffect(() => {
     onGetCategories(locale);
   }, [locale]);
@@ -40,9 +42,7 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
 
   // Filter products based on selected filter
   const filteredProducts = selectedCategory
-    ? products.filter(product =>
-      product.Categories.some(cat => cat.Code === selectedCategory)
-    )
+    ? products.filter(product => product.Categories.some(cat => cat.Code === selectedCategory))
     : products;
 
   // Calculate total pages based on filtered products
@@ -65,86 +65,83 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
       <div className="container mx-auto px-4 py-16">
         {/* Filters Section */}
 
-        {!isCategoriesLoading && <div className="mb-8 flex flex-wrap items-center gap-4">
-          {/* Categories Dropdown */}
-          <div
-            className="relative w-1/2"
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget)) {
-                setIsOpen(false);
-              }
-            }}
-          >
-            <button
-              type="button"
-              className={`w-full md:w-64 h-[42px] px-4 rounded-lg  border border-[var(--main-color1)]
+        {!isCategoriesLoading && (
+          <div className="mb-8 flex flex-wrap items-center gap-4">
+            {/* Categories Dropdown */}
+            <div
+              className="relative w-1/2"
+              onBlur={e => {
+                if (!e.currentTarget.contains(e.relatedTarget)) {
+                  setIsOpen(false);
+                }
+              }}
+            >
+              <button
+                type="button"
+                className={`w-full md:w-64 h-[42px] px-4 rounded-lg  border border-[var(--main-color1)]
                 hover:border-[var(--main-color1)] transition-colors duration-200 flex items-center justify-between
                 focus:outline-none focus:ring-2 focus:ring-[var(--main-color1)] focus:ring-opacity-50
                 ${isOpen ? 'border-[var(--main-color1)]' : ''}`}
-              onClick={() => setIsOpen(!isOpen)}
-              disabled={isCategoriesLoading}
-            >
-              <span className="truncate">
-                {selectedCategory
-                  ? getSelectOptions(locale).find(opt => opt.value === selectedCategory)?.label
-                  : isCategoriesLoading
-                    ? t('loading')
-                    : t('allCategories')
-                }
-              </span>
-              <svg
-                className={`w-5 h-5 text-[var(--main-color1)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                onClick={() => setIsOpen(!isOpen)}
+                disabled={isCategoriesLoading}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {/* Dropdown Menu */}
-            {isOpen && (
-              <div className="absolute z-50 w-full mt-1 dark:bg-[#3C3C3B] bg-white border border-[var(--main-color1)] rounded-lg shadow-lg max-h-60 overflow-auto">
-                <div
-                  className="py-1"
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="options-menu"
+                <span className="truncate">
+                  {selectedCategory
+                    ? getSelectOptions(locale).find(opt => opt.value === selectedCategory)?.label
+                    : isCategoriesLoading
+                    ? t('loading')
+                    : t('allCategories')}
+                </span>
+                <svg
+                  className={`w-5 h-5 text-[var(--main-color1)] transition-transform duration-200 ${
+                    isOpen ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <button
-                    className={`w-full text-left px-4 py-2 text-sm hover:bg-[var(--main-color1)] hover:text-black transition-colors duration-150
-                      ${!selectedCategory ? 'bg-[var(--main-color1)] bg-opacity-10' : ''}`}
-                    onClick={() => {
-                      handleCategorySelect('');
-                    }}
-                  >
-                    {t('allCategories')}
-                  </button>
-                  {getSelectOptions(locale).map((option) => (
-                    <button
-                      key={option.value}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-[var(--main-color1)] hover:text-black transition-colors duration-150
-                        ${selectedCategory === option.value ? 'bg-[var(--main-color1)] bg-opacity-10' : ''}`}
-                      onClick={() => handleCategorySelect(option.value)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>}
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
+              {/* Dropdown Menu */}
+              {isOpen && (
+                <div className="absolute z-50 w-full mt-1 dark:bg-[#3C3C3B] bg-white border border-[var(--main-color1)] rounded-lg shadow-lg max-h-60 overflow-auto">
+                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <button
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-[var(--main-color1)] hover:text-black transition-colors duration-150
+                      ${!selectedCategory ? 'bg-[var(--main-color1)] bg-opacity-10' : ''}`}
+                      onClick={() => {
+                        handleCategorySelect('');
+                      }}
+                    >
+                      {t('allCategories')}
+                    </button>
+                    {getSelectOptions(locale).map(option => (
+                      <button
+                        key={option.value}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-[var(--main-color1)] hover:text-black transition-colors duration-150
+                        ${selectedCategory === option.value ? 'bg-[var(--main-color1)] bg-opacity-10' : ''}`}
+                        onClick={() => handleCategorySelect(option.value)}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="border border-[var(--main-color1)] rounded-[5px] p-6 my-8">
           {/* Products Grid */}
           {filteredProducts.length > 0 ? (
             <>
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {displayedProducts.map((product, index) => (
-                  <div key={`index-${index}`} className="w-full">
-                    <ProductCard product={product} />
+                  <div key={`product-${product.id || index}`} className="w-full">
+                    <ProductCard product={product} qrKey={qrKey || undefined} />
                   </div>
                 ))}
               </div>
@@ -154,10 +151,9 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
                 <div className="flex justify-center items-center gap-2 mt-12">
                   <Link
                     href={`/products?page=${currentPage - 1}`}
-                    className={`p-2 rounded-full transition-colors ${currentPage === 1
-                      ? 'pointer-events-none text-gray-500'
-                      : 'text-yellow-500 hover:bg-white/5'
-                      }`}
+                    className={`p-2 rounded-full transition-colors ${
+                      currentPage === 1 ? 'pointer-events-none text-gray-500' : 'text-yellow-500 hover:bg-white/5'
+                    }`}
                     aria-label="Previous page"
                   >
                     <svg
@@ -174,10 +170,9 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
                     <Link
                       key={index}
                       href={`/products?page=${index + 1}`}
-                      className={`w-8 h-8 rounded-full transition-colors flex items-center justify-center ${currentPage === index + 1
-                        ? 'bg-yellow-500 text-black'
-                        : 'text-white hover:bg-white/5'
-                        }`}
+                      className={`w-8 h-8 rounded-full transition-colors flex items-center justify-center ${
+                        currentPage === index + 1 ? 'bg-yellow-500 text-black' : 'text-white hover:bg-white/5'
+                      }`}
                     >
                       {index + 1}
                     </Link>
@@ -185,10 +180,11 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
 
                   <Link
                     href={`/products?page=${currentPage + 1}`}
-                    className={`p-2 rounded-full transition-colors ${currentPage === totalFilteredPages
-                      ? 'pointer-events-none text-gray-500'
-                      : 'text-yellow-500 hover:bg-white/5'
-                      }`}
+                    className={`p-2 rounded-full transition-colors ${
+                      currentPage === totalFilteredPages
+                        ? 'pointer-events-none text-gray-500'
+                        : 'text-yellow-500 hover:bg-white/5'
+                    }`}
                     aria-label="Next page"
                   >
                     <svg
@@ -210,11 +206,7 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
 
         <div className="mt-12 flex flex-col gap-4">
           <p className="text-xl text-start text-[var(--main-color1)]">Or Buy a new Product</p>
-          <ProductsContent
-            products={products}
-            totalPages={totalPages}
-            className={{ padding: 0 }}
-          />
+          <ProductsContent products={products} totalPages={totalPages} className={{ padding: 0 }} />
         </div>
       </div>
     </div>

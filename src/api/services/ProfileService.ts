@@ -2,7 +2,7 @@ import { ApiURLs, httpClient } from 'api/core';
 import { ProfileForReadDTO, ProfileQrCodeDTO, GroupForCreateDTO, GroupResponseDTO } from 'types';
 
 async function getProfile() {
-  return await httpClient.post<ProfileForReadDTO>(`${ApiURLs.myProfile}`);
+  return await httpClient.get<ProfileForReadDTO>(`${ApiURLs.myProfile}`);
 }
 
 async function getQRCode(userpk: number) {
@@ -65,10 +65,27 @@ async function getOfflineQrCode(userpk: number) {
   return await httpClient.post<ProfileQrCodeDTO>(`${ApiURLs.OfflineQrCode}?userpk=${userpk}`);
 }
 
+async function getProfileByKey(key: string) {
+  return await httpClient.get<ProfileForReadDTO>(`${ApiURLs.myProfileByKey}?key=${key}`);
+}
+
+async function linkQrCode(params: { key: string, productId: string }) {
+  return await httpClient.post<{
+    success?: boolean;
+    sucess?: boolean;
+    errorcode: number;
+    message: string;
+  }>(`${ApiURLs.linkQrCode}?key=${params.key}&productId=${params.productId}`);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
     mutationKey: 'get-profile',
+  },
+  getProfileByKey: {
+    request: getProfileByKey,
+    mutationKey: 'get-profile-by-key',
   },
   getQRCode: {
     request: getQRCode,
@@ -109,6 +126,10 @@ export const ProfileService = {
   updateDirectLink: {
     request: updateDirectLink,
     mutationKey: 'update-direct-link',
+  },
+  linkQrCode: {
+    request: linkQrCode,
+    mutationKey: 'link-qr-code',
   },
   getOfflineQrCode: {
     request: getOfflineQrCode,
