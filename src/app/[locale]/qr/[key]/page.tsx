@@ -32,12 +32,18 @@ async function getProfileByKey(key: string) {
   }
 }
 
-export default async function QrPage({ params }: { params: { key: string } }) {
-  // Await params to fix Next.js warning
-  const { key } = await Promise.resolve(params);
-  
+// Define the correct types for Next.js page props
+interface QrPageProps {
+  params: Promise<{ locale: string; key: string }>;
+}
+
+export default async function QrPage({ params }: QrPageProps) {
+  // Await params as required by the app's configuration
+  const resolvedParams = await params;
+  const { key } = resolvedParams;
+
   let profileData;
-  
+
   try {
     profileData = await getProfileByKey(key);
     console.log(profileData);
@@ -45,7 +51,7 @@ export default async function QrPage({ params }: { params: { key: string } }) {
     console.error('Error fetching profile data:', error);
     return notFound();
   }
-  
+
   // Handle error codes with appropriate redirects
   if (profileData.errorcode === 406) {
     // Redirect to active products page with QR key as search param for activation
@@ -61,7 +67,7 @@ export default async function QrPage({ params }: { params: { key: string } }) {
     console.error('QR not found or invalid:', profileData.message);
     return notFound();
   }
-  
+
   // Server-side rendering of the profile preview
   return (
     <div className="w-full min-h-screen py-8 px-4">
