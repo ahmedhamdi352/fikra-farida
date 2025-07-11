@@ -12,28 +12,50 @@ export interface ProfileLink {
   lastIPvisitdate: string;
 }
 
+export interface LinkedProduct {
+  linkPk: number;
+  userFk: number;
+  linkCode: string;
+  createDate: string;
+  isLinked: boolean;
+  linkDate: string;
+  lcompanyFk: number;
+  productId: string | null;
+}
+
 export interface ProfileForReadDTO {
   userPk: number;
   username: string;
-  isLocked: boolean;
-  autoconnect: boolean;
-  directurl: string;
   fullname: string;
   jobTitle: string;
   bio: string;
-  email: string;
   phoneNumber1: string;
   address: string;
   imageFilename: string;
-  type: number;
-  keycount: number;
   createDate: string;
   modifedDate: string;
   links: ProfileLink[];
+  LinkedProducts: LinkedProduct[];
+  email: string;
+  type: number;
+  keycount: number;
+  token: string;
   lastIPvisit: string;
   lastIPvisitdate: string;
   visitcount: number;
   subscriptionEnddate: string;
   companyFk: number;
+  _companyFk: number;
   theme: string;
+  ColorMode: string;
+  IsLocked: boolean;
+  directurl: string;
+  autoconnect: boolean;
+  accountFk: number;
+  showEmail: boolean;
+  showPhone: boolean;
+  showWebsite: boolean;
+  colorBackground: string;
+  iconColor: string;
+  saveContact: boolean;
 }

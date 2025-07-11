@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import ProductScanButton from 'components/profile/ProductScanButton';
 import ProfileContent from './components/ProfileContent';
 import Link from 'next/link';
@@ -10,11 +9,7 @@ import LoadingOverlay from 'components/ui/LoadingOverlay';
 import ProfileTabs from './components/ProfileTabs';
 
 export default function ProfilePage() {
-  const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
-
-  useEffect(() => {
-    onGetProfile();
-  }, []);
+  const { data: profileData, isLoading, } = useGetProfileQuery();
 
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading} />;
@@ -23,7 +18,6 @@ export default function ProfilePage() {
   return (
     <div className="w-full min-h-screen py-8 px-4 flex flex-col items-center">
       <ProfileTabs />
-
       <ProfileContent profileData={profileData} />
       <div className="flex items-center justify-center gap-2 mt-4">
         <Link
@@ -47,7 +41,7 @@ export default function ProfilePage() {
         </Link>
         <ProductScanButton />
       </div>
-      <ClientUserLinks profileLinks={profileData?.links} />
+      <ClientUserLinks profileLinks={profileData?.links || []} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { ApiURLs, httpClient } from 'api/core';
-import { ProfileForReadDTO, ProfileQrCodeDTO, GroupForCreateDTO, GroupResponseDTO } from 'types';
+import { ProfileForReadDTO, ProfileQrCodeDTO, GroupForCreateDTO, ProfileForCreateDTO, GroupResponseDTO } from 'types';
 
 async function getProfile() {
   return await httpClient.get<ProfileForReadDTO>(`${ApiURLs.myProfile}`);
@@ -69,7 +69,7 @@ async function getProfileByKey(key: string) {
   return await httpClient.get<ProfileForReadDTO>(`${ApiURLs.myProfileByKey}?key=${key}`);
 }
 
-async function linkQrCode(params: { key: string, productId: string }) {
+async function linkQrCode(params: { key: string; productId: string }) {
   return await httpClient.post<{
     success?: boolean;
     sucess?: boolean;
@@ -78,10 +78,22 @@ async function linkQrCode(params: { key: string, productId: string }) {
   }>(`${ApiURLs.linkQrCode}?key=${params.key}&productId=${params.productId}`);
 }
 
+async function getProfiles() {
+  return await httpClient.get<ProfileForReadDTO[]>(`${ApiURLs.myProfiles}`);
+}
+
+async function addProfile(profile: ProfileForCreateDTO) {
+  return await httpClient.post<ProfileForReadDTO>(`${ApiURLs.createProfile}`, profile);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
-    mutationKey: 'get-profile',
+    queryKey: 'get-profile',
+  },
+  addProfile: {
+    request: addProfile,
+    mutationKey: 'add-profile',
   },
   getProfileByKey: {
     request: getProfileByKey,
@@ -134,5 +146,9 @@ export const ProfileService = {
   getOfflineQrCode: {
     request: getOfflineQrCode,
     mutationKey: 'get-offline-qr-code',
+  },
+  getProfiles: {
+    request: getProfiles,
+    queryKey: 'get-profiles',
   },
 };

@@ -34,8 +34,8 @@ export function useAddLinkMutation() {
     },
     onSuccess: async () => {
       // First invalidate the query cache
-      queryClient.invalidateQueries({ queryKey: [ProfileService.getProfile.mutationKey] });
-      
+      queryClient.invalidateQueries({ queryKey: [ProfileService.getProfile.queryKey] });
+
       // Then force a direct refetch to ensure fresh data
       try {
         await ProfileService.getProfile.request();

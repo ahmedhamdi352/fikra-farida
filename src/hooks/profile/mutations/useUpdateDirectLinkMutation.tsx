@@ -19,7 +19,7 @@ export function useUpdateDirectLinkMutation() {
     onSuccess: async (response: DirectLinkResponse) => {
       try {
         await queryClient.invalidateQueries({
-          queryKey: [ProfileService.getProfile.mutationKey],
+          queryKey: [ProfileService.getProfile.queryKey],
         });
         // Use the message from the API response
         SnackbarUtils.success(response.message || 'Direct link updated successfully');

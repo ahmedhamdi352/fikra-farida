@@ -35,7 +35,7 @@ export function useUpdateLinkMutation() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [ProfileService.getProfile.mutationKey] });
+      queryClient.invalidateQueries({ queryKey: [ProfileService.getProfile.queryKey] });
     },
   });
 

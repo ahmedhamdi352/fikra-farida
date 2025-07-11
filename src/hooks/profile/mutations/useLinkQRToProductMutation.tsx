@@ -25,9 +25,9 @@ export function useLinkQRToProductMutation() {
       try {
         // Invalidate relevant queries to refresh data
         await queryClient.invalidateQueries({
-          queryKey: [ProfileService.getProfile.mutationKey],
+          queryKey: [ProfileService.getProfile.queryKey],
         });
-        
+
         // Use the message from the API response
         SnackbarUtils.success(response.message || 'QR code linked successfully');
       } catch (error) {

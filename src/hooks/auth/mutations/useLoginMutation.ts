@@ -15,7 +15,8 @@ export function useLoginMutation() {
     mutationFn: AuthService.login.request,
     onSuccess: response => {
       if (response.sucess) {
-        setAuth(response.token!);
+        // Pass the entire response to setAuth which now handles profiles
+        setAuth(response);
         SnackbarUtils.success('Login successful!');
         router.push('/profile');
         router.refresh();

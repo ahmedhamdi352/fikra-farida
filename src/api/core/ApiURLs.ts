@@ -7,6 +7,8 @@ export const ApiURLs = {
   order: '/api/ShoppingOrder/add',
   catergories: '/api/Store/Categories',
   myProfile: '/api/Account/MyProfile',
+  myProfiles: '/api/Account/MyProfiles',
+  createProfile: '/api/Account/CreateProfile',
   myProfileByKey: '/api/Account/ProfileByQrcode',
   QrCode: '/api/Media/QrCodebyUser',
   OfflineQrCode: '/api/Media/offlinesharing',

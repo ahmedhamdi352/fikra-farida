@@ -19,7 +19,7 @@ export function useUpdateCollectInfoMutation() {
     onSuccess: async (response: CollectInfoResponse) => {
       try {
         await queryClient.invalidateQueries({
-          queryKey: [ProfileService.getProfile.mutationKey],
+          queryKey: [ProfileService.getProfile.queryKey],
         });
         // Use the message from the API response
         SnackbarUtils.success(response.message || 'Collect info updated successfully');

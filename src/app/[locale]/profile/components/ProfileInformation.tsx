@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useUpdateLockStatusMutation } from 'hooks/profile/mutations';
 import { createPortal } from 'react-dom';
 import lock from 'assets/images/lock.png';
+import ProfileSwitcher from './ProfileSwitcher';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -16,9 +17,9 @@ interface ProfileInformationProps {
 
 export default function ProfileInformation({ profileData, withEdit, withSwitch, withBio }: ProfileInformationProps) {
   const [showMenu, setShowMenu] = useState(false);
+  const [showProfileSwitcher, setShowProfileSwitcher] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const lockConfirmModalRef = useRef<HTMLDialogElement>(null);
-
   const { onUpdateLockStatus, isLoading: isLockLoading } = useUpdateLockStatusMutation();
 
   const handleLockToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +31,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
 
   const handleLockConfirm = () => {
     // Call the API to update lock status
-    onUpdateLockStatus({ isLocked: !profileData?.isLocked });
+    onUpdateLockStatus({ isLocked: !profileData?.IsLocked });
     // Close the dialog
     lockConfirmModalRef.current?.close();
     // The profile lock status will be updated via the react-query invalidation in the hook
@@ -137,7 +138,13 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
 
                   <div className="space-y-0">
                     {/* Switch Profile */}
-                    <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
+                    <div
+                      className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer"
+                      onClick={() => {
+                        setShowMenu(false);
+                        setShowProfileSwitcher(true);
+                      }}
+                    >
                       <div className="w-8 h-8 flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -239,7 +246,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                         <input
                           type="checkbox"
                           className="sr-only peer"
-                          checked={profileData?.isLocked || false}
+                          checked={profileData?.IsLocked || false}
                           onChange={handleLockToggle}
                         />
                         <div
@@ -260,7 +267,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
 
                             {/* Title */}
                             <h3 className="font-bold text-2xl text-black mb-4">
-                              {!profileData?.isLocked ? 'Account Locked' : 'Account Unlocked'}
+                              {!profileData?.IsLocked ? 'Account Locked' : 'Account Unlocked'}
                             </h3>
 
                             {/* Lock and Key Image */}
@@ -270,7 +277,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
 
                             {/* Description */}
                             <p className="text-black mb-4 px-4">
-                              {profileData?.isLocked
+                              {profileData?.IsLocked
                                 ? 'This account is currently unavailable. It seems that the digital card owner has disabled their profile at the moment. You can leave them a message and they will contact you when their account is reactivated.'
                                 : 'When activating this option, your profile will be locked, and no one will be able to access your data when scanning the digital card or any of your smart products. Instead, they will see a message stating that the account is currently unavailable. You can reactivate your profile at any time through the same option.'}
                             </p>
@@ -322,11 +329,23 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
         <div className="flex flex-col py-2">
           <div className="flex items-center gap-2">
             <h1 className="text-md font-semibold ">{profileData.fullname}</h1>
-            {withSwitch && <p className="text-gray-400 underline cursor-pointer text-[10px]">Switch Account</p>}
+            {withSwitch && (
+              <p
+                className="text-gray-400 underline cursor-pointer text-[10px]"
+                onClick={() => setShowProfileSwitcher(true)}
+              >
+                Switch Account
+              </p>
+            )}
           </div>
           <p className="text-gray-400 text-sm">{profileData.jobTitle}</p>
         </div>
       </div>
+
+      {showProfileSwitcher && <ProfileSwitcher
+        isOpen={showProfileSwitcher}
+        onClose={() => setShowProfileSwitcher(false)}
+      />}
     </div>
   );
 }

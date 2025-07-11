@@ -83,7 +83,10 @@ export class ErrorService {
           type: ErrorType.AUTHENTICATION,
           messageKey: 'errors.authentication',
           action: () => {
+            // Clear all auth-related storage
             localStorage.removeItem('token');
+            localStorage.removeItem('user_profiles');
+            localStorage.removeItem('active_profile_id');
             // You can add redirect to login here
             window.location.href = '/auth/login';
           },

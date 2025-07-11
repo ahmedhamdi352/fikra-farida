@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -26,6 +26,12 @@ interface UserLinksProps {
 
 export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
   const [links, setLinks] = useState<ProfileLink[]>(profileLinks || []);
+
+  useEffect(() => {
+    if (profileLinks) {
+      setLinks(profileLinks);
+    }
+  }, [profileLinks]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),

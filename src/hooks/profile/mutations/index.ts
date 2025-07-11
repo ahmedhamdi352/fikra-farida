@@ -5,3 +5,4 @@ export * from './useUpdateLockStatusMutation';
 export * from './useUpdateCollectInfoMutation';
 export * from './useUpdateDirectLinkMutation';
 export * from './useLinkQRToProductMutation';
+export * from './useCreateProfileMutation';

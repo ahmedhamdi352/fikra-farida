@@ -11,7 +11,32 @@ const instance: AxiosInstance = axios.create();
 instance.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 instance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('token');
+  let token = null;
+  const activeProfileId = localStorage.getItem('active_profile_id');
+  const storedProfiles = localStorage.getItem('user_profiles');
+
+  if (activeProfileId && storedProfiles) {
+    try {
+      interface StoredProfile {
+        userPk: number;
+        token: string;
+      }
+
+      const profiles = JSON.parse(storedProfiles) as StoredProfile[];
+      const activeProfile = profiles.find(p => p.userPk.toString() === activeProfileId);
+
+      if (activeProfile && activeProfile.token) {
+        token = activeProfile.token;
+      }
+    } catch (error) {
+      console.error('Error parsing profiles in axios interceptor:', error);
+    }
+  }
+
+  if (!token) {
+    token = localStorage.getItem('token');
+  }
+
   if (token) {
     config.headers['token'] = token;
   }
@@ -25,14 +50,13 @@ instance.interceptors.request.use(async (config: InternalAxiosRequestConfig) => 
 instance.interceptors.response.use(
   response => response,
   async error => {
-    // Check if the error is due to token expiration
     if (error.response?.status === HttpStatusCode.Unauthorized) {
-      sessionStorage.clear();
-      localStorage.clear();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user_profiles');
+      localStorage.removeItem('active_profile_id');
       window.location.href = '/login';
     }
 
-    // Handle other errors
     const errorResponse = error.response?.data as ApiError;
 
     if (errorResponse) {

@@ -1,24 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import { ProfileService } from 'api';
-export function useGetProfileQuery() {
+
+export function useGetProfilesQuery() {
   const query = useQuery({
-    queryKey: [ProfileService.getProfile.queryKey],
+    queryKey: [ProfileService.getProfiles.queryKey],
     queryFn: async () => {
       try {
-        const response = await ProfileService.getProfile.request();
+        const response = await ProfileService.getProfiles.request();
         return response;
       } catch (error) {
-        console.error('Profile fetch error:', error);
+        console.error('Profiles fetch error:', error);
         throw error;
       }
     },
   });
 
-  const onGetProfile = () => {
+  const onGetProfiles = () => {
     try {
       query.refetch();
     } catch (error) {
-      console.error('Error triggering profile fetch:', error);
+      console.error('Error triggering profiles fetch:', error);
     }
   };
 
@@ -26,6 +27,6 @@ export function useGetProfileQuery() {
     data: query.data,
     isLoading: query.isLoading,
     error: query.error,
-    onGetProfile,
+    onGetProfiles,
   };
 }
