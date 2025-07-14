@@ -8,6 +8,7 @@ import LoadingOverlay from 'components/ui/LoadingOverlay';
 import collect from 'assets/images/collect.png';
 
 import { useUpdateCollectInfoMutation, useUpdateDirectLinkMutation } from 'hooks/profile/mutations';
+import Link from 'next/link';
 
 export default function ProfileContent({ profileData }: { profileData?: ProfileForReadDTO }) {
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
@@ -181,9 +182,8 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
               {profileData?.directurl && profileData?.links?.find(link => link.url === profileData.directurl) && (
                 <div className="w-5 h-5 rounded-full overflow-hidden relative">
                   <Image
-                    src={`${baseIconsUrl}${
-                      profileData.links.find(link => link.url === profileData.directurl)?.iconurl
-                    }`}
+                    src={`${baseIconsUrl}${profileData.links.find(link => link.url === profileData.directurl)?.iconurl
+                      }`}
                     alt="Direct Link Icon"
                     width={20}
                     height={20}
@@ -211,7 +211,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
         </div>
 
         <div className="flex justify-center">
-          <button className="bg-[#FEF3C7] text-black font-medium py-3 px-6 rounded-3xl flex items-center justify-center gap-2 w-fit">
+          <Link href={`/${profileData?.username}`} className="bg-[#FEF3C7] text-black font-medium py-3 px-6 rounded-3xl flex items-center justify-center gap-2 w-fit">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
               <path
                 d="M15.4698 8.33C14.8817 6.80882 13.8608 5.49331 12.5332 4.54604C11.2056 3.59878 9.62953 3.06129 7.99979 3C6.37005 3.06129 4.79398 3.59878 3.46639 4.54604C2.1388 5.49331 1.11787 6.80882 0.529787 8.33C0.490071 8.43985 0.490071 8.56015 0.529787 8.67C1.11787 10.1912 2.1388 11.5067 3.46639 12.454C4.79398 13.4012 6.37005 13.9387 7.99979 14C9.62953 13.9387 11.2056 13.4012 12.5332 12.454C13.8608 11.5067 14.8817 10.1912 15.4698 8.67C15.5095 8.56015 15.5095 8.43985 15.4698 8.33ZM7.99979 13C5.34979 13 2.54979 11.035 1.53479 8.5C2.54979 5.965 5.34979 4 7.99979 4C10.6498 4 13.4498 5.965 14.4648 8.5C13.4498 11.035 10.6498 13 7.99979 13Z"
@@ -223,7 +223,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
               />
             </svg>
             Preview
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -312,11 +312,10 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                             <button
                               onClick={() => handleDirectLinkConfirm(link.url)}
                               disabled={profileData?.directurl === link.url}
-                              className={`ml-2 px-3 py-1 text-xs font-medium rounded-md ${
-                                profileData?.directurl === link.url
+                              className={`ml-2 px-3 py-1 text-xs font-medium rounded-md ${profileData?.directurl === link.url
                                   ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                                   : 'bg-[#FEC400] text-black'
-                              }`}
+                                }`}
                             >
                               Set
                             </button>

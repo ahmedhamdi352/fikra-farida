@@ -22,7 +22,7 @@ interface HeaderProps {
 const OfferBanner = ({ title }: { title: string | null }) => {
   return (
     <Link href="/products">
-      <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-700 via-grey-200 to-gray-700 text-white text-center p-2 z-10">
+      <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-700 via-grey-200 to-gray-700 text-white text-center p-2 z-50">
         <div className="font-bold text-body whitespace-nowrap animate-marquee"> {title} </div>
       </div>
     </Link>
@@ -124,9 +124,8 @@ const Header = ({ siteData }: HeaderProps) => {
     <>
       <OfferBanner title={siteData.siteNews} />
       <header
-        className={`fixed top-8 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${
-          isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-        }`}
+        className={`fixed top-8 left-0 right-0 p-2 text-white z-50 transition-all duration-300 ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+          }`}
         style={{
           background: 'linear-gradient(239deg, rgba(12, 13, 13, 0.90) 29.09%, rgba(41, 47, 54, 0.90) 109.67%)',
           backdropFilter: 'blur(8px)',
@@ -156,38 +155,34 @@ const Header = ({ siteData }: HeaderProps) => {
           >
             <Link
               href="/"
-              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${
-                pathname === '/' ? 'text-white font-bold bg-white/20' : 'text-black hover:text-white group'
-              }`}
+              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname === '/' ? 'text-white font-bold bg-white/20' : 'text-black hover:text-white group'
+                }`}
             >
               <span className="relative z-10">{t('nav.home')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
             </Link>
             <Link
               href="/products"
-              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${
-                pathname.includes('/products')
+              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname.includes('/products')
                   ? 'text-white font-bold bg-white/20'
                   : 'text-black hover:text-white group'
-              }`}
+                }`}
             >
               <span className="relative z-10">{t('nav.products')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
             </Link>
             <Link
               href="/blogs"
-              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${
-                pathname.includes('/blogs') ? 'text-white font-bold bg-white/20' : 'text-black hover:text-white group'
-              }`}
+              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname.includes('/blogs') ? 'text-white font-bold bg-white/20' : 'text-black hover:text-white group'
+                }`}
             >
               <span className="relative z-10">{t('nav.blogs')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
             </Link>
             <Link
               href="/contact"
-              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${
-                pathname.includes('/contact') ? 'text-white font-bold bg-white/20' : 'text-black hover:text-white group'
-              }`}
+              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname.includes('/contact') ? 'text-white font-bold bg-white/20' : 'text-black hover:text-white group'
+                }`}
             >
               <span className="relative z-10">{t('nav.contact')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
@@ -292,11 +287,10 @@ const Header = ({ siteData }: HeaderProps) => {
                   <nav className="h-full mt-[35px] p-4 flex flex-col space-y-4">
                     <Link
                       href="/"
-                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${
-                        pathname === '/'
+                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname === '/'
                           ? 'bg-yellow-500 text-black dark:text-white font-bold'
                           : 'dark:text-gray-200 text-gray-500 group'
-                      }`}
+                        }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -313,11 +307,10 @@ const Header = ({ siteData }: HeaderProps) => {
                     </Link>
                     <Link
                       href="/products"
-                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${
-                        pathname.includes('/products')
+                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/products')
                           ? 'bg-yellow-500 text-black dark:text-white font-bold'
                           : 'dark:text-gray-200 text-gray-500 group'
-                      }`}
+                        }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -334,11 +327,10 @@ const Header = ({ siteData }: HeaderProps) => {
                     </Link>
                     <Link
                       href="/blogs"
-                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${
-                        pathname.includes('/blogs')
+                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/blogs')
                           ? 'bg-yellow-500 text-black dark:text-white font-bold'
                           : 'dark:text-gray-200 text-gray-500 group'
-                      }`}
+                        }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -355,11 +347,10 @@ const Header = ({ siteData }: HeaderProps) => {
                     </Link>
                     <Link
                       href="/contact"
-                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${
-                        pathname.includes('/contact')
+                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/contact')
                           ? 'bg-yellow-500 text-black dark:text-white font-bold'
                           : 'dark:text-gray-200 text-gray-500 group'
-                      }`}
+                        }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">

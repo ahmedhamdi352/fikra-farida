@@ -11,6 +11,7 @@ type ButtonProps = {
   className?: string;
   withArrow?: boolean;
   translationNamespace?: string;
+  style?: React.CSSProperties;
 } & (
     | { translationKey: string; children?: never }
     | { translationKey?: never; children: React.ReactNode }
@@ -24,6 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
   withArrow = false,
   translationKey,
   translationNamespace = 'common',
+  style,
 }) => {
   const t = useTranslations(translationNamespace);
   const baseStyles = "inline-flex items-center justify-between px-8 py-3 rounded-[10px] hover:opacity-80 transition-all w-full sm:w-auto capitalize";
@@ -54,7 +56,7 @@ export const Button: React.FC<ButtonProps> = ({
   }
 
   return (
-    <button onClick={onClick} className={twMerge(baseStyles, gradientBorderStyles, className)}>
+    <button style={style} onClick={onClick} className={twMerge(baseStyles, gradientBorderStyles, className)}>
       {content}
     </button>
   );

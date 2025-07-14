@@ -44,7 +44,106 @@ const getButtonConfig = (
   return { type: 'update', label: 'Update', color: 'bg-[--main-color1]' };
 };
 
-const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApps, categoryRefs, profileData }) => {
+// Function to construct the proper URL for each platform type
+const constructSocialMediaUrl = (platform: string, username: string): string => {
+  // Remove @ symbol if present for social media handles
+  const cleanUsername = username.startsWith('@') ? username.substring(1) : username;
+
+  // Convert platform to lowercase for case-insensitive matching
+  const platformLower = platform.toLowerCase();
+
+  // Special handling for phone numbers
+  if (platformLower === 'businessphone' || platformLower === 'hotline') {
+    // Clean the phone number - remove spaces, dashes, parentheses
+    const cleanPhone = cleanUsername.replace(/[\s\-()]/g, '');
+    return `tel:${cleanPhone}`;
+  }
+
+  // Special handling for email
+  if (platformLower === 'businessemail') {
+    return `mailto:${cleanUsername}`;
+  }
+
+  // Special handling for maps/address - use as is
+  if (platformLower === 'address') {
+    // For maps, we use the full URL as entered by the user without modification
+    return cleanUsername;
+  }
+
+  // Map of platform IDs to their URL formats
+  const platformUrlFormats: Record<string, string> = {
+    // Social Media
+    'facebook': 'https://facebook.com/',
+    'instagram': 'https://instagram.com/',
+    'twitter': 'https://twitter.com/',
+    'x': 'https://x.com/',
+    'linkedin': 'https://linkedin.com/in/',
+    'youtube': 'https://youtube.com/',
+    'tiktok': 'https://tiktok.com/@',
+    'pinterest': 'https://pinterest.com/',
+    'snapchat': 'https://snapchat.com/add/',
+    'quora': 'https://quora.com/profile/',
+    'reddit': 'https://reddit.com/user/',
+    'clubhouse': 'https://clubhouse.com/@',
+
+    // Chatting
+    'whatsapp': 'https://wa.me/',
+    'messenger': 'https://m.me/',
+    'telegram': 'https://t.me/',
+    'signal': 'https://signal.me/#p/',
+    'webchat': 'https://web.wechat.com/',
+    'line': 'https://line.me/ti/p/',
+    'imo': 'https://imo.im/',
+    'viber': 'viber://chat?number=',
+
+    // Music
+    'spotify': 'https://open.spotify.com/user/',
+    'anghami': 'https://play.anghami.com/',
+    'castbox': 'https://castbox.fm/',
+    'soundcloud': 'https://soundcloud.com/',
+    'applemusic': 'https://music.apple.com/',
+
+    // Business
+    'website': '',
+    'paypal': 'https://paypal.me/',
+    'medium': 'https://medium.com/@',
+    'ted': 'https://ted.com/',
+
+    // Meeting
+    'skype': 'skype:',
+    'zoom': 'https://zoom.us/j/',
+    'googlemeet': 'https://meet.google.com/',
+    'slack': 'https://slack.com/app_redirect?channel=',
+    'facetime': 'facetime:',
+
+    // Apps & Software
+    'googleplay': 'https://play.google.com/store/apps/details?id=',
+    'appstore': 'https://apps.apple.com/app/',
+    'notion': 'https://notion.so/',
+    'github': 'https://github.com/',
+    'gitlab': 'https://gitlab.com/',
+    'bitbucket': 'https://bitbucket.org/',
+    'stackoverflow': 'https://stackoverflow.com/users/',
+  };
+
+  // Get the URL format for the platform, or use the username as is for custom/unknown platforms
+  const urlFormat = platformUrlFormats[platformLower] || '';
+
+  // For custom websites or platforms without a specific format
+  if (platformLower === 'website' || platformLower === 'addalink' || !urlFormat) {
+    // If it's already a full URL, use it as is
+    if (cleanUsername.startsWith('http://') || cleanUsername.startsWith('https://')) {
+      return cleanUsername;
+    }
+    // Otherwise, add https:// prefix
+    return `https://${cleanUsername}`;
+  }
+
+  // For all other platforms, append the username to the URL format
+  return urlFormat + cleanUsername;
+};
+
+const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileData }: StoreItemProps): React.ReactNode => {
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
@@ -65,12 +164,14 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
     if (!selectedApp) return;
 
     try {
+      // Construct the proper URL for the social media platform
+      const fullUrl = constructSocialMediaUrl(selectedApp.id, username);
       const existingLink = getExistingLinkData(selectedApp.id);
 
       if (existingLink) {
         await onUpdateLink({
           pk: existingLink.pk,
-          url: username,
+          url: fullUrl,
           title: existingLink.title,
           iconurl: existingLink.iconurl,
           type: existingLink.type,
@@ -79,7 +180,7 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
       } else {
         await onAddLink({
           title: selectedApp.id,
-          url: username,
+          url: fullUrl,
           iconurl: selectedApp.iconurl,
           type: 0,
           sort: profileData?.links?.length || 0,
@@ -256,8 +357,7 @@ const StoreItem: React.FC<StoreItemProps> = ({ categoryId, category, categoryApp
                     Processing...
                   </span>
                 ) : (
-                  `${getButtonConfig(selectedApp?.id || '', profileData).type === 'update' ? 'Update' : 'Add'} ${
-                    selectedApp?.name
+                  `${getButtonConfig(selectedApp?.id || '', profileData).type === 'update' ? 'Update' : 'Add'} ${selectedApp?.name
                   }`
                 )}
               </button>

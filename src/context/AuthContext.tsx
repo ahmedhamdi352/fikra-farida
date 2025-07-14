@@ -3,6 +3,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import Cookies from 'js-cookie';
 import { AuthForReadDTo, Profile } from '../types/api/AuthForReadDTo';
+import { ProfileService } from 'api';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -21,6 +23,7 @@ const ACTIVE_PROFILE_KEY = 'active_profile_id';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [activeProfile, setActiveProfile] = useState<Profile | null>(null);
 
@@ -95,7 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const switchProfile = (profileId: number) => {
+  const switchProfile = async (profileId: number) => {
+
     const profile = profiles.find(p => p.userPk === profileId);
     if (profile) {
       setActiveProfile(profile);
@@ -107,6 +111,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         expires: 7,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict'
+      });
+      //
+      await queryClient.invalidateQueries({
+        queryKey: [ProfileService.getProfile.queryKey],
       });
     }
   };
