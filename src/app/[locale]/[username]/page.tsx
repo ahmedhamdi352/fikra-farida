@@ -1,10 +1,14 @@
-import { Metadata } from 'next';
+// import { Metadata } from 'next';
 import ClientWrapper from './components/ClientWrapper';
 import type { Viewport } from 'next';
 import { ProfileForReadDTO } from 'types';
 
+// interface UsernameProps {
+//   params: { locale: string; username: string };
+// }
+
 interface UsernameProps {
-  params: { locale: string; username: string };
+  params: Promise<{ locale: string; username: string }>;
 }
 
 type ProfileResponse = {
@@ -72,7 +76,7 @@ async function getProfileByUsername(username: string): Promise<ProfileResponse> 
   }
 }
 
-export async function generateMetadata({ params }: UsernameProps): Promise<Metadata> {
+export async function generateMetadata({ params }: UsernameProps) {
   const { username } = await params;
 
   // Try to get profile data for better metadata
@@ -96,7 +100,7 @@ export async function generateMetadata({ params }: UsernameProps): Promise<Metad
 }
 
 export default async function UsernamePage({ params }: UsernameProps) {
-  const { username } = params;
+  const { username } = await params;
 
   const profileData = await getProfileByUsername(username);
 
