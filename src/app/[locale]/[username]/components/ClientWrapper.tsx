@@ -218,7 +218,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
             {/* {lightThemeBackground()} */}
             <div className="relative">
               <CoverPhoto theme="premium" />
-              <div className="absolute top-5 inset-x-0 z-20 flex justify-center">
+              <div className="absolute top-5 inset-x-0 z-5 flex justify-center">
                 {imageUrl && (
                   <div className='w-full h-fit flex flex-col'>
                     <div className="w-full h-[300px] inset-x-0 overflow-hidden relative shadow-lg">
@@ -243,7 +243,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                   // Alternatively, use native share dialog:
                   navigator.share?.({ url: profileUrl });
                 }}
-                className="z-[1000] absolute top-10 right-2 flex gap-1  bg-[#F4DD94] hover:bg-yellow-500 text-white py-2 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105">
+                className="z-[10] absolute top-10 right-2 flex gap-1  bg-[#F4DD94] hover:bg-yellow-500 text-white py-2 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105">
 
                 <p className='text-black text-[12px] font-semibold'>
                   Export

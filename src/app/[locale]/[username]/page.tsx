@@ -105,7 +105,7 @@ export default async function UsernamePage({ params }: UsernameProps) {
 
   const isAccountLocked = (profileData.errorcode === 408 || profileData.sucess === false);
 
-  const theme = profileData.data?.theme || 'edge';
+  const theme = profileData.data?.theme || 'rounded';
 
 
   return (
