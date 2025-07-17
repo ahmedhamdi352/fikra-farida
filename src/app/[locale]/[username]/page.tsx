@@ -2,7 +2,6 @@
 import ClientWrapper from './components/ClientWrapper';
 import type { Viewport } from 'next';
 import { ProfileForReadDTO } from 'types';
-
 // interface UsernameProps {
 //   params: { locale: string; username: string };
 // }
@@ -107,8 +106,6 @@ export default async function UsernamePage({ params }: UsernameProps) {
   const isAccountLocked = (profileData.errorcode === 408 || profileData.sucess === false);
 
   const theme = profileData.data?.theme || 'premium';
-
-  console.log(profileData);
 
 
   return (
