@@ -164,8 +164,10 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
     if (!selectedApp) return;
 
     try {
+      // Check if username is already a full URL
+      const isFullUrl = username.startsWith('http://') || username.startsWith('https://');
       // Construct the proper URL for the social media platform
-      const fullUrl = constructSocialMediaUrl(selectedApp.id, username);
+      const fullUrl = isFullUrl ? username : constructSocialMediaUrl(selectedApp.id, username);
       const existingLink = getExistingLinkData(selectedApp.id);
 
       if (existingLink) {
