@@ -6,3 +6,6 @@ export * from './useUpdateCollectInfoMutation';
 export * from './useUpdateDirectLinkMutation';
 export * from './useLinkQRToProductMutation';
 export * from './useCreateProfileMutation';
+export * from './useUpdateProfileMutation';
+export * from './useGetAnalyticsMutation';
+export * from './useCreateConnectionMutation';

@@ -20,4 +20,6 @@ export const ApiURLs = {
   collectInfo: '/api/Account/UpdateAutoConnect',
   directLink: '/api/Account/UpdateDirectUrl',
   linkQrCode: '/api/Account/LinkQrCode',
+  analytics: '/api/Account/Analytics',
+  addConnection: '/api/UserConnection/Add',
 } as const;

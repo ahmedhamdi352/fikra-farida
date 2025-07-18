@@ -151,21 +151,19 @@ const ConnectionsPage = () => {
           <nav className="-mb-px flex justify-around space-x-8">
             <button
               onClick={() => setActiveTab(TabType.GROUPS)}
-              className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === TabType.GROUPS
+              className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.GROUPS
                   ? 'border-[--main-color1] text-[--main-color1]'
                   : 'border-transparent text-gray-400 hover:text-gray-700 '
-              }`}
+                }`}
             >
               Groups
             </button>
             <button
               onClick={() => setActiveTab(TabType.CONTACTS)}
-              className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === TabType.CONTACTS
+              className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.CONTACTS
                   ? 'border-[--main-color1] text-[--main-color1]'
                   : 'border-transparent text-gray-400 hover:text-gray-700'
-              }`}
+                }`}
             >
               Contacts
             </button>
@@ -212,9 +210,8 @@ const ConnectionsPage = () => {
                       </button>
                       <ul
                         id={`group-menu-${group.GroupId}`}
-                        className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${
-                          openMenuId === group.GroupId ? 'block' : 'hidden'
-                        }`}
+                        className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${openMenuId === group.GroupId ? 'block' : 'hidden'
+                          }`}
                         onClick={e => e.stopPropagation()}
                         onTouchEnd={e => e.stopPropagation()}
                         role="menu"
@@ -253,7 +250,7 @@ const ConnectionsPage = () => {
                       </div>
                     </div>
                     <div className="flex justify-center gap-1">
-                      <p className="text-h4 font-bold">0</p>
+                      <p className="text-h4 font-bold">{group.UsersCount}</p>
                       <p className="text-h4 text-[--main-color1]">Members</p>
                     </div>
                   </div>

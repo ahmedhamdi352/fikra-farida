@@ -1,5 +1,13 @@
 import { ApiURLs, httpClient } from 'api/core';
-import { ProfileForReadDTO, ProfileQrCodeDTO, GroupForCreateDTO, ProfileForCreateDTO, GroupResponseDTO } from 'types';
+import {
+  ProfileForReadDTO,
+  ProfileAnalyticsForReadDTO,
+  ProfileQrCodeDTO,
+  GroupForCreateDTO,
+  ProfileForCreateDTO,
+  GroupResponseDTO,
+  ConnectionForCreateDTO,
+} from 'types';
 
 async function getProfile() {
   return await httpClient.get<ProfileForReadDTO>(`${ApiURLs.myProfile}`);
@@ -86,6 +94,14 @@ async function addProfile(profile: ProfileForCreateDTO) {
   return await httpClient.post<ProfileForReadDTO>(`${ApiURLs.createProfile}`, profile);
 }
 
+async function getAnalytics(payload: { StartDate: string; EndDate: string }) {
+  return await httpClient.post<ProfileAnalyticsForReadDTO>(`${ApiURLs.analytics}`, payload);
+}
+
+async function addConnection(payload: ConnectionForCreateDTO) {
+  return await httpClient.post<ConnectionForCreateDTO>(`${ApiURLs.addConnection}`, payload);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -94,6 +110,14 @@ export const ProfileService = {
   addProfile: {
     request: addProfile,
     mutationKey: 'add-profile',
+  },
+  getAnalytics: {
+    request: getAnalytics,
+    mutationKey: 'get-analytics',
+  },
+  addConnection: {
+    request: addConnection,
+    mutationKey: 'add-connection',
   },
   getProfileByKey: {
     request: getProfileByKey,

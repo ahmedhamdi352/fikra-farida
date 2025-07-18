@@ -3,6 +3,7 @@ export interface GroupResponseDTO {
   CreatedDate: string;
   GroupId: number;
   GroupName: string;
-  Note?: string;
+  Note: string;
   UpdatedDate: string;
+  UsersCount: number;
 }

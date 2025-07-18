@@ -116,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await queryClient.invalidateQueries({
         queryKey: [ProfileService.getProfile.queryKey],
       });
+      window.location.reload();
     }
   };
 

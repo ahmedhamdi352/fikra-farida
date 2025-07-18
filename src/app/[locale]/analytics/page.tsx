@@ -6,24 +6,52 @@ import { useGetProfileQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import Link from 'next/link';
 import ProfileInformation from '../profile/components/ProfileInformation';
+import { useGetAnalyticsMutation } from 'hooks/profile/mutations';
 
 type TimeFilter = 'today' | 'week' | 'month' | 'quarter';
 
 const AnalyticsPage = () => {
-  const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
+  const { data: profileData, isLoading, } = useGetProfileQuery();
+  const { data: profileAnalytics, isLoading: isLoadingAnalytics, onGetAnalytics } = useGetAnalyticsMutation();
   const [selectedFilter, setSelectedFilter] = useState<TimeFilter>('today');
 
   useEffect(() => {
-    onGetProfile();
-  }, []);
+    const now = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
+
+    switch (selectedFilter) {
+      case 'today':
+        // Already set to current date
+        break;
+      case 'week':
+        startDate = new Date(now.setDate(now.getDate() - now.getDay())); // Start of current week (Sunday)
+        endDate = new Date(now);
+        endDate.setDate(now.getDate() + 6); // End of current week (Saturday)
+        break;
+      case 'month':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1); // 1st day of current month
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of current month
+        break;
+      case 'quarter':
+        const quarter = Math.floor(now.getMonth() / 3);
+        startDate = new Date(now.getFullYear(), quarter * 3, 1); // 1st day of current quarter
+        endDate = new Date(now.getFullYear(), (quarter * 3) + 3, 0); // Last day of current quarter
+        break;
+    }
+
+    onGetAnalytics({
+      StartDate: startDate.toISOString(),
+      EndDate: endDate.toISOString(),
+    });
+  }, [selectedFilter]);
 
   const handleFilterChange = (filter: TimeFilter) => {
     setSelectedFilter(filter);
-    // Here you can add logic to fetch data based on the selected filter
   };
 
-  if (isLoading) {
-    return <LoadingOverlay isLoading={isLoading} />;
+  if (isLoading || isLoadingAnalytics) {
+    return <LoadingOverlay isLoading={isLoading || isLoadingAnalytics} />;
   }
 
   return (
@@ -64,33 +92,29 @@ const AnalyticsPage = () => {
             }
           `}</style>
           <button
-            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${
-              selectedFilter === 'today' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
-            }`}
+            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'today' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
+              }`}
             onClick={() => handleFilterChange('today')}
           >
             Today
           </button>
           <button
-            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${
-              selectedFilter === 'week' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
-            }`}
+            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'week' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
+              }`}
             onClick={() => handleFilterChange('week')}
           >
             This Week
           </button>
           <button
-            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${
-              selectedFilter === 'month' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
-            }`}
+            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'month' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
+              }`}
             onClick={() => handleFilterChange('month')}
           >
             Month
           </button>
           <button
-            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${
-              selectedFilter === 'quarter' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
-            }`}
+            className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'quarter' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
+              }`}
             onClick={() => handleFilterChange('quarter')}
           >
             Quarter
@@ -129,7 +153,7 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">Views</span>
               </div>
-              <p className="text-2xl font-bold ">{profileData?.visitcount || 0}</p>
+              <p className="text-2xl font-bold ">{profileAnalytics?.TotalViews || 0}</p>
             </div>
           </div>
 
@@ -161,7 +185,7 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">clicks</span>
               </div>
-              <p className="text-2xl font-bold ">{profileData?.visitcount || 0}</p>
+              <p className="text-2xl font-bold ">{profileAnalytics?.TotalClicks || 0}</p>
             </div>
           </div>
 
@@ -179,7 +203,7 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">rate</span>
               </div>
-              <p className="text-2xl font-bold ">{profileData?.visitcount || 0} %</p>
+              <p className="text-2xl font-bold ">{Number(profileAnalytics?.Rate).toFixed() || 0} %</p>
             </div>
           </div>
         </div>
@@ -189,7 +213,7 @@ const AnalyticsPage = () => {
           <h3 className="font-semibold mb-4">Contact Clicks</h3>
           <div className="space-y-3">
             {profileData?.links
-              ?.filter(link => ['phone', 'email', 'save_contact'].includes(link.title))
+              ?.filter(link => ['phone', 'email', 'save_contact', 'website', 'businessPhone'].includes(link.title))
               .map((link, index) => (
                 <div
                   key={index}
@@ -207,7 +231,7 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {link.visitcount || 0}
+                      {profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0}
                       <span className="text-[var(--main-color1)] mx-2">Click</span>
                     </span>
                   </div>
@@ -239,7 +263,7 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="text-base flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {link.visitcount || 0}
+                      {profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0}
                       <span className="text-[var(--main-color1)] mx-2">Click</span>
                     </span>
                   </div>

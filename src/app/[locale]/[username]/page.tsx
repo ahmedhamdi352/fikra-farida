@@ -13,7 +13,7 @@ interface UsernameProps {
 type ProfileResponse = {
   success?: boolean;
   sucess?: boolean; // Handle both spellings (API might use 'sucess' instead of 'success')
-  data?: ProfileForReadDTO; // Replace with proper type when available
+  data?: ProfileForReadDTO | { sucess: boolean; errorcode: number; message: string };
   message?: string;
   errorCode?: number;
   errorcode?: number; // Handle both spellings
@@ -82,10 +82,17 @@ export async function generateMetadata({ params }: UsernameProps) {
   try {
     const profileData = await getProfileByUsername(username);
     if (profileData.success && profileData.data) {
-      return {
-        title: `${profileData.data.fullname || username}'s Profile`,
-        description: `View ${profileData.data.fullname || username}'s profile page`,
-      };
+      if (typeof profileData.data === 'object' && 'fullname' in profileData.data) {
+        return {
+          title: `${profileData.data?.fullname || username}'s Profile`,
+          description: `View ${profileData.data?.fullname || username}'s profile page`,
+        };
+      } else {
+        return {
+          title: `${username}'s Profile`,
+          description: `View ${username}'s profile page`,
+        };
+      }
     }
   } catch (error) {
     console.error('Error generating metadata:', error);
@@ -102,18 +109,20 @@ export default async function UsernamePage({ params }: UsernameProps) {
   const { username } = await params;
 
   const profileData = await getProfileByUsername(username);
+  console.log(profileData, 'server side');
 
-  const isAccountLocked = (profileData.errorcode === 408 || profileData.sucess === false);
-
-  const theme = profileData.data?.theme || 'rounded';
+  const isAccountLocked = !(typeof profileData.data === 'object' && 'fullname' in profileData.data) ? (profileData?.data?.errorcode === 408 || profileData?.data?.sucess === false) : false;
 
 
+  const theme = (typeof profileData.data === 'object' && 'fullname' in profileData.data) ? profileData.data?.theme : 'rounded';
+
+  console.log(theme.length);
   return (
     <div className="relative">
       <ClientWrapper
         isAccountLocked={isAccountLocked}
-        profileData={profileData.data}
-        theme={theme}
+        profileData={typeof profileData.data === 'object' && 'fullname' in profileData.data ? profileData.data : undefined}
+        theme={theme.length > 0 ? theme : 'rounded'}
       />
     </div>
   );

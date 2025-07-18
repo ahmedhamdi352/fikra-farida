@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { saveAs } from 'file-saver';
-import LockedAccountPopup from './LockedAccountPopup'; // Assuming this component exists
-import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO'; // Assuming this type exists
+import LockedAccountPopup from './LockedAccountPopup';
+import AutoConnectPopup from './AutoConnectPopup';
+import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import CoverImage from 'assets/images/cover.jpeg'
 import Link from 'next/link';
 interface ClientWrapperProps {
@@ -40,6 +41,8 @@ const generateVCard = (profile: VCardProfile) => {
 
 export default function ClientWrapper({ isAccountLocked, profileData, theme = 'premium' }: ClientWrapperProps) {
   const [showPopup, setShowPopup] = useState(false);
+  const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
+
   const handleSaveContact = () => {
     if (!profileData) return;
     try {
@@ -50,6 +53,12 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
       alert('Failed to save contact. Please try again.');
     }
   };
+
+  useEffect(() => {
+    if (profileData?.autoconnect) {
+      setShowAutoConnectPopup(true);
+    }
+  }, [profileData]);
 
   useEffect(() => {
     if (isAccountLocked) {
@@ -107,11 +116,11 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
   };
 
   // Render profile content based on theme
-  const renderProfileContent = () => {
-    if (!profileData) return null;
+  const renderProfileContent = (theme: string) => {
+    console.log(profileData?.fullname, theme, 'inside render method');
 
     // Get the image URL from imageFilename
-    const imageUrl = profileData.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; // Placeholder for missing image
+    const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; // Placeholder for missing image
     const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 
     switch (theme) {
@@ -128,7 +137,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                   <div className="w-40 h-40 rounded-lg overflow-hidden relative shadow-lg">
                     <Image
                       src={imageUrl}
-                      alt={profileData.fullname || 'Profile'}
+                      alt={profileData?.fullname || 'Profile'}
                       fill
                       sizes="(max-width: 768px) 100vw, 280px" // Optimized for responsive image loading
                       className="object-cover"
@@ -159,13 +168,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>
             </div>
             <div className="flex flex-col items-start justify-start pt-16 pb-8 px-8 ml-2 relative z-10">
-              <h2 className="text-3xl font-bold mb-2 leading-tight text-left">{profileData.fullname}</h2>
-              <p className="text-lg mb-3 text-left">{profileData.jobTitle || 'Member'}</p>
-              <p className="text-base text-left max-w-xs">{profileData.bio}</p>
+              <h2 className="text-3xl font-bold mb-2 leading-tight text-left">{profileData?.fullname}</h2>
+              <p className="text-lg mb-3 text-left">{profileData?.jobTitle || 'Member'}</p>
+              <p className="text-base text-left max-w-xs">{profileData?.bio}</p>
             </div>
 
             <div className="px-6 pb-6 relative z-10">
-              {profileData.saveContact && (
+              {profileData?.saveContact && (
                 <button
                   onClick={handleSaveContact}
                   className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
@@ -178,7 +187,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
             {/* Profile Links Grid - Matching screenshot design */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
               {/* Facebook Links - 9 identical items as shown in screenshot */}
-              {profileData.links.map((link, index) => (
+              {profileData?.links?.map((link, index) => (
                 <div key={index} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="p-3 flex flex-col items-center justify-center shadow-sm">
                   <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
                     <Image
@@ -188,7 +197,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                       height={60}
                       // sizes="(max-width: 768px) 100vw, 24px"
                       className="object-contain"
-                      onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
+                    // onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
                     />
                   </Link>
                   <span className="text-[16px] text-white font-semibold mt-1 max-w-[100px] truncate">{link.title}</span>
@@ -196,16 +205,14 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               ))}
             </div>
             <div className="px-6 pb-6 relative z-10 flex justify-center">
-              {profileData.saveContact && (
-                <Link
-                  href='/products'
-                  style={{
-                    borderRadius: '12px',
-                  }}
-                  className="w-[70%]  text-white bg-transparent border border-[var(--main-color1)] hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-[400] text-sm transition duration-300 shadow-xl transform hover:scale-105">
-                  creat your own card
-                </Link>
-              )}
+              <Link
+                href='/products'
+                style={{
+                  borderRadius: '12px',
+                }}
+                className="w-[70%]  text-white bg-transparent border border-[var(--main-color1)] hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-[400] text-sm transition duration-300 shadow-xl transform hover:scale-105">
+                creat your own card
+              </Link>
             </div>
           </div>
         );
@@ -224,7 +231,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                     <div className="w-full h-[300px] inset-x-0 overflow-hidden relative shadow-lg">
                       <Image
                         src={imageUrl}
-                        alt={profileData.fullname || 'Profile'}
+                        alt={profileData?.fullname || 'Profile'}
                         fill
                         sizes="(max-width: 768px) 100vw, 280px" // Optimized for responsive image loading
                         className="object-cover"
@@ -256,13 +263,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>
             </div>
             <div className="flex flex-col items-start justify-start pt-32 pb-8 px-8 relative z-10">
-              <h2 className="text-3xl font-bold mb-2 leading-tight text-left text-black">{profileData.fullname}</h2>
-              <p className="text-lg mb-3 text-left text-black">{profileData.jobTitle || 'Member'}</p>
-              <p className="text-base text-left max-w-xs text-black">{profileData.bio}</p>
+              <h2 className="text-3xl font-bold mb-2 leading-tight text-left text-black">{profileData?.fullname}</h2>
+              <p className="text-lg mb-3 text-left text-black">{profileData?.jobTitle || 'Member'}</p>
+              <p className="text-base text-left max-w-xs text-black">{profileData?.bio}</p>
             </div>
 
             <div className="px-6 pb-6 relative z-10">
-              {profileData.saveContact && (
+              {profileData?.saveContact && (
                 <button
                   onClick={handleSaveContact}
                   className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
@@ -275,7 +282,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
             {/* Profile Links Grid - Matching screenshot design */}
             <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-10">
               {/* Facebook Links - 9 identical items as shown in screenshot */}
-              {profileData.links.map((link, index) => (
+              {profileData?.links?.map((link, index) => (
                 <Link href={link.url} target="_blank" key={index} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="px-2 flex  items-center justify-start shadow-sm">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center ">
                     <Image
@@ -293,16 +300,14 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               ))}
             </div>
             <div className="px-6 pb-6 relative z-10 flex justify-center">
-              {profileData.saveContact && (
-                <Link
-                  href='/products'
-                  style={{
-                    borderRadius: '12px',
-                  }}
-                  className="w-[70%]  text-white bg-transparent border border-[var(--main-color1)] hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-[400] text-sm transition duration-300 shadow-xl transform hover:scale-105">
-                  creat your own card
-                </Link>
-              )}
+              <Link
+                href='/products'
+                style={{
+                  borderRadius: '12px',
+                }}
+                className="w-[70%]  text-white bg-transparent border border-[var(--main-color1)] hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-[400] text-sm transition duration-300 shadow-xl transform hover:scale-105">
+                creat your own card
+              </Link>
             </div>
           </div>
         );
@@ -320,7 +325,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                   <div className="w-40 h-40 rounded-full overflow-hidden relative shadow-lg">
                     <Image
                       src={imageUrl}
-                      alt={profileData.fullname || 'Profile'}
+                      alt={profileData?.fullname || 'Profile'}
                       fill
                       sizes="(max-width: 768px) 100vw, 280px" // Optimized for responsive image loading
                       className="object-cover"
@@ -351,13 +356,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>
             </div>
             <div className="flex flex-col items-center justify-center pt-16 pb-8 px-8  relative z-10">
-              <h2 className="text-3xl font-bold mb-2 leading-tight text-center">{profileData.fullname}</h2>
-              <p className="text-lg mb-3 text-center">{profileData.jobTitle || 'Member'}</p>
-              <p className="text-base text-center max-w-xs">{profileData.bio}</p>
+              <h2 className="text-3xl font-bold mb-2 leading-tight text-center">{profileData?.fullname}</h2>
+              <p className="text-lg mb-3 text-center">{profileData?.jobTitle || 'Member'}</p>
+              <p className="text-base text-center max-w-xs">{profileData?.bio}</p>
             </div>
 
             <div className="px-6 pb-6 relative z-10">
-              {profileData.saveContact && (
+              {profileData?.saveContact && (
                 <button
                   onClick={handleSaveContact}
                   className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
@@ -370,7 +375,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
             {/* Profile Links Grid - Matching screenshot design */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
               {/* Facebook Links - 9 identical items as shown in screenshot */}
-              {profileData.links.map((link, index) => (
+              {profileData?.links?.map((link, index) => (
                 <div key={index} style={{ borderRadius: '12px', }} className="p-3 flex flex-col items-center justify-center shadow-sm">
                   <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
                     <Image
@@ -388,23 +393,20 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               ))}
             </div>
             <div className="px-6 pb-6 relative z-10 flex justify-center">
-              {profileData.saveContact && (
-                <Link
-                  href='/products'
-                  style={{
-                    borderRadius: '12px',
-                  }}
-                  className="w-[70%]  text-white bg-transparent border border-[var(--main-color1)] hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-[400] text-sm transition duration-300 shadow-xl transform hover:scale-105">
-                  creat your own card
-                </Link>
-              )}
+              <Link
+                href='/products'
+                style={{
+                  borderRadius: '12px',
+                }}
+                className="w-[70%]  text-white bg-transparent border border-[var(--main-color1)] hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-[400] text-sm transition duration-300 shadow-xl transform hover:scale-105">
+                creat your own card
+              </Link>
             </div>
           </div>
         );
 
       default:
-        // Default to premium if theme is not recognized
-        return renderProfileContent(); // Recursively call for default premium
+        return null;
     }
   };
 
@@ -413,25 +415,36 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
     console.log('Popup closed by user');
   };
 
+  const handleCloseAutoConnectPopup = () => {
+    setShowAutoConnectPopup(false);
+    console.log('Popup closed by user');
+  };
+  console.log(profileData, isAccountLocked);
   return (
     <>
-      {/* Render the theme-based profile content */}
-      {!isAccountLocked && profileData && renderProfileContent()}
-      {!isAccountLocked && profileData &&
+      {!isAccountLocked && profileData && renderProfileContent(theme)}
+      {isAccountLocked && profileData &&
         <>
 
 
         </>
 
       }
-
-      {/* Show locked account popup if account is locked */}
       {isAccountLocked && (
         <LockedAccountPopup
           isOpen={showPopup}
           onClose={handleClose}
         />
       )}
+      {
+        !isAccountLocked && profileData?.autoconnect && (
+          <AutoConnectPopup
+            isOpen={showAutoConnectPopup}
+            onClose={handleCloseAutoConnectPopup}
+            userPk={profileData.userPk}
+          />
+        )
+      }
     </>
   );
 }
