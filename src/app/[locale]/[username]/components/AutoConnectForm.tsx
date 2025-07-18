@@ -123,7 +123,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
           required
           defaultCountry={'eg'}
           placeholder='phone'
-          disableDropdown={true}
+          disableDropdown={false}
         />
 
         <TextInput

@@ -94,7 +94,7 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                       type="button"
                       disabled={disabled || disableDropdown}
                       onClick={() => setIsOpen(!isOpen)}
-                      className={`h-full min-w-[120px] flex items-center gap-2 px-4 text-black dark:text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${error ? 'text-red-500' : ''}`}
+                      className={`h-full min-w-[200px] flex items-center gap-2 px-4 text-black dark:text-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${error ? 'text-red-500' : ''}`}
                     >
                       <div className="flex items-center gap-3">
                         <FlagImage iso2={country.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
@@ -134,9 +134,8 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                   type="tel"
                   id={name}
                   placeholder={placeholder}
-                  className={`w-full pl-[130px] pr-4 py-4 bg-[#F5F5F5] dark:bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${
-                    error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-[var(--main-color1)]'
-                  } text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400`}
+                  className={`w-full pl-[130px] pr-4 py-4 bg-[#F5F5F5] dark:bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-[var(--main-color1)]'
+                    } text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400`}
                   value={inputValue}
                   onChange={handleInputChange}
                   onBlur={onBlur}
