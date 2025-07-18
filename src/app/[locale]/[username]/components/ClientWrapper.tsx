@@ -283,7 +283,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
             <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-10">
               {/* Facebook Links - 9 identical items as shown in screenshot */}
               {profileData?.links?.map((link, index) => (
-                <Link href={link.url} target="_blank" key={index} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="px-2 flex  items-center justify-start shadow-sm">
+                <Link href={link.url} target="_blank" key={index} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="px-2 flex  items-center justify-start">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center ">
                     <Image
                       src={`${baseIconsUrl}${link.iconurl}`}
