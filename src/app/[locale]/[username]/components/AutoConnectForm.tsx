@@ -10,11 +10,11 @@ import TextArea from 'components/forms/text-area';
 import { useCreateConnectionMutation } from 'hooks/profile';
 
 interface AutoConnectFormData {
-  name: string;
+  fullname: string;
   company?: string;
   email?: string;
-  phoneNumber: string;
-  jobTitle?: string;
+  phone: string;
+  title?: string;
   message?: string;
 }
 
@@ -24,11 +24,11 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
   const { isLoading, onAddConnection } = useCreateConnectionMutation();
 
   const schema = yup.object().shape({
-    name: yup.string().required(t('register.validation.fullNameRequired')),
+    fullname: yup.string().required(t('register.validation.fullNameRequired')),
     company: yup.string().optional(),
     email: yup.string().optional().email(t('register.validation.emailInvalid')),
-    phoneNumber: yup.string().required(t('register.validation.phoneNumberRequired')),
-    jobTitle: yup.string().optional(),
+    phone: yup.string().required(t('register.validation.phoneNumberRequired')),
+    title: yup.string().optional(),
     message: yup.string().optional(),
   });
 
@@ -53,7 +53,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
       <div className="space-y-4">
         <TextInput
           control={control}
-          name="name"
+          name="fullname"
           type="text"
           placeholder='name'
           icon={
@@ -118,7 +118,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
         />
 
         <PhoneInput
-          name="phoneNumber"
+          name="phone"
           control={control}
           required
           defaultCountry={'eg'}
@@ -128,7 +128,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
 
         <TextInput
           control={control}
-          name="jobTitle"
+          name="title"
           type="text"
           placeholder='jobTitle'
           icon={

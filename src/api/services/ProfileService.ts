@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiURLs, httpClient } from 'api/core';
 import {
   ProfileForReadDTO,
@@ -102,10 +103,18 @@ async function addConnection(payload: ConnectionForCreateDTO) {
   return await httpClient.post<ConnectionForCreateDTO>(`${ApiURLs.addConnection}`, payload);
 }
 
+async function updateProfile(payload: any) {
+  return await httpClient.post<any>(`${ApiURLs.updateProfile}`, payload);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
     queryKey: 'get-profile',
+  },
+  updateProfile: {
+    request: updateProfile,
+    mutationKey: 'update-profile',
   },
   addProfile: {
     request: addProfile,

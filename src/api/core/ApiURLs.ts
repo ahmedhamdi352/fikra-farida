@@ -22,4 +22,5 @@ export const ApiURLs = {
   linkQrCode: '/api/Account/LinkQrCode',
   analytics: '/api/Account/Analytics',
   addConnection: '/api/UserConnection/Add',
+  updateProfile: '/api/Account/Update',
 } as const;

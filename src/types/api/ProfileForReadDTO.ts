@@ -27,6 +27,8 @@ export interface ProfileForReadDTO {
   userPk: number;
   username: string;
   fullname: string;
+  //need to add
+  company?: string;
   jobTitle: string;
   bio: string;
   phoneNumber1: string;
@@ -50,6 +52,9 @@ export interface ProfileForReadDTO {
   ColorMode: string;
   IsLocked: boolean;
   directurl: string;
+  //need to add
+  websiteUrl: string;
+  coverImage: string;
   autoconnect: boolean;
   accountFk: number;
   showEmail: boolean;

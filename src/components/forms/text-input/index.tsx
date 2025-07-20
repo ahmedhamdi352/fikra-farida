@@ -15,6 +15,7 @@ export type TextInputProps<T extends FieldValues = FieldValues> = Omit<React.Com
   endIcon?: React.ReactNode;
   className?: string;
   type?: string;
+  textColor?: string;
 };
 
 export default function TextInput<TFieldValues extends FieldValues = FieldValues>({
@@ -27,6 +28,7 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
   icon,
   endIcon,
   placeholder,
+
   ...rest
 }: TextInputProps<TFieldValues>) {
   const locale = useLocale();
@@ -57,7 +59,7 @@ export default function TextInput<TFieldValues extends FieldValues = FieldValues
         return (
           <div className="relative w-full">
             {label && (
-              <label htmlFor={name} className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor={name} className="block text-sm font-medium text-[var(--main-color1)] mb-1">
                 {label}
               </label>
             )}

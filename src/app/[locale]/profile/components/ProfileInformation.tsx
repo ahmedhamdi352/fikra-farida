@@ -7,6 +7,7 @@ import { useUpdateLockStatusMutation } from 'hooks/profile/mutations';
 import { createPortal } from 'react-dom';
 import lock from 'assets/images/lock.png';
 import ProfileSwitcher from './ProfileSwitcher';
+import Link from 'next/link';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -167,7 +168,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                     </div>
 
                     {/* Edit Profile */}
-                    <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
+                    <Link href={`/profile/edit`} className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
                       <div className="w-8 h-8 flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -185,7 +186,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                         </svg>
                       </div>
                       <div className="text-gray-700 dark:text-white">Edit Profile</div>
-                    </div>
+                    </Link>
 
                     {/* Customization */}
                     <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">

@@ -54,7 +54,7 @@ export default function TextArea<TFieldValues extends FieldValues = FieldValues>
         return (
           <div className="relative w-full">
             {label && (
-              <label htmlFor={name} className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor={name} className="block text-sm font-medium text-[var(--main-color1)] mb-1">
                 {label}
               </label>
             )}
