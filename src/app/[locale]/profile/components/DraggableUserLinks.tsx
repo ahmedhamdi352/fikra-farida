@@ -54,7 +54,7 @@ export const DraggableUserLinks: React.FC<DraggableUserLinksProps> = ({ links, o
       >
         <div className="space-y-2">
           {links.map((link) => (
-            <SortableLink key={link.pk} link={link} />
+            <SortableLink key={link.pk} link={link} totalCount={links.length} />
           ))}
         </div>
       </SortableContext>

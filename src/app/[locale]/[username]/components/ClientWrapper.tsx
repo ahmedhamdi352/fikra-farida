@@ -54,6 +54,8 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
     }
   };
 
+  console.log(profileData, 'profileData');
+
   useEffect(() => {
     if (profileData?.autoconnect) {
       setShowAutoConnectPopup(true);

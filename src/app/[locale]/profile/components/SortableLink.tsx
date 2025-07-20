@@ -5,14 +5,20 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import Image from 'next/image';
+import { useUpdateLinkMutation } from 'hooks/links';
+import LoadingOverlay from 'components/ui/LoadingOverlay';
 
 interface SortableLinkProps {
   link: ProfileLink;
+  totalCount: number;
 }
 
-export const SortableLink = ({ link }: SortableLinkProps) => {
+export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: link.pk });
   const [mounted, setMounted] = useState(false);
+
+  const { onUpdateLink, isLoading: isUpdatingLoading } = useUpdateLinkMutation();
+
 
   useEffect(() => {
     setMounted(true);
@@ -21,6 +27,12 @@ export const SortableLink = ({ link }: SortableLinkProps) => {
   if (!mounted) {
     return (
       <div className="bg-[rgba(255,255,255,0.08)] rounded-xl mb-3 border border-[#B0A18E] h-[60px] animate-pulse"></div>
+    );
+  }
+
+  if (isUpdatingLoading) {
+    return (
+      <LoadingOverlay isLoading={isUpdatingLoading} />
     );
   }
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
@@ -80,7 +92,18 @@ export const SortableLink = ({ link }: SortableLinkProps) => {
         <span className="text-base flex-grow truncate">{link.title}</span>
 
         <label className="relative inline-flex items-center cursor-pointer ml-3">
-          <input type="checkbox" className="sr-only peer" defaultChecked={true} />
+          <input type="checkbox" className="sr-only peer" checked={link.sort > 0}
+            onChange={(e) => {
+              onUpdateLink({
+                pk: link.pk,
+                url: link.url,
+                title: link.title,
+                iconurl: link.iconurl,
+                type: link.type,
+                sort: e.target.checked ? totalCount : 0,
+              })
+            }}
+          />
           <div
             className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full

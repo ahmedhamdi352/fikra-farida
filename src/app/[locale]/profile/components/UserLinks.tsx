@@ -72,7 +72,7 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
           <SortableContext items={links.map(link => ({ id: link.pk }))} strategy={verticalListSortingStrategy}>
             <div className="space-y-3">
               {links.map(link => (
-                <SortableLink key={link.pk} link={link} />
+                <SortableLink key={link.pk} link={link} totalCount={links.length} />
               ))}
             </div>
           </SortableContext>
