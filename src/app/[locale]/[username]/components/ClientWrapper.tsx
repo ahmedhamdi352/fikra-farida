@@ -184,25 +184,25 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               )}
             </div>
 
-            {/* Profile Links Grid - Matching screenshot design */}
+            {/* Profile Links Grid - Sorted by sort property */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
-              {/* Facebook Links - 9 identical items as shown in screenshot */}
-              {profileData?.links?.map((link, index) => (
-                <div key={index} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="p-3 flex flex-col items-center justify-center shadow-sm">
-                  <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
-                    <Image
-                      src={`${baseIconsUrl}${link.iconurl}`}
-                      alt={link.title}
-                      width={60}
-                      height={60}
-                      // sizes="(max-width: 768px) 100vw, 24px"
-                      className="object-contain"
-                    // onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
-                    />
-                  </Link>
-                  <span className="text-[16px] text-white font-semibold mt-1 max-w-[100px] truncate">{link.title}</span>
-                </div>
-              ))}
+              {profileData?.links
+                ?.filter(link => link.sort && link.sort > 0) // Only include links with sort > 0
+                .sort((a, b) => (a.sort || 0) - (b.sort || 0)) // Sort by sort value
+                .map((link) => (
+                  <div key={link.pk} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="p-3 flex flex-col items-center justify-center shadow-sm">
+                    <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
+                      <Image
+                        src={`${baseIconsUrl}${link.iconurl}`}
+                        alt={link.title}
+                        width={60}
+                        height={60}
+                        className="object-contain"
+                      />
+                    </Link>
+                    <span className="text-[16px] text-white font-semibold mt-1 max-w-[100px] truncate">{link.title}</span>
+                  </div>
+                ))}
             </div>
             <div className="px-6 pb-6 relative z-10 flex justify-center">
               <Link
@@ -279,25 +279,32 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               )}
             </div>
 
-            {/* Profile Links Grid - Matching screenshot design */}
+            {/* Profile Links List - Sorted by sort property */}
             <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-10">
-              {/* Facebook Links - 9 identical items as shown in screenshot */}
-              {profileData?.links?.map((link, index) => (
-                <Link href={link.url} target="_blank" key={index} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="px-2 flex  items-center justify-start">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center ">
-                    <Image
-                      src={`${baseIconsUrl}${link.iconurl}`}
-                      alt={link.title}
-                      width={40}
-                      height={40}
-                      // sizes="(max-width: 768px) 100vw, 24px"
-                      className="object-contain"
-                      onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
-                    />
-                  </div>
-                  <span className="text-[16px] text-white font-semibold ">{link.title}</span>
-                </Link>
-              ))}
+              {profileData?.links
+                ?.filter(link => link.sort && link.sort > 0) // Only include links with sort > 0
+                .sort((a, b) => (a.sort || 0) - (b.sort || 0)) // Sort by sort value
+                .map((link) => (
+                  <Link
+                    href={link.url}
+                    target="_blank"
+                    key={link.pk}
+                    style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }}
+                    className="px-2 flex items-center justify-start"
+                  >
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center">
+                      <Image
+                        src={`${baseIconsUrl}${link.iconurl}`}
+                        alt={link.title}
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                        onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
+                      />
+                    </div>
+                    <span className="text-[16px] text-white font-semibold">{link.title}</span>
+                  </Link>
+                ))}
             </div>
             <div className="px-6 pb-6 relative z-10 flex justify-center">
               <Link
@@ -372,25 +379,26 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               )}
             </div>
 
-            {/* Profile Links Grid - Matching screenshot design */}
+            {/* Profile Links Grid - Sorted by sort property */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
-              {/* Facebook Links - 9 identical items as shown in screenshot */}
-              {profileData?.links?.map((link, index) => (
-                <div key={index} style={{ borderRadius: '12px', }} className="p-3 flex flex-col items-center justify-center shadow-sm">
-                  <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
-                    <Image
-                      src={`${baseIconsUrl}${link.iconurl}`}
-                      alt={link.title}
-                      width={65}
-                      height={65}
-                      // sizes="(max-width: 768px) 100vw, 24px"
-                      className="object-contain"
-                      onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
-                    />
-                  </Link>
-                  <span className="text-[16px] text-white font-semibold mt-1 max-w-[100px] truncate">{link.title}</span>
-                </div>
-              ))}
+              {profileData?.links
+                ?.filter(link => link.sort && link.sort > 0) // Only include links with sort > 0
+                .sort((a, b) => (a.sort || 0) - (b.sort || 0)) // Sort by sort value
+                .map((link) => (
+                  <div key={link.pk} style={{ borderRadius: '12px' }} className="p-3 flex flex-col items-center justify-center">
+                    <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
+                      <Image
+                        src={`${baseIconsUrl}${link.iconurl}`}
+                        alt={link.title}
+                        width={65}
+                        height={65}
+                        className="object-contain"
+                        onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
+                      />
+                    </Link>
+                    <span className="text-[16px] text-white font-semibold mt-1 max-w-[100px] truncate">{link.title}</span>
+                  </div>
+                ))}
             </div>
             <div className="px-6 pb-6 relative z-10 flex justify-center">
               <Link

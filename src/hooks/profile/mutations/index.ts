@@ -9,3 +9,4 @@ export * from './useCreateProfileMutation';
 export * from './useUpdateProfileMutation';
 export * from './useGetAnalyticsMutation';
 export * from './useCreateConnectionMutation';
+export * from './useUpdateBulkLinksSortMutation';

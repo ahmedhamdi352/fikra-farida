@@ -107,6 +107,10 @@ async function updateProfile(payload: any) {
   return await httpClient.post<any>(`${ApiURLs.updateProfile}`, payload);
 }
 
+async function updateBulkLinksSort(payload: { pk: number; sort: number }[]) {
+  return await httpClient.post<any>(`${ApiURLs.updateBulkLinksSort}`, payload);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -183,5 +187,9 @@ export const ProfileService = {
   getProfiles: {
     request: getProfiles,
     queryKey: 'get-profiles',
+  },
+  updateBulkLinksSort: {
+    request: updateBulkLinksSort,
+    mutationKey: 'update-bulk-links-sort',
   },
 };
