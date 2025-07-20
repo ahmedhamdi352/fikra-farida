@@ -150,7 +150,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
 
 
           <div className="flex flex-col items-center gap-2 mt-2">
-            <div className='flex items-center gap-2'>
+            <div className='flex flex-col items-center gap-2'>
 
               {index === 0 && <label className="relative inline-flex items-center cursor-pointer group">
                 <input
