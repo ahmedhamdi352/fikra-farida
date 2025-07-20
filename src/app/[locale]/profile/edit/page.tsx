@@ -165,7 +165,7 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className="w-full min-h-screen py-8 px-4">
+    <div className="w-full min-h-screen py-8">
       <div className="max-w-4xl mx-auto rounded-lg overflow-hidden mt-4">
         <div className="relative w-full h-48 bg-gray-200 rounded-2xl  flex items-center justify-center">
           <Image
