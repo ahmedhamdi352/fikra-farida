@@ -46,7 +46,6 @@ export default async function QrPage({ params }: QrPageProps) {
 
   try {
     profileData = await getProfileByKey(key);
-    console.log(profileData);
   } catch (error: unknown) {
     console.error('Error fetching profile data:', error);
     return notFound();
@@ -59,7 +58,6 @@ export default async function QrPage({ params }: QrPageProps) {
     return redirect(`/active-products?key=${key}`);
   } else if (profileData.errorcode === 408) {
     // Account is locked - show profile with locked indicator
-    console.log('Account is locked:', profileData.message);
     // Mark profile as locked for UI indication
     profileData.isLocked = true;
   } else if (profileData.errorcode === 407 || (!profileData.sucess && !profileData.success)) {

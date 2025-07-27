@@ -114,7 +114,6 @@ export default function EditProfilePage() {
         profileImageUrl: profileImageUrl || undefined
       };
 
-      console.log('Submitting data:', combinedData);
       await onUpdateProfile(combinedData);
     } catch (error) {
       console.error('Error updating profile:', error);

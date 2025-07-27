@@ -21,9 +21,14 @@ interface VCardProfile {
   jobTitle?: string;
   company?: string;
   bio?: string;
+  websiteUrl?: string;
+  links?: Array<{
+    title: string;
+    url: string;
+  }>;
 }
 
-const generateVCard = (profile: VCardProfile) => {
+const generateVCard = (profile: VCardProfile & { username?: string }) => {
   const vCard = [
     'BEGIN:VCARD',
     'VERSION:3.0',
@@ -32,9 +37,14 @@ const generateVCard = (profile: VCardProfile) => {
     `EMAIL:${profile.email || ''}`,
     `TITLE:${profile.jobTitle || ''}`,
     `ORG:${profile.company || ''}`,
+    // Add profile's direct URL as the first website
+    ...(profile.username ? [`URL;type=Profile:${process.env.NEXT_PUBLIC_BASE_URL}/${profile.username}`] : []),
+    // Add other websites
+    ...(profile.websiteUrl ? [`URL:${profile.websiteUrl}`] : []),
+    ...(profile.links?.map(link => `URL;type=${link.title}:${link.url}`) || []),
     `NOTE:${profile.bio || ''}`,
     'END:VCARD'
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 
   return new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
 };
@@ -53,8 +63,6 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
       alert('Failed to save contact. Please try again.');
     }
   };
-
-  console.log(profileData, 'profileData');
 
   useEffect(() => {
     if (profileData?.autoconnect) {
@@ -119,7 +127,6 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
   // Render profile content based on theme
   const renderProfileContent = (theme: string) => {
-    console.log(profileData?.fullname, theme, 'inside render method');
 
     // Get the image URL from imageFilename
     const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; // Placeholder for missing image
@@ -169,13 +176,59 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>
             </div>
-            <div className="flex flex-col items-start justify-start pt-16 pb-8 px-8 ml-2 relative z-10">
-              <h2 className="text-3xl font-bold mb-2 leading-tight text-left">{profileData?.fullname}</h2>
-              <p className="text-lg mb-3 text-left">{profileData?.jobTitle || 'Member'}</p>
+            <div className="flex flex-col items-start justify-start pt-16 pb-4 px-8 relative z-10">
+              <h2 className="text-3xl font-bold  leading-tight text-left">{profileData?.fullname}</h2>
+              <p className="text-lg text-left">{profileData?.jobTitle || 'Member'}</p>
               <p className="text-base text-left max-w-xs">{profileData?.bio}</p>
             </div>
 
-            <div className="px-6 pb-6 relative z-10">
+            <div className="flex justify-center space-x-8 py-4 pb-8">
+              {/* Phone Icon */}
+              {profileData?.showPhone && <button
+                onClick={() => {
+                  if (profileData?.phoneNumber1) {
+                    window.location.href = `tel:${profileData.phoneNumber1}`;
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Call"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </button>}
+
+              {/* Email Icon */}
+              {profileData?.showEmail && <button
+                onClick={() => {
+                  if (profileData?.email) {
+                    window.location.href = `mailto:${profileData.email}`;
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Email"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>}
+
+              {profileData?.showWebsite && <button
+                onClick={() => {
+                  if (profileData?.websiteUrl) {
+                    window.open(profileData.websiteUrl.startsWith('http') ? profileData.websiteUrl : `https://${profileData.websiteUrl}`, '_blank');
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Website"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+              </button>}
+            </div>
+
+            {profileData?.saveContact && <div className="px-6 pb-6 relative z-10">
               {profileData?.saveContact && (
                 <button
                   onClick={handleSaveContact}
@@ -184,7 +237,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                   Save Contact
                 </button>
               )}
-            </div>
+            </div>}
 
             {/* Profile Links Grid - Sorted by sort property */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
@@ -264,13 +317,59 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>
             </div>
-            <div className="flex flex-col items-start justify-start pt-32 pb-8 px-8 relative z-10">
-              <h2 className="text-3xl font-bold mb-2 leading-tight text-left text-black">{profileData?.fullname}</h2>
-              <p className="text-lg mb-3 text-left text-black">{profileData?.jobTitle || 'Member'}</p>
+            <div className="flex flex-col items-start justify-start pt-32 pb-4 px-8 relative z-10">
+              <h2 className="text-3xl font-bold mb-1 leading-tight text-left text-black">{profileData?.fullname}</h2>
+              <p className="text-lg mb-1 text-left text-black">{profileData?.jobTitle || 'Member'}</p>
               <p className="text-base text-left max-w-xs text-black">{profileData?.bio}</p>
             </div>
 
-            <div className="px-6 pb-6 relative z-10">
+            <div className="flex justify-center space-x-8 py-4 pb-8">
+              {/* Phone Icon */}
+              {profileData?.showPhone && <button
+                onClick={() => {
+                  if (profileData?.phoneNumber1) {
+                    window.location.href = `tel:${profileData.phoneNumber1}`;
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Call"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </button>}
+
+              {/* Email Icon */}
+              {profileData?.showEmail && <button
+                onClick={() => {
+                  if (profileData?.email) {
+                    window.location.href = `mailto:${profileData.email}`;
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Email"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>}
+
+              {profileData?.showWebsite && <button
+                onClick={() => {
+                  if (profileData?.websiteUrl) {
+                    window.open(profileData.websiteUrl.startsWith('http') ? profileData.websiteUrl : `https://${profileData.websiteUrl}`, '_blank');
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Website"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+              </button>}
+            </div>
+
+            {profileData?.saveContact && <div className="px-6 pb-6 relative z-10">
               {profileData?.saveContact && (
                 <button
                   onClick={handleSaveContact}
@@ -279,7 +378,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                   Save Contact
                 </button>
               )}
-            </div>
+            </div>}
 
             {/* Profile Links List - Sorted by sort property */}
             <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-10">
@@ -364,22 +463,67 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>
             </div>
-            <div className="flex flex-col items-center justify-center pt-16 pb-8 px-8  relative z-10">
-              <h2 className="text-3xl font-bold mb-2 leading-tight text-center">{profileData?.fullname}</h2>
-              <p className="text-lg mb-3 text-center">{profileData?.jobTitle || 'Member'}</p>
+            <div className="flex flex-col items-center justify-center pt-16 pb-4 px-8  relative z-10">
+              <h2 className="text-3xl font-bold mb-1 leading-tight text-center">{profileData?.fullname}</h2>
+              <p className="text-lg mb-1 text-center">{profileData?.jobTitle || 'Member'}</p>
               <p className="text-base text-center max-w-xs">{profileData?.bio}</p>
             </div>
 
-            <div className="px-6 pb-6 relative z-10">
-              {profileData?.saveContact && (
-                <button
-                  onClick={handleSaveContact}
-                  className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
-                >
-                  Save Contact
-                </button>
-              )}
+            <div className="flex justify-center space-x-8 py-4 pb-8">
+              {/* Phone Icon */}
+              {profileData?.showPhone && <button
+                onClick={() => {
+                  if (profileData?.phoneNumber1) {
+                    window.location.href = `tel:${profileData.phoneNumber1}`;
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Call"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </button>}
+
+              {/* Email Icon */}
+              {profileData?.showEmail && <button
+                onClick={() => {
+                  if (profileData?.email) {
+                    window.location.href = `mailto:${profileData.email}`;
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Email"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </button>}
+
+              {profileData?.showWebsite && <button
+                onClick={() => {
+                  if (profileData?.websiteUrl) {
+                    window.open(profileData.websiteUrl.startsWith('http') ? profileData.websiteUrl : `https://${profileData.websiteUrl}`, '_blank');
+                  }
+                }}
+                className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
+                aria-label="Website"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+              </button>}
             </div>
+
+            {profileData?.saveContact && <div className="px-6 pb-6 relative z-10">
+              <button
+                onClick={handleSaveContact}
+                className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
+              >
+                Save Contact
+              </button>
+
+            </div>}
 
             {/* Profile Links Grid - Sorted by sort property */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
@@ -422,14 +566,11 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
   const handleClose = () => {
     setShowPopup(false);
-    console.log('Popup closed by user');
   };
 
   const handleCloseAutoConnectPopup = () => {
     setShowAutoConnectPopup(false);
-    console.log('Popup closed by user');
   };
-  console.log(profileData, isAccountLocked);
   return (
     <>
       {!isAccountLocked && profileData && renderProfileContent(theme)}

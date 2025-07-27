@@ -15,10 +15,8 @@ export default function LockedAccountPopup({
   isOpen,
   onClose,
   isLocked = false,
-  onConfirm
 }: LockedAccountPopupProps) {
   const [mounted, setMounted] = useState(false);
-  const [isLockLoading, setIsLockLoading] = useState(false);
   const lockConfirmModalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -36,7 +34,7 @@ export default function LockedAccountPopup({
       // Remove blur when popup is closed
       document.body.classList.remove('blur-backdrop');
     }
-    
+
     // Add style for blur effect if it doesn't exist
     if (!document.getElementById('blur-backdrop-style')) {
       const style = document.createElement('style');
@@ -51,17 +49,7 @@ export default function LockedAccountPopup({
     }
   }, [isOpen]);
 
-  const handleLockConfirm = async () => {
-    if (onConfirm) {
-      setIsLockLoading(true);
-      try {
-        await onConfirm();
-      } finally {
-        setIsLockLoading(false);
-        onClose();
-      }
-    }
-  };
+
 
   if (!mounted) return null;
 
@@ -72,9 +60,9 @@ export default function LockedAccountPopup({
   };
 
   return (
-    <dialog 
-      ref={lockConfirmModalRef} 
-      className="modal modal-backdrop" 
+    <dialog
+      ref={lockConfirmModalRef}
+      className="modal modal-backdrop"
       onClose={onClose}
       onClick={handleDialogClick}>
       <div className="modal-box rounded-[15px] border border-white bg-[#FEF9E9] backdrop-blur-[200px] transform duration-300 transition-all scale-90 opacity-0 modal-open:scale-100 modal-open:opacity-100 max-w-md">
@@ -99,24 +87,7 @@ export default function LockedAccountPopup({
               : 'When activating this option, your profile will be locked, and no one will be able to access your data when scanning the digital card or any of your smart products. Instead, they will see a message stating that the account is currently unavailable. You can reactivate your profile at any time through the same option.'}
           </p>
 
-          <div className="modal-action w-full">
-            <form method="dialog" className="w-full flex gap-3" onSubmit={(e) => e.preventDefault()}>
-              <button
-                className="btn bg-gray-300 hover:bg-gray-400 text-black border-none flex-1"
-                onClick={onClose}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleLockConfirm}
-                className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none flex-1"
-                disabled={isLockLoading}
-              >
-                {isLockLoading ? 'Processing...' : 'Confirm'}
-              </button>
-            </form>
-          </div>
+
         </div>
       </div>
     </dialog>

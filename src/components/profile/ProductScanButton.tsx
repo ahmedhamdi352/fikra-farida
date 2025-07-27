@@ -119,7 +119,6 @@ export default function ProductScanButton() {
   const handleScanSuccess = (url: string) => {
     try {
       SnackbarUtils.success('QR Code scanned successfully');
-      console.log('Scanned URL:', url);
 
       // Open the URL in a new tab
       if (url) {

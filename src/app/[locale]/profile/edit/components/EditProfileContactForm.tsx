@@ -88,7 +88,6 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
   // Expose form methods via ref
   useImperativeHandle(ref, () => ({
     submit: async () => {
-      console.log(methods.getValues());
       return new Promise<boolean>((resolve) => {
         handleSubmit(
           () => resolve(true),

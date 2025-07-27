@@ -120,7 +120,7 @@ export default async function UsernamePage({ params }: UsernameProps) {
       <ClientWrapper
         isAccountLocked={isAccountLocked}
         profileData={typeof profileData.data === 'object' && 'fullname' in profileData.data ? profileData.data : undefined}
-        theme={theme.length > 0 ? theme : 'rounded'}
+        theme={theme.length > 0 ? theme : 'edge'}
       />
     </div>
   );
