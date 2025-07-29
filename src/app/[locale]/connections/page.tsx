@@ -10,7 +10,7 @@ import LoadingOverlay from 'components/ui/LoadingOverlay';
 import Link from 'next/link';
 import ProfileInformation from '../profile/components/ProfileInformation';
 import { useRouter } from 'next/navigation';
-import { ConnectionForCreateDTO } from 'types';
+import { ConnectionForCreateDTO, GroupResponseDTO } from 'types';
 import saveAs from 'file-saver';
 
 enum TabType {
@@ -59,6 +59,8 @@ const ConnectionsPage = () => {
 
   // Mock data - replace with actual API calls
   const [contacts, setContacts] = useState<ConnectionForCreateDTO[] | []>(connectionsData || []);
+  const [groups, setGroups] = useState<GroupResponseDTO[] | []>(groupsData || []);
+
   useEffect(() => {
     onGetProfile();
     onGetConnections();
@@ -69,12 +71,20 @@ const ConnectionsPage = () => {
     setContacts(connectionsData || []);
   }, [connectionsData]);
 
-
+  useEffect(() => {
+    setGroups(groupsData || []);
+  }, [groupsData]);
 
   const filteredContacts = contacts.filter(
     contact =>
       contact.fullname?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contact.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredGroups = groups.filter(
+    group =>
+      group.GroupName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.CompanyName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const generateVCard = (profile: ConnectionForCreateDTO & { username?: string }) => {
@@ -174,7 +184,10 @@ const ConnectionsPage = () => {
         <div className="mb-6">
           <nav className="-mb-px flex justify-around space-x-8">
             <button
-              onClick={() => setActiveTab(TabType.GROUPS)}
+              onClick={() => {
+                setActiveTab(TabType.GROUPS);
+                setSearchQuery('');
+              }}
               className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.GROUPS
                 ? 'border-[--main-color1] text-[--main-color1]'
                 : 'border-transparent text-gray-400 hover:text-gray-700 '
@@ -183,7 +196,10 @@ const ConnectionsPage = () => {
               Groups
             </button>
             <button
-              onClick={() => setActiveTab(TabType.CONTACTS)}
+              onClick={() => {
+                setActiveTab(TabType.CONTACTS);
+                setSearchQuery('');
+              }}
               className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.CONTACTS
                 ? 'border-[--main-color1] text-[--main-color1]'
                 : 'border-transparent text-gray-400 hover:text-gray-700'
@@ -198,8 +214,8 @@ const ConnectionsPage = () => {
         <div className="space-y-4">
           {activeTab === TabType.GROUPS ? (
             <div className="space-y-4">
-              {groupsData && groupsData.length > 0 ? (
-                groupsData.map(group => (
+              {filteredGroups && filteredGroups.length > 0 ? (
+                filteredGroups.map(group => (
                   <div
                     key={group.GroupId}
                     className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
