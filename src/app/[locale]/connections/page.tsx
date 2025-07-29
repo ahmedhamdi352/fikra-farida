@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
 import { useGetConnectionQuery } from 'hooks/profile/queries/useGetConnectionQuery';
 import { useGetGroupQuery } from 'hooks/profile/queries/useGetGroupQuery';
 import { useGetProfileQuery } from 'hooks/profile/queries/useGetProfileQuery';
