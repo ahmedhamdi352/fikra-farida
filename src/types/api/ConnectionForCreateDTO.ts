@@ -1,4 +1,5 @@
 export type ConnectionForCreateDTO = {
+  pk?: number;
   userpk: number;
   fullname?: string;
   title?: string;

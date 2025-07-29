@@ -24,4 +24,5 @@ export const ApiURLs = {
   addConnection: '/api/UserConnection/Add',
   updateProfile: '/api/Account/Update',
   updateBulkLinksSort: '/api/CustomLink/BulkUpdateSort',
+  deleteConnection: '/api/UserConnection/Delete',
 } as const;

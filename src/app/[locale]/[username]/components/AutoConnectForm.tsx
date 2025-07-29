@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import TextInput from 'components/forms/text-input';
 import TextArea from 'components/forms/text-area';
-import { useCreateConnectionMutation } from 'hooks/profile';
+import { useCreateConnectionMutation, useGetConnectionQuery } from 'hooks/profile';
 
 interface AutoConnectFormData {
   fullname: string;
@@ -22,6 +22,8 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
   const t = useTranslations('auth');
 
   const { isLoading, onAddConnection } = useCreateConnectionMutation();
+  const { onGetConnections } = useGetConnectionQuery();
+
 
   const schema = yup.object().shape({
     fullname: yup.string().required(t('register.validation.fullNameRequired')),
@@ -43,6 +45,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
       userpk: userPk,
     };
     await onAddConnection(connectionData);
+    await onGetConnections();
     onClose();
   };
 

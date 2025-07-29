@@ -100,7 +100,7 @@ async function getAnalytics(payload: { StartDate: string; EndDate: string }) {
 }
 
 async function addConnection(payload: ConnectionForCreateDTO) {
-  return await httpClient.post<ConnectionForCreateDTO>(`${ApiURLs.addConnection}`, payload);
+  return await httpClient.post<any>(`${ApiURLs.addConnection}`, payload);
 }
 
 async function updateProfile(payload: any) {
@@ -109,6 +109,12 @@ async function updateProfile(payload: any) {
 
 async function updateBulkLinksSort(payload: { pk: number; sort: number }[]) {
   return await httpClient.post<any>(`${ApiURLs.updateBulkLinksSort}`, payload);
+}
+
+async function deleteConnection(payload: { ConnectionId: number }) {
+  return await httpClient.post<{ success?: boolean; sucess?: boolean; errorcode: number; message: string }>(
+    `${ApiURLs.deleteConnection}?connectionpk=${payload.ConnectionId}`
+  );
 }
 
 export const ProfileService = {
@@ -191,5 +197,9 @@ export const ProfileService = {
   updateBulkLinksSort: {
     request: updateBulkLinksSort,
     mutationKey: 'update-bulk-links-sort',
+  },
+  deleteConnection: {
+    request: deleteConnection,
+    mutationKey: 'delete-connection',
   },
 };
