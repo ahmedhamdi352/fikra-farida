@@ -328,32 +328,32 @@ const ConnectionsPage = () => {
                       <div className="flex flex-col py-2 gap-1">
                         <div className="flex items-center gap-2">
                           <div className='flex items-center gap-2 justify-center'>
-                            <p className='text-h2  text-[--main-color1]'>Title:</p>
-                            <h1 className="text-h2 ">{contact?.title}</h1>
+                            <p className='text-[18px]  text-[--main-color1]'>Title:</p>
+                            <h1 className="text-[18px] ">{contact?.title}</h1>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className='flex items-center gap-2 justify-center'>
-                            <p className='text-h2  text-[--main-color1]'>Name:</p>
-                            <h1 className="text-h2 ">{contact?.fullname}</h1>
+                            <p className='text-[18px]  text-[--main-color1]'>Name:</p>
+                            <h1 className="text-[18px] ">{contact?.fullname}</h1>
                           </div>
                         </div>
                         {contact?.company && <div className="flex items-center gap-2">
                           <div className='flex items-center gap-2 justify-center'>
-                            <p className='text-h2 text-[--main-color1]'>Company:</p>
-                            <p className="text-h2 ">{contact?.company}</p>
+                            <p className='text-[18px] text-[--main-color1]'>Company:</p>
+                            <p className="text-[18px] ">{contact?.company}</p>
                           </div>
                         </div>}
                         {contact?.email && <div className="flex items-center gap-2">
                           <div className='flex items-center gap-2 justify-center'>
-                            <p className='text-h2 text-[--main-color1]'>Email:</p>
-                            <p className="text-h2 ">{contact?.email}</p>
+                            <p className='text-[18px] text-[--main-color1]'>Email:</p>
+                            <p className="text-[18px] ">{contact?.email}</p>
                           </div>
                         </div>}
                         {contact?.phone && <div className="flex items-center gap-2">
                           <div className='flex items-center gap-2 justify-center'>
-                            <p className='text-h2 text-[--main-color1]'>Phone:</p>
-                            <p className="text-h2 ">{contact?.phone}</p>
+                            <p className='text-[18px] text-[--main-color1]'>Phone:</p>
+                            <p className="text-[18px] ">{contact?.phone}</p>
                           </div>
                         </div>}
                       </div>
