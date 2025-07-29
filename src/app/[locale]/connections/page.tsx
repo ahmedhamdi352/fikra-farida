@@ -10,19 +10,15 @@ import LoadingOverlay from 'components/ui/LoadingOverlay';
 import Link from 'next/link';
 import ProfileInformation from '../profile/components/ProfileInformation';
 import { useRouter } from 'next/navigation';
+import { ConnectionForCreateDTO } from 'types';
+import saveAs from 'file-saver';
 
 enum TabType {
   GROUPS = 'groups',
   CONTACTS = 'contacts',
 }
 
-interface Contact {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  group?: string;
-}
+
 
 const ConnectionsPage = () => {
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
@@ -62,24 +58,52 @@ const ConnectionsPage = () => {
   };
 
   // Mock data - replace with actual API calls
-  const [contacts, setContacts] = useState<Contact[]>([]);
-
+  const [contacts, setContacts] = useState<ConnectionForCreateDTO[] | []>(connectionsData || []);
   useEffect(() => {
     onGetProfile();
     onGetConnections();
     onGetGroups();
-    // Mock data - replace with actual API calls
-    setContacts([
-      { id: '1', name: 'John Doe', email: 'john@example.com', avatar: '', group: 'Work' },
-      { id: '2', name: 'Jane Smith', email: 'jane@example.com', avatar: '', group: 'Friends' },
-    ]);
   }, []);
+
+  useEffect(() => {
+    setContacts(connectionsData || []);
+  }, [connectionsData]);
+
+
 
   const filteredContacts = contacts.filter(
     contact =>
-      contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchQuery.toLowerCase())
+      contact.fullname?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      contact.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const generateVCard = (profile: ConnectionForCreateDTO & { username?: string }) => {
+    const vCard = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${profile.fullname || ''}`,
+      `TEL;type=CELL:${profile.phone || ''}`,
+      `EMAIL:${profile.email || ''}`,
+      `TITLE:${profile.title || ''}`,
+      `ORG:${profile.company || ''}`,
+      'END:VCARD'
+    ].filter(Boolean).join('\n');
+
+    return new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
+  };
+
+
+  const handleSaveContact = (contact: ConnectionForCreateDTO) => {
+    if (!contact) return;
+    try {
+      const vCardBlob = generateVCard(contact);
+      saveAs(vCardBlob, `${contact.fullname || 'contact'}.vcf`);
+    } catch (error) {
+      console.error('Error saving contact:', error);
+      alert('Failed to save contact. Please try again.');
+    }
+  };
+
 
   if (isLoading || connectionsLoading || groupsLoading || deleteGroupLoading) {
     return <LoadingOverlay isLoading={isLoading || connectionsLoading || groupsLoading || deleteGroupLoading} />;
@@ -152,8 +176,8 @@ const ConnectionsPage = () => {
             <button
               onClick={() => setActiveTab(TabType.GROUPS)}
               className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.GROUPS
-                  ? 'border-[--main-color1] text-[--main-color1]'
-                  : 'border-transparent text-gray-400 hover:text-gray-700 '
+                ? 'border-[--main-color1] text-[--main-color1]'
+                : 'border-transparent text-gray-400 hover:text-gray-700 '
                 }`}
             >
               Groups
@@ -161,8 +185,8 @@ const ConnectionsPage = () => {
             <button
               onClick={() => setActiveTab(TabType.CONTACTS)}
               className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.CONTACTS
-                  ? 'border-[--main-color1] text-[--main-color1]'
-                  : 'border-transparent text-gray-400 hover:text-gray-700'
+                ? 'border-[--main-color1] text-[--main-color1]'
+                : 'border-transparent text-gray-400 hover:text-gray-700'
                 }`}
             >
               Contacts
@@ -262,9 +286,9 @@ const ConnectionsPage = () => {
           ) : (
             <div className="space-y-4">
               {filteredContacts.length > 0 ? (
-                filteredContacts.map(contact => (
+                filteredContacts.map((contact, index) => (
                   <div
-                    key={contact.id}
+                    key={contact.userpk + index}
                     className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
                   >
                     <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-2 p-1">
@@ -301,24 +325,37 @@ const ConnectionsPage = () => {
                     </div>
 
                     <div className="flex items-center gap-4">
-                      <div className="relative flex-shrink-0">
-                        {profileData?.imageFilename && (
-                          <>
-                            <Image
-                              src={`https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}`}
-                              alt="Profile"
-                              className="w-14 h-14 rounded-full bg-black"
-                              width={100}
-                              height={100}
-                            />
-                          </>
-                        )}
-                      </div>
-                      <div className="flex flex-col py-2">
+                      <div className="flex flex-col py-2 gap-1">
                         <div className="flex items-center gap-2">
-                          <h1 className="text-md font-semibold ">{profileData?.fullname}</h1>
+                          <div className='flex items-center gap-2 justify-center'>
+                            <p className='text-h2  text-[--main-color1]'>Title:</p>
+                            <h1 className="text-h2 ">{contact?.title}</h1>
+                          </div>
                         </div>
-                        <p className="text-gray-400 text-sm">{profileData?.jobTitle}</p>
+                        <div className="flex items-center gap-2">
+                          <div className='flex items-center gap-2 justify-center'>
+                            <p className='text-h2  text-[--main-color1]'>Name:</p>
+                            <h1 className="text-h2 ">{contact?.fullname}</h1>
+                          </div>
+                        </div>
+                        {contact?.company && <div className="flex items-center gap-2">
+                          <div className='flex items-center gap-2 justify-center'>
+                            <p className='text-h2 text-[--main-color1]'>Company:</p>
+                            <p className="text-h2 ">{contact?.company}</p>
+                          </div>
+                        </div>}
+                        {contact?.email && <div className="flex items-center gap-2">
+                          <div className='flex items-center gap-2 justify-center'>
+                            <p className='text-h2 text-[--main-color1]'>Email:</p>
+                            <p className="text-h2 ">{contact?.email}</p>
+                          </div>
+                        </div>}
+                        {contact?.phone && <div className="flex items-center gap-2">
+                          <div className='flex items-center gap-2 justify-center'>
+                            <p className='text-h2 text-[--main-color1]'>Phone:</p>
+                            <p className="text-h2 ">{contact?.phone}</p>
+                          </div>
+                        </div>}
                       </div>
                     </div>
 
@@ -333,7 +370,7 @@ const ConnectionsPage = () => {
                         </svg>
                         <span>Remove Contact</span>
                       </button>
-                      <button className="flex gap-2 justify-center items-center border border-[--main-color1] px-4 py-1 rounded-full text-[--main-color1]">
+                      <button onClick={() => handleSaveContact(contact)} className="flex gap-2 justify-center items-center border border-[--main-color1] px-4 py-1 rounded-full text-[--main-color1]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                           <path
                             d="M11.3333 14.5V9.16667H4.66667V14.5M4.66667 2.5V5.83333H10M12.6667 14.5H3.33333C2.97971 14.5 2.64057 14.3595 2.39052 14.1095C2.14048 13.8594 2 13.5203 2 13.1667V3.83333C2 3.47971 2.14048 3.14057 2.39052 2.89052C2.64057 2.64048 2.97971 2.5 3.33333 2.5H10.6667L14 5.83333V13.1667C14 13.5203 13.8595 13.8594 13.6095 14.1095C13.3594 14.3595 13.0203 14.5 12.6667 14.5Z"

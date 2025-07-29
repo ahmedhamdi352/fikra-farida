@@ -22,6 +22,7 @@ interface VCardProfile {
   company?: string;
   bio?: string;
   websiteUrl?: string;
+  imageFilename?: string;
   links?: Array<{
     title: string;
     url: string;
@@ -29,10 +30,16 @@ interface VCardProfile {
 }
 
 const generateVCard = (profile: VCardProfile & { username?: string }) => {
+  // Prepare photo URL if available
+  const photoUrl = profile.imageFilename 
+    ? `https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`
+    : null;
+
   const vCard = [
     'BEGIN:VCARD',
     'VERSION:3.0',
     `FN:${profile.fullname || ''}`,
+    ...(photoUrl ? [`PHOTO;VALUE=URI;TYPE=JPEG:${photoUrl}`] : []),
     `TEL;type=CELL:${profile.phoneNumber1 || ''}`,
     `EMAIL:${profile.email || ''}`,
     `TITLE:${profile.jobTitle || ''}`,

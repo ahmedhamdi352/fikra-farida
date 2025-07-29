@@ -19,7 +19,7 @@ async function getQRCode(userpk: number) {
 }
 
 async function getConnections() {
-  return await httpClient.post<ConnectionForCreateDTO>(`${ApiURLs.connections}`);
+  return await httpClient.post<ConnectionForCreateDTO[]>(`${ApiURLs.connections}`);
 }
 
 async function getGroups() {

@@ -25,7 +25,7 @@ export function useGetConnectionQuery() {
   };
 
   const { isLoading } = useIsLoadingMutation(ProfileService.getConnections.mutationKey);
-
+  console.log('mutation.data', mutation);
   return {
     data: mutation.data,
     isLoading,
