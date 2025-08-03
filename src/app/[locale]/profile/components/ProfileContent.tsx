@@ -239,15 +239,23 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
               {!profileData?.autoconnect ? 'Collect Info' : 'Disable Collect Info'}
             </h3>
 
+            <p className="text-black mb-4 px-4">
+              When this feature is enabled, a form automatically appears when you share your digital card, allowing you to instantly collect contact details.
+            </p>
+
             <div className="mb-4 relative">
               <Image src={collect} alt="collect" width={180} height={180} />
             </div>
 
             {/* Description */}
-            <p className="text-black mb-4 px-4">
-              {profileData?.autoconnect
-                ? 'Disabling Collect Info will prevent you from gathering contact information from visitors. Are you sure you want to proceed?'
-                : 'When this feature is enabled, a form automatically appears when you share your digital card, allowing you to instantly collect contact details.'}
+            <p className="text-black text-start mb-4 px-4">
+              <span className="font-bold">How it works</span>
+              <ul className="list-none">
+                <li>1. Share your digital card with someone.</li>
+                <li>2. A quick form will pop up for them to fill out.</li>
+                <li>3. Once completed, the person is automatically saved as a contact.</li>
+                <li>4. You can export the data to an Excel file for easy management.</li>
+              </ul>
             </p>
 
             <div className="modal-action w-full">
@@ -279,10 +287,8 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
             </h3>
 
             {/* Description */}
-            <p className="text-black mb-4 px-4">
-              {profileData?.directurl
-                ? 'Disabling Direct Link Mode will return to showing your profile page instead of redirecting visitors directly to a URL. Are you sure you want to proceed?'
-                : 'When Direct Link Mode is enabled, users will be taken directly to the destination URL instead of your profile page.'}
+            <p className="text-black mb-4 px-4 text-start">
+              instantly redirect customers to any link without browsing your full profile.
             </p>
 
             <form method="dialog" className="w-full">
@@ -326,15 +332,25 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                   </div>
                 </div>
               </div>
-              <div className="flex justify-center mt-4">
-                <button
-                  type="submit"
-                  className="py-2 px-8 bg-gray-300 hover:bg-gray-400 text-black rounded-lg font-medium"
-                >
-                  Cancel
-                </button>
-              </div>
+
             </form>
+            <p className="text-black mb-4 px-4 text-start">
+              <span className="font-bold">How to activate:</span>
+              <ul className="list-none">
+                <li>1- Select the link you want to direct others to and set it as direct.</li>
+                <li>2- Enable the direct toggle.</li>
+                <li>3- Share the link via our smart products or QR code.</li>
+              </ul>
+            </p>
+
+            <div className="flex justify-center mt-4">
+              <button
+                type="submit"
+                className="py-2 px-8 bg-gray-300 hover:bg-gray-400 text-black rounded-lg font-medium"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </dialog>
