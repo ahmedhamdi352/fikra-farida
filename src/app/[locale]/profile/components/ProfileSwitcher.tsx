@@ -174,7 +174,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
 
                   <div className="flex items-center gap-2 mt-4">
                     <span className="px-3 py-1 bg-[#FEC400] text-black text-[14px] font-semibold rounded-full">
-                      {profile.type === 2 ? 'Pro' : 'Personal'}
+                      {profile.profileTitle ? profile.profileTitle : profile.type === 2 ? 'Pro' : 'Personal'}
                     </span>
                     {activeProfile?.userPk === profile.userPk && (
                       <span className="text-[#FEC400]">

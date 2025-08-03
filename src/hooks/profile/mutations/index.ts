@@ -13,3 +13,5 @@ export * from './useUpdateBulkLinksSortMutation';
 export * from './useDeleteConnectionMutation';
 export * from './useExportContactsFileMutation';
 export * from './useAddContactToGroupMutation';
+export * from './useUploadProfileImageMutation';
+export * from './useUploadCoverImageMutation';

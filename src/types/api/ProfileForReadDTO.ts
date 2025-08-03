@@ -63,4 +63,6 @@ export interface ProfileForReadDTO {
   colorBackground: string;
   iconColor: string;
   saveContact: boolean;
+  profileEmail: string;
+  profileTitle: string;
 }

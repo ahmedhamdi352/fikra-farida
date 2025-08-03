@@ -8,10 +8,14 @@ import CollapsibleSection from './components/CollapsibleSection';
 import { toast } from 'react-toastify';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useUploadProfileImageMutation, useUploadCoverImageMutation } from 'hooks/profile/mutations';
 
 export default function EditProfilePage() {
   const { data: profileData, isLoading } = useGetProfileQuery();
-  const [coverImageUrl, setCoverImageUrl] = useState(profileData?.coverImage || '/default-cover.jpg'); // Replace with your default
+  const { onUploadProfileImage, isLoading: isUploadingProfileImage } = useUploadProfileImageMutation();
+  const { onUploadCoverImage, isLoading: isUploadingCoverImage } = useUploadCoverImageMutation();
+
+  const [coverImageUrl, setCoverImageUrl] = useState(profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : ''); // Replace with your default
   const [profileImageUrl, setProfileImageUrl] = useState(profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : ''); // Replace with your default
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -35,7 +39,7 @@ export default function EditProfilePage() {
       }
 
       // If both forms are valid, get their values
-      const profileData = profileFormRef.current?.getValues() || {};
+      const personalData = profileFormRef.current?.getValues() || {};
       const contactData = contactFormRef.current?.getValues() || {};
 
       // Define interfaces for form data
@@ -109,9 +113,8 @@ export default function EditProfilePage() {
       // Combine the data
       const combinedData = {
         ...profileData,
+        ...personalData,
         ...transformedContactData,
-        coverImageUrl: coverImageUrl || undefined,
-        profileImageUrl: profileImageUrl || undefined
       };
 
       await onUpdateProfile(combinedData);
@@ -133,9 +136,11 @@ export default function EditProfilePage() {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      const formData = new FormData();
+      formData.append('file', file);
+      reader.onloadend = async () => {
+        await onUploadCoverImage(formData);
         setCoverImageUrl(reader.result as string);
-        toast.info("Cover image selected. Implement actual upload logic.");
       };
       reader.readAsDataURL(file);
     }
@@ -145,9 +150,11 @@ export default function EditProfilePage() {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      const formData = new FormData();
+      formData.append('file', file);
+      reader.onloadend = async () => {
+        await onUploadProfileImage(formData);
         setProfileImageUrl(reader.result as string);
-        toast.info("Profile image selected. Implement actual upload logic.");
       };
       reader.readAsDataURL(file);
     }
@@ -156,11 +163,12 @@ export default function EditProfilePage() {
   useEffect(() => {
     if (profileData) {
       setProfileImageUrl(profileData.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : '');
+      setCoverImageUrl(profileData.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : '');
     }
   }, [profileData])
 
-  if (isLoading || isUpdatingProfile) {
-    return <LoadingOverlay isLoading={isLoading || isUpdatingProfile} />;
+  if (isLoading || isUpdatingProfile || isUploadingProfileImage || isUploadingCoverImage) {
+    return <LoadingOverlay isLoading={isLoading || isUpdatingProfile || isUploadingProfileImage || isUploadingCoverImage} />;
   }
 
   return (
@@ -168,7 +176,7 @@ export default function EditProfilePage() {
       <div className="max-w-4xl mx-auto rounded-lg overflow-hidden mt-4">
         <div className="relative w-full h-48 bg-gray-200 rounded-2xl  flex items-center justify-center">
           <Image
-            src={coverImageUrl || 'assets/images/cover.jpeg'}
+            src={coverImageUrl}
             alt="Cover"
             fill
             sizes="(max-width: 768px) 100vw, 768px"
@@ -232,7 +240,7 @@ export default function EditProfilePage() {
         </div>
 
         <div className="px-6 py-5 ">
-          <div className='flex justify-center gap-4 items-center w-full mb-6'>
+          {/* <div className='flex justify-center gap-4 items-center w-full mb-6'>
             <div className='flex flex-col gap-1 w-[50%]'>
               <p className='text-[var(--main-color1)] font-normal text-[12px]'>
                 profile title
@@ -254,7 +262,7 @@ export default function EditProfilePage() {
                 </p>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-2">
             <CollapsibleSection

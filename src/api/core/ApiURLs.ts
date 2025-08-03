@@ -22,9 +22,11 @@ export const ApiURLs = {
   linkQrCode: '/api/Account/LinkQrCode',
   analytics: '/api/Account/Analytics',
   addConnection: '/api/UserConnection/Add',
-  updateProfile: '/api/Account/Update',
+  updateProfile: '/api/Account/UpdateProfile',
   updateBulkLinksSort: '/api/CustomLink/BulkUpdateSort',
   deleteConnection: '/api/UserConnection/Delete',
   exportContactsFile: '/api/UserConnection/ExportToExcelFile',
   addContactToGroup: '/api/UserConnection/UpdateGroup',
+  uploadProfileImage: '/api/Media/UploadProfileImage',
+  uploadCoverImage: '/api/Media/UploadCoverImage',
 } as const;

@@ -31,7 +31,7 @@ interface VCardProfile {
 
 const generateVCard = (profile: VCardProfile & { username?: string }) => {
   // Prepare photo URL if available
-  const photoUrl = profile.imageFilename 
+  const photoUrl = profile.imageFilename
     ? `https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`
     : null;
 
@@ -191,7 +191,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
             <div className="flex justify-center space-x-8 py-4 pb-8">
               {/* Phone Icon */}
-              {profileData?.showPhone && <button
+              {profileData?.showPhone && profileData?.phoneNumber1.length > 0 && <button
                 onClick={() => {
                   if (profileData?.phoneNumber1) {
                     window.location.href = `tel:${profileData.phoneNumber1}`;
@@ -206,7 +206,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>}
 
               {/* Email Icon */}
-              {profileData?.showEmail && <button
+              {profileData?.showEmail && profileData?.email.length > 0 && <button
                 onClick={() => {
                   if (profileData?.email) {
                     window.location.href = `mailto:${profileData.email}`;
@@ -220,7 +220,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>}
 
-              {profileData?.showWebsite && <button
+              {profileData?.showWebsite && profileData?.websiteUrl.length > 0 && <button
                 onClick={() => {
                   if (profileData?.websiteUrl) {
                     window.open(profileData.websiteUrl.startsWith('http') ? profileData.websiteUrl : `https://${profileData.websiteUrl}`, '_blank');
@@ -332,7 +332,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
             <div className="flex justify-center space-x-8 py-4 pb-8">
               {/* Phone Icon */}
-              {profileData?.showPhone && <button
+              {profileData?.showPhone && profileData?.phoneNumber1.length > 0 && <button
                 onClick={() => {
                   if (profileData?.phoneNumber1) {
                     window.location.href = `tel:${profileData.phoneNumber1}`;
@@ -347,7 +347,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>}
 
               {/* Email Icon */}
-              {profileData?.showEmail && <button
+              {profileData?.showEmail && profileData?.email.length > 0 && <button
                 onClick={() => {
                   if (profileData?.email) {
                     window.location.href = `mailto:${profileData.email}`;
@@ -361,7 +361,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>}
 
-              {profileData?.showWebsite && <button
+              {profileData?.showWebsite && profileData?.websiteUrl.length > 0 && <button
                 onClick={() => {
                   if (profileData?.websiteUrl) {
                     window.open(profileData.websiteUrl.startsWith('http') ? profileData.websiteUrl : `https://${profileData.websiteUrl}`, '_blank');
@@ -478,7 +478,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
             <div className="flex justify-center space-x-8 py-4 pb-8">
               {/* Phone Icon */}
-              {profileData?.showPhone && <button
+              {profileData?.showPhone && profileData?.phoneNumber1.length > 0 && <button
                 onClick={() => {
                   if (profileData?.phoneNumber1) {
                     window.location.href = `tel:${profileData.phoneNumber1}`;
@@ -493,7 +493,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>}
 
               {/* Email Icon */}
-              {profileData?.showEmail && <button
+              {profileData?.showEmail && profileData?.email.length > 0 && <button
                 onClick={() => {
                   if (profileData?.email) {
                     window.location.href = `mailto:${profileData.email}`;
@@ -507,7 +507,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>}
 
-              {profileData?.showWebsite && <button
+              {profileData?.showWebsite && profileData?.websiteUrl.length > 0 && <button
                 onClick={() => {
                   if (profileData?.websiteUrl) {
                     window.open(profileData.websiteUrl.startsWith('http') ? profileData.websiteUrl : `https://${profileData.websiteUrl}`, '_blank');

@@ -7,8 +7,11 @@ import * as yup from 'yup';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import TextInput from 'components/forms/text-input';
 import TextArea from 'components/forms/text-area';
+import { useTranslations } from 'next-intl';
 
 export interface ProfileFormData {
+  profileTitle: string;
+  username: string;
   fullname: string;
   bio?: string;
   company?: string;
@@ -25,8 +28,15 @@ interface EditProfileFormProps {
 }
 
 const EditProfileForm = forwardRef<EditProfileFormRef, EditProfileFormProps>(({ initialData }, ref) => {
+  const t = useTranslations('auth');
 
   const schema = yup.object().shape({
+    profileTitle: yup.string().required('Profile title is required'),
+    username: yup
+      .string()
+      .required(t('register.validation.usernameRequired'))
+      .matches(/^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/, t('register.validation.usernameEnglishOnly')),
+
     fullname: yup.string().required('Full name is required'),
     bio: yup.string().optional(),
     company: yup.string().optional(),
@@ -36,6 +46,8 @@ const EditProfileForm = forwardRef<EditProfileFormRef, EditProfileFormProps>(({ 
   const methods = useForm<ProfileFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
+      profileTitle: initialData?.profileTitle,
+      username: initialData?.username,
       fullname: initialData?.fullname || '',
       jobTitle: initialData?.jobTitle || '',
       company: initialData?.company || '',
@@ -65,6 +77,24 @@ const EditProfileForm = forwardRef<EditProfileFormRef, EditProfileFormProps>(({ 
   return (
     <form id="profile-form" className="space-y-6">
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+        <div className="sm:col-span-3">
+          <TextInput<ProfileFormData>
+            name="profileTitle"
+            label='Profile Title'
+            control={control}
+            placeholder='Enter your profile title'
+          />
+        </div>
+
+        <div className="sm:col-span-3">
+          <TextInput<ProfileFormData>
+            name="username"
+            label='Username'
+            control={control}
+            placeholder='Enter your username'
+          />
+        </div>
         <div className="sm:col-span-3">
           <TextInput<ProfileFormData>
             name="fullname"

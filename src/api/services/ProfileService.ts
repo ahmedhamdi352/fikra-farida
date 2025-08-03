@@ -128,6 +128,14 @@ async function addContactToGroup(payload: { groupId: number; connectionId: numbe
   );
 }
 
+async function uploadProfileImage(payload: FormData) {
+  return await httpClient.post<any>(`${ApiURLs.uploadProfileImage}`, payload);
+}
+
+async function uploadCoverImage(payload: FormData) {
+  return await httpClient.post<any>(`${ApiURLs.uploadCoverImage}`, payload);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -220,5 +228,13 @@ export const ProfileService = {
   addContactToGroup: {
     request: addContactToGroup,
     mutationKey: 'add-contact-to-group',
+  },
+  uploadProfileImage: {
+    request: uploadProfileImage,
+    mutationKey: 'upload-profile-image',
+  },
+  uploadCoverImage: {
+    request: uploadCoverImage,
+    mutationKey: 'upload-cover-image',
   },
 };
