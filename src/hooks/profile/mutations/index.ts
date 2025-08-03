@@ -12,3 +12,4 @@ export * from './useCreateConnectionMutation';
 export * from './useUpdateBulkLinksSortMutation';
 export * from './useDeleteConnectionMutation';
 export * from './useExportContactsFileMutation';
+export * from './useAddContactToGroupMutation';

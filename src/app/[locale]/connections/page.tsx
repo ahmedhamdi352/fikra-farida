@@ -13,6 +13,7 @@ import { ConnectionForCreateDTO, GroupResponseDTO } from 'types';
 import saveAs from 'file-saver';
 import AutoConnectPopup from '../[username]/components/AutoConnectPopup';
 import ViewContactPopup from './components/ViewContactPopup';
+import AddToGroupPopup from './components/AddToGroupPopup';
 
 enum TabType {
   GROUPS = 'groups',
@@ -35,6 +36,8 @@ const ConnectionsPage = () => {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
   const [showContactPopup, setShowContactPopup] = useState(false);
+  const [showAddContactToGroupPopup, setShowAddContactToGroupPopup] = useState(false);
+  const [selectedContactPk, setSelectedContactPk] = useState<number | null>(null);
   const [selectedContact, setSelectedContact] = useState<ConnectionForCreateDTO | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +75,14 @@ const ConnectionsPage = () => {
     onGetConnections();
     onGetGroups();
   }, []);
+
+  useEffect(() => {
+    if (activeTab === TabType.GROUPS) {
+      onGetGroups();
+    } else {
+      onGetConnections();
+    }
+  }, [activeTab])
 
   useEffect(() => {
     setContacts(connectionsData || []);
@@ -373,7 +384,12 @@ const ConnectionsPage = () => {
                           aria-orientation="vertical"
                           aria-labelledby={`contact-options-${contact.pk}`}
                         >
-                          <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
+                          <li
+                            onClick={() => {
+                              setShowAddContactToGroupPopup(true)
+                              setSelectedContactPk(contact.pk || 0)
+                            }}
+                            className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
                             <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">Add to Group</a>
                           </li>
                           <li onClick={() => {
@@ -473,6 +489,13 @@ const ConnectionsPage = () => {
         isOpen={showContactPopup}
         onClose={() => setShowContactPopup(false)}
         contact={selectedContact}
+      />}
+
+      {showAddContactToGroupPopup && <AddToGroupPopup
+        isOpen={showAddContactToGroupPopup}
+        onClose={() => setShowAddContactToGroupPopup(false)}
+        contactPk={selectedContactPk || 0}
+        groups={groups}
       />}
     </>
   );

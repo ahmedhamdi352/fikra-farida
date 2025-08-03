@@ -122,6 +122,12 @@ async function exportContactsFile() {
   return await httpClient.post<ExportFileDTO>(`${ApiURLs.exportContactsFile}`);
 }
 
+async function addContactToGroup(payload: { groupId: number; connectionId: number }) {
+  return await httpClient.post<any>(
+    `${ApiURLs.addContactToGroup}?groupId=${payload.groupId}&connectionPk=${payload.connectionId}`
+  );
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -210,5 +216,9 @@ export const ProfileService = {
   exportContactsFile: {
     request: exportContactsFile,
     mutationKey: 'export-contacts-file',
+  },
+  addContactToGroup: {
+    request: addContactToGroup,
+    mutationKey: 'add-contact-to-group',
   },
 };
