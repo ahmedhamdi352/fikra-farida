@@ -8,6 +8,7 @@ import {
   ProfileForCreateDTO,
   GroupResponseDTO,
   ConnectionForCreateDTO,
+  ExportFileDTO,
 } from 'types';
 
 async function getProfile() {
@@ -117,6 +118,10 @@ async function deleteConnection(payload: { ConnectionId: number }) {
   );
 }
 
+async function exportContactsFile() {
+  return await httpClient.post<ExportFileDTO>(`${ApiURLs.exportContactsFile}`);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -201,5 +206,9 @@ export const ProfileService = {
   deleteConnection: {
     request: deleteConnection,
     mutationKey: 'delete-connection',
+  },
+  exportContactsFile: {
+    request: exportContactsFile,
+    mutationKey: 'export-contacts-file',
   },
 };
