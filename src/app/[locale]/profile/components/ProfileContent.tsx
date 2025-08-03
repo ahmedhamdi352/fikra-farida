@@ -313,8 +313,8 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                               onClick={() => handleDirectLinkConfirm(link.url)}
                               disabled={profileData?.directurl === link.url}
                               className={`ml-2 px-3 py-1 text-xs font-medium rounded-md ${profileData?.directurl === link.url
-                                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                                  : 'bg-[#FEC400] text-black'
+                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                : 'bg-[#FEC400] text-black'
                                 }`}
                             >
                               Set
@@ -329,9 +329,9 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
               <div className="flex justify-center mt-4">
                 <button
                   type="submit"
-                  className="py-2 px-8 bg-[#FEC400] hover:bg-[#FEC400]/90 text-black rounded-lg font-medium"
+                  className="py-2 px-8 bg-gray-300 hover:bg-gray-400 text-black rounded-lg font-medium"
                 >
-                  Confirm
+                  Cancel
                 </button>
               </div>
             </form>
