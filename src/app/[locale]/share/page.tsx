@@ -13,9 +13,6 @@ export default function SharePage() {
   const { data: offlineQrCodeData, isLoading: offlineQrCodeLoading, onGetOfflineQrCode } = useGetOfflineQrCodeQuery();
 
   const [offLine, setOffLine] = useState(false);
-
-  console.log(offlineQrCodeLoading);
-
   useEffect(() => {
     onGetProfile();
   }, []);
@@ -26,7 +23,6 @@ export default function SharePage() {
     }
   }, [profileData]);
 
-  // Fetch offline QR code when offLine state changes to true
   useEffect(() => {
     if (offLine && profileData?.userPk) {
       onGetOfflineQrCode(profileData.userPk);
@@ -82,9 +78,8 @@ export default function SharePage() {
           <ProfileInformation profileData={profileData} withEdit={false} />
           <div className="flex flex-col items-center justify-center my-8">
             <Image
-              src={`https://fikrafarida.com/Media/Profiles/${
-                offLine ? offlineQrCodeData?.imagename || '' : QrCodeData?.imagename || ''
-              }`}
+              src={`https://fikrafarida.com/Media/Profiles/${offLine ? offlineQrCodeData?.imagename || '' : QrCodeData?.imagename || ''
+                }`}
               alt={offLine ? 'Offline QR Code' : 'QR Code'}
               width={300}
               height={300}

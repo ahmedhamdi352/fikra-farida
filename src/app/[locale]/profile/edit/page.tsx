@@ -3,6 +3,7 @@
 import { useGetProfileQuery, useUpdateProfileMutation } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import EditProfileForm, { EditProfileFormRef } from './components/EditProfileForm';
+import CustomizationForm, { CustomizationFormRef } from './components/CustomizationForm';
 import EditProfileContactForm, { EditProfileContactFormRef } from './components/EditProfileContactForm';
 import CollapsibleSection from './components/CollapsibleSection';
 import { toast } from 'react-toastify';
@@ -21,6 +22,7 @@ export default function EditProfilePage() {
 
   const profileFormRef = useRef<EditProfileFormRef>(null);
   const contactFormRef = useRef<EditProfileContactFormRef>(null);
+  const customizationFormRef = useRef<CustomizationFormRef>(null);
 
   const { onUpdateProfile, isLoading: isUpdatingProfile } = useUpdateProfileMutation();
 
@@ -41,7 +43,7 @@ export default function EditProfilePage() {
       // If both forms are valid, get their values
       const personalData = profileFormRef.current?.getValues() || {};
       const contactData = contactFormRef.current?.getValues() || {};
-
+      const customizationData = customizationFormRef.current?.getValues() || {};
       // Define interfaces for form data
       interface ContactField {
         value: string;
@@ -114,6 +116,7 @@ export default function EditProfilePage() {
       const combinedData = {
         ...profileData,
         ...personalData,
+        ...customizationData,
         ...transformedContactData,
       };
 
@@ -279,6 +282,15 @@ export default function EditProfilePage() {
             >
               <EditProfileContactForm
                 ref={contactFormRef}
+                initialData={profileData}
+              />
+            </CollapsibleSection>
+
+            <CollapsibleSection
+              title="Customization"
+            >
+              <CustomizationForm
+                ref={customizationFormRef}
                 initialData={profileData}
               />
             </CollapsibleSection>

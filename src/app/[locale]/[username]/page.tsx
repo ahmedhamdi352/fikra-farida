@@ -114,7 +114,6 @@ export default async function UsernamePage({ params }: UsernameProps) {
 
 
   const theme = (typeof profileData.data === 'object' && 'fullname' in profileData.data) ? profileData.data?.theme : 'rounded';
-
   return (
     <div className="relative md:pb-10 ">
       <ClientWrapper

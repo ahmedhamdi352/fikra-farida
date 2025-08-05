@@ -23,34 +23,21 @@ export default function AutoConnectPopup({
   useEffect(() => {
     const dialogElement = autoConnectModalRef.current;
 
-    // Ensure the dialog DOM element is available
     if (dialogElement) {
       if (isOpen) {
-        console.log("AutoConnectPopup: showing popup");
-        // Use showModal() for a modal dialog that prevents interaction with elements outside
-        // Check dialogElement.open to prevent re-opening if already open (optional but good)
         if (!dialogElement.open) {
           dialogElement.showModal();
         }
-        // Add blur effect to the body
         document.body.classList.add('blur-backdrop');
       } else {
-        console.log("AutoConnectPopup: closing popup");
-        // Only close if it's actually open
         if (dialogElement.open) {
           dialogElement.close();
         }
-        // Remove blur effect from the body
         document.body.classList.remove('blur-backdrop');
       }
-    } else {
-      // This log helps in debugging if the ref is unexpectedly null when isOpen changes
-      console.log("AutoConnectPopup: Dialog ref not yet available when isOpen changed. Current isOpen:", isOpen);
     }
-  }, [isOpen]); // Re-run this effect only when the `isOpen` prop changes
+  }, [isOpen]);
 
-  // Effect to manage the global CSS style for the blur effect
-  // This should run only once on mount and clean up on unmount.
   useEffect(() => {
     const styleId = 'blur-backdrop-style';
     if (!document.getElementById(styleId)) {

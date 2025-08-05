@@ -207,10 +207,8 @@ const ConnectionsPage = () => {
               ) : (
                 <button
                   onClick={() => {
-                    console.log("click")
                     setShowAutoConnectPopup(true);
                   }}
-                  // tabIndex={0}
                   className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
                 >
                   <span className="text-center text-h4">Add +</span>
