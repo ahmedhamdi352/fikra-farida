@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import TextInput from 'components/forms/text-input';
 import { PhoneInput } from 'components/forms/phone-input';
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export interface ContactField {
   value: string;
@@ -134,6 +134,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
                 label={label}
                 defaultCountry="eg"
                 key={`${fieldName}.${index}.value`}
+                defaultValue={field.value}
               />
             ) : (
               <TextInput
@@ -178,14 +179,14 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
 
               </label>}
 
-              {fields.length < 2 && <button
+              {/* {fields.length < 2 && <button
                 type="button"
                 onClick={onAdd}
                 className="inline-flex items-center px-3 py-1.5 border border-[var(--main-color1)] shadow-sm text-xs font-medium rounded-full text-[var(--main-color1)] bg-transparent hover:bg-[var(--main-color1)] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FEC400] transition-colors"
               >
                 <PlusIcon className="h-3.5 w-3.5 mr-1.5" />
                 Add
-              </button>}
+              </button>} */}
             </div>
 
             {fields.length > 1 && index !== 0 && (

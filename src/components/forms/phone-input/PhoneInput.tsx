@@ -53,12 +53,15 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
     } else return defaultCountries;
   };
 
+  const initialValue = (rest.defaultValue || rest.value || '') as string;
+
   const { inputValue, handlePhoneValueChange, country, setCountry } = usePhoneInput({
     defaultCountry: defaultCountry ?? 'eg',
     countries: countriesOptions(),
     defaultMask,
     forceDialCode: false,
     disableDialCodeAndPrefix: true,
+    value: initialValue,
   });
 
   return (

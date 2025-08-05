@@ -343,14 +343,15 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
               </ul>
             </p>
 
-            <div className="flex justify-center mt-4">
+            {/* <div className=""> */}
+            <form method="dialog" className="w-full flex gap-3 justify-center mt-4">
               <button
-                type="submit"
                 className="py-2 px-8 bg-gray-300 hover:bg-gray-400 text-black rounded-lg font-medium"
               >
                 Cancel
               </button>
-            </div>
+            </form>
+            {/* </div> */}
           </div>
         </div>
       </dialog>

@@ -103,9 +103,9 @@ export default function EditProfilePage() {
         });
 
         // Map websites if needed (assuming single website)
-        contactData.websites?.forEach((website, index) => {
+        contactData.websites?.forEach((website) => {
           if (website?.value) {
-            transformedContactData[`websiteUrl${index + 1}`] = website.value;
+            transformedContactData[`websiteUrl`] = website.value;
           }
         })
       }
