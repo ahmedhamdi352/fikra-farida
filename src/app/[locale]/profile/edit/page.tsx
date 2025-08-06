@@ -9,6 +9,7 @@ import CollapsibleSection from './components/CollapsibleSection';
 import { toast } from 'react-toastify';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { useUploadProfileImageMutation, useUploadCoverImageMutation } from 'hooks/profile/mutations';
 
 export default function EditProfilePage() {
@@ -25,6 +26,57 @@ export default function EditProfilePage() {
   const customizationFormRef = useRef<CustomizationFormRef>(null);
 
   const { onUpdateProfile, isLoading: isUpdatingProfile } = useUpdateProfileMutation();
+  const searchParams = useSearchParams();
+  const customizationParam = searchParams?.get('customization');
+
+
+  // Handle scrolling to customization section when the param is present
+  useEffect(() => {
+    if (customizationParam) {
+      const scrollToCustomization = () => {
+        try {
+          // First, ensure the section is expanded
+          const collapsibleHeader = document.querySelector('[data-section="customization"]');
+          if (collapsibleHeader && !collapsibleHeader.getAttribute('data-open')) {
+            (collapsibleHeader as HTMLElement).click();
+          }
+
+          // Then scroll to the section
+          const section = document.getElementById('customization-section');
+          if (section) {
+            // Small delay to ensure the section is expanded
+            setTimeout(() => {
+              section.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+
+              // Add a temporary highlight
+              section.style.transition = 'box-shadow 0.5s';
+              section.style.boxShadow = '0 0 0 2px var(--main-color1)';
+
+              // Remove the highlight after animation
+              setTimeout(() => {
+                section.style.boxShadow = 'none';
+              }, 2000);
+
+              // Clean up the URL
+              const cleanUrl = window.location.pathname;
+              window.history.replaceState({}, '', cleanUrl);
+            }, 100);
+          }
+        } catch (error) {
+          console.error('Error scrolling to section:', error);
+        }
+      };
+
+      // Initial attempt after a small delay to ensure everything is rendered
+      const timer = setTimeout(scrollToCustomization, 300);
+
+      // Cleanup
+      return () => clearTimeout(timer);
+    }
+  }, [customizationParam]);
 
   const handleSectionUpdate = async () => {
     setIsUpdating(true);
@@ -288,6 +340,8 @@ export default function EditProfilePage() {
 
             <CollapsibleSection
               title="Customization"
+              openOption={customizationParam ? true : false}
+              data-section="customization"
             >
               <CustomizationForm
                 ref={customizationFormRef}

@@ -56,6 +56,7 @@ const generateVCard = (profile: VCardProfile & { username?: string }) => {
   return new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
 };
 
+
 export default function ClientWrapper({ isAccountLocked, profileData, theme = 'premium' }: ClientWrapperProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
@@ -143,9 +144,8 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
       case 'premium':
         return (
           <div className="premium-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
-            style={{ background: 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
+            style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
           >
-            {/* {lightThemeBackground()} */}
             <div className="relative">
               <CoverPhoto theme="premium" />
               <div className="absolute top-[50%] left-[5%] z-20 flex justify-start">
@@ -200,7 +200,12 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Call"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </button>}
@@ -215,7 +220,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Email"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}>
+
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </button>}
@@ -229,22 +240,30 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Website"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                 </svg>
               </button>}
             </div>
 
-            {profileData?.saveContact && <div className="px-6 pb-6 relative z-10">
-              {profileData?.saveContact && (
-                <button
-                  onClick={handleSaveContact}
-                  className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
-                >
-                  Save Contact
-                </button>
-              )}
-            </div>}
+            {
+              profileData?.saveContact && <div className="px-6 pb-6 relative z-10">
+                {profileData?.saveContact && (
+                  <button
+                    onClick={handleSaveContact}
+                    className="w-full text-black bg-yellow-500 hover:bg-yellow-600 py-4 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105"
+                  >
+                    Save Contact
+                  </button>
+                )}
+              </div>
+            }
 
             {/* Profile Links Grid - Sorted by sort property */}
             <div className="px-6 grid grid-cols-3 gap-4 relative z-10 w-full pb-10">
@@ -253,13 +272,15 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 .sort((a, b) => (a.sort || 0) - (b.sort || 0)) // Sort by sort value
                 .map((link) => (
                   <div key={link.pk} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="p-3 flex flex-col items-center justify-center shadow-sm">
-                    <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
+                    <Link
+                      style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                      href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
                       <Image
                         src={`${baseIconsUrl}${link.iconurl}`}
                         alt={link.title}
                         width={60}
                         height={60}
-                        className="object-contain"
+                        className="object-contain w-full h-full"
                       />
                     </Link>
                     <span className="text-[16px] text-white font-semibold mt-1 max-w-[100px] truncate">{link.title}</span>
@@ -276,13 +297,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 creat your own card
               </Link>
             </div>
-          </div>
+          </div >
         );
 
       case 'edge':
         return (
           <div className="premium-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
-            style={{ background: 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
+            style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
           >
             {/* {lightThemeBackground()} */}
             <div className="relative">
@@ -341,7 +362,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Call"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </button>}
@@ -356,7 +383,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Email"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </button>}
@@ -370,7 +403,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Website"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                 </svg>
               </button>}
@@ -430,7 +469,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
       case 'rounded':
         return (
           <div className="premium-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
-            style={{ background: 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
+            style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
           >
             {/* {lightThemeBackground()} */}
             <div className="relative">
@@ -487,7 +526,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Call"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </button>}
@@ -502,7 +547,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Email"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </button>}
@@ -516,7 +567,13 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 className="p-4 rounded-full bg-[var(--main-color1)] hover:bg-gray-200 transition-colors"
                 aria-label="Website"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke={profileData?.iconColor?.length > 0 ? profileData.iconColor : 'currentColor'}
+                  style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                 </svg>
               </button>}

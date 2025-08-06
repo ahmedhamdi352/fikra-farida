@@ -3,13 +3,15 @@ import { useState } from 'react';
 interface CollapsibleSectionProps {
   title: string;
   children: React.ReactNode;
+  openOption?: boolean;
 }
 
 export default function CollapsibleSection({
   title,
   children,
+  openOption
 }: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(openOption ?? false);
 
   return (
     <div className="py-4 border-b border-[var(--main-color1)]">

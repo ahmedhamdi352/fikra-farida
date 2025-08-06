@@ -189,7 +189,10 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                     </Link>
 
                     {/* Customization */}
-                    <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
+                    <Link 
+                      href="/profile/edit?customization=1"
+                      className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer"
+                    >
                       <div className="w-8 h-8 flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +222,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                         </svg>
                       </div>
                       <div className="text-gray-700 dark:text-white">Customization</div>
-                    </div>
+                    </Link>
 
                     {/* Lock Profile */}
                     <div className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer">
