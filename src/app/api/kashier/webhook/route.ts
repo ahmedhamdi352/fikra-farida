@@ -1,50 +1,93 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const API_KEY = process.env.KASHIER_API_KEY!;
+// Ensure this is your "Webhook Secret Key" from the Kashier dashboard, not the API key.
+const KASHIER_WEBHOOK_SECRET = process.env.KASHIER_WEBHOOK_SECRET;
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
+  // 1. Verify the secret is configured on the server.
+  if (!KASHIER_WEBHOOK_SECRET) {
+    console.error('CRITICAL_ERROR: KASHIER_WEBHOOK_SECRET is not set in environment variables.');
+    return NextResponse.json({ error: 'Internal server configuration error' }, { status: 500 });
+  }
 
-    // Verify webhook signature
+  try {
+    // 2. Get the RAW text of the request body for signature verification.
+    // This is the most important fix.
+    const rawBody = await request.text();
+
+    // 3. Get the signature from the request headers.
     const signature = request.headers.get('x-kashier-signature');
     if (!signature) {
-      return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
+      console.warn("Webhook received without 'x-kashier-signature' header.");
+      return NextResponse.json({ error: 'Missing signature header' }, { status: 401 });
     }
 
-    // Calculate expected signature
-    const payload = JSON.stringify(body);
-    const expectedSignature = crypto.createHmac('sha256', API_KEY).update(payload).digest('hex');
+    // 4. Calculate the expected signature using the raw body.
+    const expectedSignature = crypto
+      .createHmac('sha256', KASHIER_WEBHOOK_SECRET)
+      .update(rawBody) // Use the raw text body here.
+      .digest('hex');
 
-    // Verify signature
+    // 5. Securely compare the signatures.
     if (signature !== expectedSignature) {
+      console.error('Invalid webhook signature. Request may be fraudulent.');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
-    // Handle different payment statuses
-    const { status } = body;
+    // 6. Signature is valid! Now parse the JSON to use its content.
+    const event = JSON.parse(rawBody);
 
-    console.log(body, 'kashiiier');
+    // --- Structured Logging for Vercel ---
+    // This makes it easy to search and filter your logs.
+    console.log(
+      JSON.stringify(
+        {
+          logType: 'KASHIER_WEBHOOK_VALIDATED',
+          eventType: event.type,
+          orderId: event.data?.orderId,
+          paymentStatus: event.data?.status,
+          timestamp: new Date().toISOString(),
+        },
+        null,
+        2
+      )
+    );
 
-    // Here you can update your database or perform other actions based on the payment status
+    // --- Business Logic ---
+    const { orderId, status } = event.data;
+
     switch (status) {
       case 'SUCCESS':
-        // Payment successful
+        // TODO: Add your logic for a successful payment.
+        // - Find order in DB using `orderId`.
+        // - Check if already paid (idempotency).
+        // - Update status to 'paid'.
+        // - Grant access to service/product.
+        console.log(`Processing SUCCESS for orderId: ${orderId}`);
         break;
+
       case 'FAILED':
-        // Payment failed
+        // TODO: Add your logic for a failed payment.
+        // - Find order in DB using `orderId`.
+        // - Update status to 'failed'.
+        console.log(`Processing FAILED for orderId: ${orderId}`);
         break;
+
       case 'PENDING':
-        // Payment pending
+        // No action is usually needed for pending status.
+        console.log(`Processing PENDING for orderId: ${orderId}`);
         break;
+
       default:
-        console.info('Unknown payment status:', status);
+        console.info(`Received unhandled payment status: '${status}' for orderId: ${orderId}`);
     }
 
-    return NextResponse.json({ success: true });
+    // 7. Acknowledge receipt of the webhook.
+    return NextResponse.json({ received: true });
   } catch (error) {
-    console.error('Webhook error:', error instanceof Error ? error.message : error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Unhandled error in Kashier webhook processing:', message);
     return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
   }
 }
