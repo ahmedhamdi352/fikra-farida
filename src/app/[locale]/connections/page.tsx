@@ -528,7 +528,6 @@ const ConnectionsPage = () => {
         groups={groups}
       />}
       {showSubscriptionPopup && <SubscriptionsPopup
-        redirectLink='connections'
         isOpen={showSubscriptionPopup}
         onClose={() => setShowSubscriptionPopup(false)}
       />}
