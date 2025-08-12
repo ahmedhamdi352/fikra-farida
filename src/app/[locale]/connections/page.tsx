@@ -14,7 +14,9 @@ import saveAs from 'file-saver';
 import AutoConnectPopup from '../[username]/components/AutoConnectPopup';
 import ViewContactPopup from './components/ViewContactPopup';
 import AddToGroupPopup from './components/AddToGroupPopup';
-
+import { useSubscriptionStatus } from 'hooks';
+import { UnlockedButton } from 'components/subcriptions/subcriptionButtons'
+import SubscriptionsPopup from 'components/subcriptions/subcriptionsPopup';
 enum TabType {
   GROUPS = 'groups',
   CONTACTS = 'contacts',
@@ -31,7 +33,7 @@ const ConnectionsPage = () => {
   const { onDeleteGroup, isLoading: deleteGroupLoading } = useDeleteGroupMutation();
   const { onExportContactsFile, isLoading: exportContactsFileLoading } = useExportContactsFileMutation();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabType>(TabType.GROUPS);
+  const [activeTab, setActiveTab] = useState<TabType>(TabType.CONTACTS);
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
@@ -39,7 +41,14 @@ const ConnectionsPage = () => {
   const [showAddContactToGroupPopup, setShowAddContactToGroupPopup] = useState(false);
   const [selectedContactPk, setSelectedContactPk] = useState<number | null>(null);
   const [selectedContact, setSelectedContact] = useState<ConnectionForCreateDTO | null>(null);
+  const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const hasProAccess = useSubscriptionStatus({
+    subscriptionType: profileData?.type,
+    subscriptionEndDate: profileData?.subscriptionEnddate
+  });
+  console.log(hasProAccess)
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -136,6 +145,8 @@ const ConnectionsPage = () => {
     return <LoadingOverlay isLoading={isLoading || connectionsLoading || groupsLoading || deleteGroupLoading || deleteConnectionLoading || exportContactsFileLoading} />;
   }
 
+
+
   return (
     <>
       <div className="min-h-screen w-full py-8 px-4">
@@ -217,21 +228,13 @@ const ConnectionsPage = () => {
             }
           </div>
 
+          {/* <UnlockedButton />
+          <ProButton />
+          <UpgradButton /> */}
+
           {/* Tabs */}
           <div className="mb-6">
             <nav className="-mb-px flex justify-around space-x-8">
-              <button
-                onClick={() => {
-                  setActiveTab(TabType.GROUPS);
-                  setSearchQuery('');
-                }}
-                className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.GROUPS
-                  ? 'border-[--main-color1] text-[--main-color1]'
-                  : 'border-transparent text-gray-400 hover:text-gray-700 '
-                  }`}
-              >
-                Groups
-              </button>
               <button
                 onClick={() => {
                   setActiveTab(TabType.CONTACTS);
@@ -244,234 +247,263 @@ const ConnectionsPage = () => {
               >
                 Contacts
               </button>
+              <button
+                onClick={() => {
+                  setActiveTab(TabType.GROUPS);
+                  setSearchQuery('');
+                }}
+                className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.GROUPS
+                  ? 'border-[--main-color1] text-[--main-color1]'
+                  : 'border-transparent text-gray-400 hover:text-gray-700 '
+                  }`}
+              >
+                Groups
+              </button>
+
             </nav>
           </div>
 
           {/* Tab Content */}
           <div className="space-y-4">
             {activeTab === TabType.GROUPS ? (
-              <div className="space-y-4">
-                {filteredGroups && filteredGroups.length > 0 ? (
-                  filteredGroups.map(group => (
+              <>
+                {
+                  hasProAccess ? (
                     <div
-                      key={group.GroupId}
-                      className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
-                      ref={menuRef}
+                      className="relative flex flex-col items-center justify-center gap-4 py-20 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
                     >
-                      <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-4 p-1">
-                        <button
-                          className="focus:outline-none touch-manipulation"
-                          onClick={e => toggleMenu(group.GroupId, e)}
-                          onTouchEnd={e => toggleMenu(group.GroupId, e)}
-                          aria-expanded={openMenuId === group.GroupId}
-                          aria-controls={`group-menu-${group.GroupId}`}
-                          aria-label="Group options"
-                        >
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14Z"
-                              stroke="#FEC400"
-                              strokeWidth="1.5"
-                            />
-                            <path
-                              d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
-                              stroke="#FEC400"
-                              strokeWidth="1.5"
-                            />
-                            <path
-                              d="M19 14C20.1046 14 21 13.1046 21 12C21 10.8954 20.1046 10 19 10C17.8954 10 17 10.8954 17 12C17 13.1046 17.8954 14 19 14Z"
-                              stroke="#FEC400"
-                              strokeWidth="1.5"
-                            />
-                          </svg>
-                        </button>
-                        <ul
-                          id={`group-menu-${group.GroupId}`}
-                          className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${openMenuId === group.GroupId ? 'block' : 'hidden'
-                            }`}
-                          onClick={e => e.stopPropagation()}
-                          onTouchEnd={e => e.stopPropagation()}
-                          role="menu"
-                          aria-orientation="vertical"
-                          aria-labelledby={`group-options-${group.GroupId}`}
-                        >
-                          <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md ">
-                            <button
-                              className="px-2 py-1.5 active:bg-transparent focus:bg-transparent w-full text-left"
+                      <UnlockedButton onClick={() => setShowSubscriptionPopup(true)} />
+                    </div>
+
+                  ) : (
+                    <div className="space-y-4">
+                      {filteredGroups && filteredGroups.length > 0 ? (
+                        filteredGroups.map(group => (
+                          <div
+                            key={group.GroupId}
+                            className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
+                            ref={menuRef}
+                          >
+                            <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-4 p-1">
+                              <button
+                                className="focus:outline-none touch-manipulation"
+                                onClick={e => toggleMenu(group.GroupId, e)}
+                                onTouchEnd={e => toggleMenu(group.GroupId, e)}
+                                aria-expanded={openMenuId === group.GroupId}
+                                aria-controls={`group-menu-${group.GroupId}`}
+                                aria-label="Group options"
+                              >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path
+                                    d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14Z"
+                                    stroke="#FEC400"
+                                    strokeWidth="1.5"
+                                  />
+                                  <path
+                                    d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
+                                    stroke="#FEC400"
+                                    strokeWidth="1.5"
+                                  />
+                                  <path
+                                    d="M19 14C20.1046 14 21 13.1046 21 12C21 10.8954 20.1046 10 19 10C17.8954 10 17 10.8954 17 12C17 13.1046 17.8954 14 19 14Z"
+                                    stroke="#FEC400"
+                                    strokeWidth="1.5"
+                                  />
+                                </svg>
+                              </button>
+                              <ul
+                                id={`group-menu-${group.GroupId}`}
+                                className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${openMenuId === group.GroupId ? 'block' : 'hidden'
+                                  }`}
+                                onClick={e => e.stopPropagation()}
+                                onTouchEnd={e => e.stopPropagation()}
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby={`group-options-${group.GroupId}`}
+                              >
+                                <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md ">
+                                  <button
+                                    className="px-2 py-1.5 active:bg-transparent focus:bg-transparent w-full text-left"
+                                    onClick={() => {
+                                      const searchParams = new URLSearchParams();
+                                      searchParams.set('groupId', group.GroupId.toString());
+                                      router.push(`/group?${searchParams.toString()}`);
+                                    }}
+                                  >
+                                    Edit Group
+                                  </button>
+                                </li>
+                                <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
+                                  <button
+                                    onClick={() => onDeleteGroup(group.GroupId)}
+                                    className="px-2 py-1.5 active:bg-transparent focus:bg-transparent"
+                                  >
+                                    Delete Group
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                              <div className="flex flex-col py-2">
+                                <div className="flex items-center gap-2">
+                                  <h1 className="text-h2 font-semibold">{group.GroupName}</h1>
+                                </div>
+                                <p className="text-gray-400 text-h4">{group.CompanyName}</p>
+                              </div>
+                            </div>
+                            <div className="flex justify-center gap-1">
+                              <p className="text-h4 font-bold">{group.UsersCount}</p>
+                              <p className="text-h4 text-[--main-color1]">Members</p>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-center text-gray-500 py-8">No groups found</p>
+                      )}
+                    </div>
+                  )}
+              </>
+            )
+              : (
+                <div className="space-y-4">
+                  {filteredContacts.length > 0 ? (
+                    filteredContacts.map((contact, index) => (
+                      <div
+                        key={contact.userpk + index}
+                        className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
+                      >
+                        <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-2 p-1">
+                          <button
+                            className="focus:outline-none touch-manipulation"
+                            onClick={e => toggleMenu(contact?.pk || 0, e)}
+                            onTouchEnd={e => toggleMenu(contact?.pk || 0, e)}
+                            aria-expanded={openMenuId === contact?.pk}
+                            aria-controls={`contact-menu-${contact?.pk}`}
+                            aria-label="Group options"
+                          >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14Z"
+                                stroke="#FEC400"
+                                strokeWidth="1.5"
+                              />
+                              <path
+                                d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
+                                stroke="#FEC400"
+                                strokeWidth="1.5"
+                              />
+                              <path
+                                d="M19 14C20.1046 14 21 13.1046 21 12C21 10.8954 20.1046 10 19 10C17.8954 10 17 10.8954 17 12C17 13.1046 17.8954 14 19 14Z"
+                                stroke="#FEC400"
+                                strokeWidth="1.5"
+                              />
+                            </svg>
+                          </button>
+
+                          <ul
+                            id={`contact-menu-${contact.pk}`}
+                            className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${openMenuId === contact.pk ? 'block' : 'hidden'
+                              }`}
+                            onClick={e => e.stopPropagation()}
+                            onTouchEnd={e => e.stopPropagation()}
+                            role="menu"
+                            aria-orientation="vertical"
+                            aria-labelledby={`contact-options-${contact.pk}`}
+                          >
+                            <li
                               onClick={() => {
-                                const searchParams = new URLSearchParams();
-                                searchParams.set('groupId', group.GroupId.toString());
-                                router.push(`/group?${searchParams.toString()}`);
+                                setShowAddContactToGroupPopup(true)
+                                setSelectedContactPk(contact.pk || 0)
                               }}
-                            >
-                              Edit Group
-                            </button>
-                          </li>
-                          <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
-                            <button
-                              onClick={() => onDeleteGroup(group.GroupId)}
-                              className="px-2 py-1.5 active:bg-transparent focus:bg-transparent"
-                            >
-                              Delete Group
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-
-                      <div className="flex items-center gap-4">
-                        <div className="flex flex-col py-2">
-                          <div className="flex items-center gap-2">
-                            <h1 className="text-h2 font-semibold">{group.GroupName}</h1>
-                          </div>
-                          <p className="text-gray-400 text-h4">{group.CompanyName}</p>
-                        </div>
-                      </div>
-                      <div className="flex justify-center gap-1">
-                        <p className="text-h4 font-bold">{group.UsersCount}</p>
-                        <p className="text-h4 text-[--main-color1]">Members</p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500 py-8">No groups found</p>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredContacts.length > 0 ? (
-                  filteredContacts.map((contact, index) => (
-                    <div
-                      key={contact.userpk + index}
-                      className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
-                    >
-                      <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-2 p-1">
-                        <button
-                          className="focus:outline-none touch-manipulation"
-                          onClick={e => toggleMenu(contact?.pk || 0, e)}
-                          onTouchEnd={e => toggleMenu(contact?.pk || 0, e)}
-                          aria-expanded={openMenuId === contact?.pk}
-                          aria-controls={`contact-menu-${contact?.pk}`}
-                          aria-label="Group options"
-                        >
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14Z"
-                              stroke="#FEC400"
-                              strokeWidth="1.5"
-                            />
-                            <path
-                              d="M12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
-                              stroke="#FEC400"
-                              strokeWidth="1.5"
-                            />
-                            <path
-                              d="M19 14C20.1046 14 21 13.1046 21 12C21 10.8954 20.1046 10 19 10C17.8954 10 17 10.8954 17 12C17 13.1046 17.8954 14 19 14Z"
-                              stroke="#FEC400"
-                              strokeWidth="1.5"
-                            />
-                          </svg>
-                        </button>
-
-                        <ul
-                          id={`contact-menu-${contact.pk}`}
-                          className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${openMenuId === contact.pk ? 'block' : 'hidden'
-                            }`}
-                          onClick={e => e.stopPropagation()}
-                          onTouchEnd={e => e.stopPropagation()}
-                          role="menu"
-                          aria-orientation="vertical"
-                          aria-labelledby={`contact-options-${contact.pk}`}
-                        >
-                          <li
-                            onClick={() => {
-                              setShowAddContactToGroupPopup(true)
-                              setSelectedContactPk(contact.pk || 0)
+                              className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
+                              <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">Add to Group</a>
+                            </li>
+                            <li onClick={() => {
+                              setShowContactPopup(true)
+                              setSelectedContact(contact)
                             }}
-                            className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
-                            <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">Add to Group</a>
-                          </li>
-                          <li onClick={() => {
-                            setShowContactPopup(true)
-                            setSelectedContact(contact)
-                          }}
-                            className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
-                            <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">View Contact</a>
-                          </li>
-                        </ul>
-                      </div>
+                              className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
+                              <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">View Contact</a>
+                            </li>
+                          </ul>
+                        </div>
 
-                      <div className="flex items-center gap-4">
-                        <div className="flex flex-col py-2 gap-1">
-                          <div className="flex items-center gap-2">
-                            <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px]  text-[--main-color1]'>Title:</p>
-                              <h1 className="text-[18px] ">{contact?.title}</h1>
+                        <div className="flex items-center gap-4">
+                          <div className="flex flex-col py-2 gap-1">
+                            <div className="flex items-center gap-2">
+                              <div className='flex items-center gap-2 justify-center'>
+                                <p className='text-[18px]  text-[--main-color1]'>Title:</p>
+                                <h1 className="text-[18px] ">{contact?.title}</h1>
+                              </div>
                             </div>
+                            <div className="flex items-center gap-2">
+                              <div className='flex items-center gap-2 justify-center'>
+                                <p className='text-[18px]  text-[--main-color1]'>Name:</p>
+                                <h1 className="text-[18px] ">{contact?.fullname}</h1>
+                              </div>
+                            </div>
+                            {contact?.company && <div className="flex items-center gap-2">
+                              <div className='flex items-center gap-2 justify-center'>
+                                <p className='text-[18px] text-[--main-color1]'>Company:</p>
+                                <p className="text-[18px] ">{contact?.company}</p>
+                              </div>
+                            </div>}
+                            {contact?.email && <div className="flex items-center gap-2">
+                              <div className='flex items-center gap-2 justify-center'>
+                                <p className='text-[18px] text-[--main-color1]'>Email:</p>
+                                <p className="text-[18px] ">{contact?.email}</p>
+                              </div>
+                            </div>}
+                            {contact?.phone && <div className="flex items-center gap-2">
+                              <div className='flex items-center gap-2 justify-center'>
+                                <p className='text-[18px] text-[--main-color1]'>Phone:</p>
+                                <p className="text-[18px] ">{contact?.phone}</p>
+                              </div>
+                            </div>}
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px]  text-[--main-color1]'>Name:</p>
-                              <h1 className="text-[18px] ">{contact?.fullname}</h1>
-                            </div>
-                          </div>
-                          {contact?.company && <div className="flex items-center gap-2">
-                            <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Company:</p>
-                              <p className="text-[18px] ">{contact?.company}</p>
-                            </div>
-                          </div>}
-                          {contact?.email && <div className="flex items-center gap-2">
-                            <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Email:</p>
-                              <p className="text-[18px] ">{contact?.email}</p>
-                            </div>
-                          </div>}
-                          {contact?.phone && <div className="flex items-center gap-2">
-                            <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Phone:</p>
-                              <p className="text-[18px] ">{contact?.phone}</p>
-                            </div>
-                          </div>}
+                        </div>
+
+                        <div className="flex justify-center gap-4 ">
+                          <button
+                            onClick={() => {
+                              onDeleteConnection({ ConnectionId: contact.pk! });
+                              setTimeout(() => onGetConnections(), 1000);
+                            }}
+                            className="flex gap-2 justify-center items-center border border-[--main-color1] px-6 py-1 rounded-full text-[--main-color1]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                              <path
+                                d="M4.66675 14.5C4.30008 14.5 3.98619 14.3694 3.72508 14.1083C3.46397 13.8472 3.33341 13.5333 3.33341 13.1667V4.5H2.66675V3.16667H6.00008V2.5H10.0001V3.16667H13.3334V4.5H12.6667V13.1667C12.6667 13.5333 12.5362 13.8472 12.2751 14.1083C12.014 14.3694 11.7001 14.5 11.3334 14.5H4.66675ZM11.3334 4.5H4.66675V13.1667H11.3334V4.5ZM6.00008 11.8333H7.33341V5.83333H6.00008V11.8333ZM8.66675 11.8333H10.0001V5.83333H8.66675V11.8333Z"
+                                fill="#FEC400"
+                                fill-opacity="0.9"
+                              />
+                            </svg>
+                            <span>Remove</span>
+                          </button>
+                          <button onClick={() => handleSaveContact(contact)} className="flex gap-2 justify-center items-center border border-[--main-color1] px-6 py-1 rounded-full text-[--main-color1]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                              <path
+                                d="M11.3333 14.5V9.16667H4.66667V14.5M4.66667 2.5V5.83333H10M12.6667 14.5H3.33333C2.97971 14.5 2.64057 14.3595 2.39052 14.1095C2.14048 13.8594 2 13.5203 2 13.1667V3.83333C2 3.47971 2.14048 3.14057 2.39052 2.89052C2.64057 2.64048 2.97971 2.5 3.33333 2.5H10.6667L14 5.83333V13.1667C14 13.5203 13.8595 13.8594 13.6095 14.1095C13.3594 14.3595 13.0203 14.5 12.6667 14.5Z"
+                                stroke="#FEC400"
+                                stroke-opacity="0.9"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                            <span>Save</span>
+                          </button>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-gray-500 py-8">No contacts found</p>
+                  )}
+                </div>
+              )
+            }
 
-                      <div className="flex justify-center gap-4 ">
-                        <button
-                          onClick={() => {
-                            onDeleteConnection({ ConnectionId: contact.pk! });
-                            setTimeout(() => onGetConnections(), 1000);
-                          }}
-                          className="flex gap-2 justify-center items-center border border-[--main-color1] px-6 py-1 rounded-full text-[--main-color1]">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                            <path
-                              d="M4.66675 14.5C4.30008 14.5 3.98619 14.3694 3.72508 14.1083C3.46397 13.8472 3.33341 13.5333 3.33341 13.1667V4.5H2.66675V3.16667H6.00008V2.5H10.0001V3.16667H13.3334V4.5H12.6667V13.1667C12.6667 13.5333 12.5362 13.8472 12.2751 14.1083C12.014 14.3694 11.7001 14.5 11.3334 14.5H4.66675ZM11.3334 4.5H4.66675V13.1667H11.3334V4.5ZM6.00008 11.8333H7.33341V5.83333H6.00008V11.8333ZM8.66675 11.8333H10.0001V5.83333H8.66675V11.8333Z"
-                              fill="#FEC400"
-                              fill-opacity="0.9"
-                            />
-                          </svg>
-                          <span>Remove</span>
-                        </button>
-                        <button onClick={() => handleSaveContact(contact)} className="flex gap-2 justify-center items-center border border-[--main-color1] px-6 py-1 rounded-full text-[--main-color1]">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-                            <path
-                              d="M11.3333 14.5V9.16667H4.66667V14.5M4.66667 2.5V5.83333H10M12.6667 14.5H3.33333C2.97971 14.5 2.64057 14.3595 2.39052 14.1095C2.14048 13.8594 2 13.5203 2 13.1667V3.83333C2 3.47971 2.14048 3.14057 2.39052 2.89052C2.64057 2.64048 2.97971 2.5 3.33333 2.5H10.6667L14 5.83333V13.1667C14 13.5203 13.8595 13.8594 13.6095 14.1095C13.3594 14.3595 13.0203 14.5 12.6667 14.5Z"
-                              stroke="#FEC400"
-                              stroke-opacity="0.9"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                          <span>Save</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500 py-8">No contacts found</p>
-                )}
-              </div>
-            )}
+
           </div>
         </div>
       </div>
@@ -494,6 +526,11 @@ const ConnectionsPage = () => {
         onClose={() => setShowAddContactToGroupPopup(false)}
         contactPk={selectedContactPk || 0}
         groups={groups}
+      />}
+      {showSubscriptionPopup && <SubscriptionsPopup
+        redirectLink='connections'
+        isOpen={showSubscriptionPopup}
+        onClose={() => setShowSubscriptionPopup(false)}
       />}
     </>
   );

@@ -6,6 +6,8 @@ import { BiErrorCircle } from 'react-icons/bi';
 import { TiCancel } from 'react-icons/ti';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useUpdateSubscriptionMutation } from 'hooks';
+import LoadingOverlay from 'components/ui/LoadingOverlay';
 
 interface PaymentDetails {
   paymentStatus: string;
@@ -18,13 +20,13 @@ interface PaymentDetails {
   transactionId: string;
   amount: string;
   currency: string;
-  mode: string;
   signature?: string;
 }
 
 export default function PaymentStatusPage() {
   const t = useTranslations('Payment');
   const searchParams = useSearchParams();
+  const { onUpdateSubscription, isLoading } = useUpdateSubscriptionMutation();
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
   useEffect(() => {
     // Get all query parameters
@@ -40,8 +42,7 @@ export default function PaymentStatusPage() {
       transactionId,
       amount,
       currency,
-      mode,
-      signature
+      signature,
     } = params;
 
     // Store payment details
@@ -56,14 +57,31 @@ export default function PaymentStatusPage() {
       transactionId: transactionId || orderId,
       amount,
       currency,
-      mode: mode || 'CASH', // Default to CASH if not provided
-      signature
+      signature,
     });
 
   }, [searchParams]);
 
+  useEffect(() => {
+    if (paymentDetails?.paymentStatus === 'SUCCESS') {
+      onUpdateSubscription({
+        "CountryCode": "EG",
+        "Domain": "fikrafarida.com",
+        "DaysToAdd": paymentDetails?.amount === '449' ? 365 : 30,
+        "PaymentAmount": Number(paymentDetails?.amount),
+        "Currency": "EGP",
+        "PaymentOperationId": paymentDetails?.merchantOrderId,
+      })
+    }
+  }, [paymentDetails]);
+
+
   if (!paymentDetails) {
     return null;
+  }
+
+  if (isLoading) {
+    return <LoadingOverlay isLoading={isLoading} />
   }
 
   const getStatusConfig = () => {
@@ -71,24 +89,22 @@ export default function PaymentStatusPage() {
       case 'SUCCESS':
         return {
           icon: <BsCheckCircleFill className="text-[#FEC400] text-6xl" />,
-          title: paymentDetails.mode === 'CASH' ? t('cashPaymentSuccessful') : t('paymentSuccessful'),
-          message: paymentDetails.mode === 'CASH'
-            ? t('cashPaymentSuccessMessage')
-            : t('onlinePaymentSuccessMessage'),
+          title: 'Welcome to Pro plan',
+          message: 'Your subscription has been activated successfully',
           orderDetails: true
         };
       case 'FAILED':
         return {
           icon: <BiErrorCircle className="text-red-500 text-6xl" />,
-          title: t('paymentFailed'),
-          message: t('paymentFailureMessage'),
+          title: 'Payment Failed',
+          message: 'Your subscription has not been activated successfully',
           orderDetails: false
         };
       default:
         return {
           icon: <TiCancel className="text-gray-400 text-6xl" />,
-          title: t('paymentCancelled'),
-          message: t('paymentCancelMessage'),
+          title: 'Payment Cancelled',
+          message: 'Your subscription has not been activated successfully',
           orderDetails: false
         };
     }
@@ -111,38 +127,18 @@ export default function PaymentStatusPage() {
               {t('orderDetails')}
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-400">{t('orderNumber')}</span>
-                <span>{paymentDetails.merchantOrderId}</span>
-              </div>
+
               <div className="flex justify-between">
                 <span className="text-gray-400">{t('amount')}</span>
                 <span>
-                  {(Number(paymentDetails.amount) / 100).toLocaleString('en-US', {
+                  {(Number(paymentDetails.amount)).toLocaleString('en-US', {
                     style: 'currency',
                     currency: paymentDetails.currency
                   })}
                 </span>
               </div>
-              {paymentDetails.mode === 'CASH' ? (
-                <div className="flex justify-between">
-                  <span className="text-gray-400">{t('paymentMethod')}</span>
-                  <span >{t('cashOnDelivery')}</span>
-                </div>
-              ) : paymentDetails.cardBrand && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400">{t('paymentMethod')}</span>
-                  <span >
-                    {paymentDetails.cardBrand} {paymentDetails.maskedCard}
-                  </span>
-                </div>
-              )}
-              {paymentDetails.mode !== 'CASH' && (
-                <div className="flex justify-between">
-                  <span className="text-gray-400">{t('transactionId')}</span>
-                  <span >{paymentDetails.transactionId}</span>
-                </div>
-              )}
+
+
             </div>
           </div>
         )}
@@ -150,7 +146,7 @@ export default function PaymentStatusPage() {
         <div className="space-y-4">
           {paymentDetails.paymentStatus === 'FAILED' && (
             <Link
-              href="/payment"
+              href="/profile"
               locale={searchParams.get('locale') || 'ar'}
               className="inline-block bg-[#FEC400] font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
             >
@@ -158,11 +154,11 @@ export default function PaymentStatusPage() {
             </Link>
           )}
           <Link
-            href="/"
+            href="/profile"
             locale={searchParams.get('locale') || 'ar'}
             className="inline-block bg-transparent border border-[#FEC400] font-semibold px-6 py-3 rounded-lg hover:bg-[#FEC400]/90 transition-colors w-full text-center"
           >
-            {t('backToHome')}
+            {t('backToProfile')}
           </Link>
         </div>
       </div>

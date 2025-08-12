@@ -29,4 +29,5 @@ export const ApiURLs = {
   addContactToGroup: '/api/UserConnection/UpdateGroup',
   uploadProfileImage: '/api/Media/UploadProfileImage',
   uploadCoverImage: '/api/Media/UploadCoverImage',
+  updateSubscription: '/api/Account/Subscribe',
 } as const;

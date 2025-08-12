@@ -11,6 +11,7 @@ const mapProfileDTOToProfile = (profileDTO: ProfileForReadDTO): Profile => {
   return {
     userPk: profileDTO.userPk,
     username: profileDTO.username,
+    email: profileDTO.email,
     fullname: profileDTO.fullname,
     imageFilename: profileDTO.imageFilename,
     token: profileDTO.token,

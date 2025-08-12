@@ -18,11 +18,13 @@ function generateKashierOrderHash(merchantId: string, orderId: string, amount: n
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, currency, orderId, email, firstName, lastName } = await request.json();
+    const { amount, currency, orderId, email, firstName } = await request.json();
 
-    if (!amount || !currency || !orderId || !email || !firstName || !lastName) {
+    console.log(amount, currency, orderId, email, firstName);
+
+    if (!amount || !currency || !orderId || !email || !firstName) {
       return NextResponse.json(
-        { error: 'Missing required fields: amount, currency, orderId, email, firstName, lastName' },
+        { error: 'Missing required fields: amount, currency, orderId, email, firstName' },
         { status: 400 }
       );
     }
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
     redirectUrl.searchParams.append('display', 'en');
     redirectUrl.searchParams.append('allowedMethods', 'card,wallet');
     redirectUrl.searchParams.append('brandColor', '#fec400');
-    redirectUrl.searchParams.append('merchantRedirect', `${BASE_URL}/payment/status`);
+    redirectUrl.searchParams.append('merchantRedirect', `${BASE_URL}/subscription/status`);
     redirectUrl.searchParams.append('serverWebhook', `${BASE_URL}/api/kashier/webhook`);
 
     // Return the redirect URL

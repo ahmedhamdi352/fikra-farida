@@ -2,6 +2,7 @@ export interface Profile {
   userPk: number;
   username: string;
   fullname: string;
+  email: string;
   imageFilename: string;
   token: string;
   expire_date: string;

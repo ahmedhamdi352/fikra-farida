@@ -7,3 +7,4 @@ export * from './order';
 export * from './categories';
 export * from './groupForCreateDTO';
 export * from './groupResponse';
+export * from './subscriptionForCreateDTO';

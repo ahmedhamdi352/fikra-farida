@@ -25,6 +25,8 @@ export async function POST(request: NextRequest) {
     // Handle different payment statuses
     const { status } = body;
 
+    console.log(body, 'kashiiier');
+
     // Here you can update your database or perform other actions based on the payment status
     switch (status) {
       case 'SUCCESS':
