@@ -202,7 +202,7 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
 
       <div
         ref={modalRef}
-        className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[10000] bg-[#50514E] rounded-2xl shadow-xl w-[90%] max-w-md overflow-hidden"
+        className="h-[90%] overflow-y-auto fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[10000] bg-[#50514E] rounded-2xl shadow-xl w-[90%] max-w-md overflow-hidden"
       >
         <div className="p-6">
           <div className="flex justify-center mb-6">
@@ -233,7 +233,7 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
             </div>
           </div>
 
-          <div className='flex flex-col justify-start align-center gap-1 border border-gray-200 p-4 rounded-2xl'>
+          <div className='overflow-y-auto flex flex-col justify-start align-center gap-1 border border-gray-200 p-4 rounded-2xl'>
 
             <div className='flex flex-col justify-start w-1/4 items-start'>
               <div
