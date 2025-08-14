@@ -62,6 +62,12 @@ export default function PaymentStatusPage() {
 
   }, [searchParams]);
 
+  useEffect(() => {
+    if (paymentDetails?.paymentStatus === 'SUCCESS') {
+      localStorage.removeItem('fikra-farida-cart')
+    }
+  }, [paymentDetails]);
+
   if (!paymentDetails) {
     return null;
   }
@@ -118,7 +124,7 @@ export default function PaymentStatusPage() {
               <div className="flex justify-between">
                 <span className="text-gray-400">{t('amount')}</span>
                 <span>
-                  {(Number(paymentDetails.amount) / 100).toLocaleString('en-US', {
+                  {(Number(paymentDetails.amount)).toLocaleString('en-US', {
                     style: 'currency',
                     currency: paymentDetails.currency
                   })}
