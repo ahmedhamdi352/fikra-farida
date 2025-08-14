@@ -62,11 +62,6 @@ export default function PaymentStatusPage() {
 
   }, [searchParams]);
 
-  useEffect(() => {
-    if (paymentDetails?.paymentStatus === 'SUCCESS') {
-      localStorage.removeItem('fikra-farida-cart')
-    }
-  }, [paymentDetails]);
 
   if (!paymentDetails) {
     return null;
