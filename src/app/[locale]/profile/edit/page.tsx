@@ -11,6 +11,9 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useUploadProfileImageMutation, useUploadCoverImageMutation } from 'hooks/profile/mutations';
+import { UnlockedButton } from 'components/subcriptions/subcriptionButtons';
+import { useSubscriptionStatus } from 'hooks';
+import Link from 'next/link';
 
 export default function EditProfilePage() {
   const { data: profileData, isLoading } = useGetProfileQuery();
@@ -28,6 +31,11 @@ export default function EditProfilePage() {
   const { onUpdateProfile, isLoading: isUpdatingProfile } = useUpdateProfileMutation();
   const searchParams = useSearchParams();
   const customizationParam = searchParams?.get('customization');
+
+  const hasProAccess = useSubscriptionStatus({
+    subscriptionType: profileData?.type,
+    subscriptionEndDate: profileData?.subscriptionEnddate
+  });
 
 
   // Handle scrolling to customization section when the param is present
@@ -181,11 +189,6 @@ export default function EditProfilePage() {
     }
   };
 
-  const handleSectionRemove = (section: string) => {
-    if (confirm(`Are you sure you want to remove ${section}?`)) {
-      toast.info(`Removing ${section}...`);
-    }
-  };
 
   const handleCoverImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -229,7 +232,7 @@ export default function EditProfilePage() {
   return (
     <div className="w-full min-h-screen py-8">
       <div className="max-w-4xl mx-auto rounded-lg overflow-hidden mt-4">
-        <div className="relative w-full h-48 bg-gray-200 rounded-2xl  flex items-center justify-center">
+        <div className="relative mx-[7px] h-48 bg-gray-200 rounded-2xl  flex items-center justify-center">
           <Image
             src={coverImageUrl}
             alt="Cover"
@@ -335,6 +338,7 @@ export default function EditProfilePage() {
               <EditProfileContactForm
                 ref={contactFormRef}
                 initialData={profileData}
+                hasProAccess={hasProAccess}
               />
             </CollapsibleSection>
 
@@ -343,30 +347,44 @@ export default function EditProfilePage() {
               openOption={customizationParam ? true : false}
               data-section="customization"
             >
-              <CustomizationForm
-                ref={customizationFormRef}
-                initialData={profileData}
-              />
+              <>
+                {
+                  !hasProAccess ? (
+                    <div
+                      className="relative flex flex-col items-center justify-center gap-4 py-20 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
+                    >
+                      <UnlockedButton />
+                    </div>
+
+                  ) : (
+                    <CustomizationForm
+                      ref={customizationFormRef}
+                      initialData={profileData}
+                    />
+                  )
+                }
+              </>
+
             </CollapsibleSection>
-            <div className="flex flex-col justify-center gap-2 mt-12">
+            <div className="flex flex-col justify-center items-center w-full gap-2 mt-12">
 
               <button
                 type="button"
                 onClick={handleSectionUpdate}
                 disabled={isUpdating}
-                className={`px-6 py-3 bg-yellow-500 text-black rounded-2xl hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 text-sm font-medium ${isUpdating ? 'opacity-75 cursor-not-allowed' : ''
+                className={`w-[60%] px-6 py-3 bg-yellow-500 text-black rounded-2xl hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 text-sm font-medium ${isUpdating ? 'opacity-75 cursor-not-allowed' : ''
                   }`}
               >
                 {isUpdating ? 'Updating...' : 'Update Profile'}
               </button>
 
-              <button
+              <Link
+                href={`/${profileData?.username}`}
                 type="button"
-                onClick={() => handleSectionRemove('profile')}
                 className="px-6 py-2  text-[var(--main-color1)] rounded-2xl text-sm font-medium"
               >
-                Remove Profile
-              </button>
+                Preview
+              </Link>
             </div>
           </div>
         </div>

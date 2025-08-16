@@ -8,6 +8,8 @@ import { createPortal } from 'react-dom';
 import lock from 'assets/images/lock.png';
 import ProfileSwitcher from './ProfileSwitcher';
 import Link from 'next/link';
+import { ProButton } from 'components/subcriptions/subcriptionButtons';
+import { useSubscriptionStatus } from 'hooks';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -39,6 +41,11 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
   };
 
   const [mounted, setMounted] = useState(false);
+
+  const hasProAccess = useSubscriptionStatus({
+    subscriptionType: profileData?.type,
+    subscriptionEndDate: profileData?.subscriptionEnddate
+  });
 
   // Set mounted state when component mounts
   useEffect(() => {
@@ -189,39 +196,42 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                     </Link>
 
                     {/* Customization */}
-                    <Link 
+                    <Link
                       href="/profile/edit?customization=1"
-                      className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer"
+                      className="flex items-center justify-between gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-100 rounded-lg cursor-pointer"
                     >
-                      <div className="w-8 h-8 flex items-center justify-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
-                          <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-                          <path d="M12 2v2" />
-                          <path d="M12 22v-2" />
-                          <path d="m17 20.66-1-1.73" />
-                          <path d="M11 10.27 7 3.34" />
-                          <path d="m20.66 17-1.73-1" />
-                          <path d="m3.34 7 1.73 1" />
-                          <path d="M14 12h8" />
-                          <path d="M2 12h2" />
-                          <path d="m20.66 7-1.73 1" />
-                          <path d="m3.34 17 1.73-1" />
-                          <path d="m17 3.34-1 1.73" />
-                          <path d="m7 20.66-1-1.73" />
-                        </svg>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
+                            <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                            <path d="M12 2v2" />
+                            <path d="M12 22v-2" />
+                            <path d="m17 20.66-1-1.73" />
+                            <path d="M11 10.27 7 3.34" />
+                            <path d="m20.66 17-1.73-1" />
+                            <path d="m3.34 7 1.73 1" />
+                            <path d="M14 12h8" />
+                            <path d="M2 12h2" />
+                            <path d="m20.66 7-1.73 1" />
+                            <path d="m3.34 17 1.73-1" />
+                            <path d="m17 3.34-1 1.73" />
+                            <path d="m7 20.66-1-1.73" />
+                          </svg>
+                        </div>
+                        <div className="text-gray-700 dark:text-white">Customization</div>
                       </div>
-                      <div className="text-gray-700 dark:text-white">Customization</div>
+                      {hasProAccess && <ProButton />}
                     </Link>
 
                     {/* Lock Profile */}
@@ -246,21 +256,26 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                         <div className="text-gray-700 dark:text-white">Lock Profile</div>
                       </div>
                       {/* Lock Profile Toggle */}
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={profileData?.IsLocked || false}
-                          onChange={handleLockToggle}
-                        />
-                        <div
-                          className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                      {
+                        !hasProAccess ? (
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="sr-only peer"
+                              checked={profileData?.IsLocked || false}
+                              onChange={handleLockToggle}
+                            />
+                            <div
+                              className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
                         after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
                         peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]"
-                        ></div>
-                      </label>
+                            ></div>
+                          </label>
+                        ) : (
+                          <ProButton />
+                        )}
 
                       {/* Lock Profile Dialog */}
                       <dialog ref={lockConfirmModalRef} className="modal modal-backdrop">

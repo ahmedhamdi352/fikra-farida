@@ -7,6 +7,8 @@ import LoadingOverlay from 'components/ui/LoadingOverlay';
 import Link from 'next/link';
 import ProfileInformation from '../profile/components/ProfileInformation';
 import { useGetAnalyticsMutation } from 'hooks/profile/mutations';
+import { useSubscriptionStatus } from 'hooks';
+import { ProButton, UnlockedButton, UpgradButton } from 'components/subcriptions/subcriptionButtons';
 
 type TimeFilter = 'today' | 'week' | 'month' | 'quarter';
 
@@ -14,6 +16,11 @@ const AnalyticsPage = () => {
   const { data: profileData, isLoading, } = useGetProfileQuery();
   const { data: profileAnalytics, isLoading: isLoadingAnalytics, onGetAnalytics } = useGetAnalyticsMutation();
   const [selectedFilter, setSelectedFilter] = useState<TimeFilter>('today');
+
+  const hasProAccess = useSubscriptionStatus({
+    subscriptionType: profileData?.type,
+    subscriptionEndDate: profileData?.subscriptionEnddate
+  });
 
   useEffect(() => {
     const now = new Date();
@@ -185,7 +192,7 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">clicks</span>
               </div>
-              <p className="text-2xl font-bold ">{profileAnalytics?.TotalClicks || 0}</p>
+              {hasProAccess ? <ProButton /> : <p className="text-2xl font-bold ">{profileAnalytics?.TotalClicks || 0}</p>}
             </div>
           </div>
 
@@ -203,7 +210,7 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">rate</span>
               </div>
-              <p className="text-2xl font-bold ">{Number(profileAnalytics?.Rate).toFixed() || 0} %</p>
+              {hasProAccess ? <ProButton /> : <p className="text-2xl font-bold ">{Number(profileAnalytics?.Rate).toFixed() || 0} %</p>}
             </div>
           </div>
         </div>
@@ -212,7 +219,7 @@ const AnalyticsPage = () => {
         <div className="card-container rounded-xl p-4 mb-6">
           <h3 className="font-semibold mb-4">Contact Clicks</h3>
           <div className="space-y-3">
-            {profileData?.links
+            {hasProAccess ? <UnlockedButton /> : profileData?.links
               ?.filter(link => ['phone', 'email', 'save_contact', 'website', 'businessPhone'].includes(link.title))
               .map((link, index) => (
                 <div
@@ -244,7 +251,7 @@ const AnalyticsPage = () => {
         <div className="card-container rounded-xl p-4">
           <h3 className="font-semibold mb-4">Links Visits</h3>
           <div className="space-y-3">
-            {profileData?.links
+            {hasProAccess ? <UpgradButton /> : profileData?.links
               ?.filter(link => !['phone', 'email', 'url', 'save_contact'].includes(link.title))
               .map((link, index) => (
                 <div

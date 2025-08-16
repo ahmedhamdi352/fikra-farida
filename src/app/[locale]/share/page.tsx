@@ -6,12 +6,16 @@ import LoadingOverlay from 'components/ui/LoadingOverlay';
 import ProfileInformation from './components/ProfileInformation';
 import Image from 'next/image';
 import Link from 'next/link';
-
+import { ProButton } from 'components/subcriptions/subcriptionButtons';
+import { useSubscriptionStatus } from 'hooks';
 export default function SharePage() {
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
   const { data: QrCodeData, isLoading: QrCodeLoading, onGetProfileQrCode } = useGetQrCodeQuery();
   const { data: offlineQrCodeData, isLoading: offlineQrCodeLoading, onGetOfflineQrCode } = useGetOfflineQrCodeQuery();
-
+  const hasProAccess = useSubscriptionStatus({
+    subscriptionType: profileData?.type,
+    subscriptionEndDate: profileData?.subscriptionEnddate
+  });
   const [offLine, setOffLine] = useState(false);
   useEffect(() => {
     onGetProfile();
@@ -206,21 +210,27 @@ export default function SharePage() {
             </svg>
             Offline Sharing
           </div>
-          <label className="relative inline-flex items-center cursor-pointer ml-3">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={offLine}
-              onChange={e => handleOfflineToggle(e.target.checked)}
-            />
-            <div
-              className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+          {
+            !hasProAccess ? (
+              <label className="relative inline-flex items-center cursor-pointer ml-3">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={offLine}
+                  onChange={e => handleOfflineToggle(e.target.checked)}
+                />
+                <div
+                  className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
                         after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
                         peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]"
-            ></div>
-          </label>
+                ></div>
+              </label>
+            ) : (
+              <ProButton />
+            )
+          }
         </div>
       </div>
     </div>

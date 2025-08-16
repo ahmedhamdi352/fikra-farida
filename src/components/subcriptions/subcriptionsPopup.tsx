@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'next/navigation';
 
 interface SubscriptionsPopupProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
   const [mounted, setMounted] = useState(false);
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const { activeProfile } = useAuth();
 
 
@@ -235,14 +237,24 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
 
           <div className='overflow-y-auto flex flex-col justify-start align-center gap-1 border border-gray-200 p-4 rounded-2xl'>
 
-            <div className='flex flex-col justify-start w-1/4 items-start'>
+            <div className='flex justify-between gap-8 mb-2'>
               <div
-                className='px-1 py-3 rounded-2xl text-black font-bold w-full text-center'
+                className='px-1 py-3 rounded-2xl text-black font-bold text-center justify-start w-1/4 items-start'
                 style={{
                   background: 'linear-gradient(130deg, #FEC400 -5.74%, rgba(254, 200, 39, 0.96) 3.84%, rgba(254, 204, 59, 0.93) 13.43%, rgba(254, 208, 76, 0.89) 23.01%, rgba(255, 212, 91, 0.85) 32.6%, rgba(255, 216, 105, 0.81) 42.18%, rgba(255, 220, 119, 0.77) 51.77%, rgba(255, 223, 132, 0.73) 61.35%, rgba(255, 227, 145, 0.69) 70.94%, rgba(255, 230, 158, 0.65) 80.52%, rgba(255, 234, 172, 0.62) 90.1%, rgba(255, 237, 185, 0.58) 99.69%, rgba(255, 241, 198, 0.54) 109.27%, rgba(255, 244, 211, 0.50) 118.86%), linear-gradient(130deg, #FEC400 -5.74%, rgba(254, 202, 49, 0.95) 8.1%, rgba(254, 208, 74, 0.89) 21.95%, rgba(255, 213, 96, 0.84) 35.79%, rgba(255, 219, 116, 0.78) 49.64%, rgba(255, 224, 135, 0.72) 63.48%, rgba(255, 229, 154, 0.67) 77.32%, rgba(255, 234, 173, 0.61) 91.17%, rgba(255, 239, 192, 0.56) 105.01%, rgba(255, 244, 211, 0.50) 118.86%), linear-gradient(130deg, #FEC400 -5.74%, rgba(255, 244, 211, 0.50) 118.86%)',
                 }}
               >
                 Pro +
+              </div>
+
+              <div
+                onClick={() => router.push('/subscription')}
+                className='px-1 py-3 rounded-2xl text-black font-bold w-full text-center'
+                style={{
+                  background: 'linear-gradient(130deg, #FEC400 -5.74%, rgba(254, 200, 39, 0.96) 3.84%, rgba(254, 204, 59, 0.93) 13.43%, rgba(254, 208, 76, 0.89) 23.01%, rgba(255, 212, 91, 0.85) 32.6%, rgba(255, 216, 105, 0.81) 42.18%, rgba(255, 220, 119, 0.77) 51.77%, rgba(255, 223, 132, 0.73) 61.35%, rgba(255, 227, 145, 0.69) 70.94%, rgba(255, 230, 158, 0.65) 80.52%, rgba(255, 234, 172, 0.62) 90.1%, rgba(255, 237, 185, 0.58) 99.69%, rgba(255, 241, 198, 0.54) 109.27%, rgba(255, 244, 211, 0.50) 118.86%), linear-gradient(130deg, #FEC400 -5.74%, rgba(254, 202, 49, 0.95) 8.1%, rgba(254, 208, 74, 0.89) 21.95%, rgba(255, 213, 96, 0.84) 35.79%, rgba(255, 219, 116, 0.78) 49.64%, rgba(255, 224, 135, 0.72) 63.48%, rgba(255, 229, 154, 0.67) 77.32%, rgba(255, 234, 173, 0.61) 91.17%, rgba(255, 239, 192, 0.56) 105.01%, rgba(255, 244, 211, 0.50) 118.86%), linear-gradient(130deg, #FEC400 -5.74%, rgba(255, 244, 211, 0.50) 118.86%)',
+                }}
+              >
+                Learn More
               </div>
             </div>
             <div className='border-b pb-2 border-gray-100 mb-4'>

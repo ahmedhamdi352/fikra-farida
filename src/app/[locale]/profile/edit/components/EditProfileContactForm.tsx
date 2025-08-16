@@ -8,6 +8,7 @@ import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import TextInput from 'components/forms/text-input';
 import { PhoneInput } from 'components/forms/phone-input';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { ProButton } from 'components/subcriptions/subcriptionButtons';
 
 export interface ContactField {
   value: string;
@@ -27,9 +28,10 @@ export interface EditProfileContactFormRef {
 
 interface EditProfileContactFormProps {
   initialData?: Partial<ProfileForReadDTO>;
+  hasProAccess?: boolean;
 }
 
-const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfileContactFormProps>(({ initialData }, ref) => {
+const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfileContactFormProps>(({ initialData, hasProAccess }, ref) => {
   const defaultValues: ProfileContactFormData = {
 
     emails: initialData?.email ? [{ value: initialData.email }] : [{ value: '' }],
@@ -143,20 +145,17 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
                 control={control}
                 placeholder={placeholder}
                 label={label}
+                disabled={fieldName === 'websites' && hasProAccess}
               />
             )}
           </div>
-
-
-
-          <div className="flex flex-col items-center gap-2 mt-2">
+          <div className="flex flex-col items-center gap-2 mt-6">
             <div className='flex flex-col items-center gap-2'>
 
               {index === 0 && <label className="relative inline-flex items-center cursor-pointer group">
                 <input
                   type="checkbox"
                   className="sr-only peer"
-                  // name={fieldName === 'emails' ? 'showEmail' : fieldName === 'phones' ? 'showPhone' : 'showWebsite'}
                   checked={fieldName === 'emails' ? showEmail : fieldName === 'phones' ? showPhone : showWebsite}
                   onChange={(e) => {
                     if (fieldName === 'emails') {
@@ -168,14 +167,17 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
                     }
                   }}
                 />
-
-
-                <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                {fieldName !== 'websites' ? (<div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
                         after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
                         peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]">
-                </div>
+                </div>) : hasProAccess ? <ProButton /> : <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                        peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
+                        after:content-[''] after:absolute after:top-[2px] after:start-[2px]
+                        after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
+                        peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]">
+                </div>}
 
               </label>}
 

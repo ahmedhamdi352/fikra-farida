@@ -105,16 +105,16 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
     switch (theme) {
       case 'premium':
-        coverSrc = coverPhotos.premium;
+        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.premium;
         break;
       case 'rounded':
-        coverSrc = coverPhotos.rounded;
+        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.rounded;
         break;
       case 'edge':
-        coverSrc = coverPhotos.edge;
+        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.edge;
         break;
       default:
-        coverSrc = coverPhotos.premium;
+        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.premium;
     }
 
     return (

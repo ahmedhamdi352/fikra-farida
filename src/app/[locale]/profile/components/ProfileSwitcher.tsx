@@ -9,7 +9,8 @@ import { useGetProfilesQuery, useGetProfileQuery } from 'hooks/profile';
 import LoadingSpinner from 'components/ui/LoadingSpinner';
 import { ProfileForReadDTO } from 'types';
 import { useRouter } from 'next/navigation';
-
+import { ProButton } from 'components/subcriptions/subcriptionButtons';
+import { useSubscriptionStatus } from 'hooks';
 interface ProfileSwitcherProps {
   isOpen: boolean;
   onClose: () => void;
@@ -32,7 +33,12 @@ const mapProfileDTOToProfile = (profileDTO: ProfileForReadDTO): Profile => {
 export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProps) {
   const { profiles, activeProfile, switchProfile, setAuth } = useAuth();
   const { data: profilesData, isLoading } = useGetProfilesQuery();
-  const { onGetProfile } = useGetProfileQuery();
+
+  const { data: profileData, onGetProfile } = useGetProfileQuery();
+  const hasProAccess = useSubscriptionStatus({
+    subscriptionType: profileData?.type,
+    subscriptionEndDate: profileData?.subscriptionEnddate
+  });
 
   const [mounted, setMounted] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -93,6 +99,9 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
   };
 
   const handleAddNewProfile = () => {
+    if (hasProAccess) {
+      return;
+    }
     onClose();
     router.push('/profile/add');
   };
@@ -193,7 +202,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
 
           {/* Add New Profile Button */}
           <div
-            className="px-4 py-6 rounded-lg cursor-pointer bg-[#646458]/70 hover:bg-[#646458] flex items-center justify-center"
+            className="gap-2 px-4 py-6 rounded-lg cursor-pointer bg-[#646458]/70 hover:bg-[#646458] flex items-center justify-center"
             onClick={handleAddNewProfile}
           >
             <div className="flex items-center gap-3">
@@ -209,6 +218,8 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
                 <h3 className="text-xl font-bold text-[var(--main-color1)]">Add New Profile</h3>
               </div>
             </div>
+            {hasProAccess && <ProButton />}
+
           </div>
         </div>
       </div>
