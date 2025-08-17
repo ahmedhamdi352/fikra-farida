@@ -192,7 +192,13 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">clicks</span>
               </div>
-              {hasProAccess ? <ProButton /> : <p className="text-2xl font-bold ">{profileAnalytics?.TotalClicks || 0}</p>}
+              {
+                hasProAccess ? (<div className='z-50 flex items-center justify-center'>
+                  <ProButton />
+                </div>) : (
+                  <p className="text-2xl font-bold ">{Number(profileAnalytics?.TotalClicks).toFixed() || 0}</p>
+                )
+              }
             </div>
           </div>
 
@@ -210,23 +216,33 @@ const AnalyticsPage = () => {
                 </svg>
                 <span className="text-[var(--main-color1)]">rate</span>
               </div>
-              {hasProAccess ? <ProButton /> : <p className="text-2xl font-bold ">{Number(profileAnalytics?.Rate).toFixed() || 0} %</p>}
+              {
+                hasProAccess ? (<div className='z-50 flex items-center justify-center'>
+                  <ProButton />
+                </div>) : (
+                  <p className="text-2xl font-bold ">{Number(profileAnalytics?.Rate).toFixed() || 0} %</p>
+                )
+              }
             </div>
+
           </div>
         </div>
 
         {/* Contact Clicks */}
         <div className="card-container rounded-xl p-4 mb-6">
+          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
+            <UpgradButton />
+          </div>
           <h3 className="font-semibold mb-4">Contact Clicks</h3>
           <div className="space-y-3">
-            {hasProAccess ? <UnlockedButton /> : profileData?.links
+            {profileData?.links
               ?.filter(link => ['phone', 'email', 'save_contact', 'website', 'businessPhone'].includes(link.title))
               .map((link, index) => (
                 <div
                   key={index}
                   className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
                 >
-                  <div className="flex items-center px-4 py-2">
+                  <div className="flex items-center px-4 py-2 opacity-40">
                     <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
                       <Image
                         src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
@@ -238,7 +254,7 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0}
+                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
                       <span className="text-[var(--main-color1)] mx-2">Click</span>
                     </span>
                   </div>
@@ -249,16 +265,19 @@ const AnalyticsPage = () => {
 
         {/* Apps Clicks */}
         <div className="card-container rounded-xl p-4">
+          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
+            <UnlockedButton />
+          </div>
           <h3 className="font-semibold mb-4">Links Visits</h3>
           <div className="space-y-3">
-            {hasProAccess ? <UpgradButton /> : profileData?.links
+            {profileData?.links
               ?.filter(link => !['phone', 'email', 'url', 'save_contact'].includes(link.title))
               .map((link, index) => (
                 <div
                   key={index}
                   className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
                 >
-                  <div className="flex items-center px-4 py-2">
+                  <div className="flex items-center px-4 py-2 opacity-40">
                     <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
                       <Image
                         src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
@@ -270,7 +289,7 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="text-base flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0}
+                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
                       <span className="text-[var(--main-color1)] mx-2">Click</span>
                     </span>
                   </div>
