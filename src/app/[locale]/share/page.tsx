@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useGetProfileQuery, useGetQrCodeQuery, useGetOfflineQrCodeQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
-import ProfileInformation from './components/ProfileInformation';
+import ProfileInformation from '../profile/components/ProfileInformation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ProButton } from 'components/subcriptions/subcriptionButtons';
@@ -79,7 +79,7 @@ export default function SharePage() {
           </Link>
         </div>
         <div className="card-container rounded-3xl p-6">
-          <ProfileInformation profileData={profileData} withEdit={false} />
+          <ProfileInformation profileData={profileData} withEdit={false} withSwitch={true} />
           <div className="flex flex-col items-center justify-center my-8">
             <Image
               src={`https://fikrafarida.com/Media/Profiles/${offLine ? offlineQrCodeData?.imagename || '' : QrCodeData?.imagename || ''

@@ -57,7 +57,7 @@ export const getShippingPrice = (city: EgyptCity): number => {
       return zone.price;
     }
   }
-  return 120; // Default price for unlisted cities
+  return 55; // Default price for unlisted cities
 };
 
 // Helper function to get zone name for a city

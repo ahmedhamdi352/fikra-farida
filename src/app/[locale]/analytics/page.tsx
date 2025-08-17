@@ -49,7 +49,7 @@ const AnalyticsPage = () => {
 
     onGetAnalytics({
       StartDate: startDate.toISOString(),
-      EndDate: endDate.toISOString(),
+      EndDate: selectedFilter === 'today' ? '' : endDate.toISOString(),
     });
   }, [selectedFilter]);
 
