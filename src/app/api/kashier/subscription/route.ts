@@ -18,13 +18,28 @@ function generateKashierOrderHash(merchantId: string, orderId: string, amount: n
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, currency, orderId, email, firstName } = await request.json();
+    const requestBody = await request.json();
+    const { amount, currency, orderId, email, firstName } = requestBody;
 
-    console.log(amount, currency, orderId, email, firstName);
+    console.log('Subscription API - Full request body:', JSON.stringify(requestBody, null, 2));
+    console.log('Subscription API - Extracted fields:', { amount, currency, orderId, email, firstName });
 
-    if (!amount || !currency || !orderId || !email || !firstName) {
+    // Check which fields are missing
+    const missingFields = [];
+    if (!amount) missingFields.push('amount');
+    if (!currency) missingFields.push('currency');
+    if (!orderId) missingFields.push('orderId');
+    if (!email) missingFields.push('email');
+    if (!firstName) missingFields.push('firstName');
+
+    if (missingFields.length > 0) {
+      console.error('Subscription API - Missing fields:', missingFields);
       return NextResponse.json(
-        { error: 'Missing required fields: amount, currency, orderId, email, firstName' },
+        { 
+          error: `Missing required fields: ${missingFields.join(', ')}`,
+          received: requestBody,
+          missingFields
+        },
         { status: 400 }
       );
     }

@@ -156,7 +156,7 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
           currency: 'EGP',
           orderId: uuidv4(),
           email: activeProfile?.email,
-          firstName: activeProfile?.fullname,
+          firstName: activeProfile?.fullname || 'guest',
         }),
       });
 
