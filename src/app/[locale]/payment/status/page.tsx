@@ -68,6 +68,12 @@ export default function PaymentStatusPage() {
 
   }, [searchParams]);
 
+  // Clear cart when payment is successful (only once)
+  useEffect(() => {
+    if (paymentDetails?.paymentStatus === 'SUCCESS' && typeof window !== 'undefined') {
+      clearCart();
+    }
+  }, [paymentDetails?.paymentStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!paymentDetails) {
     return null;
@@ -76,7 +82,6 @@ export default function PaymentStatusPage() {
   const getStatusConfig = () => {
     switch (paymentDetails.paymentStatus) {
       case 'SUCCESS':
-        clearCart();
         return {
           icon: <BsCheckCircleFill className="text-[#FEC400] text-6xl" />,
           title: paymentDetails.mode === 'CASH' ? t('cashPaymentSuccessful') : t('paymentSuccessful'),
