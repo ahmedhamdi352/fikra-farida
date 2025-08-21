@@ -61,6 +61,11 @@ export default function PaymentStatusPage() {
       mode: mode || 'CASH', // Default to CASH if not provided
       signature
     });
+
+    if (paymentDetails?.paymentStatus === 'SUCCESS') {
+      clearCart();
+    }
+
   }, [searchParams]);
 
 
