@@ -62,9 +62,9 @@ export default function PaymentStatusPage() {
       signature
     });
 
-    if (paymentDetails?.paymentStatus === 'SUCCESS') {
-      clearCart();
-    }
+    // if (paymentDetails?.paymentStatus === 'SUCCESS') {
+    //   clearCart();
+    // }
 
   }, [searchParams]);
 
