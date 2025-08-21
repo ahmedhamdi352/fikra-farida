@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-const KASHIER_WEBHOOK_SECRET = process.env.KASHIER_WEBHOOK_SECRET;
+const KASHIER_WEBHOOK_SECRET = process.env.KASHIER_API_KEY;
 
 export async function POST(request: NextRequest) {
   if (!KASHIER_WEBHOOK_SECRET) {
@@ -16,10 +16,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing signature header' }, { status: 401 });
     }
 
-    // For Kashier's specific method, we must parse the body first
-    // to access the `signatureKeys` array.
     const event = await request.json();
-    const { data } = event; // The `hash` in the body is for the payment, not the webhook.
+    const { data } = event;
     const { signatureKeys } = data;
 
     if (!signatureKeys || !Array.isArray(signatureKeys)) {
@@ -27,42 +25,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid payload structure' }, { status: 400 });
     }
 
-    // --- THIS IS THE CRITICAL FIX ---
-    // Rebuild the string that Kashier signed by concatenating the values
-    // of the keys in the order specified by the `signatureKeys` array.
-    let stringToSign = '';
+    const pairsToSign = [];
     for (const key of signatureKeys) {
       if (data[key] !== undefined) {
-        stringToSign += data[key];
+        const encodedValue = encodeURIComponent(data[key]);
+        pairsToSign.push(`${key}=${encodedValue}`);
       }
     }
+    const stringToSign = pairsToSign.join('&');
 
-    // Now, create the expected signature using the newly constructed string.
-    const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(stringToSign).digest('hex');
+    const encodedString = encodeURIComponent(stringToSign);
 
-    // Log for debugging
+    const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(encodedString).digest('hex');
+
     console.log(`String Used for Hashing: "${stringToSign}"`);
     console.log(`Received Signature: ${signature}`);
     console.log(`Calculated Signature: ${expectedSignature}`);
 
-    // Securely compare the signatures.
     if (signature !== expectedSignature) {
       console.error('Invalid webhook signature. Request may be fraudulent.');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
-    // --- SIGNATURE IS NOW VALID ---
     console.log(
       JSON.stringify({
         logType: 'KASHIER_WEBHOOK_VALIDATED',
-        eventType: event.event, // The event type is at the top level
+        eventType: event.event,
         orderId: data.merchantOrderId,
         paymentStatus: data.status,
         timestamp: new Date().toISOString(),
       })
     );
 
-    // --- Business Logic ---
     const { merchantOrderId, status } = data;
 
     switch (status) {
