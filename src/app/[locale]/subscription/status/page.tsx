@@ -6,8 +6,7 @@ import { BiErrorCircle } from 'react-icons/bi';
 import { TiCancel } from 'react-icons/ti';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useUpdateSubscriptionMutation } from 'hooks';
-import LoadingOverlay from 'components/ui/LoadingOverlay';
+// import { useUpdateSubscriptionMutation } from 'hooks';
 
 interface PaymentDetails {
   paymentStatus: string;
@@ -26,7 +25,7 @@ interface PaymentDetails {
 export default function PaymentStatusPage() {
   const t = useTranslations('Payment');
   const searchParams = useSearchParams();
-  const { onUpdateSubscription, isLoading } = useUpdateSubscriptionMutation();
+  // const { onUpdateSubscription, isLoading } = useUpdateSubscriptionMutation();
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
   useEffect(() => {
     // Get all query parameters
@@ -62,27 +61,11 @@ export default function PaymentStatusPage() {
 
   }, [searchParams]);
 
-  useEffect(() => {
-    if (paymentDetails?.paymentStatus === 'SUCCESS') {
-      onUpdateSubscription({
-        "CountryCode": "EG",
-        "Domain": "fikrafarida.com",
-        "DaysToAdd": paymentDetails?.amount === '449' ? 365 : 30,
-        "PaymentAmount": Number(paymentDetails?.amount),
-        "Currency": "EGP",
-        "PaymentOperationId": paymentDetails?.merchantOrderId,
-      })
-    }
-  }, [paymentDetails]);
-
 
   if (!paymentDetails) {
     return null;
   }
 
-  if (isLoading) {
-    return <LoadingOverlay isLoading={isLoading} />
-  }
 
   const getStatusConfig = () => {
     switch (paymentDetails.paymentStatus) {

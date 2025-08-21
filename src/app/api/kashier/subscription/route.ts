@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     redirectUrl.searchParams.append('allowedMethods', 'card,wallet');
     redirectUrl.searchParams.append('brandColor', '#fec400');
     redirectUrl.searchParams.append('merchantRedirect', `${BASE_URL}/subscription/status`);
-    redirectUrl.searchParams.append('serverWebhook', `${BASE_URL}/api/kashier/webhook`);
+    redirectUrl.searchParams.append('serverWebhook', `${BASE_URL}/api/kashier/subscription-webhook`);
 
     // Return the redirect URL
     return NextResponse.json({
