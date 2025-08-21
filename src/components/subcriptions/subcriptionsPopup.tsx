@@ -157,6 +157,7 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
           orderId: uuidv4(),
           email: activeProfile?.email,
           firstName: activeProfile?.fullname || 'guest',
+          userToken: activeProfile?.token,
         }),
       });
 

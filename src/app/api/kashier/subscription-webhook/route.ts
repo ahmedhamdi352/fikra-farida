@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { getUserToken } from 'utils/tokenStorage';
 
 const KASHIER_WEBHOOK_SECRET = process.env.KASHIER_API_KEY;
 
@@ -51,16 +52,27 @@ export async function POST(request: NextRequest) {
         merchantOrderId: data.merchantOrderId,
         status: data.status,
         timestamp: new Date().toISOString(),
+        fullWebhookData: data,
       })
     );
 
     // Extract payment details
     const { merchantOrderId, status } = data;
+    
+    console.log('Full webhook data received:', JSON.stringify(data, null, 2));
 
     switch (status) {
       case 'SUCCESS':
         console.log(`Processing subscription SUCCESS for orderId: ${merchantOrderId}`);
         try {
+          // Retrieve user token for authentication
+          const userToken = getUserToken(merchantOrderId);
+          
+          if (!userToken) {
+            console.error(`No user token found for order: ${merchantOrderId}`);
+            return;
+          }
+
           // Update subscription with payment details
           const subscriptionPayload = {
             "CountryCode": "EG",
@@ -77,6 +89,7 @@ export async function POST(request: NextRequest) {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userToken}`,
               },
               body: JSON.stringify(subscriptionPayload),
             }

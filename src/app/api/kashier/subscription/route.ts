@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { storeUserToken } from 'utils/tokenStorage';
 
 const MERCHANT_ID = process.env.KASHIER_MERCHANT_ID!;
 const API_KEY = process.env.KASHIER_API_KEY!;
@@ -19,10 +20,16 @@ function generateKashierOrderHash(merchantId: string, orderId: string, amount: n
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
-    const { amount, currency, orderId, email, firstName } = requestBody;
+    const { amount, currency, orderId, email, firstName, userToken } = requestBody;
 
     console.log('Subscription API - Full request body:', JSON.stringify(requestBody, null, 2));
     console.log('Subscription API - Extracted fields:', { amount, currency, orderId, email, firstName });
+
+    // Store user token for webhook use
+    if (userToken) {
+      storeUserToken(orderId, userToken);
+      console.log(`Stored user token for order: ${orderId}`);
+    }
 
     // Check which fields are missing
     const missingFields = [];
