@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { ApiURLs, httpClient } from 'api/core';
 
 const KASHIER_WEBHOOK_SECRET = process.env.KASHIER_API_KEY;
 
@@ -63,10 +62,26 @@ export async function POST(request: NextRequest) {
         console.log(`Processing SUCCESS for orderId: ${merchantOrderId}`);
         try {
           // Update order status to success
-          await httpClient.post(`${ApiURLs.updateOrder}/${merchantOrderId}`, {
-            status: 'success',
-          });
-          console.log(`Order ${merchantOrderId} status updated to success`);
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/ShoppingOrder/update/${merchantOrderId}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                status: 'success',
+              }),
+            }
+          );
+
+          if (response.ok) {
+            console.log(`Order ${merchantOrderId} status updated to success`);
+          } else {
+            console.error(
+              `Failed to update order ${merchantOrderId} status: ${response.status} ${response.statusText}`
+            );
+          }
         } catch (error) {
           console.error(`Failed to update order ${merchantOrderId} status:`, error);
         }
@@ -75,10 +90,26 @@ export async function POST(request: NextRequest) {
         console.log(`Processing FAILED for orderId: ${merchantOrderId}`);
         try {
           // Update order status to failed
-          await httpClient.post(`${ApiURLs.updateOrder}/${merchantOrderId}`, {
-            status: 'failed'
-          });
-          console.log(`Order ${merchantOrderId} status updated to failed`);
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/ShoppingOrder/update/${merchantOrderId}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                status: 'failed',
+              }),
+            }
+          );
+
+          if (response.ok) {
+            console.log(`Order ${merchantOrderId} status updated to failed`);
+          } else {
+            console.error(
+              `Failed to update order ${merchantOrderId} status: ${response.status} ${response.statusText}`
+            );
+          }
         } catch (error) {
           console.error(`Failed to update order ${merchantOrderId} status:`, error);
         }
@@ -87,10 +118,26 @@ export async function POST(request: NextRequest) {
         console.log(`Processing PENDING for orderId: ${merchantOrderId}`);
         try {
           // Update order status to pending
-          await httpClient.post(`${ApiURLs.updateOrder}/${merchantOrderId}`, {
-            status: 'pending'
-          });
-          console.log(`Order ${merchantOrderId} status updated to pending`);
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/ShoppingOrder/update/${merchantOrderId}`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                status: 'pending',
+              }),
+            }
+          );
+
+          if (response.ok) {
+            console.log(`Order ${merchantOrderId} status updated to pending`);
+          } else {
+            console.error(
+              `Failed to update order ${merchantOrderId} status: ${response.status} ${response.statusText}`
+            );
+          }
         } catch (error) {
           console.error(`Failed to update order ${merchantOrderId} status:`, error);
         }
