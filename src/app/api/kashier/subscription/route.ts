@@ -23,12 +23,14 @@ export async function POST(request: NextRequest) {
     const { amount, currency, orderId, email, firstName, userToken } = requestBody;
 
     console.log('Subscription API - Full request body:', JSON.stringify(requestBody, null, 2));
-    console.log('Subscription API - Extracted fields:', { amount, currency, orderId, email, firstName });
+    console.log('Subscription API - Extracted fields:', { amount, currency, orderId, email, firstName, userToken: userToken ? 'TOKEN_PROVIDED' : 'NO_TOKEN' });
 
     // Store user token for webhook use
     if (userToken) {
       storeUserToken(orderId, userToken);
-      console.log(`Stored user token for order: ${orderId}`);
+      console.log(`✅ Successfully stored user token for order: ${orderId}`);
+    } else {
+      console.warn(`⚠️ No user token provided for order: ${orderId} - webhook authentication will fail`);
     }
 
     // Check which fields are missing

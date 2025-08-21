@@ -66,12 +66,20 @@ export async function POST(request: NextRequest) {
         console.log(`Processing subscription SUCCESS for orderId: ${merchantOrderId}`);
         try {
           // Retrieve user token for authentication
+          console.log(`🔍 Attempting to retrieve user token for order: ${merchantOrderId}`);
           const userToken = getUserToken(merchantOrderId);
           
           if (!userToken) {
-            console.error(`No user token found for order: ${merchantOrderId}`);
-            return;
+            console.error(`❌ No user token found for order: ${merchantOrderId}`);
+            console.error('Subscription activation failed - missing authentication token');
+            console.error('This usually means:');
+            console.error('1. Token was not provided when creating the subscription');
+            console.error('2. Token expired (older than 1 hour)');
+            console.error('3. Token was already used by another webhook call');
+            break; // Continue to return response instead of early return
           }
+          
+          console.log(`✅ Successfully retrieved user token for order: ${merchantOrderId}`);
 
           // Update subscription with payment details
           const subscriptionPayload = {
