@@ -185,6 +185,7 @@ const PaymentPage = () => {
         },
         countryCode: locale,
         domain: window.location.hostname,
+        paymentMethod: paymentMethod,
       };
 
       if (paymentMethod === 'cash') {
@@ -211,6 +212,7 @@ const PaymentPage = () => {
             amount: finalTotal,
             currency: 'EGP',
             orderId: orderResponse.orderId,
+            id: orderResponse.id,
             email: data.email,
             firstName: data.fullName.split(' ')[0],
             lastName: data.fullName.split(' ').slice(1).join(' ') || data.fullName.split(' ')[0], // Fallback if no last name
@@ -380,17 +382,15 @@ const PaymentPage = () => {
 
               <div className="space-y-2">
                 <label
-                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${
-                    paymentMethod === 'online'
-                      ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
-                      : 'border-gray-600 hover:border-[#FEC400]/50'
-                  }`}
+                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'online'
+                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                    : 'border-gray-600 hover:border-[#FEC400]/50'
+                    }`}
                 >
                   <input type="radio" {...control.register('paymentMethod')} value="online" className="hidden" />
                   <div
-                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${
-                      paymentMethod === 'online' ? 'border-[#FEC400]' : 'border-gray-600'
-                    }`}
+                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'online' ? 'border-[#FEC400]' : 'border-gray-600'
+                      }`}
                   >
                     {paymentMethod === 'online' && <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />}
                   </div>
@@ -404,17 +404,15 @@ const PaymentPage = () => {
                 <p className="text-sm">{t('onlineOptions')}</p>
 
                 <label
-                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${
-                    paymentMethod === 'cash'
-                      ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
-                      : 'border-gray-600 hover:border-[#FEC400]/50'
-                  }`}
+                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'cash'
+                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                    : 'border-gray-600 hover:border-[#FEC400]/50'
+                    }`}
                 >
                   <input type="radio" {...control.register('paymentMethod')} value="cash" className="hidden" />
                   <div
-                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${
-                      paymentMethod === 'cash' ? 'border-[#FEC400]' : 'border-gray-600'
-                    }`}
+                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'cash' ? 'border-[#FEC400]' : 'border-gray-600'
+                      }`}
                   >
                     {paymentMethod === 'cash' && <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />}
                   </div>

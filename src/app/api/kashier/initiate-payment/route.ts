@@ -18,11 +18,11 @@ function generateKashierOrderHash(merchantId: string, orderId: string, amount: n
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, currency, orderId, email, firstName, lastName } = await request.json();
+    const { amount, currency, orderId, email, firstName, lastName, id } = await request.json();
 
-    if (!amount || !currency || !orderId || !email || !firstName || !lastName) {
+    if (!amount || !currency || !orderId || !email || !firstName || !lastName || !id) {
       return NextResponse.json(
-        { error: 'Missing required fields: amount, currency, orderId, email, firstName, lastName' },
+        { error: 'Missing required fields: amount, currency, orderId, email, firstName, lastName, id' },
         { status: 400 }
       );
     }
@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
     // Add required parameters
     redirectUrl.searchParams.append('merchantId', MERCHANT_ID);
     redirectUrl.searchParams.append('orderId', orderId);
+    redirectUrl.searchParams.append('id', id);
     redirectUrl.searchParams.append('amount', amount.toString());
     redirectUrl.searchParams.append('currency', currency);
     redirectUrl.searchParams.append('hash', hash);

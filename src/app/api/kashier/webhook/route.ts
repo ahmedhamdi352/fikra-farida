@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { ApiURLs, httpClient } from 'api/core';
 
 const KASHIER_WEBHOOK_SECRET = process.env.KASHIER_API_KEY;
 
@@ -34,8 +35,6 @@ export async function POST(request: NextRequest) {
     }
     const stringToSign = pairsToSign.join('&');
 
-    // const encodedString = encodeURIComponent(stringToSign);
-
     const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(stringToSign).digest('hex');
 
     console.log(`String Used for Hashing: "${stringToSign}"`);
@@ -62,13 +61,39 @@ export async function POST(request: NextRequest) {
     switch (status) {
       case 'SUCCESS':
         console.log(`Processing SUCCESS for orderId: ${merchantOrderId}`);
-        localStorage.removeItem('fikra-farida-cart');
+        try {
+          // Update order status to success
+          await httpClient.post(`${ApiURLs.updateOrder}/${merchantOrderId}`, {
+            status: 'success',
+          });
+          console.log(`Order ${merchantOrderId} status updated to success`);
+        } catch (error) {
+          console.error(`Failed to update order ${merchantOrderId} status:`, error);
+        }
         break;
       case 'FAILED':
         console.log(`Processing FAILED for orderId: ${merchantOrderId}`);
+        try {
+          // Update order status to failed
+          await httpClient.post(`${ApiURLs.updateOrder}/${merchantOrderId}`, {
+            status: 'failed'
+          });
+          console.log(`Order ${merchantOrderId} status updated to failed`);
+        } catch (error) {
+          console.error(`Failed to update order ${merchantOrderId} status:`, error);
+        }
         break;
       case 'PENDING':
         console.log(`Processing PENDING for orderId: ${merchantOrderId}`);
+        try {
+          // Update order status to pending
+          await httpClient.post(`${ApiURLs.updateOrder}/${merchantOrderId}`, {
+            status: 'pending'
+          });
+          console.log(`Order ${merchantOrderId} status updated to pending`);
+        } catch (error) {
+          console.error(`Failed to update order ${merchantOrderId} status:`, error);
+        }
         break;
       default:
         console.info(`Received unhandled payment status: '${status}' for orderId: ${merchantOrderId}`);

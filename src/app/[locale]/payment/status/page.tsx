@@ -6,6 +6,7 @@ import { BiErrorCircle } from 'react-icons/bi';
 import { TiCancel } from 'react-icons/ti';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useCart } from 'context/CartContext';
 
 interface PaymentDetails {
   paymentStatus: string;
@@ -26,6 +27,7 @@ export default function PaymentStatusPage() {
   const t = useTranslations('Payment');
   const searchParams = useSearchParams();
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails | null>(null);
+  const { clearCart } = useCart();
   useEffect(() => {
     // Get all query parameters
     const params = Object.fromEntries(searchParams.entries());
@@ -59,7 +61,6 @@ export default function PaymentStatusPage() {
       mode: mode || 'CASH', // Default to CASH if not provided
       signature
     });
-
   }, [searchParams]);
 
 
@@ -70,6 +71,7 @@ export default function PaymentStatusPage() {
   const getStatusConfig = () => {
     switch (paymentDetails.paymentStatus) {
       case 'SUCCESS':
+        clearCart();
         return {
           icon: <BsCheckCircleFill className="text-[#FEC400] text-6xl" />,
           title: paymentDetails.mode === 'CASH' ? t('cashPaymentSuccessful') : t('paymentSuccessful'),

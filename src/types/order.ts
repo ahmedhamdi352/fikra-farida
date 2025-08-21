@@ -27,6 +27,7 @@ export interface OrderPayloadForCreateDto {
   billing: BillingInfo;
   countryCode: string;
   domain: string;
+  paymentMethod: string;
 }
 
 export interface ApplyDiscountParams {
@@ -39,6 +40,7 @@ export interface ApplyDiscountParams {
 
 export interface ResultOrderForReadDto extends OrderPayloadForCreateDto {
   orderId: string;
+  id: number;
 }
 
 export interface CreateOrderDto {
