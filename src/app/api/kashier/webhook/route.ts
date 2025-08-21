@@ -34,9 +34,9 @@ export async function POST(request: NextRequest) {
     }
     const stringToSign = pairsToSign.join('&');
 
-    const encodedString = encodeURIComponent(stringToSign);
+    // const encodedString = encodeURIComponent(stringToSign);
 
-    const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(encodedString).digest('hex');
+    const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(stringToSign).digest('hex');
 
     console.log(`String Used for Hashing: "${stringToSign}"`);
     console.log(`Received Signature: ${signature}`);
