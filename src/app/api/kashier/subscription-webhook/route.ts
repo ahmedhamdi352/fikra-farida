@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
           const subscriptionPayload = {
             CountryCode: 'EG',
             Domain: 'fikrafarida.com',
-            DaysToAdd: data.amount === '449' ? 365 : 30,
+            DaysToAdd: (data.amount === '449' || data.amount === 449) ? 365 : 30,
             PaymentAmount: Number(data.amount),
             Currency: 'EGP',
             PaymentOperationId: merchantOrderId,
