@@ -59,6 +59,15 @@ export async function POST(request: NextRequest) {
     const { merchantOrderId, status } = data;
     const userToken = merchantOrderId; // Token is sent as orderId from frontend
 
+    console.log('🔍 Webhook Debug:');
+    console.log('merchantOrderId received:', merchantOrderId);
+    console.log('merchantOrderId length:', merchantOrderId ? merchantOrderId.length : 'null');
+    console.log(
+      'Is merchantOrderId a UUID?',
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(merchantOrderId)
+    );
+    console.log('userToken (same as merchantOrderId):', userToken ? 'TOKEN_SET' : 'NO_TOKEN');
+
     console.log('Full webhook data received:', JSON.stringify(data, null, 2));
 
     switch (status) {
@@ -90,7 +99,7 @@ export async function POST(request: NextRequest) {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${userToken}`,
+              token: userToken,
             },
             body: JSON.stringify(subscriptionPayload),
           });

@@ -147,12 +147,18 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
     try {
       // Get token from cookies to ensure it's available for webhook
       const tokenFromCookies = Cookies.get('token');
+      const userToken = tokenFromCookies || activeProfile?.token;
+      
+      console.log('🔍 Frontend Debug:');
+      console.log('tokenFromCookies:', tokenFromCookies ? 'TOKEN_FOUND' : 'NO_COOKIE_TOKEN');
+      console.log('activeProfile?.token:', activeProfile?.token ? 'PROFILE_TOKEN_FOUND' : 'NO_PROFILE_TOKEN');
+      console.log('Final userToken (orderId):', userToken ? 'TOKEN_READY' : 'NO_TOKEN');
 
       const payloadData = {
         amount: activeTab === 'yearly' ? 449 : 50,
         currency: 'EGP',
-        orderId: tokenFromCookies || activeProfile?.token,
-        email: activeProfile?.email,
+        orderId: userToken,
+        email: activeProfile?.email || 'contact@fikrafarida.com',
         firstName: activeProfile?.fullname || 'guest',
       };
       const response = await fetch('/api/kashier/subscription', {
