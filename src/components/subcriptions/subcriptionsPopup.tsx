@@ -5,8 +5,8 @@ import { useAuth } from 'context/AuthContext';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 interface SubscriptionsPopupProps {
   isOpen: boolean;
@@ -145,20 +145,22 @@ export default function SubscriptionsPopup({ isOpen, onClose }: SubscriptionsPop
 
   const handlePay = async () => {
     try {
-      // Then initiate online payment
+      // Get token from cookies to ensure it's available for webhook
+      const tokenFromCookies = Cookies.get('token');
+
+      const payloadData = {
+        amount: activeTab === 'yearly' ? 449 : 50,
+        currency: 'EGP',
+        orderId: tokenFromCookies || activeProfile?.token,
+        email: activeProfile?.email,
+        firstName: activeProfile?.fullname || 'guest',
+      };
       const response = await fetch('/api/kashier/subscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          amount: activeTab === 'yearly' ? 449 : 50,
-          currency: 'EGP',
-          orderId: uuidv4(),
-          email: activeProfile?.email,
-          firstName: activeProfile?.fullname || 'guest',
-          userToken: activeProfile?.token,
-        }),
+        body: JSON.stringify(payloadData),
       });
 
       if (!response.ok) {
