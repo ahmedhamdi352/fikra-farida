@@ -3,6 +3,7 @@
 import { useGetProfileQuery, useUpdateProfileMutation } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import EditProfileForm, { EditProfileFormRef } from './components/EditProfileForm';
+import ImageCropModal from 'components/ui/ImageCropModal';
 import CustomizationForm, { CustomizationFormRef } from './components/CustomizationForm';
 import EditProfileContactForm, { EditProfileContactFormRef } from './components/EditProfileContactForm';
 import CollapsibleSection from './components/CollapsibleSection';
@@ -23,6 +24,10 @@ export default function EditProfilePage() {
   const [coverImageUrl, setCoverImageUrl] = useState(profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : ''); // Replace with your default
   const [profileImageUrl, setProfileImageUrl] = useState(profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : ''); // Replace with your default
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [showCoverCropModal, setShowCoverCropModal] = useState(false);
+  const [selectedCoverImageFile, setSelectedCoverImageFile] = useState<File | null>(null);
 
   const profileFormRef = useRef<EditProfileFormRef>(null);
   const contactFormRef = useRef<EditProfileContactFormRef>(null);
@@ -193,28 +198,54 @@ export default function EditProfilePage() {
   const handleCoverImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      setSelectedCoverImageFile(file);
+      setShowCoverCropModal(true);
+    }
+    // Reset the input value to allow selecting the same file again
+    event.target.value = '';
+  };
+
+  const handleCoverCropComplete = async (croppedFile: File) => {
+    const formData = new FormData();
+    formData.append('file', croppedFile);
+    
+    try {
+      await onUploadCoverImage(formData);
+      // Update the preview with the cropped image
       const reader = new FileReader();
-      const formData = new FormData();
-      formData.append('file', file);
-      reader.onloadend = async () => {
-        await onUploadCoverImage(formData);
+      reader.onloadend = () => {
         setCoverImageUrl(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(croppedFile);
+    } catch (error) {
+      console.error('Error uploading cropped cover image:', error);
     }
   };
 
   const handleProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      setSelectedImageFile(file);
+      setShowCropModal(true);
+    }
+    // Reset the input value to allow selecting the same file again
+    event.target.value = '';
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
+    const formData = new FormData();
+    formData.append('file', croppedFile);
+    
+    try {
+      await onUploadProfileImage(formData);
+      // Update the preview with the cropped image
       const reader = new FileReader();
-      const formData = new FormData();
-      formData.append('file', file);
-      reader.onloadend = async () => {
-        await onUploadProfileImage(formData);
+      reader.onloadend = () => {
         setProfileImageUrl(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(croppedFile);
+    } catch (error) {
+      console.error('Error uploading cropped image:', error);
     }
   };
 
@@ -389,6 +420,28 @@ export default function EditProfilePage() {
           </div>
         </div>
       </div>
+      
+      {/* Profile Image Crop Modal */}
+      {showCropModal && selectedImageFile && (
+        <ImageCropModal
+          isOpen={showCropModal}
+          onClose={() => setShowCropModal(false)}
+          imageFile={selectedImageFile}
+          onCropComplete={handleCropComplete}
+          cropType="profile"
+        />
+      )}
+      
+      {/* Cover Image Crop Modal */}
+      {showCoverCropModal && selectedCoverImageFile && (
+        <ImageCropModal
+          isOpen={showCoverCropModal}
+          onClose={() => setShowCoverCropModal(false)}
+          imageFile={selectedCoverImageFile}
+          onCropComplete={handleCoverCropComplete}
+          cropType="cover"
+        />
+      )}
     </div>
   );
 }
