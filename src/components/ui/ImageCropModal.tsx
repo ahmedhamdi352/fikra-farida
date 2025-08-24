@@ -106,10 +106,95 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
     e.preventDefault();
     e.stopPropagation();
     setIsResizing(true);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    if (!imageRef.current) return;
+
+    const touch = e.touches[0];
+    const rect = imageRef.current.getBoundingClientRect();
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+
+    setIsDragging(true);
     setDragStart({
-      x: e.clientX,
-      y: e.clientY
+      x: relativeX - crop.x,
+      y: relativeY - crop.y
     });
+  };
+
+  const handleResizeTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsResizing(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!imageRef.current) return;
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    const rect = imageRef.current.getBoundingClientRect();
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+
+    if (isDragging) {
+      const newX = Math.max(0, Math.min(relativeX - dragStart.x, imageSize.width - crop.width));
+      const newY = Math.max(0, Math.min(relativeY - dragStart.y, imageSize.height - crop.height));
+      setCrop({ ...crop, x: newX, y: newY });
+    } else if (isResizing) {
+      const centerX = crop.x + crop.width / 2;
+      const centerY = crop.y + crop.height / 2;
+      const distanceX = Math.abs(relativeX - centerX);
+      const distanceY = Math.abs(relativeY - centerY);
+
+      if (cropType === 'cover' && cropShape === 'rectangle') {
+        // For cover images, maintain 3:1 aspect ratio
+        const newWidth = distanceX * 2;
+
+        const minWidth = 150;
+        const maxWidth = Math.min(imageSize.width, imageSize.height * 3);
+
+        const finalWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
+        const finalHeight = finalWidth / 3;
+
+        // Adjust position to keep crop centered and within bounds
+        const newX = Math.max(0, Math.min(centerX - finalWidth / 2, imageSize.width - finalWidth));
+        const newY = Math.max(0, Math.min(centerY - finalHeight / 2, imageSize.height - finalHeight));
+
+        setCrop({
+          x: newX,
+          y: newY,
+          width: finalWidth,
+          height: finalHeight
+        });
+      } else {
+        // For profile images (circle/square), maintain square aspect ratio
+        const distance = Math.max(distanceX, distanceY);
+        const newSize = distance * 2;
+
+        const minSize = 50;
+        const maxSize = Math.min(imageSize.width, imageSize.height);
+        const finalSize = Math.max(minSize, Math.min(newSize, maxSize));
+
+        // Adjust position to keep crop centered and within bounds
+        const newX = Math.max(0, Math.min(centerX - finalSize / 2, imageSize.width - finalSize));
+        const newY = Math.max(0, Math.min(centerY - finalSize / 2, imageSize.height - finalSize));
+
+        setCrop({
+          x: newX,
+          y: newY,
+          width: finalSize,
+          height: finalSize
+        });
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setIsResizing(false);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -240,8 +325,7 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
         className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
         style={{ 
           position: 'relative',
-          transform: 'none',
-          touchAction: 'none'
+          transform: 'none'
         }}
       >
         <div className="p-6 overflow-y-auto max-h-[90vh]">
@@ -307,6 +391,8 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <img
               ref={imageRef}
@@ -329,6 +415,7 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
                 boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
               }}
               onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
             >
               {/* Size indicator */}
               <div className="absolute top-1 left-1 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
@@ -337,22 +424,26 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
 
               {/* Corner handles for resizing */}
               <div
-                className="absolute -bottom-1 -right-1 w-4 h-4 bg-[var(--main-color1)] border-2 border-white cursor-se-resize rounded-full hover:bg-opacity-80 transition-all"
+                className="absolute -bottom-1 -right-1 w-6 h-6 bg-[var(--main-color1)] border-2 border-white cursor-se-resize rounded-full hover:bg-opacity-80 transition-all"
                 onMouseDown={handleResizeMouseDown}
+                onTouchStart={handleResizeTouchStart}
               ></div>
 
               {/* Additional resize handles for better UX */}
               <div
-                className="absolute -top-1 -right-1 w-4 h-4 bg-[var(--main-color1)] border-2 border-white cursor-ne-resize rounded-full hover:bg-opacity-80 transition-all"
+                className="absolute -top-1 -right-1 w-6 h-6 bg-[var(--main-color1)] border-2 border-white cursor-ne-resize rounded-full hover:bg-opacity-80 transition-all"
                 onMouseDown={handleResizeMouseDown}
+                onTouchStart={handleResizeTouchStart}
               ></div>
               <div
-                className="absolute -bottom-1 -left-1 w-4 h-4 bg-[var(--main-color1)] border-2 border-white cursor-sw-resize rounded-full hover:bg-opacity-80 transition-all"
+                className="absolute -bottom-1 -left-1 w-6 h-6 bg-[var(--main-color1)] border-2 border-white cursor-sw-resize rounded-full hover:bg-opacity-80 transition-all"
                 onMouseDown={handleResizeMouseDown}
+                onTouchStart={handleResizeTouchStart}
               ></div>
               <div
-                className="absolute -top-1 -left-1 w-4 h-4 bg-[var(--main-color1)] border-2 border-white cursor-nw-resize rounded-full hover:bg-opacity-80 transition-all"
+                className="absolute -top-1 -left-1 w-6 h-6 bg-[var(--main-color1)] border-2 border-white cursor-nw-resize rounded-full hover:bg-opacity-80 transition-all"
                 onMouseDown={handleResizeMouseDown}
+                onTouchStart={handleResizeTouchStart}
               ></div>
             </div>
           </div>
