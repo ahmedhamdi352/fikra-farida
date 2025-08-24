@@ -42,19 +42,20 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
   useEffect(() => {
     if (!mounted) return;
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      // Prevent body scrolling when modal is open
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      
       return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
+        // Restore body scrolling when modal closes
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
       };
     }
-  }, [mounted, isOpen, onClose]);
+  }, [mounted, isOpen]);
 
   const handleImageLoad = () => {
     if (imageRef.current) {
@@ -234,8 +235,17 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
 
   const modalContent = (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div ref={modalRef} className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-auto">
-        <div className="flex justify-between items-center mb-4">
+      <div 
+        ref={modalRef}
+        className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+        style={{ 
+          position: 'relative',
+          transform: 'none',
+          touchAction: 'none'
+        }}
+      >
+        <div className="p-6 overflow-y-auto max-h-[90vh]">
+          <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-[black]">
             Crop {cropType === 'profile' ? 'Profile' : 'Cover'} Image
           </h2>
@@ -366,6 +376,7 @@ export default function ImageCropModal({ isOpen, onClose, imageFile, onCropCompl
 
         {/* Hidden canvas for cropping */}
         <canvas ref={canvasRef} className="hidden" />
+        </div>
       </div>
     </div>
   );
