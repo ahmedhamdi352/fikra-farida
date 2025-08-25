@@ -99,7 +99,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
   };
 
   const handleAddNewProfile = () => {
-    if (hasProAccess) {
+    if (!hasProAccess) {
       return;
     }
     onClose();
@@ -218,7 +218,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
                 <h3 className="text-xl font-bold text-[var(--main-color1)]">Add New Profile</h3>
               </div>
             </div>
-            {hasProAccess && <ProButton />}
+            {!hasProAccess && <ProButton />}
 
           </div>
         </div>

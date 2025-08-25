@@ -208,7 +208,7 @@ export default function EditProfilePage() {
   const handleCoverCropComplete = async (croppedFile: File) => {
     const formData = new FormData();
     formData.append('file', croppedFile);
-    
+
     try {
       await onUploadCoverImage(formData);
       // Update the preview with the cropped image
@@ -235,7 +235,7 @@ export default function EditProfilePage() {
   const handleCropComplete = async (croppedFile: File) => {
     const formData = new FormData();
     formData.append('file', croppedFile);
-    
+
     try {
       await onUploadProfileImage(formData);
       // Update the preview with the cropped image
@@ -420,7 +420,7 @@ export default function EditProfilePage() {
           </div>
         </div>
       </div>
-      
+
       {/* Profile Image Crop Modal */}
       {showCropModal && selectedImageFile && (
         <ImageCropModal
@@ -431,7 +431,7 @@ export default function EditProfilePage() {
           cropType="profile"
         />
       )}
-      
+
       {/* Cover Image Crop Modal */}
       {showCoverCropModal && selectedCoverImageFile && (
         <ImageCropModal

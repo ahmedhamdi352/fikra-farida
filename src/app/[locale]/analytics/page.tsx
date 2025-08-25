@@ -9,6 +9,7 @@ import ProfileInformation from '../profile/components/ProfileInformation';
 import { useGetAnalyticsMutation } from 'hooks/profile/mutations';
 import { useSubscriptionStatus } from 'hooks';
 import { ProButton, UnlockedButton, UpgradButton } from 'components/subcriptions/subcriptionButtons';
+import { cn } from 'utils';
 
 type TimeFilter = 'today' | 'week' | 'month' | 'quarter';
 
@@ -193,7 +194,7 @@ const AnalyticsPage = () => {
                 <span className="text-[var(--main-color1)]">clicks</span>
               </div>
               {
-                hasProAccess ? (<div className='z-50 flex items-center justify-center'>
+                !hasProAccess ? (<div className='z-50 flex items-center justify-center'>
                   <ProButton />
                 </div>) : (
                   <p className="text-2xl font-bold ">{Number(profileAnalytics?.TotalClicks).toFixed() || 0}</p>
@@ -217,7 +218,7 @@ const AnalyticsPage = () => {
                 <span className="text-[var(--main-color1)]">rate</span>
               </div>
               {
-                hasProAccess ? (<div className='z-50 flex items-center justify-center'>
+                !hasProAccess ? (<div className='z-50 flex items-center justify-center'>
                   <ProButton />
                 </div>) : (
                   <p className="text-2xl font-bold ">{Number(profileAnalytics?.Rate).toFixed() || 0} %</p>
@@ -230,9 +231,9 @@ const AnalyticsPage = () => {
 
         {/* Contact Clicks */}
         <div className="card-container rounded-xl p-4 mb-6">
-          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
+          {!hasProAccess && <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
             <UpgradButton />
-          </div>
+          </div>}
           <h3 className="font-semibold mb-4">Contact Clicks</h3>
           <div className="space-y-3">
             {profileData?.links
@@ -242,7 +243,7 @@ const AnalyticsPage = () => {
                   key={index}
                   className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
                 >
-                  <div className="flex items-center px-4 py-2 opacity-40">
+                  <div className={cn("flex items-center px-4 py-2", !hasProAccess && "opacity-40")}>
                     <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
                       <Image
                         src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
@@ -254,7 +255,7 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
+                      {hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
                       <span className="text-[var(--main-color1)] mx-2">Click</span>
                     </span>
                   </div>
@@ -265,9 +266,9 @@ const AnalyticsPage = () => {
 
         {/* Apps Clicks */}
         <div className="card-container rounded-xl p-4">
-          <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
+          {!hasProAccess && <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
             <UnlockedButton />
-          </div>
+          </div>}
           <h3 className="font-semibold mb-4">Links Visits</h3>
           <div className="space-y-3">
             {profileData?.links
@@ -277,7 +278,7 @@ const AnalyticsPage = () => {
                   key={index}
                   className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
                 >
-                  <div className="flex items-center px-4 py-2 opacity-40">
+                  <div className={cn("flex items-center px-4 py-2", !hasProAccess && "opacity-40")}>
                     <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
                       <Image
                         src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
@@ -289,7 +290,7 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="text-base flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
+                      {hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
                       <span className="text-[var(--main-color1)] mx-2">Click</span>
                     </span>
                   </div>

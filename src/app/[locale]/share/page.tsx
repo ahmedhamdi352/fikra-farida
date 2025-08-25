@@ -211,7 +211,7 @@ export default function SharePage() {
             Offline Sharing
           </div>
           {
-            !hasProAccess ? (
+            hasProAccess ? (
               <label className="relative inline-flex items-center cursor-pointer ml-3">
                 <input
                   type="checkbox"

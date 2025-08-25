@@ -169,7 +169,7 @@ const ConnectionsPage = () => {
               <span className="uppercase text-h5 font-bold">{activeTab === TabType.GROUPS ? 'Groups' : 'Contacts'}</span>
             </Link>
             <button onClick={() => {
-              if (hasProAccess) {
+              if (!hasProAccess) {
                 setShowSubscriptionPopup(true)
               }
               else onExportContactsFile()
@@ -273,7 +273,7 @@ const ConnectionsPage = () => {
             {activeTab === TabType.GROUPS ? (
               <>
                 {
-                  hasProAccess ? (
+                  !hasProAccess ? (
                     <div
                       className="relative flex flex-col items-center justify-center gap-4 py-20 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
                     >

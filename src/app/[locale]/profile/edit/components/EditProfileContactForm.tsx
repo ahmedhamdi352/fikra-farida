@@ -145,7 +145,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
                 control={control}
                 placeholder={placeholder}
                 label={label}
-                disabled={fieldName === 'websites' && hasProAccess}
+                disabled={fieldName === 'websites' && !hasProAccess}
               />
             )}
           </div>
@@ -172,7 +172,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
                         after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
                         peer-checked:bg-[#FEC400] peer-checked:border-[#FEC400]">
-                </div>) : hasProAccess ? <ProButton /> : <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
+                </div>) : !hasProAccess ? <ProButton /> : <div className="w-12 h-6 bg-gray-200 dark:bg-[rgba(255,255,255,0.1)] border border-gray-300 dark:border-transparent peer-focus:outline-none rounded-full peer
                         peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                         after:content-[''] after:absolute after:top-[2px] after:start-[2px]
                         after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all
