@@ -8,4 +8,5 @@ export type ConnectionForCreateDTO = {
   company?: string;
   message?: string;
   reason?: string;
+  createdate?: string;
 };
