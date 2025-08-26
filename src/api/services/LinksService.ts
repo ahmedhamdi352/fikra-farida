@@ -30,6 +30,10 @@ async function deleteLink(pk: string | number) {
   return await httpClient.post(`${ApiURLs.links}/Delete?linkpk=${pk}`);
 }
 
+async function updateVisitCount(pk: string | number) {
+  return await httpClient.post(`${ApiURLs.visitCount}?linkpk=${pk}`);
+}
+
 export const LinksService = {
   addLink: {
     request: addLink,
@@ -42,5 +46,9 @@ export const LinksService = {
   deleteLink: {
     request: deleteLink,
     mutationKey: 'delete-link',
+  },
+  updateVisitCount: {
+    request: updateVisitCount,
+    mutationKey: 'update-visit-count',
   },
 };

@@ -30,21 +30,27 @@ const AnalyticsPage = () => {
 
     switch (selectedFilter) {
       case 'today':
-        // Already set to current date
+        // Set to start of today (00:00:00)
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
         break;
       case 'week':
-        startDate = new Date(now.setDate(now.getDate() - now.getDay())); // Start of current week (Sunday)
-        endDate = new Date(now);
-        endDate.setDate(now.getDate() + 6); // End of current week (Saturday)
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay()); // Start of current week (Sunday)
+        startDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
+        
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // End of current week (Saturday)
+        endDate = new Date(endOfWeek.getFullYear(), endOfWeek.getMonth(), endOfWeek.getDate(), 23, 59, 59, 999);
         break;
       case 'month':
-        startDate = new Date(now.getFullYear(), now.getMonth(), 1); // 1st day of current month
-        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of current month
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1); // 1st day of current month at 00:00
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999); // Last day of current month at 23:59
         break;
       case 'quarter':
         const quarter = Math.floor(now.getMonth() / 3);
-        startDate = new Date(now.getFullYear(), quarter * 3, 1); // 1st day of current quarter
-        endDate = new Date(now.getFullYear(), (quarter * 3) + 3, 0); // Last day of current quarter
+        startDate = new Date(now.getFullYear(), quarter * 3, 1); // 1st day of current quarter at 00:00
+        endDate = new Date(now.getFullYear(), (quarter * 3) + 3, 0, 23, 59, 59, 999); // Last day of current quarter at 23:59
         break;
     }
 

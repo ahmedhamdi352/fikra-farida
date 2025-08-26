@@ -31,4 +31,5 @@ export const ApiURLs = {
   uploadProfileImage: '/api/Media/UploadProfileImage',
   uploadCoverImage: '/api/Media/UploadCoverImage',
   updateSubscription: '/api/Account/Subscribe',
+  visitCount: '/api/CustomLink/Visit',
 } as const;

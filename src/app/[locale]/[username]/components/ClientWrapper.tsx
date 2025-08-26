@@ -6,8 +6,10 @@ import { saveAs } from 'file-saver';
 import LockedAccountPopup from './LockedAccountPopup';
 import AutoConnectPopup from './AutoConnectPopup';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
+import { useUpdateVisitCountMutation } from 'hooks/links/mutations/useUpdateVisitCountMutation';
 import CoverImage from 'assets/images/cover.jpeg'
 import Link from 'next/link';
+
 interface ClientWrapperProps {
   isAccountLocked: boolean;
   profileData?: ProfileForReadDTO;
@@ -60,6 +62,7 @@ const generateVCard = (profile: VCardProfile & { username?: string }) => {
 export default function ClientWrapper({ isAccountLocked, profileData, theme = 'premium' }: ClientWrapperProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
+  const { onUpdateVisitCount } = useUpdateVisitCountMutation();
 
   const handleSaveContact = () => {
     if (!profileData) return;
@@ -134,7 +137,9 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
   };
 
   // Render profile content based on theme
-  const renderProfileContent = (theme: string) => {
+  const renderProfileContent = (theme: string, onUpdateVisitCount: (pk: string | number) => Promise<void>) => {
+
+
 
     // Get the image URL from imageFilename
     const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; // Placeholder for missing image
@@ -273,6 +278,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 .map((link) => (
                   <div key={link.pk} style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }} className="p-3 flex flex-col items-center justify-center shadow-sm">
                     <Link
+                      onClick={() => onUpdateVisitCount(link.pk)}
                       style={profileData?.iconColor?.length > 0 ? { color: profileData.iconColor } : { color: 'black' }}
                       href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
                       <Image
@@ -433,6 +439,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 .sort((a, b) => (a.sort || 0) - (b.sort || 0)) // Sort by sort value
                 .map((link) => (
                   <Link
+                    onClick={() => onUpdateVisitCount(link.pk)}
                     href={link.url}
                     target="_blank"
                     key={link.pk}
@@ -596,7 +603,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 .sort((a, b) => (a.sort || 0) - (b.sort || 0)) // Sort by sort value
                 .map((link) => (
                   <div key={link.pk} style={{ borderRadius: '12px' }} className="p-3 flex flex-col items-center justify-center">
-                    <Link href={link.url} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
+                    <Link href={link.url} onClick={() => onUpdateVisitCount(link.pk)} target="_blank" className="w-16 h-16 rounded-full flex items-center justify-center mb-1">
                       <Image
                         src={`${baseIconsUrl}${link.iconurl}`}
                         alt={link.title}
@@ -637,13 +644,10 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
   };
   return (
     <>
-      {!isAccountLocked && profileData && renderProfileContent(theme)}
+      {!isAccountLocked && profileData && renderProfileContent(theme || 'premium', async (pk: string | number) => { await onUpdateVisitCount(pk || profileData.userPk); })}
       {isAccountLocked && profileData &&
         <>
-
-
         </>
-
       }
       {isAccountLocked && (
         <LockedAccountPopup
