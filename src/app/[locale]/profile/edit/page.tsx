@@ -46,45 +46,58 @@ export default function EditProfilePage() {
   // Handle scrolling to customization section when the param is present
   useEffect(() => {
     if (customizationParam) {
+      console.log('Customization param detected, will scroll after delay');
+      
       const scrollToCustomization = () => {
-        try {
-          // First, ensure the section is expanded
-          const collapsibleHeader = document.querySelector('[data-section="customization"]');
-          if (collapsibleHeader && !collapsibleHeader.getAttribute('data-open')) {
-            (collapsibleHeader as HTMLElement).click();
-          }
-
-          // Then scroll to the section
-          const section = document.getElementById('customization-section');
-          if (section) {
-            // Small delay to ensure the section is expanded
+        console.log('Attempting to scroll to customization section...');
+        
+        // Look for the Customization section by finding the button with "Customization" text
+        const customizationButton = Array.from(document.querySelectorAll('button')).find(button => 
+          button.textContent?.trim() === 'Customization'
+        );
+        
+        if (customizationButton) {
+          console.log('Found customization button:', customizationButton);
+          
+          // Find the parent CollapsibleSection div
+          const sectionDiv = customizationButton.closest('div[class*="py-4"]');
+          
+          if (sectionDiv) {
+            console.log('Found customization section div:', sectionDiv);
+            
+            // Scroll to the section
+            sectionDiv.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+            
+            // Add highlight effect
+            const targetElement = sectionDiv as HTMLElement;
+            targetElement.style.transition = 'box-shadow 0.5s';
+            targetElement.style.boxShadow = '0 0 0 2px var(--main-color1)';
+            
+            // Remove highlight after animation
             setTimeout(() => {
-              section.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-              });
-
-              // Add a temporary highlight
-              section.style.transition = 'box-shadow 0.5s';
-              section.style.boxShadow = '0 0 0 2px var(--main-color1)';
-
-              // Remove the highlight after animation
-              setTimeout(() => {
-                section.style.boxShadow = 'none';
-              }, 2000);
-
-              // Clean up the URL
+              targetElement.style.boxShadow = 'none';
+            }, 2000);
+            
+            // Clean up URL
+            setTimeout(() => {
               const cleanUrl = window.location.pathname;
               window.history.replaceState({}, '', cleanUrl);
-            }, 100);
+            }, 1000);
+            
+            console.log('Successfully scrolled to customization section!');
+          } else {
+            console.log('Could not find customization section div');
           }
-        } catch (error) {
-          console.error('Error scrolling to section:', error);
+        } else {
+          console.log('Could not find customization button');
         }
       };
 
-      // Initial attempt after a small delay to ensure everything is rendered
-      const timer = setTimeout(scrollToCustomization, 300);
+      // Wait longer to ensure the CollapsibleSection is fully rendered and opened
+      const timer = setTimeout(scrollToCustomization, 1000);
 
       // Cleanup
       return () => clearTimeout(timer);

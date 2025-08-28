@@ -93,21 +93,7 @@ const Header = ({ siteData }: HeaderProps) => {
     };
   }, [isMobileMenuOpen]);
 
-  const scrollToHowItWorks = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setMobileMenuOpen(false);
 
-    if (pathname === '/') {
-      setTimeout(() => {
-        const section = document.getElementById('how-it-works');
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
-    } else {
-      router.push('/#how-it-works');
-    }
-  };
 
   const switchLocale = (newLocale: string) => {
     document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000`;
@@ -164,8 +150,8 @@ const Header = ({ siteData }: HeaderProps) => {
             <Link
               href="/products"
               className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname.includes('/products')
-                  ? 'text-white font-bold bg-white/20'
-                  : 'text-black hover:text-white group'
+                ? 'text-white font-bold bg-white/20'
+                : 'text-black hover:text-white group'
                 }`}
             >
               <span className="relative z-10">{t('nav.products')}</span>
@@ -187,14 +173,14 @@ const Header = ({ siteData }: HeaderProps) => {
               <span className="relative z-10">{t('nav.contact')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
             </Link>
-            <a
+            {/* <a
               href="/#how-it-works"
               onClick={scrollToHowItWorks}
               className="relative px-3 py-1 rounded-md transition-all duration-300 text-black hover:text-white group"
             >
               <span className="relative z-10">{t('nav.howItUse')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
-            </a>
+            </a> */}
           </nav>
 
           {/* Icons Section */}
@@ -288,8 +274,8 @@ const Header = ({ siteData }: HeaderProps) => {
                     <Link
                       href="/"
                       className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname === '/'
-                          ? 'bg-yellow-500 text-black dark:text-white font-bold'
-                          : 'dark:text-gray-200 text-gray-500 group'
+                        ? 'bg-yellow-500 text-black dark:text-white font-bold'
+                        : 'dark:text-gray-200 text-gray-500 group'
                         }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -308,8 +294,8 @@ const Header = ({ siteData }: HeaderProps) => {
                     <Link
                       href="/products"
                       className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/products')
-                          ? 'bg-yellow-500 text-black dark:text-white font-bold'
-                          : 'dark:text-gray-200 text-gray-500 group'
+                        ? 'bg-yellow-500 text-black dark:text-white font-bold'
+                        : 'dark:text-gray-200 text-gray-500 group'
                         }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -328,8 +314,8 @@ const Header = ({ siteData }: HeaderProps) => {
                     <Link
                       href="/blogs"
                       className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/blogs')
-                          ? 'bg-yellow-500 text-black dark:text-white font-bold'
-                          : 'dark:text-gray-200 text-gray-500 group'
+                        ? 'bg-yellow-500 text-black dark:text-white font-bold'
+                        : 'dark:text-gray-200 text-gray-500 group'
                         }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -348,8 +334,8 @@ const Header = ({ siteData }: HeaderProps) => {
                     <Link
                       href="/contact"
                       className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/contact')
-                          ? 'bg-yellow-500 text-black dark:text-white font-bold'
-                          : 'dark:text-gray-200 text-gray-500 group'
+                        ? 'bg-yellow-500 text-black dark:text-white font-bold'
+                        : 'dark:text-gray-200 text-gray-500 group'
                         }`}
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -365,7 +351,7 @@ const Header = ({ siteData }: HeaderProps) => {
                       <span className="relative z-10 text-[18px]">{t('nav.contact')}</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
                     </Link>
-                    <a
+                    {/* <a
                       href="/#how-it-works"
                       className="relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden dark:text-gray-200 text-gray-500 group"
                       onClick={scrollToHowItWorks}
@@ -389,7 +375,40 @@ const Header = ({ siteData }: HeaderProps) => {
                       </svg>
                       <span className="relative z-10 text-[18px]">{t('nav.howItUse')}</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
-                    </a>
+                    </a> */}
+
+                    <Link
+                      href="/profile"
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-lg border dark:border-white/20 border-gray-400 dark:text-gray-200 text-gray-500"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke={theme === 'dark' ? 'white' : '#6b7280'}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                        <span className="text-[18px]">{t('nav.profile')}</span>
+                      </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke={theme === 'dark' ? 'white' : '#6b7280'}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
 
                     <div className="flex flex-col items-center justify-center w-full gap-4">
                       <div className="grid grid-cols-2 w-full gap-3">
@@ -486,7 +505,7 @@ const Header = ({ siteData }: HeaderProps) => {
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
                                   strokeWidth={2}
-                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                                 />
                               </svg>
                               <span className="text-[18px]">{t('nav.logout')}</span>
