@@ -32,4 +32,5 @@ export const ApiURLs = {
   uploadCoverImage: '/api/Media/UploadCoverImage',
   updateSubscription: '/api/Account/Subscribe',
   visitCount: '/api/CustomLink/Visit',
+  blogs: '/api/Blogs',
 } as const;

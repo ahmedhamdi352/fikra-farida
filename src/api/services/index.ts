@@ -4,3 +4,4 @@ export * from './OrderService';
 export * from './CategoriesService';
 export * from './ProfileService';
 export * from './SubscriptionService';
+export * from './BlogsService';

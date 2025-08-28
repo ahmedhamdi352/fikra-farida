@@ -25,6 +25,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'fikrafarida.com',
+        pathname: '/Media/Blogs/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fikrafarida.com',
         pathname: '/Media/icons/**',
       }
     ],
