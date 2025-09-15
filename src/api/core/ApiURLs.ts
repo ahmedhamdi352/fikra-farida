@@ -11,7 +11,7 @@ export const ApiURLs = {
   myProfiles: '/api/Account/MyProfiles',
   createProfile: '/api/Account/CreateProfile',
   myProfileByKey: '/api/Account/ProfileByQrcode',
-  QrCode: '/api/Media/QrCodebyUser',
+  QrCode: '/api/Media/QrProfilebyUser',
   OfflineQrCode: '/api/Media/offlinesharing',
   connections: '/api/UserConnection/MyConnections',
   groups: '/api/ConnectionGroup',
