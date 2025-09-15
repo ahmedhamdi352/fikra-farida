@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         try {
           // Update order status to success
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/ShoppingOrder/update/${merchantOrderId}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/ShoppingOrder/update/${merchantOrderId}/status`,
             {
               method: 'POST',
               headers: {

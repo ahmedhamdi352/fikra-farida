@@ -211,8 +211,8 @@ const PaymentPage = () => {
           body: JSON.stringify({
             amount: finalTotal,
             currency: 'EGP',
-            orderId: orderResponse.orderId,
-            id: orderResponse.id,
+            orderId: orderResponse.id,
+            // id: orderResponse.id,
             email: data.email,
             firstName: data.fullName.split(' ')[0],
             lastName: data.fullName.split(' ').slice(1).join(' ') || data.fullName.split(' ')[0], // Fallback if no last name
