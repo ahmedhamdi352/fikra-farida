@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiURLs, httpClient } from 'api/core';
+import { ConnectionFilters } from 'hooks/profile';
 import {
   ProfileForReadDTO,
   ProfileAnalyticsForReadDTO,
@@ -19,8 +20,22 @@ async function getQRCode(userpk: number) {
   return await httpClient.post<ProfileQrCodeDTO>(`${ApiURLs.QrCode}?userpk=${userpk}`);
 }
 
-async function getConnections() {
-  return await httpClient.post<ConnectionForCreateDTO[]>(`${ApiURLs.connections}`);
+async function getConnections(filters?: ConnectionFilters) {
+  const params = new URLSearchParams();
+
+  // Only add parameters if they have actual values
+  if (filters?.dateFrom) {
+    params.append('from', filters.dateFrom);
+  }
+
+  if (filters?.dateTo) {
+    params.append('to', filters.dateTo);
+  }
+
+  const queryString = params.toString();
+  const url = `${ApiURLs.connections}${queryString ? `?${queryString}` : ''}`;
+
+  return await httpClient.post<ConnectionForCreateDTO[]>(url);
 }
 
 async function getGroups() {

@@ -20,17 +20,17 @@ export function useCreateOrderMutation() {
         clearCart();
         const searchParams = new URLSearchParams({
           paymentStatus: 'SUCCESS',
-          merchantOrderId: response.orderId,
-          orderId: response.orderId,
-          amount: (response.total * 100).toString(), // Convert to cents as expected by the status page
+          merchantOrderId: response?.id?.toString() || '',
+          orderId: response?.id?.toString() || '',
+          amount: response.total.toString(), // Convert to cents as expected by the status page
           currency: 'EGP',
           mode: 'CASH',
-          transactionId: response.orderId,
+          transactionId: response?.id?.toString() || '',
         });
         router.push(`/payment/status?${searchParams.toString()}`);
         return;
       }
-      if (!response.orderId) {
+      if (!response.id) {
         SnackbarUtils.error(t('orderCreationFailed'));
         return;
       }
