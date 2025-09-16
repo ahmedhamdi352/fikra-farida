@@ -1,9 +1,6 @@
 'use client';
-// import Image from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
-// import blog1 from 'assets/images/blogs/blog1.png'
-// import blog2 from 'assets/images/blogs/blog2.png'
-// import blog3 from 'assets/images/blogs/blog3.png'
 import { Button } from 'components/ui/Button';
 import { Newsletter } from 'components/Newsletter';
 import { useTranslations } from 'next-intl';
@@ -27,35 +24,11 @@ export default function BlogsPage() {
         Subtitle: blog.Subtitle,
         Content: blog.Content,
         MediaUrl: blog.MediaUrl,
+        BlogType: blog.BlogType,
       }));
       setBlogs(blogs || []);
     }
   }, [blogsData]);
-
-
-
-  // const [firstBlog, ...otherBlogs] = blogs;
-
-  // const blogs = [
-  //   {
-  //     id: 1,
-  //     title: t('blog1'),
-  //     description: t('blog1Des'),
-  //     image: blog1,
-  //   },
-  //   {
-  //     id: 2,
-  //     title: t('blog2'),
-  //     description: t('blog2Des'),
-  //     image: blog2,
-  //   },
-  //   {
-  //     id: 3,
-  //     title: t('blog3'),
-  //     description: t('blog3Des'),
-  //     image: blog3,
-  //   },
-  // ];
 
   const [firstBlog, ...otherBlogs] = blogs || [];
 
@@ -74,6 +47,7 @@ export default function BlogsPage() {
       </main>
     );
   }
+  console.log(blogs)
   return (
     <main className="container mx-auto px-4 py-12">
       <div className="mb-8">
@@ -92,14 +66,24 @@ export default function BlogsPage() {
           >
             <article className="flex flex-col pb-5">
               <div className="relative  w-full mb-6">
-                <video
-                  src={firstBlog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${firstBlog.MediaUrl}` : ''}
-                  className="object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
+                {firstBlog.BlogType === 'Pic' ? (
+                  <Image
+                    alt='blog image'
+                    src={firstBlog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${firstBlog.MediaUrl}` : ''}
+                    width={800}
+                    height={400}
+                    className="w-full h-64 object-cover rounded-lg mb-6"
+                  />
+                ) : (
+                  <video
+                    src={firstBlog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${firstBlog.MediaUrl}` : ''}
+                    // className="object-cover "
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                )}
               </div>
               <div className="flex flex-col gap-1">
                 <h2 className="text-h2 text-[#FEC400] font-semibold self-start">{firstBlog.Title || 'Untitled'}</h2>
@@ -124,7 +108,15 @@ export default function BlogsPage() {
                p-5 lg:p-0 lg:pr-8 flex flex-col justify-center items-center shadow-sm'
             >
               <article key={blog.BlogId} className="flex flex-col">
-                <div className="relative h-[250px] lg:h-[360px] w-full mb-6">
+                {blog.BlogType === 'Pic' ? (
+                  <Image
+                    alt='blog image'
+                    src={blog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${blog.MediaUrl}` : ''}
+                    width={800}
+                    height={400}
+                    className="w-full h-64 object-cover rounded-lg mb-6"
+                  />
+                ) : (
                   <video
                     src={blog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${blog.MediaUrl}` : ''}
                     // className="object-cover "
@@ -133,7 +125,7 @@ export default function BlogsPage() {
                     loop
                     playsInline
                   />
-                </div>
+                )}
                 <div className="flex flex-col gap-1">
                   <h2 className="text-h2 text-[#FEC400] font-semibold self-start">{blog.Title || 'Untitled'}</h2>
                   <p className="text-h4 line-clamp-3">{blog.Subtitle || 'No description available'}</p>

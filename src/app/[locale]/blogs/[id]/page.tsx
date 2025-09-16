@@ -4,6 +4,7 @@ import { Newsletter } from 'components/Newsletter';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import { useGetBlogByIdQuery } from 'hooks/blogs/query/useGetBlogByIdQuery';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 export default function BlogDetails() {
   const params = useParams();
@@ -12,6 +13,8 @@ export default function BlogDetails() {
   const blogId = parseInt(id);
 
   const { data: blog, isLoading, isError } = useGetBlogByIdQuery(blogId);
+
+  console.log(blog)
 
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading} />;
@@ -24,10 +27,20 @@ export default function BlogDetails() {
   const content = blog.Content || '';
   const title = blog.Title || '';
 
+
   return (
     <div className="container mt-4 mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto mb-6">
-        {blog.MediaUrl && (
+        {blog.MediaUrl && blog.BlogType === 'Pic' && (
+          <Image
+            alt='blog image'
+            src={blog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${blog.MediaUrl}` : ''}
+            width={800}
+            height={400}
+            className="w-full h-64 object-cover rounded-lg mb-6"
+          />
+        )}
+        {blog.MediaUrl && blog.BlogType === 'Video' && (
           <video
             src={blog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${blog.MediaUrl}` : ''}
             width={800}
