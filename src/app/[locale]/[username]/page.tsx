@@ -113,13 +113,13 @@ export default async function UsernamePage({ params }: UsernameProps) {
   const isAccountLocked = !(typeof profileData.data === 'object' && 'fullname' in profileData.data) ? (profileData?.data?.errorcode === 408 || profileData?.data?.sucess === false) : false;
 
 
-  const theme = (typeof profileData.data === 'object' && 'fullname' in profileData.data) ? profileData.data?.theme : 'rounded';
+  const theme = (typeof profileData.data === 'object' && 'fullname' in profileData.data) ? profileData.data?.theme : 'basic';
   return (
     <div className="relative md:pb-10 ">
       <ClientWrapper
         isAccountLocked={isAccountLocked}
         profileData={typeof profileData.data === 'object' && 'fullname' in profileData.data ? profileData.data : undefined}
-        theme={theme.length > 0 ? theme : 'edge'}
+        theme={theme.length > 0 ? theme : 'basic'}
       />
     </div>
   );

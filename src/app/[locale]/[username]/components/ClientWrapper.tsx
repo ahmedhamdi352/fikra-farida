@@ -59,7 +59,7 @@ const generateVCard = (profile: VCardProfile & { username?: string }) => {
 };
 
 
-export default function ClientWrapper({ isAccountLocked, profileData, theme = 'premium' }: ClientWrapperProps) {
+export default function ClientWrapper({ isAccountLocked, profileData, theme = 'basic' }: ClientWrapperProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
   const { onUpdateVisitCount } = useUpdateVisitCountMutation();
@@ -96,8 +96,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
   // Cover photo URLs for different themes
   const coverPhotos = {
-    // Using the provided golden abstract image for premium and rounded themes
-    premium: CoverImage, // Path if you save the image locally
+    basic: CoverImage, // Path if you save the image locally
     rounded: CoverImage, // Same image for rounded theme
     edge: CoverImage, // Different image for edge theme
   };
@@ -107,8 +106,8 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
     let coverSrc;
 
     switch (theme) {
-      case 'premium':
-        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.premium;
+      case 'basic':
+        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.basic;
         break;
       case 'rounded':
         coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.rounded;
@@ -117,7 +116,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
         coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.edge;
         break;
       default:
-        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.premium;
+        coverSrc = profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : coverPhotos.basic;
     }
 
     return (
@@ -138,21 +137,18 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
   // Render profile content based on theme
   const renderProfileContent = (theme: string, onUpdateVisitCount: (pk: string | number) => Promise<void>) => {
-
-
-
     // Get the image URL from imageFilename
     const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; // Placeholder for missing image
     const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
-
+    console.log(theme)
     switch (theme) {
-      case 'premium':
+      case 'edge':
         return (
-          <div className="premium-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
+          <div className="basic-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
             style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
           >
             <div className="relative">
-              <CoverPhoto theme="premium" />
+              <CoverPhoto theme="basic" />
               <div className="absolute top-[50%] left-[5%] z-20 flex justify-start">
                 {imageUrl && (
                   <div className="w-40 h-40 rounded-lg overflow-hidden relative shadow-lg">
@@ -189,7 +185,16 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>
             </div>
             <div className="flex flex-col items-start justify-start pt-16 pb-4 px-8 relative z-10">
-              <h2 className="text-3xl font-bold  leading-tight text-left">{profileData?.fullname}</h2>
+              <div className='flex items-center gap-2'>
+                <h2 className="text-3xl font-bold  leading-tight text-left">{profileData?.fullname}</h2>
+                {profileData?.type === 2 && (
+                  <span className="text-[var(--main-color1)]" title="Verified Professional">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                )}
+              </div>
               <p className="text-lg text-left">{`${profileData?.jobTitle || 'Member'} ${profileData?.company ? ` @ ${profileData?.company}` : ''}`}</p>
               <p className="text-base text-left max-w-xs">{profileData?.bio}</p>
             </div>
@@ -318,27 +323,27 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
           </div >
         );
 
-      case 'edge':
+      case 'basic':
         return (
-          <div className="premium-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
+          <div className="basic-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
             style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
           >
             {/* {lightThemeBackground()} */}
             <div className="relative">
-              <CoverPhoto theme="premium" />
-              <div className="absolute top-5 inset-x-0 z-5 flex justify-center">
+              {/* No cover photo for basic theme */}
+
+              {/* Profile image positioning - centered at top for basic theme */}
+              <div className="flex justify-start pt-8 z-20 mt-16 mx-5">
                 {imageUrl && (
-                  <div className='w-full h-fit flex flex-col'>
-                    <div className="w-full h-[300px] inset-x-0 overflow-hidden relative shadow-lg">
-                      <Image
-                        src={imageUrl}
-                        alt={profileData?.fullname || 'Profile'}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 280px" // Optimized for responsive image loading
-                        className="object-cover"
-                        onError={(e) => { e.currentTarget.src = 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; }} // Fallback image on error
-                      />
-                    </div>
+                  <div className="w-40 h-40 rounded-lg overflow-hidden relative shadow-lg">
+                    <Image
+                      src={imageUrl}
+                      alt={profileData?.fullname || 'Profile'}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 280px" // Optimized for responsive image loading
+                      className="object-cover"
+                      onError={(e) => { e.currentTarget.src = 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; }} // Fallback image on error
+                    />
                   </div>
                 )}
               </div>
@@ -351,7 +356,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                   // Alternatively, use native share dialog:
                   navigator.share?.({ url: profileUrl });
                 }}
-                className="z-[10] absolute top-10 right-2 flex gap-1  bg-[#F4DD94] hover:bg-yellow-500 text-white py-2 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105">
+                className="z-[10] absolute top-14 right-2 flex gap-1  bg-[#F4DD94] hover:bg-yellow-500 text-white py-2 px-6 rounded-lg text-center font-semibold text-lg transition duration-300 shadow-xl transform hover:scale-105">
 
                 <p className='text-black text-[12px] font-semibold'>
                   Export
@@ -363,8 +368,17 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
                 </svg>
               </button>
             </div>
-            <div className="flex flex-col items-start justify-start pt-32 pb-4 px-8 relative z-10">
-              <h2 className="text-3xl font-bold mb-1 leading-tight text-left text-black">{profileData?.fullname}</h2>
+            <div className="flex flex-col items-start justify-start pt-4 pb-4 px-8 relative z-10">
+              <div className='flex items-center gap-2'>
+                <h2 className="text-3xl font-bold mb-1 leading-tight text-left text-black">{profileData?.fullname}</h2>
+                {profileData?.type === 2 && (
+                  <span className="text-[var(--main-color1)]" title="Verified Professional">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                )}
+              </div>
               <p className="text-lg mb-1 text-left text-black">{`${profileData?.jobTitle || 'Member'} ${profileData?.company ? ` @ ${profileData?.company}` : ''}`}</p>
               <p className="text-base text-left max-w-xs text-black">{profileData?.bio}</p>
             </div>
@@ -499,12 +513,12 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
 
       case 'rounded':
         return (
-          <div className="premium-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
+          <div className="basic-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
             style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
           >
             {/* {lightThemeBackground()} */}
             <div className="relative">
-              <CoverPhoto theme="premium" />
+              <CoverPhoto theme="basic" />
               <div className="absolute top-[50%] inset-x-0 z-20 flex justify-center">
                 {imageUrl && (
                   <div className="w-40 h-40 rounded-full overflow-hidden relative shadow-lg">
@@ -541,7 +555,16 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
               </button>
             </div>
             <div className="flex flex-col items-center justify-center pt-16 pb-4 px-8  relative z-10">
-              <h2 className="text-3xl font-bold mb-1 leading-tight text-center">{profileData?.fullname}</h2>
+              <div className='flex items-center gap-2'>
+                <h2 className="text-3xl font-bold  leading-tight text-left">{profileData?.fullname}</h2>
+                {profileData?.type === 2 && (
+                  <span className="text-[var(--main-color1)]" title="Verified Professional">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                )}
+              </div>
               <p className="text-lg mb-1 text-center">{`${profileData?.jobTitle || 'Member'} ${profileData?.company ? ` @ ${profileData?.company}` : ''}`}</p>
               <p className="text-base text-center max-w-xs">{profileData?.bio}</p>
             </div>
@@ -680,7 +703,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'p
   };
   return (
     <>
-      {!isAccountLocked && profileData && renderProfileContent(theme || 'premium', async (pk: string | number) => { await onUpdateVisitCount(pk || profileData.userPk); })}
+      {!isAccountLocked && profileData && renderProfileContent(theme || 'basic', async (pk: string | number) => { await onUpdateVisitCount(pk || profileData.userPk); })}
       {isAccountLocked && profileData &&
         <>
         </>

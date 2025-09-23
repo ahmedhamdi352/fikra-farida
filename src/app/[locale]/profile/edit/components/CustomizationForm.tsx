@@ -11,7 +11,7 @@ import Image from 'next/image'
 import { ProfileForReadDTO } from 'types';
 // Theme options with their respective icons
 const themeOptions = [
-  { id: 'premium', name: 'premium', icon: primary },
+  { id: 'basic', name: 'basic', icon: primary },
   { id: 'rounded', name: 'rounded', icon: rounded },
   { id: 'edge', name: 'edge', icon: edge },
 ];
