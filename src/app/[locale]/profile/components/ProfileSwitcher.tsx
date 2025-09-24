@@ -201,7 +201,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
           ))}
 
           {/* Add New Profile Button */}
-          <div
+          {profiles.length < 5 && <div
             className="gap-2 px-4 py-6 rounded-lg cursor-pointer bg-[#646458]/70 hover:bg-[#646458] flex items-center justify-center"
             onClick={handleAddNewProfile}
           >
@@ -220,7 +220,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
             </div>
             {!hasProAccess && <ProButton />}
 
-          </div>
+          </div>}
         </div>
       </div>
     </>,

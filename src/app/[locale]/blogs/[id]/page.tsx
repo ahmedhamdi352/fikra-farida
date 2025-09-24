@@ -47,7 +47,6 @@ export default function BlogDetails() {
             height={400}
             className="w-full h-64 object-cover rounded-lg mb-6"
             autoPlay
-            muted
             loop
             playsInline
           />

@@ -257,7 +257,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                       </div>
                       {/* Lock Profile Toggle */}
                       {
-                        hasProAccess ? (
+                        !hasProAccess ? (
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"

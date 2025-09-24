@@ -79,7 +79,6 @@ export default function BlogsPage() {
                     src={firstBlog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${firstBlog.MediaUrl}` : ''}
                     // className="object-cover "
                     autoPlay
-                    muted
                     loop
                     playsInline
                   />
@@ -121,7 +120,6 @@ export default function BlogsPage() {
                     src={blog.MediaUrl ? `https://fikrafarida.com/Media/Blogs/${blog.MediaUrl}` : ''}
                     // className="object-cover "
                     autoPlay
-                    muted
                     loop
                     playsInline
                   />
