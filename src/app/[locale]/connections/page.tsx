@@ -20,6 +20,7 @@ import SubscriptionsPopup from 'components/subcriptions/subcriptionsPopup';
 import { DateUtils } from 'utils';
 // import { useSiteData } from 'context/SiteContext';
 import DateFilterPopup from 'components/DateFilterPopup';
+import { useSiteData } from 'context/SiteContext';
 
 enum TabType {
   GROUPS = 'groups',
@@ -28,7 +29,12 @@ enum TabType {
 
 const ConnectionsPage = () => {
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
-  const { data: connectionsData, isLoading: connectionsLoading, onGetConnections } = useGetConnectionQuery();
+  const siteData = useSiteData();
+
+  const { data: connectionsData, isLoading: connectionsLoading, onGetConnections } = useGetConnectionQuery({
+    connectUser1: siteData?.connectUser1 ?? undefined,
+    connectUser2: siteData?.connectUser2 ?? undefined,
+  });
   const { data: groupsData, isLoading: groupsLoading, onGetGroups } = useGetGroupQuery();
   const { onDeleteConnection, isLoading: deleteConnectionLoading } = useDeleteConnectionMutation();
   const { onDeleteGroup, isLoading: deleteGroupLoading } = useDeleteGroupMutation();
@@ -46,6 +52,8 @@ const ConnectionsPage = () => {
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+
+
   // const siteData = useSiteData();
   // console.log(siteData);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -87,15 +95,16 @@ const ConnectionsPage = () => {
 
   useEffect(() => {
     onGetProfile();
-    onGetConnections();
-    onGetGroups();
   }, []);
 
   useEffect(() => {
     if (activeTab === TabType.GROUPS) {
       onGetGroups();
     } else {
-      onGetConnections();
+      onGetConnections({
+        connectUser1: siteData?.connectUser1 ?? undefined,
+        connectUser2: siteData?.connectUser2 ?? undefined,
+      });
     }
   }, [activeTab])
 
@@ -116,6 +125,8 @@ const ConnectionsPage = () => {
       await onGetConnections({
         dateFrom: dateFilter.from,
         dateTo: dateFilter.to,
+        connectUser1: siteData?.connectUser1 ?? undefined,
+        connectUser2: siteData?.connectUser2 ?? undefined,
       });
 
       setShowFilterDropdown(false);
@@ -133,7 +144,10 @@ const ConnectionsPage = () => {
 
     try {
       // Reload all connections without filter
-      await onGetConnections();
+      await onGetConnections({
+        connectUser1: siteData?.connectUser1 ?? undefined,
+        connectUser2: siteData?.connectUser2 ?? undefined,
+      });
       console.log('Filter cleared successfully');
     } catch (error) {
       console.error('Error clearing filter:', error);
@@ -540,7 +554,7 @@ const ConnectionsPage = () => {
                         </div>
                       </div>
 
-                      <div className="flex justify-center gap-4 ">
+                      {contact.pk && <div className="flex justify-center gap-4 ">
                         <button
                           onClick={() => {
                             onDeleteConnection({ ConnectionId: contact.pk! });
@@ -569,7 +583,7 @@ const ConnectionsPage = () => {
                           </svg>
                           <span>Save</span>
                         </button>
-                      </div>
+                      </div>}
                     </div>
                   ))
                 ) : (
