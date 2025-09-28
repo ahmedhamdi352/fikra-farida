@@ -10,6 +10,7 @@ import TextInput from 'components/forms/text-input';
 import { useCreateProfileMutation } from 'hooks/profile';
 import { useSiteData } from 'context/SiteContext';
 import { useTheme } from 'components/ThemeProvider';
+import { PhoneInput } from 'components/forms/phone-input';
 
 interface ProfileFormData {
   username: string;
@@ -17,6 +18,7 @@ interface ProfileFormData {
   email: string;
   password: string;
   confirmPassword: string;
+  phoneNumber1: string;
 }
 
 export default function ProfileForm() {
@@ -40,6 +42,7 @@ export default function ProfileForm() {
       .string()
       .required(t('register.validation.passwordRequired'))
       .oneOf([yup.ref('password')], t('register.validation.passwordMatch')),
+    phoneNumber1: yup.string().required(t('register.validation.phoneRequired')),
   });
 
   const { control, handleSubmit } = useForm<ProfileFormData>({
@@ -53,6 +56,7 @@ export default function ProfileForm() {
       fullname: data.fullName,
       username: data.username,
       password: data.password,
+      phoneNumber1: data.phoneNumber1,
     };
     await onAddProfile(registrationData);
   };
@@ -138,6 +142,15 @@ export default function ProfileForm() {
                   />
                 </svg>
               }
+            />
+
+            <PhoneInput
+              name="phoneNumber1"
+              control={control}
+              required
+              defaultCountry={'eg'}
+              placeholder='phone'
+              disableDropdown={false}
             />
 
             <TextInput

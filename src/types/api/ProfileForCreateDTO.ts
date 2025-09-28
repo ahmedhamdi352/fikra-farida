@@ -3,4 +3,5 @@ export interface ProfileForCreateDTO {
   fullname: string;
   email?: string;
   password?: string;
+  phoneNumber1?: string;
 }

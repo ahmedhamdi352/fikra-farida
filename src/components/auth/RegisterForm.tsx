@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import fikraLogo from 'assets/images/fikra-Logo.png';
 import TextInput from '../forms/text-input';
+import { PhoneInput } from 'components/forms/phone-input';
 import { useRegisterMutation } from 'hooks';
 import { useSiteData } from 'context/SiteContext';
 import { useTheme } from '../ThemeProvider';
@@ -17,6 +18,7 @@ interface RegisterFormData {
   username: string;
   fullName: string;
   email: string;
+  phoneNumber1: string;
   password: string;
   confirmPassword: string;
 }
@@ -37,6 +39,7 @@ export default function RegisterForm() {
       .matches(/^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/, t('register.validation.usernameEnglishOnly')),
     fullName: yup.string().required(t('register.validation.fullNameRequired')),
     email: yup.string().required(t('register.validation.emailRequired')).email(t('register.validation.emailInvalid')),
+    phoneNumber1: yup.string().required(t('register.validation.phoneRequired')),
     password: yup
       .string()
       .required(t('register.validation.passwordRequired'))
@@ -84,7 +87,7 @@ export default function RegisterForm() {
 
         <form noValidate className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
-            <TextInput
+            <TextInput<RegisterFormData>
               control={control}
               name="username"
               type="text"
@@ -106,7 +109,7 @@ export default function RegisterForm() {
               }
             />
 
-            <TextInput
+            <TextInput<RegisterFormData>
               control={control}
               name="fullName"
               type="text"
@@ -128,7 +131,7 @@ export default function RegisterForm() {
               }
             />
 
-            <TextInput
+            <TextInput<RegisterFormData>
               control={control}
               name="email"
               type="email"
@@ -150,7 +153,16 @@ export default function RegisterForm() {
               }
             />
 
-            <TextInput
+            <PhoneInput<RegisterFormData>
+              name="phoneNumber1"
+              control={control}
+              required
+              defaultCountry={'eg'}
+              placeholder='phone'
+              disableDropdown={false}
+            />
+
+            <TextInput<RegisterFormData>
               control={control}
               name="password"
               type="password"
@@ -172,7 +184,7 @@ export default function RegisterForm() {
               }
             />
 
-            <TextInput
+            <TextInput<RegisterFormData>
               control={control}
               name="confirmPassword"
               type="password"
