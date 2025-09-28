@@ -3,12 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   DndContext,
-  closestCenter,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   DragEndEvent,
+  MeasuringStrategy,
+  closestCenter,
+  type Modifier,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -27,6 +29,8 @@ interface UserLinksProps {
 
 export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
   const [links, setLinks] = useState<ProfileLink[]>(profileLinks || []);
+  const lastPayloadRef = React.useRef<string | null>(null);
+  const updateTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { onUpdateBulkLinksSort } = useUpdateBulkLinksSortMutation();
 
@@ -38,11 +42,21 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
   }, [profileLinks]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    // Use movement distance to start the drag; feels smoother on touch
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 6,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Local vertical-axis restriction modifier (avoids extra dependency)
+  const restrictToVerticalAxis: Modifier = ({ transform }) => {
+    return { ...transform, x: 0 };
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -54,7 +68,19 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
 
         const newLinks = arrayMove(items, oldIndex, newIndex);
         onLinksChange?.(newLinks);
-        onUpdateBulkLinksSort(newLinks.map((link, index) => ({ pk: link.pk, sort: index + 1 })));
+        const payload = newLinks.map((link, index) => ({ pk: link.pk, sort: index + 1 }));
+        const payloadKey = JSON.stringify(payload);
+
+        // Debounce and de-duplicate identical payloads to avoid double calls
+        if (updateTimerRef.current) {
+          clearTimeout(updateTimerRef.current);
+        }
+        updateTimerRef.current = setTimeout(() => {
+          if (lastPayloadRef.current !== payloadKey) {
+            lastPayloadRef.current = payloadKey;
+            onUpdateBulkLinksSort(payload);
+          }
+        }, 150);
         return newLinks;
       });
     }
@@ -68,8 +94,18 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
           <span className="text-white text-lg">({links.length} Links)</span>
         </div>
 
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={links.map(link => ({ id: link.pk }))} strategy={verticalListSortingStrategy}>
+        <DndContext
+          sensors={sensors}
+          // closestCenter tends to avoid index jumps in vertical lists on touch
+          collisionDetection={closestCenter}
+          autoScroll
+          onDragEnd={handleDragEnd}
+          // continuously measure droppables to improve accuracy on mobile
+          measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+          // Limit movement to vertical axis to reduce jitter
+          modifiers={[restrictToVerticalAxis]}
+        >
+          <SortableContext items={links.map(link => link.pk)} strategy={verticalListSortingStrategy}>
             <div className="space-y-3">
               {links.map(link => (
                 <SortableLink key={link.pk} link={link} totalCount={links.length} />

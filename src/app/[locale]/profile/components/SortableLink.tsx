@@ -14,7 +14,10 @@ interface SortableLinkProps {
 }
 
 export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: link.pk });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: link.pk,
+    animateLayoutChanges: () => false,
+  });
   const [mounted, setMounted] = useState(false);
 
   const { onUpdateLink, isLoading: isUpdatingLoading } = useUpdateLinkMutation();
@@ -26,7 +29,7 @@ export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
 
   if (!mounted) {
     return (
-      <div className="bg-[rgba(255,255,255,0.08)] rounded-xl mb-3 border border-[#B0A18E] h-[60px] animate-pulse"></div>
+      <div className="bg-[rgba(255,255,255,0.08)] rounded-xl border border-[#B0A18E] h-[60px] animate-pulse"></div>
     );
   }
 
@@ -50,7 +53,8 @@ export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl mb-3  border border-[#B0A18E]
+      className={`bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-colors duration-150 rounded-xl border border-[#B0A18E]
+                will-change-transform transform-gpu touch-none select-none min-h-[60px]
                 ${isDragging ? 'ring-2 ring-[#FEC400] shadow-lg scale-[1.02]' : ''}`}
     >
       <div className="flex items-center px-4 py-2">

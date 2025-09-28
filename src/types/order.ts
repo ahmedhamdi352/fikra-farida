@@ -18,7 +18,8 @@ interface BillingInfo {
 export interface OrderPayloadForCreateDto {
   total: number;
   subTotal: number;
-  discount: number;
+  discount?: number;
+  discountCode?: string;
   shipping: number;
   activeStep: number;
   totalItems: number;

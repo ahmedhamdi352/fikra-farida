@@ -164,6 +164,7 @@ const PaymentPage = () => {
         total: finalTotal,
         subTotal: subtotal,
         discount: appliedDiscount?.totalDiscount || 0,
+        discountCode: discountCode,
         shipping: shippingCost,
         activeStep: 3,
         totalItems: items.length,
