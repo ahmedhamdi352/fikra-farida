@@ -82,9 +82,7 @@ export default function LockedAccountPopup({
 
           {/* Description */}
           <p className="text-black mb-4 px-4">
-            {isLocked
-              ? 'This account is currently unavailable. It seems that the digital card owner has disabled their profile at the moment. You can leave them a message and they will contact you when their account is reactivated.'
-              : 'When activating this option, your profile will be locked, and no one will be able to access your data when scanning the digital card or any of your smart products. Instead, they will see a message stating that the account is currently unavailable. You can reactivate your profile at any time through the same option.'}
+            This account is currently unavailable. It seems that the digital card owner has disabled their profile at the moment. You can leave them a message and they will contact you when their account is reactivated.
           </p>
 
 
