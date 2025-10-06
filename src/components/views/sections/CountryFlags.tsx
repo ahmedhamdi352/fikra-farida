@@ -42,18 +42,18 @@ export default function CountryFlags() {
           {/* Content */}
           <div className="w-full relative z-10 py-16 px-6">
 
-            <div className=" w-full flex justify-center items-center flex-wrap gap-3 md:gap-12">
+            <div className="w-full grid grid-cols-2 md:flex md:justify-center md:items-center md:flex-wrap gap-3 md:gap-12">
               {countries.map((country, index) => (
                 <div
                   key={index}
-                  className="relative w-40 h-24 rounded-xl overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-110 hover:shadow-2xl"
+                  className="relative w-full h-20 md:w-40 md:h-24 rounded-xl overflow-hidden shadow-xl transform transition-all duration-300 hover:scale-110 hover:shadow-2xl"
                 >
                   <Image
                     src={country.flag}
                     alt={t(country.translationKey)}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 708px) 60vw, (max-width: 1100px) 30vw, 33vw"
+                    sizes="(max-width: 768px) 45vw, (max-width: 1100px) 30vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-black/10 hover:bg-black/0 transition-colors duration-300" />
                 </div>

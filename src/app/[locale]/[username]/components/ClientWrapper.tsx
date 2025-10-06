@@ -32,26 +32,66 @@ interface VCardProfile {
 }
 
 const generateVCard = (profile: VCardProfile & { username?: string }) => {
-  // Prepare photo URL if available
+  // Prepare photo URL if available - ensure it's accessible and properly formatted
   const photoUrl = profile.imageFilename
     ? `https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`
     : null;
 
+  // Clean and validate the fullname - ensure it's not empty and properly formatted
+  const fullName = (profile.fullname || '').trim();
+  const displayName = fullName || profile.username || 'Contact';
+
+  // Split name for proper vCard N field format (Last;First;Middle;Prefix;Suffix)
+  const nameParts = displayName.split(' ');
+  const lastName = nameParts.length > 1 ? nameParts.slice(-1)[0] : '';
+  const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : displayName;
+
+  // Determine image type from filename extension
+  const getImageType = (filename: string) => {
+    const ext = filename.toLowerCase().split('.').pop();
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+        return 'JPEG';
+      case 'png':
+        return 'PNG';
+      case 'gif':
+        return 'GIF';
+      case 'webp':
+        return 'WEBP';
+      default:
+        return 'JPEG'; // Default to JPEG for better compatibility
+    }
+  };
+
+  // Escape special characters in vCard fields
+  const escapeVCardField = (field: string) => {
+    return field
+      .replace(/\\/g, '\\\\') // Escape backslashes
+      .replace(/;/g, '\\;')   // Escape semicolons
+      .replace(/,/g, '\\,')   // Escape commas
+      .replace(/\n/g, '\\n')  // Escape newlines
+      .replace(/\r/g, '\\r'); // Escape carriage returns
+  };
+
   const vCard = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    `FN:${profile.fullname || ''}`,
-    ...(photoUrl ? [`PHOTO;VALUE=URI;TYPE=JPEG:${photoUrl}`] : []),
+    `FN:${escapeVCardField(displayName)}`,
+    // Add N field for proper name parsing (Last;First;Middle;Prefix;Suffix)
+    `N:${escapeVCardField(lastName)};${escapeVCardField(firstName)};;;`,
+    // Add photo with proper encoding and type detection
+    ...(photoUrl ? [`PHOTO;VALUE=URI;TYPE=${getImageType(profile.imageFilename || '')}:${photoUrl}`] : []),
     `TEL;type=CELL:${profile.phoneNumber1 || ''}`,
     `EMAIL:${profile.email || ''}`,
-    `TITLE:${profile.jobTitle || ''}`,
-    `ORG:${profile.company || ''}`,
+    `TITLE:${escapeVCardField(profile.jobTitle || '')}`,
+    `ORG:${escapeVCardField(profile.company || '')}`,
     // Add profile's direct URL as the first website
     ...(profile.username ? [`URL;type=Profile:${process.env.NEXT_PUBLIC_BASE_URL}/${profile.username}`] : []),
     // Add other websites
     ...(profile.websiteUrl ? [`URL:${profile.websiteUrl}`] : []),
-    ...(profile.links?.map(link => `URL;type=${link.title}:${link.url}`) || []),
-    `NOTE:${profile.bio || ''}`,
+    ...(profile.links?.map(link => `URL;type=${escapeVCardField(link.title)}:${link.url}`) || []),
+    `NOTE:${escapeVCardField(profile.bio || '')}`,
     'END:VCARD'
   ].filter(Boolean).join('\n');
 
@@ -67,8 +107,32 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
   const handleSaveContact = () => {
     if (!profileData) return;
     try {
+      // Debug logging to help identify issues
+      console.log('Profile data for vCard:', {
+        fullname: profileData.fullname,
+        company: profileData.company,
+        imageFilename: profileData.imageFilename,
+        email: profileData.email,
+        phoneNumber1: profileData.phoneNumber1
+      });
+
       const vCardBlob = generateVCard(profileData);
-      saveAs(vCardBlob, `${profileData.fullname || 'contact'}.vcf`);
+      
+      // Debug: Log the generated vCard content
+      vCardBlob.text().then(vCardText => {
+        console.log('Generated vCard content:', vCardText);
+      });
+      
+      // Create a more descriptive filename
+      const cleanName = (profileData.fullname || profileData.username || 'contact')
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters
+        .replace(/\s+/g, '_') // Replace spaces with underscores
+        .trim();
+      
+      saveAs(vCardBlob, `${cleanName}.vcf`);
+      
+      // Show success message
+      alert('Contact saved successfully!');
     } catch (error) {
       console.error('Error saving contact:', error);
       alert('Failed to save contact. Please try again.');
