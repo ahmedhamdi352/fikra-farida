@@ -31,7 +31,7 @@ interface VCardProfile {
   }>;
 }
 
-const generateVCard = (profile: VCardProfile & { username?: string }) => {
+const generateVCard = async (profile: VCardProfile & { username?: string }) => {
   // Prepare photo URL if available - ensure it's accessible and properly formatted
   const photoUrl = profile.imageFilename
     ? `https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`
@@ -64,6 +64,47 @@ const generateVCard = (profile: VCardProfile & { username?: string }) => {
     }
   };
 
+  // Function to convert image to base64
+  const getImageAsBase64 = async (url: string): Promise<string | null> => {
+    try {
+      // Try with CORS mode first
+      const response = await fetch(url, { 
+        mode: 'cors',
+        cache: 'no-cache'
+      });
+      if (!response.ok) {
+        console.warn('Failed to fetch image with CORS:', response.status);
+        // Try without CORS as fallback
+        try {
+          const fallbackResponse = await fetch(url, { mode: 'no-cors' });
+          if (fallbackResponse.type === 'opaque') {
+            console.warn('Image fetch returned opaque response, using URI fallback');
+            return null;
+          }
+        } catch (fallbackError) {
+          console.warn('Fallback fetch also failed:', fallbackError);
+          return null;
+        }
+        return null;
+      }
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result as string;
+          // Remove data:image/...;base64, prefix
+          const base64Data = base64.split(',')[1];
+          resolve(base64Data);
+        };
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.warn('Error converting image to base64:', error);
+      return null;
+    }
+  };
+
   // Escape special characters in vCard fields
   const escapeVCardField = (field: string) => {
     return field
@@ -74,14 +115,27 @@ const generateVCard = (profile: VCardProfile & { username?: string }) => {
       .replace(/\r/g, '\\r'); // Escape carriage returns
   };
 
+  // Get base64 photo if available
+  let photoField = '';
+  if (photoUrl) {
+    const base64Photo = await getImageAsBase64(photoUrl);
+    if (base64Photo) {
+      const imageType = getImageType(profile.imageFilename || '');
+      photoField = `PHOTO;ENCODING=BASE64;TYPE=${imageType}:${base64Photo}`;
+    } else {
+      // Fallback to URI if base64 conversion fails
+      photoField = `PHOTO;VALUE=URI;TYPE=${getImageType(profile.imageFilename || '')}:${photoUrl}`;
+    }
+  }
+
   const vCard = [
     'BEGIN:VCARD',
     'VERSION:3.0',
     `FN:${escapeVCardField(displayName)}`,
     // Add N field for proper name parsing (Last;First;Middle;Prefix;Suffix)
     `N:${escapeVCardField(lastName)};${escapeVCardField(firstName)};;;`,
-    // Add photo with proper encoding and type detection
-    ...(photoUrl ? [`PHOTO;VALUE=URI;TYPE=${getImageType(profile.imageFilename || '')}:${photoUrl}`] : []),
+    // Add photo with base64 encoding for better mobile compatibility
+    ...(photoField ? [photoField] : []),
     `TEL;type=CELL:${profile.phoneNumber1 || ''}`,
     `EMAIL:${profile.email || ''}`,
     `TITLE:${escapeVCardField(profile.jobTitle || '')}`,
@@ -104,7 +158,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
   const { onUpdateVisitCount } = useUpdateVisitCountMutation();
 
-  const handleSaveContact = () => {
+  const handleSaveContact = async () => {
     if (!profileData) return;
     try {
       // Debug logging to help identify issues
@@ -116,7 +170,10 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
         phoneNumber1: profileData.phoneNumber1
       });
 
-      const vCardBlob = generateVCard(profileData);
+      // Show loading message
+      alert('Generating contact with photo...');
+      
+      const vCardBlob = await generateVCard(profileData);
       
       // Debug: Log the generated vCard content
       vCardBlob.text().then(vCardText => {
@@ -132,7 +189,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
       saveAs(vCardBlob, `${cleanName}.vcf`);
       
       // Show success message
-      alert('Contact saved successfully!');
+      alert('Contact saved successfully with photo!');
     } catch (error) {
       console.error('Error saving contact:', error);
       alert('Failed to save contact. Please try again.');

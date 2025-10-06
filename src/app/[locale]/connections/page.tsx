@@ -166,26 +166,78 @@ const ConnectionsPage = () => {
       group.CompanyName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const generateVCard = (profile: ConnectionForCreateDTO & { username?: string }) => {
+  const generateVCard = async (profile: ConnectionForCreateDTO & { username?: string; imageFilename?: string }) => {
+    // Clean and validate the fullname - ensure it's not empty and properly formatted
+    const fullName = (profile.fullname || '').trim();
+    const displayName = fullName || profile.username || 'Contact';
+
+    // Split name for proper vCard N field format (Last;First;Middle;Prefix;Suffix)
+    const nameParts = displayName.split(' ');
+    const lastName = nameParts.length > 1 ? nameParts.slice(-1)[0] : '';
+    const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : displayName;
+
+    // Escape special characters in vCard fields
+    const escapeVCardField = (field: string) => {
+      return field
+        .replace(/\\/g, '\\\\') // Escape backslashes
+        .replace(/;/g, '\\;')   // Escape semicolons
+        .replace(/,/g, '\\,')   // Escape commas
+        .replace(/\n/g, '\\n')  // Escape newlines
+        .replace(/\r/g, '\\r'); // Escape carriage returns
+    };
+
+    // Note: ConnectionForCreateDTO doesn't include imageFilename field
+    // Photo support would require extending the DTO or API response
+    // For now, we'll generate vCard without photo
+
     const vCard = [
       'BEGIN:VCARD',
       'VERSION:3.0',
-      `FN:${profile.fullname || ''}`,
+      `FN:${escapeVCardField(displayName)}`,
+      // Add N field for proper name parsing (Last;First;Middle;Prefix;Suffix)
+      `N:${escapeVCardField(lastName)};${escapeVCardField(firstName)};;;`,
       `TEL;type=CELL:${profile.phone || ''}`,
       `EMAIL:${profile.email || ''}`,
-      `TITLE:${profile.title || ''}`,
-      `ORG:${profile.company || ''}`,
+      `TITLE:${escapeVCardField(profile.title || '')}`,
+      `ORG:${escapeVCardField(profile.company || '')}`,
       'END:VCARD'
     ].filter(Boolean).join('\n');
 
     return new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
   };
 
-  const handleSaveContact = (contact: ConnectionForCreateDTO) => {
+  const handleSaveContact = async (contact: ConnectionForCreateDTO) => {
     if (!contact) return;
     try {
-      const vCardBlob = generateVCard(contact);
-      saveAs(vCardBlob, `${contact.fullname || 'contact'}.vcf`);
+      // Debug logging to help identify issues
+      console.log('Connection data for vCard:', {
+        fullname: contact.fullname,
+        company: contact.company,
+        email: contact.email,
+        phone: contact.phone,
+        title: contact.title
+      });
+
+      // Show loading message
+      alert('Generating contact...');
+      
+      const vCardBlob = await generateVCard(contact);
+      
+      // Debug: Log the generated vCard content
+      vCardBlob.text().then(vCardText => {
+        console.log('Generated vCard content:', vCardText);
+      });
+      
+      // Create a more descriptive filename
+      const cleanName = (contact.fullname || 'contact')
+        .replace(/[^a-zA-Z0-9\s]/g, '') // Remove special characters
+        .replace(/\s+/g, '_') // Replace spaces with underscores
+        .trim();
+      
+      saveAs(vCardBlob, `${cleanName}.vcf`);
+      
+      // Show success message
+      alert('Contact saved successfully!');
     } catch (error) {
       console.error('Error saving contact:', error);
       alert('Failed to save contact. Please try again.');
