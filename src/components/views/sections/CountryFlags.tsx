@@ -4,12 +4,20 @@ import bgImage from 'assets/images/flags/Map.png';
 import egyptFlag from 'assets/images/flags/eg.png';
 import saudiFlag from 'assets/images/flags/sa.png';
 import uaeFlag from 'assets/images/flags/ae.png';
+import qatarFlag from 'assets/images/flags/qatar.png';
+import kuwaitFlag from 'assets/images/flags/kwuit.png';
+import bahrainFlag from 'assets/images/flags/bhren.png';
+
 // import locationIcon from 'assets/icons/location.png';
 
 const countries = [
   { code: 'eg', translationKey: 'egypt', flag: egyptFlag },
   { code: 'sa', translationKey: 'saudiArabia', flag: saudiFlag },
   { code: 'ae', translationKey: 'uae', flag: uaeFlag },
+  { code: 'qa', translationKey: 'qatar', flag: qatarFlag },
+  { code: 'kw', translationKey: 'kuwait', flag: kuwaitFlag },
+  { code: 'bh', translationKey: 'bahrain', flag: bahrainFlag },
+  
 ];
 
 export default function CountryFlags() {
@@ -32,22 +40,9 @@ export default function CountryFlags() {
           </div>
 
           {/* Content */}
-          <div className="relative z-10 py-16 px-6">
-            {/* <div className="text-center mb-16">
-              <h2 className="text-white text-center text-[12px] md:text-[30px] lg:text-[36px] font-bold capitalize flex items-center justify-center gap-4"
-                style={{ lineHeight: 'normal' }}>
-                <Image
-                  src={locationIcon}
-                  alt="Location"
-                  width={40}
-                  height={40}
-                  className="inline-block"
-                />
-                {t('title')}
-              </h2>
-            </div> */}
+          <div className="w-full relative z-10 py-16 px-6">
 
-            <div className="flex justify-center items-center gap-3 md:gap-12">
+            <div className=" w-full flex justify-center items-center flex-wrap gap-3 md:gap-12">
               {countries.map((country, index) => (
                 <div
                   key={index}
