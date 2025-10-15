@@ -73,7 +73,7 @@ export default function ProfileForm() {
             className={`mb-6 ${theme === 'light' ? 'brightness-0' : 'brightness-0 invert'}`}
             priority
           />
-          <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">Add New Profile</h2>
+          <h2 className="text-2xl font-bold text-[var(--main-color1)] mb-2">{t('addNewProfile')}</h2>
         </div>
 
         <form noValidate className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -203,7 +203,7 @@ export default function ProfileForm() {
             disabled={isLoading}
             className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isLoading ? 'Adding...' : 'Add Profile'}
+            {isLoading ? t('registering') : t('addProfile')}
           </button>
 
 

@@ -9,6 +9,7 @@ import TextInput from 'components/forms/text-input';
 import { PhoneInput } from 'components/forms/phone-input';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ProButton } from 'components/subcriptions/subcriptionButtons';
+import { useTranslations } from 'next-intl';
 
 export interface ContactField {
   value: string;
@@ -32,6 +33,7 @@ interface EditProfileContactFormProps {
 }
 
 const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfileContactFormProps>(({ initialData, hasProAccess }, ref) => {
+  const t = useTranslations('profile.editProfilePage');
   const defaultValues: ProfileContactFormData = {
 
     emails: initialData?.email ? [{ value: initialData.email }] : [{ value: '' }],
@@ -45,10 +47,10 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       .array()
       .of(
         yup.object().shape({
-          value: yup.string().email('Please enter a valid email').required('Email is required'),
+          value: yup.string().email(t('emailInvalid')).required(t('emailRequired')),
         })
       )
-      .min(1, 'At least one email is required'),
+      .min(1, t('emailRequired')),
     phones: yup
       .array()
       .of(
@@ -60,7 +62,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       .array()
       .of(
         yup.object().shape({
-          value: yup.string().url('Please enter a valid URL').optional(),
+          value: yup.string().url(t('urlInvalid')).optional(),
         })
       )
   }) as yup.ObjectSchema<ProfileContactFormData>;
@@ -126,7 +128,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       </div>
 
       {fields.map((field, index) => (
-        <div key={field.id} className="flex items-center justify-center space-x-2">
+        <div key={field.id} className="flex items-center justify-center gap-2 ">
           <div className="flex-1">
             {fieldName === 'phones' ? (
               <PhoneInput
@@ -212,8 +214,8 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       {renderFieldGroup(
         emailFields,
         'emails',
-        'Email Addresses',
-        'Enter email address',
+        t('emailAddress'),
+        t('emailAddressPlaceholder'),
         () => appendEmail({ value: '' }),
         (index) => removeEmail(index),
       )}
@@ -221,8 +223,8 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       {renderFieldGroup(
         phoneFields,
         'phones',
-        'Phone Numbers',
-        'Enter phone number',
+        t('phoneNumbers'),
+        t('phoneNumberPlaceholder'),
         () => appendPhone({ value: '' }),
         (index) => removePhone(index),
       )}
@@ -230,8 +232,8 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       {renderFieldGroup(
         websiteFields,
         'websites',
-        'Website URLs',
-        'Enter website URL',
+        t('websiteURLs'),
+        t('websiteURLPlaceholder'),
         () => appendWebsite({ value: '' }),
         (index) => removeWebsite(index),
       )}

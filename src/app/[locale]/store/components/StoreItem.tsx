@@ -3,6 +3,7 @@ import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import Image from 'next/image';
 import { useAddLinkMutation, useUpdateLinkMutation, useDeleteLinkMutation } from 'hooks/links';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
+import { useTranslations } from 'next-intl';
 
 interface App {
   id: string;
@@ -27,6 +28,7 @@ interface StoreItemProps {
 
 const getButtonConfig = (
   appId: string,
+  t: ReturnType<typeof useTranslations<'storePage'>>,
   profileData?: { links?: ProfileLink[] }
 ): { type: 'add' | 'update'; label: string; color: string } => {
   // Function to check if an app exists in the user's profile links
@@ -38,10 +40,10 @@ const getButtonConfig = (
   const profileLink = getProfileLink(appId);
 
   if (!profileLink) {
-    return { type: 'add', label: 'Add', color: 'bg-[--main-color1]' };
+    return { type: 'add', label: t('add'), color: 'bg-[--main-color1]' };
   }
 
-  return { type: 'update', label: 'Update', color: 'bg-[--main-color1]' };
+  return { type: 'update', label: t('update'), color: 'bg-[--main-color1]' };
 };
 
 // Function to construct the proper URL for each platform type
@@ -144,6 +146,7 @@ const constructSocialMediaUrl = (platform: string, username: string): string => 
 };
 
 const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileData }: StoreItemProps): React.ReactNode => {
+  const t = useTranslations('storePage');
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
@@ -214,7 +217,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
       <h2 className="text-xl font-bold mb-4 text-[--main-color1] dark:text-white">{category.name}</h2>
       <div className="flex flex-col space-y-2">
         {categoryApps.map((app: App) => {
-          const buttonConfig = getButtonConfig(app.id, profileData);
+          const buttonConfig = getButtonConfig(app.id, t, profileData);
           return (
             <div
               key={app.id}
@@ -304,7 +307,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
               </svg>
             </button>
 
-            <div className="flex items-center mb-6">
+            <div className="flex items-center gap-4 mb-6 mt-4">
               <div className="w-12 h-12 rounded-full overflow-hidden relative flex-shrink-0 mr-4">
                 <Image
                   src={`${baseIconsUrl}${selectedApp.iconurl}`}
@@ -356,16 +359,16 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Processing...
+                    {t('processing')}
                   </span>
                 ) : (
-                  `${getButtonConfig(selectedApp?.id || '', profileData).type === 'update' ? 'Update' : 'Add'} ${selectedApp?.name
+                  `${getButtonConfig(selectedApp?.id || '', t, profileData).type === 'update' ? t('update') : t('add')} ${selectedApp?.name
                   }`
                 )}
               </button>
 
               {/* Remove button only appears for existing links */}
-              {selectedApp && getButtonConfig(selectedApp.id, profileData).type === 'update' && (
+              {selectedApp && getButtonConfig(selectedApp.id, t, profileData).type === 'update' && (
                 <div className="mt-3">
                   <span
                     className="block text-center text-red-500 cursor-pointer hover:underline"
@@ -381,7 +384,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
                       }
                     }}
                   >
-                    Remove
+                    {t('remove')}
                   </span>
                 </div>
               )}
