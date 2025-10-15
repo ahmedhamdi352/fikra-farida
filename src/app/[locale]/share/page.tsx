@@ -8,7 +8,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ProButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
+import { useTranslations, useLocale } from 'next-intl';
 export default function SharePage() {
+  const t = useTranslations('profile.sharePage');
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
   const { data: QrCodeData, isLoading: QrCodeLoading, onGetProfileQrCode } = useGetQrCodeQuery();
   const { data: offlineQrCodeData, isLoading: offlineQrCodeLoading, onGetOfflineQrCode } = useGetOfflineQrCodeQuery();
@@ -53,62 +57,6 @@ export default function SharePage() {
     }
   };
 
-  const handleDownload = async () => {
-    try {
-      const qrCodeImageName = offLine ? offlineQrCodeData?.imagename : QrCodeData?.imagename;
-      if (!qrCodeImageName) {
-        alert('QR code is not available');
-        return;
-      }
-
-      const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${qrCodeImageName}`;
-      
-      // Fetch the image
-      const response = await fetch(qrCodeUrl);
-      if (!response.ok) {
-        throw new Error('Failed to fetch QR code image');
-      }
-      
-      const blob = await response.blob();
-      
-      // Check if we're on mobile (iOS/Android)
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      if (isMobile && navigator.share) {
-        // Use Web Share API for mobile devices
-        const file = new File([blob], `${profileData?.username || 'profile'}-qr-code.png`, { type: 'image/png' });
-        
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            title: 'QR Code',
-            text: `QR Code for ${profileData?.fullname || profileData?.username}`,
-            files: [file]
-          });
-        } else {
-          // Fallback: create download link
-          downloadImage(blob, `${profileData?.username || 'profile'}-qr-code.png`);
-        }
-      } else {
-        // Desktop: direct download
-        downloadImage(blob, `${profileData?.username || 'profile'}-qr-code.png`);
-      }
-    } catch (error) {
-      console.error('Error downloading QR code:', error);
-      alert('Failed to save QR code. Please try again.');
-    }
-  };
-
-  const downloadImage = (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   if (isLoading || QrCodeLoading || offlineQrCodeLoading) {
     return <LoadingOverlay isLoading={isLoading || QrCodeLoading || offlineQrCodeLoading} />;
   }
@@ -128,10 +76,11 @@ export default function SharePage() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+              className={isRTL ? 'rotate-180' : ''}
             >
               <path d="M19 12H5M12 19l-7-7 7-7-11-11 11-11 7 7 7 7" />
             </svg>
-            <span className="uppercase text-h5 font-bold">your QR Code</span>
+            <span className="uppercase text-h5 font-bold">{t('yourQRCode')}</span>
           </Link>
         </div>
         <div className="card-container rounded-3xl p-6">
@@ -173,7 +122,7 @@ export default function SharePage() {
                   </clipPath>
                 </defs>
               </svg>
-              <span>Share Link</span>
+              <span>{t('shareLink')}</span>
             </button>
             <button
               onClick={() => {
@@ -203,15 +152,13 @@ export default function SharePage() {
                   fill-opacity="0.9"
                 />
               </svg>
-              <span>Share QR</span>
+              <span>{t('shareQRCode')}</span>
             </button>
           </div>
         </div>
       </div>
       <div className="card-container w-full lg:w-[55%] rounded-3xl p-6 space-y-3">
-
-        <button onClick={handleDownload}
-          className="flex items-center justify-between w-full px-2 py-4">
+        <button onClick={handleAddToHomeScreen} className="flex items-center justify-between w-full px-2 py-4">
           <div className="flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
@@ -219,15 +166,23 @@ export default function SharePage() {
                 fill="white"
               />
             </svg>
-            Save to Photos
+            {t('addHomeScreen')}
           </div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={isRTL ? 'rotate-180' : ''}
+          >
+            <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
-
         <div className="flex items-center justify-between w-full text-white px-2 py-2">
           <div className="flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -259,10 +214,10 @@ export default function SharePage() {
                 </clipPath>
               </defs>
             </svg>
-            Offline Sharing
+            {t('offlineSharing')}
           </div>
           {
-            hasProAccess ? (
+            !hasProAccess ? (
               <label className="relative inline-flex items-center cursor-pointer ml-3">
                 <input
                   type="checkbox"
@@ -283,30 +238,6 @@ export default function SharePage() {
             )
           }
         </div>
-        <button onClick={handleAddToHomeScreen} className="flex items-center justify-between w-full px-2 py-4">
-          <div className="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 5.75C3 5.02065 3.28973 4.32118 3.80546 3.80546C4.32118 3.28973 5.02065 3 5.75 3H18.25C18.9793 3 19.6788 3.28973 20.1945 3.80546C20.7103 4.32118 21 5.02065 21 5.75V12.022C20.5323 11.7226 20.0282 11.4843 19.5 11.313V5.75C19.5 5.06 18.94 4.5 18.25 4.5H5.75C5.06 4.5 4.5 5.06 4.5 5.75V18.25C4.5 18.94 5.06 19.5 5.75 19.5H11.313C11.486 20.034 11.725 20.537 12.022 21H5.75C5.02065 21 4.32118 20.7103 3.80546 20.1945C3.28973 19.6788 3 18.9793 3 18.25V5.75ZM23 17.5C23 16.0413 22.4205 14.6424 21.3891 13.6109C20.3576 12.5795 18.9587 12 17.5 12C16.0413 12 14.6424 12.5795 13.6109 13.6109C12.5795 14.6424 12 16.0413 12 17.5C12 18.9587 12.5795 20.3576 13.6109 21.3891C14.6424 22.4205 16.0413 23 17.5 23C18.9587 23 20.3576 22.4205 21.3891 21.3891C22.4205 20.3576 23 18.9587 23 17.5ZM18 18L18.001 20.503C18.001 20.6356 17.9483 20.7628 17.8546 20.8566C17.7608 20.9503 17.6336 21.003 17.501 21.003C17.3684 21.003 17.2412 20.9503 17.1474 20.8566C17.0537 20.7628 17.001 20.6356 17.001 20.503V18H14.496C14.3634 18 14.2362 17.9473 14.1424 17.8536C14.0487 17.7598 13.996 17.6326 13.996 17.5C13.996 17.3674 14.0487 17.2402 14.1424 17.1464C14.2362 17.0527 14.3634 17 14.496 17H17V14.5C17 14.3674 17.0527 14.2402 17.1464 14.1464C17.2402 14.0527 17.3674 14 17.5 14C17.6326 14 17.7598 14.0527 17.8536 14.1464C17.9473 14.2402 18 14.3674 18 14.5V17H20.497C20.6296 17 20.7568 17.0527 20.8506 17.1464C20.9443 17.2402 20.997 17.3674 20.997 17.5C20.997 17.6326 20.9443 17.7598 20.8506 17.8536C20.7568 17.9473 20.6296 18 20.497 18H18Z"
-                fill="white"
-              />
-            </svg>
-            Add To Home Screen
-          </div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
       </div>
     </div>
   );

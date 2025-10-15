@@ -82,7 +82,7 @@ export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
         </button>
 
         {link.iconurl && mounted && (
-          <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
+          <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0">
             <Image
               src={`${baseIconsUrl}${link.iconurl}`}
               alt={link.title}
@@ -93,9 +93,9 @@ export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
           </div>
         )}
 
-        <span className="text-base flex-grow truncate">{link.title}</span>
+        <span className="text-base flex-grow truncate mx-2">{link.title}</span>
 
-        <label className="relative inline-flex items-center cursor-pointer ml-3">
+        <label className="relative inline-flex items-center cursor-pointer">
           <input type="checkbox" className="sr-only peer" checked={link.sort > 0}
             onChange={(e) => {
               onUpdateLink({

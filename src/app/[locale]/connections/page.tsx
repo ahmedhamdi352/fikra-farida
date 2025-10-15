@@ -21,6 +21,7 @@ import { DateUtils } from 'utils';
 // import { useSiteData } from 'context/SiteContext';
 import DateFilterPopup from 'components/DateFilterPopup';
 import { useSiteData } from 'context/SiteContext';
+import { useLocale, useTranslations } from 'next-intl';
 
 enum TabType {
   GROUPS = 'groups',
@@ -30,7 +31,9 @@ enum TabType {
 const ConnectionsPage = () => {
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
   const siteData = useSiteData();
-
+  const t = useTranslations('profile.connectionsPage');
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
   const { data: connectionsData, isLoading: connectionsLoading, onGetConnections } = useGetConnectionQuery({
     connectUser1: siteData?.connectUser1 ?? undefined,
     connectUser2: siteData?.connectUser2 ?? undefined,
@@ -264,10 +267,11 @@ const ConnectionsPage = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className={isRTL ? 'rotate-180' : ''}
               >
                 <path d="M19 12H5M12 19l-7-7 7-7-11-11 11-11 7 7 7 7" />
               </svg>
-              <span className="uppercase text-h5 font-bold">{activeTab === TabType.GROUPS ? 'Groups' : 'Contacts'}</span>
+              <span className="uppercase text-h5 font-bold">{activeTab === TabType.GROUPS ? t('groups') : t('contacts')}</span>
             </Link>
             <button
               className='btn btn-ghost border border-[--main-color1] text-center p-6 text-[--main-color1] rounded-lg font-semibold hover:bg-yellow-500 transition-colors'
@@ -282,7 +286,7 @@ const ConnectionsPage = () => {
                 <path fillRule="evenodd" clipRule="evenodd" d="M6.75 9C6.75 8.80109 6.82902 8.61032 6.96967 8.46967C7.11032 8.32902 7.30109 8.25 7.5 8.25H15C15.1989 8.25 15.3897 8.32902 15.5303 8.46967C15.671 8.61032 15.75 8.80109 15.75 9V16.5C15.75 16.6989 15.671 16.8897 15.5303 17.0303C15.3897 17.171 15.1989 17.25 15 17.25C14.8011 17.25 14.6103 17.171 14.4697 17.0303C14.329 16.8897 14.25 16.6989 14.25 16.5V9.75H7.5C7.30109 9.75 7.11032 9.67098 6.96967 9.53033C6.82902 9.38968 6.75 9.19891 6.75 9Z" fill="#FEC400" fillOpacity="0.9" />
                 <path fillRule="evenodd" clipRule="evenodd" d="M15.531 8.46936C15.6008 8.53903 15.6562 8.6218 15.694 8.71291C15.7318 8.80403 15.7513 8.90171 15.7513 9.00036C15.7513 9.09901 15.7318 9.1967 15.694 9.28781C15.6562 9.37893 15.6008 9.4617 15.531 9.53136L3.53097 21.5314C3.39014 21.6722 3.19913 21.7513 2.99997 21.7513C2.80081 21.7513 2.6098 21.6722 2.46897 21.5314C2.32814 21.3905 2.24902 21.1995 2.24902 21.0004C2.24902 20.8012 2.32814 20.6102 2.46897 20.4694L14.469 8.46936C14.5386 8.39952 14.6214 8.3441 14.7125 8.30629C14.8036 8.26849 14.9013 8.24902 15 8.24902C15.0986 8.24902 15.1963 8.26849 15.2874 8.30629C15.3785 8.3441 15.4613 8.39952 15.531 8.46936Z" fill="#FEC400" fillOpacity="0.9" />
               </svg>
-              Export CSV
+              {t('exportCSV')}
             </button>
           </div>
 
@@ -297,7 +301,7 @@ const ConnectionsPage = () => {
             <div className="relative w-80">
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder={t('search')}
                 className="bg-transparent w-full p-2.5 pl-9 border border-[--main-color1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-sm"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -324,7 +328,7 @@ const ConnectionsPage = () => {
                   ? 'border-[--main-color1] bg-[--main-color1] text-white'
                   : 'border-[--main-color1] hover:bg-[--main-color1] hover:bg-opacity-10 text-[--main-color1]'
                   }`}
-                title="Filter by date"
+                title={t('filterByDate')}
               >
                 <svg
                   className="h-5 w-5"
@@ -357,7 +361,7 @@ const ConnectionsPage = () => {
                 role="button"
                 className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
               >
-                <span className="text-center text-h4">Create +</span>
+                <span className="text-center text-h4">{t('create') + ' +'}</span>
               </Link>
             ) : (
               <button
@@ -366,7 +370,7 @@ const ConnectionsPage = () => {
                 }}
                 className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
               >
-                <span className="text-center text-h4">Add +</span>
+                <span className="text-center text-h4">{t('add') + ' +'}</span>
               </button>
             )}
           </div>
@@ -384,7 +388,7 @@ const ConnectionsPage = () => {
                   : 'border-transparent text-gray-400 hover:text-gray-700'
                   }`}
               >
-                Contacts
+                {t('contacts')}
               </button>
               <button
                 onClick={() => {
@@ -396,7 +400,7 @@ const ConnectionsPage = () => {
                   : 'border-transparent text-gray-400 hover:text-gray-700 '
                   }`}
               >
-                Groups
+                {t('groups')}
               </button>
             </nav>
           </div>
@@ -464,7 +468,7 @@ const ConnectionsPage = () => {
                                     router.push(`/group?${searchParams.toString()}`);
                                   }}
                                 >
-                                  Edit Group
+                                 {t('editGroup')}
                                 </button>
                               </li>
                               <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
@@ -472,7 +476,7 @@ const ConnectionsPage = () => {
                                   onClick={() => onDeleteGroup(group.GroupId)}
                                   className="px-2 py-1.5 active:bg-transparent focus:bg-transparent"
                                 >
-                                  Delete Group
+                                  {t('deleteGroup')}
                                 </button>
                               </li>
                             </ul>
@@ -550,7 +554,7 @@ const ConnectionsPage = () => {
                               setSelectedContactPk(contact.pk || 0)
                             }}
                             className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
-                            <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">Add to Group</a>
+                            <a className="px-2 py-1.5 active:bg-transparent focus:bg-transparent">{t('addToGroup')}</a>
                           </li>
                         </ul>
                       </div>
@@ -559,47 +563,47 @@ const ConnectionsPage = () => {
                         <div className="flex flex-col py-2 gap-1">
                           <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px]  text-[--main-color1]'>Name:</p>
+                              <p className='text-[18px]  text-[--main-color1]'>{t('name')}:</p>
                               <h1 className="text-[18px] ">{contact?.fullname}</h1>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px]  text-[--main-color1]'>Title:</p>
+                              <p className='text-[18px]  text-[--main-color1]'>{t('title')}:</p>
                               <h1 className="text-[18px] ">{contact?.title}</h1>
                             </div>
                           </div>
 
                           {contact?.company && <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Company:</p>
+                              <p className='text-[18px] text-[--main-color1]'>{t('company')}:</p>
                               <p className="text-[18px] ">{contact?.company}</p>
                             </div>
                           </div>}
                           {contact?.email && <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Email:</p>
+                              <p className='text-[18px] text-[--main-color1]'>{t('email')}:</p>
                               <p className="text-[18px] ">{contact?.email}</p>
                             </div>
                           </div>}
                           {contact?.phone && <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Phone:</p>
+                              <p className='text-[18px] text-[--main-color1]'>{t('phone')}:</p>
                               <p className="text-[18px] ">{contact?.phone}</p>
                             </div>
                           </div>}
 
                           {contact?.message && <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Message:</p>
+                              <p className='text-[18px] text-[--main-color1]'>{t('message')}:</p>
                               <p className="text-[18px] ">{contact?.message}</p>
                             </div>
                           </div>}
 
                           {contact?.createdate && <div className="flex items-center gap-2">
                             <div className='flex items-center gap-2 justify-center'>
-                              <p className='text-[18px] text-[--main-color1]'>Created Date:</p>
+                              <p className='text-[18px] text-[--main-color1]'>{t('createdDate')}:</p>
                               <p className="text-[18px] ">{DateUtils.formatDate(contact?.createdate)}</p>
                             </div>
                           </div>}
@@ -620,7 +624,7 @@ const ConnectionsPage = () => {
                               fillOpacity="0.9"
                             />
                           </svg>
-                          <span>Remove</span>
+                          <span>{t('remove')}</span>
                         </button>
                         <button onClick={() => handleSaveContact(contact)} className="flex gap-2 justify-center items-center border border-[--main-color1] px-6 py-1 rounded-full text-[--main-color1]">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
@@ -633,7 +637,7 @@ const ConnectionsPage = () => {
                               strokeLinejoin="round"
                             />
                           </svg>
-                          <span>Save</span>
+                          <span>{t('save')}</span>
                         </button>
                       </div>}
                     </div>

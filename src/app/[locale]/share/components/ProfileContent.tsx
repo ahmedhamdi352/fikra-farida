@@ -71,7 +71,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
             <div className="flex items-center gap-2">
               <span className="text-body">Direct Link Mode</span>
               <div className="relative group">
-                <div className="tooltip" data-tip="hello">
+                <div className="tooltip" >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" className="cursor-help">
                     <path d="M8.00016 14.6663C11.6668 14.6663 14.6668 11.6663 14.6668 7.99967C14.6668 4.33301 11.6668 1.33301 8.00016 1.33301C4.3335 1.33301 1.3335 4.33301 1.3335 7.99967C1.3335 11.6663 4.3335 14.6663 8.00016 14.6663Z" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M8 5.33301V8.66634" stroke="#FEC400" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

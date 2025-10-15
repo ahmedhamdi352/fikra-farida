@@ -3,6 +3,7 @@
 
 import { useEffect, useRef } from 'react';
 import AutoConnectForm from './AutoConnectForm'; // Assuming AutoConnectForm is in the same directory
+import { useTranslations } from 'next-intl';
 
 interface AutoConnectPopupProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function AutoConnectPopup({
   userPk,
 }: AutoConnectPopupProps) {
   const autoConnectModalRef = useRef<HTMLDialogElement>(null);
+  const t = useTranslations('profile.connectionsPage');
 
   // Effect to handle showing/closing the native <dialog> element
   useEffect(() => {
@@ -87,7 +89,7 @@ export default function AutoConnectPopup({
 
           {/* Title */}
           <h3 className="font-bold text-2xl text-[var(--main-color1)] mb-4">
-            Share your information with me
+            {t('shareYourInformationWithMe')}
           </h3>
           {/* Render the form component */}
           <AutoConnectForm userPk={userPk} onClose={onClose} />

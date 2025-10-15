@@ -7,9 +7,11 @@ import ClientUserLinks from './components/ClientUserLinks';
 import { useGetProfileQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import ProfileTabs from './components/ProfileTabs';
+import { useTranslations } from 'next-intl';
 
 export default function ProfilePage() {
   const { data: profileData, isLoading, } = useGetProfileQuery();
+  const t = useTranslations('profile');
 
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading} />;
@@ -37,7 +39,7 @@ export default function ProfilePage() {
               </clipPath>
             </defs>
           </svg>
-          <span>Add New Link</span>
+          <span>{t('addNewLink')}</span>
         </Link>
         <ProductScanButton />
       </div>

@@ -10,6 +10,7 @@ import ProfileSwitcher from './ProfileSwitcher';
 import Link from 'next/link';
 import { ProButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
+import { useTranslations } from 'next-intl';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -19,6 +20,7 @@ interface ProfileInformationProps {
 }
 
 export default function ProfileInformation({ profileData, withEdit, withSwitch, withBio }: ProfileInformationProps) {
+  const t = useTranslations('profile');
   const [showMenu, setShowMenu] = useState(false);
   const [showProfileSwitcher, setShowProfileSwitcher] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -75,7 +77,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
     <div className="relative w-full px-4 sm:px-0 mb-6">
       {withEdit && (
         <>
-          <button className="absolute -top-2 -right-2 z-10" onClick={() => setShowMenu(!showMenu)}>
+          <button className="absolute -top-2 ltr:right-2 rtl:left-2 z-10" onClick={() => setShowMenu(!showMenu)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
                 d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"
@@ -171,7 +173,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                           <path d="M21 13v2a4 4 0 0 1-4 4H3" />
                         </svg>
                       </div>
-                      <div className="text-gray-700 dark:text-white">Switch Profile</div>
+                      <div className="text-gray-700 dark:text-white">{t('switchProfile')}</div>
                     </div>
 
                     {/* Edit Profile */}
@@ -192,7 +194,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                         </svg>
                       </div>
-                      <div className="text-gray-700 dark:text-white">Edit Profile</div>
+                      <div className="text-gray-700 dark:text-white">{t('editProfile')}</div>
                     </Link>
 
                     {/* Customization */}
@@ -229,7 +231,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                             <path d="m7 20.66-1-1.73" />
                           </svg>
                         </div>
-                        <div className="text-gray-700 dark:text-white">Customization</div>
+                        <div className="text-gray-700 dark:text-white">{t('customization')}</div>
                       </div>
                       {!hasProAccess && <ProButton />}
                     </Link>
@@ -253,7 +255,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                           </svg>
                         </div>
-                        <div className="text-gray-700 dark:text-white">Lock Profile</div>
+                        <div className="text-gray-700 dark:text-white">{t('lockProfile')}</div>
                       </div>
                       {/* Lock Profile Toggle */}
                       {
@@ -362,7 +364,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                 className="text-gray-400 underline cursor-pointer text-[10px]"
                 onClick={() => setShowProfileSwitcher(true)}
               >
-                Switch Account
+                {t('switchProfile')}
               </p>
             )}
           </div>

@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export const ProfileTabs = () => {
+  const t = useTranslations('profile');
 
   const tabs = [
     {
       href: '/share',
-      label: 'SHARE',
+      label: t('share'),
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <g clip-path="url(#clip0_2369_8910)">
@@ -28,7 +30,7 @@ export const ProfileTabs = () => {
     },
     {
       href: '/analytics',
-      label: 'analytics',
+      label: t('analytics'),
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
           <path d="M5.1665 12.0003V10.667M8.49984 12.0003V10.0003M11.8332 12.0003V8.66699M2.1665 8.00033C2.1665 5.01499 2.1665 3.52166 3.09384 2.59433C4.02117 1.66699 5.51384 1.66699 8.49984 1.66699C11.4852 1.66699 12.9785 1.66699 13.9058 2.59433C14.8332 3.52166 14.8332 5.01433 14.8332 8.00033C14.8332 10.9857 14.8332 12.479 13.9058 13.4063C12.9785 14.3337 11.4858 14.3337 8.49984 14.3337C5.5145 14.3337 4.02117 14.3337 3.09384 13.4063C2.1665 12.479 2.1665 10.9863 2.1665 8.00033Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -38,7 +40,7 @@ export const ProfileTabs = () => {
     },
     {
       href: '/connections',
-      label: 'connections',
+      label: t('connections'),
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
           <g clip-path="url(#clip0_2369_8928)">
@@ -67,7 +69,7 @@ export const ProfileTabs = () => {
               }`}
           >
             <span className="text-white">{tab.icon}</span>
-            <span className="uppercase text-[12px]">{tab.label}</span>
+            <span className="uppercase text-[12px] capitalize">{tab.label}</span>
           </Link>
         ))}
       </div>

@@ -11,10 +11,14 @@ import { useSubscriptionStatus } from 'hooks';
 import { ProButton, UnlockedButton, UpgradButton } from 'components/subcriptions/subcriptionButtons';
 import { cn } from 'utils';
 import DateFilterPopup from 'components/DateFilterPopup';
+import { useTranslations, useLocale } from 'next-intl';
 
 type TimeFilter = 'today' | 'week' | 'month' | 'quarter' | 'custom';
 
 const AnalyticsPage = () => {
+  const t = useTranslations('profile.analyticsPage');
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
   const { data: profileData, isLoading, } = useGetProfileQuery();
   const { data: profileAnalytics, isLoading: isLoadingAnalytics, onGetAnalytics } = useGetAnalyticsMutation();
   const [selectedFilter, setSelectedFilter] = useState<TimeFilter>('today');
@@ -141,10 +145,11 @@ const AnalyticsPage = () => {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
+              className={isRTL ? 'rotate-180' : ''}
             >
               <path d="M19 12H5M12 19l-7-7 7-7-11-11 11-11 7 7 7 7" />
             </svg>
-            <span className="uppercase text-h5 font-bold">Analytics</span>
+            <span className="uppercase text-h5 font-bold">{t('analytics')}</span>
           </Link>
         </div>
 
@@ -168,28 +173,28 @@ const AnalyticsPage = () => {
               }`}
             onClick={() => handleFilterChange('today')}
           >
-            Today
+            {t('today')}
           </button>
           <button
             className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'week' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
               }`}
             onClick={() => handleFilterChange('week')}
           >
-            This Week
+            {t('thisWeek')}
           </button>
           <button
             className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'month' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
               }`}
             onClick={() => handleFilterChange('month')}
           >
-            Month
+            {t('month')}
           </button>
           <button
             className={`px-4 py-2 rounded-full font-medium whitespace-nowrap ${selectedFilter === 'quarter' ? 'bg-[--main-color1] text-black' : 'bg-gray-200 dark:bg-[#2A2A2A]'
               }`}
             onClick={() => handleFilterChange('quarter')}
           >
-            Quarter
+            {t('quarter')}
           </button>
           <div className="relative" ref={filterRef}>
             <button
@@ -241,7 +246,7 @@ const AnalyticsPage = () => {
                     fill="#FEC400"
                   />
                 </svg>
-                <span className="text-[var(--main-color1)]">Views</span>
+                <span className="text-[var(--main-color1)]">{t('views')}</span>
               </div>
               <p className="text-2xl font-bold ">{profileAnalytics?.TotalViews || 0}</p>
             </div>
@@ -273,7 +278,7 @@ const AnalyticsPage = () => {
                     stroke-linejoin="round"
                   />
                 </svg>
-                <span className="text-[var(--main-color1)]">clicks</span>
+                <span className="text-[var(--main-color1)]">{t('clicks')}</span>
               </div>
               {
                 !hasProAccess ? (<div className='z-50 flex items-center justify-center'>
@@ -297,7 +302,7 @@ const AnalyticsPage = () => {
                     stroke-linejoin="round"
                   />
                 </svg>
-                <span className="text-[var(--main-color1)]">rate</span>
+                <span className="text-[var(--main-color1)]">{t('rate')}</span>
               </div>
               {
                 !hasProAccess ? (<div className='z-50 flex items-center justify-center'>
@@ -312,11 +317,11 @@ const AnalyticsPage = () => {
         </div>
 
         {/* Contact Clicks */}
-        <div className="card-container rounded-xl p-4 mb-6">
-          {!hasProAccess && <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
+        <div className="card-container rounded-xl p-4 mb-6 relative">
+          {!hasProAccess && <div className='absolute inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
             <UpgradButton />
           </div>}
-          <h3 className="font-semibold mb-4">Contact Clicks</h3>
+          <h3 className="font-semibold mb-4">{t('contactClicks')}</h3>
           <div className="space-y-3">
             {profileData?.links
               ?.filter(link => ['phone', 'email', 'save_contact', 'website', 'businessPhone'].includes(link.title))
@@ -325,7 +330,7 @@ const AnalyticsPage = () => {
                   key={index}
                   className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
                 >
-                  <div className={cn("flex items-center px-4 py-2", !hasProAccess && "opacity-40")}>
+                  <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
                     <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
                       <Image
                         src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
@@ -337,8 +342,8 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
-                      <span className="text-[var(--main-color1)] mx-2">Click</span>
+                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
+                      <span className="text-[var(--main-color1)] mx-2">{t('clicks')}</span>
                     </span>
                   </div>
                 </div>
@@ -347,11 +352,11 @@ const AnalyticsPage = () => {
         </div>
 
         {/* Apps Clicks */}
-        <div className="card-container rounded-xl p-4">
-          {!hasProAccess && <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
+        <div className="card-container rounded-xl p-4 relative">
+          {!hasProAccess && <div className='absolute inset-0 z-50 flex items-center justify-center bg-black/30 bg-opacity-50 rounded-xl'>
             <UnlockedButton />
           </div>}
-          <h3 className="font-semibold mb-4">Links Visits</h3>
+          <h3 className="font-semibold mb-4">{t('linksVisits')}</h3>
           <div className="space-y-3">
             {profileData?.links
               ?.filter(link => !['phone', 'email', 'url', 'save_contact'].includes(link.title))
@@ -360,7 +365,7 @@ const AnalyticsPage = () => {
                   key={index}
                   className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
                 >
-                  <div className={cn("flex items-center px-4 py-2", !hasProAccess && "opacity-40")}>
+                  <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
                     <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
                       <Image
                         src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
@@ -372,8 +377,8 @@ const AnalyticsPage = () => {
                     </div>
                     <span className="text-base flex-grow truncate">{link.title}</span>
                     <span className="ml-3">
-                      {hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
-                      <span className="text-[var(--main-color1)] mx-2">Click</span>
+                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
+                      <span className="text-[var(--main-color1)] mx-2">{t('clicks')}</span>
                     </span>
                   </div>
                 </div>

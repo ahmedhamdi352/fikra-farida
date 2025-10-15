@@ -20,6 +20,7 @@ interface AutoConnectFormData {
 
 export default function AutoConnectForm({ userPk, onClose }: { userPk: number, onClose: () => void }) {
   const t = useTranslations('auth');
+  const tProfile = useTranslations('profile.connectionsPage');
 
   const { isLoading, onAddConnection } = useCreateConnectionMutation();
   const { onGetConnections } = useGetConnectionQuery();
@@ -58,7 +59,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
           control={control}
           name="fullname"
           type="text"
-          placeholder='name'
+          placeholder={tProfile('name')}
           icon={
             <svg
               className="h-5 w-5 text-[var(--main-color1)]"
@@ -80,7 +81,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
           control={control}
           name="company"
           type="text"
-          placeholder='company'
+          placeholder={tProfile('company')}
           icon={
             <svg
               className="h-5 w-5 text-[var(--main-color1)]"
@@ -102,7 +103,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
           control={control}
           name="email"
           type="email"
-          placeholder='email'
+          placeholder={tProfile('email')}
           icon={
             <svg
               className="h-5 w-5 text-[var(--main-color1)]"
@@ -125,7 +126,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
           control={control}
           required
           defaultCountry={'eg'}
-          placeholder='phone'
+          placeholder={tProfile('phone')}
           disableDropdown={false}
         />
 
@@ -133,7 +134,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
           control={control}
           name="title"
           type="text"
-          placeholder='jobTitle'
+          placeholder={tProfile('jobTitle')}
           icon={
             <svg
               className="h-5 w-5 text-[var(--main-color1)]"
@@ -154,7 +155,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
         <TextArea
           control={control}
           name="message"
-          placeholder='message'
+          placeholder={tProfile('message')}
           icon={
             <svg
               className="h-5 w-5 text-[var(--main-color1)]"
@@ -178,7 +179,7 @@ export default function AutoConnectForm({ userPk, onClose }: { userPk: number, o
         disabled={isLoading}
         className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-yellow-500 hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isLoading ? 'Registering...' : 'Share'}
+        {isLoading ? tProfile('registering') : tProfile('share')}
       </button>
     </form>
 

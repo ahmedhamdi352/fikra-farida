@@ -9,8 +9,10 @@ import collect from 'assets/images/collect.png';
 
 import { useUpdateCollectInfoMutation, useUpdateDirectLinkMutation } from 'hooks/profile/mutations';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function ProfileContent({ profileData }: { profileData?: ProfileForReadDTO }) {
+  const t = useTranslations('profile');
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 
   const directLinkModalRef = useRef<HTMLDialogElement>(null);
@@ -86,9 +88,9 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
         <div className="my-6">
           <div className="flex items-center justify-between mb-4 px-4 py-2 rounded-lg border border-[var(--main-color1)]">
             <div className="flex items-center gap-2">
-              <span className="text-body">collect info</span>
+              <span className="text-body">{t('collectInfo')}</span>
               <div className="relative group">
-                <div className="tooltip" data-tip="hello">
+                <div className="tooltip">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -141,12 +143,12 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
           <div className="flex items-center justify-between mb-4 px-4 py-2 rounded-lg border border-[var(--main-color1)]">
             <div className="flex items-center gap-2 justify-center">
-              <span className="text-body">Direct Link Mode</span>
+              <span className="text-body">{t('directLinkMode')}</span>
 
               {/* Show the icon of the selected direct link */}
 
               <div className="relative group">
-                <div className="tooltip" data-tip="hello">
+                <div className="tooltip">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -222,7 +224,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
                 fill="black"
               />
             </svg>
-            Preview
+            {t('preview')}
           </Link>
         </div>
       </div>

@@ -21,6 +21,7 @@ import {
 import { SortableLink } from './SortableLink';
 import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import { useUpdateBulkLinksSortMutation } from 'hooks/profile';
+import { useTranslations } from 'next-intl';
 
 interface UserLinksProps {
   profileLinks?: ProfileLink[];
@@ -28,6 +29,7 @@ interface UserLinksProps {
 }
 
 export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
+  const t = useTranslations('profile');
   const [links, setLinks] = useState<ProfileLink[]>(profileLinks || []);
   const lastPayloadRef = React.useRef<string | null>(null);
   const updateTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -90,8 +92,8 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
     <div className="w-full max-w-screen-md py-8">
       <div className="rounded-[32px] p-8 card-container backdrop-blur-md w-full">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-[#FEC400] text-2xl font-semibold">My Links</h2>
-          <span className="text-white text-lg">({links.length} Links)</span>
+          <h2 className="text-[#FEC400] text-2xl font-semibold">{t('myLinks')}</h2>
+          <span className="text-white text-lg">({links.length} {t('links')})</span>
         </div>
 
         <DndContext
