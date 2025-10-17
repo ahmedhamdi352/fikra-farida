@@ -176,7 +176,6 @@ const ConnectionsPage = () => {
               <GroupList
                 groups={groups}
                 isLoading={groupsLoading}
-                onGetGroups={onGetGroups}
                 profileData={profileData}
               />
             ) : (
@@ -184,7 +183,6 @@ const ConnectionsPage = () => {
                 contacts={contacts}
                 isLoading={connectionsLoading}
                 onGetConnections={onGetConnections}
-                profileData={profileData}
                 groups={groups}
               />
             )}

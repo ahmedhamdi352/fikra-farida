@@ -6,27 +6,26 @@ import { useRouter } from 'next/navigation';
 import { GroupResponseDTO } from 'types';
 import { useSubscriptionStatus } from 'hooks';
 import { UnlockedButton } from 'components/subcriptions/subcriptionButtons';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 interface GroupListProps {
   groups: GroupResponseDTO[];
   isLoading: boolean;
-  onGetGroups: () => void;
-  profileData: any;
+  profileData: {
+    type?: number;
+    subscriptionEnddate?: string;
+  } | undefined;
 }
 
 const GroupList: React.FC<GroupListProps> = ({
   groups,
   isLoading,
-  onGetGroups,
   profileData
 }) => {
   const t = useTranslations('profile.connectionsPage');
-  const locale = useLocale();
-  const isRTL = locale === 'ar';
   const router = useRouter();
   
-  const { onDeleteGroup, isLoading: deleteGroupLoading } = useDeleteGroupMutation();
+  const { onDeleteGroup } = useDeleteGroupMutation();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);

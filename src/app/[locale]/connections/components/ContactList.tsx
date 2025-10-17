@@ -2,23 +2,25 @@
 
 import React, { useState, useRef } from 'react';
 import { useDeleteConnectionMutation } from 'hooks/profile';
-import { useRouter } from 'next/navigation';
 import { ConnectionForCreateDTO } from 'types';
 import saveAs from 'file-saver';
 import ViewContactPopup from './ViewContactPopup';
 import AddToGroupPopup from './AddToGroupPopup';
-import { useSubscriptionStatus } from 'hooks';
 import { DateUtils } from 'utils';
 import DateFilterPopup from 'components/DateFilterPopup';
 import { useSiteData } from 'context/SiteContext';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { GroupResponseDTO } from 'types';
 
 interface ContactListProps {
   contacts: ConnectionForCreateDTO[];
   isLoading: boolean;
-  onGetConnections: (params?: any) => void;
-  profileData: any;
+  onGetConnections: (params?: {
+    dateFrom?: string;
+    dateTo?: string;
+    connectUser1?: string;
+    connectUser2?: string;
+  }) => void;
   groups: GroupResponseDTO[];
 }
 
@@ -26,15 +28,12 @@ const ContactList: React.FC<ContactListProps> = ({
   contacts,
   isLoading,
   onGetConnections,
-  profileData,
   groups
 }) => {
   const t = useTranslations('profile.connectionsPage');
-  const locale = useLocale();
-  const isRTL = locale === 'ar';
   const siteData = useSiteData();
   
-  const { onDeleteConnection, isLoading: deleteConnectionLoading } = useDeleteConnectionMutation();
+  const { onDeleteConnection } = useDeleteConnectionMutation();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
@@ -48,11 +47,6 @@ const ContactList: React.FC<ContactListProps> = ({
 
   const menuRef = useRef<HTMLDivElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
-
-  const hasProAccess = useSubscriptionStatus({
-    subscriptionType: profileData?.type,
-    subscriptionEndDate: profileData?.subscriptionEnddate
-  });
 
   // Close menu when clicking outside
   React.useEffect(() => {
