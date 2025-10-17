@@ -94,8 +94,7 @@ export default function QRCodePage() {
       // For Android devices
       try {
         // Show the install prompt
-        const result = await deferredPrompt.prompt();
-        console.log('PWA prompt result:', result);
+        await deferredPrompt.prompt();
         setDeferredPrompt(null);
       } catch (error) {
         console.error('Error showing PWA prompt:', error);

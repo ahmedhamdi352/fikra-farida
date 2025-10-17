@@ -41,10 +41,8 @@ function saveTokens(tokens: TokenStorage): void {
 
 // Store token with expiration (1 hour)
 export function storeUserToken(orderId: string, token: string): void {
-  console.log(`📝 Storing token for orderId: ${orderId}`);
-  
+
   const tokens = loadTokens();
-  console.log(`📝 Current storage size before: ${Object.keys(tokens).length}`);
   
   tokens[orderId] = {
     token,
@@ -57,39 +55,29 @@ export function storeUserToken(orderId: string, token: string): void {
   for (const [key, value] of Object.entries(tokens)) {
     if (now - value.timestamp > oneHour) {
       delete tokens[key];
-      console.log(`🗑️ Cleaned up expired token for orderId: ${key}`);
+
     }
   }
   
   saveTokens(tokens);
   
-  console.log(`📝 Current storage size after: ${Object.keys(tokens).length}`);
-  console.log(`📝 All stored order IDs: ${Object.keys(tokens).join(', ')}`);
 }
 
 // Retrieve and remove token
 export function getUserToken(orderId: string): string | null {
-  console.log(`🔍 Looking for token with orderId: ${orderId}`);
-  
   const tokens = loadTokens();
-  console.log(`🔍 Current storage size: ${Object.keys(tokens).length}`);
-  console.log(`🔍 All stored order IDs: ${Object.keys(tokens).join(', ')}`);
   
   const stored = tokens[orderId];
   if (!stored) {
-    console.log(`❌ No token found for orderId: ${orderId}`);
     return null;
   }
   
-  console.log(`✅ Found token for orderId: ${orderId}, stored at: ${new Date(stored.timestamp).toISOString()}`);
   
   // Check if token is expired (1 hour)
   const oneHour = 60 * 60 * 1000;
   const age = Date.now() - stored.timestamp;
-  console.log(`⏰ Token age: ${Math.round(age / 1000 / 60)} minutes`);
   
   if (age > oneHour) {
-    console.log(`⏰ Token expired (older than 1 hour)`);
     delete tokens[orderId];
     saveTokens(tokens);
     return null;
@@ -98,7 +86,6 @@ export function getUserToken(orderId: string): string | null {
   // Remove token after use for security
   delete tokens[orderId];
   saveTokens(tokens);
-  console.log(`🔒 Token retrieved and removed for security`);
   return stored.token;
 }
 

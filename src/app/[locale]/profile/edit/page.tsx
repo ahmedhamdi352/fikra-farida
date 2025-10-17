@@ -46,24 +46,18 @@ export default function EditProfilePage() {
   // Handle scrolling to customization section when the param is present
   useEffect(() => {
     if (customizationParam) {
-      console.log('Customization param detected, will scroll after delay');
       
       const scrollToCustomization = () => {
-        console.log('Attempting to scroll to customization section...');
-        
-        // Look for the Customization section by finding the button with "Customization" text
         const customizationButton = Array.from(document.querySelectorAll('button')).find(button => 
           button.textContent?.trim() === 'Customization'
         );
         
         if (customizationButton) {
-          console.log('Found customization button:', customizationButton);
           
           // Find the parent CollapsibleSection div
           const sectionDiv = customizationButton.closest('div[class*="py-4"]');
           
           if (sectionDiv) {
-            console.log('Found customization section div:', sectionDiv);
             
             // Scroll to the section
             sectionDiv.scrollIntoView({
@@ -86,13 +80,7 @@ export default function EditProfilePage() {
               const cleanUrl = window.location.pathname;
               window.history.replaceState({}, '', cleanUrl);
             }, 1000);
-            
-            console.log('Successfully scrolled to customization section!');
-          } else {
-            console.log('Could not find customization section div');
           }
-        } else {
-          console.log('Could not find customization button');
         }
       };
 

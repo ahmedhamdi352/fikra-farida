@@ -3,6 +3,8 @@
 import React, { createContext, useContext } from 'react';
 
 interface SiteData {
+  EnableCashOnDelivery?: boolean;
+  EnableOnlinePayment?: boolean;
   name: string;
   code: string;
   domain: string;

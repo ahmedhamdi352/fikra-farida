@@ -98,7 +98,6 @@ export function useGetConnectionQuery(initial?: { connectUser1?: string; connect
   };
 
   const { isLoading } = useIsLoadingMutation(ProfileService.getConnections.mutationKey);
-  console.log('mutation.data', mutation);
 
   return {
     data: mutation.data,

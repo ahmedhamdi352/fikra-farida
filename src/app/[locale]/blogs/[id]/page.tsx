@@ -14,7 +14,6 @@ export default function BlogDetails() {
 
   const { data: blog, isLoading, isError } = useGetBlogByIdQuery(blogId);
 
-  console.log(blog)
 
   if (isLoading) {
     return <LoadingOverlay isLoading={isLoading} />;

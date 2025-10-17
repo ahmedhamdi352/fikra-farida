@@ -47,7 +47,7 @@ export default function BlogsPage() {
       </main>
     );
   }
-  console.log(blogs)
+
   return (
     <main className="container mx-auto px-4 py-12">
       <div className="mb-8">

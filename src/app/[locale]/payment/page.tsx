@@ -48,6 +48,7 @@ const PaymentPage = () => {
   const locale = params.locale as string;
   const siteData = useSiteData();
 
+
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
 
@@ -382,6 +383,7 @@ const PaymentPage = () => {
               <p className="text-sm text-gray-400">{t('secureTransaction')}</p>
 
               <div className="space-y-2">
+               { siteData.EnableOnlinePayment && <>
                 <label
                   className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'online'
                     ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
@@ -403,8 +405,9 @@ const PaymentPage = () => {
                   </div>
                 </label>
                 <p className="text-sm">{t('onlineOptions')}</p>
-
-                <label
+                </>}
+                
+               { siteData.EnableCashOnDelivery && <label
                   className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'cash'
                     ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
                     : 'border-gray-600 hover:border-[#FEC400]/50'
@@ -421,7 +424,7 @@ const PaymentPage = () => {
                   <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
                     <FaMoneyBillWave className="text-[#FEC400] text-2xl" />
                   </div>
-                </label>
+                </label>}
               </div>
             </section>
           </form>

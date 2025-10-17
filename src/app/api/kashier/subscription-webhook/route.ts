@@ -37,53 +37,25 @@ export async function POST(request: NextRequest) {
 
     const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(stringToSign).digest('hex');
 
-    console.log(`Subscription webhook - String Used for Hashing: "${stringToSign}"`);
-    console.log(`Subscription webhook - Received Signature: ${signature}`);
-    console.log(`Subscription webhook - Calculated Signature: ${expectedSignature}`);
 
     if (signature !== expectedSignature) {
       console.error('Invalid subscription webhook signature. Request may be fraudulent.');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
-    console.log(
-      JSON.stringify({
-        logType: 'KASHIER_SUBSCRIPTION_WEBHOOK_VALIDATED',
-        merchantOrderId: data.merchantOrderId,
-        status: data.status,
-        timestamp: new Date().toISOString(),
-        fullWebhookData: data,
-      })
-    );
+
 
     // Extract payment details - merchantOrderId now contains the user token
     const { merchantOrderId, status } = data;
     const userToken = merchantOrderId; // Token is sent as orderId from frontend
 
-    console.log('🔍 Webhook Debug:');
-    console.log('merchantOrderId received:', merchantOrderId);
-    console.log('merchantOrderId length:', merchantOrderId ? merchantOrderId.length : 'null');
-    console.log(
-      'Is merchantOrderId a UUID?',
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(merchantOrderId)
-    );
-    console.log('userToken (same as merchantOrderId):', userToken ? 'TOKEN_SET' : 'NO_TOKEN');
-
-    console.log('Full webhook data received:', JSON.stringify(data, null, 2));
-
     switch (status) {
       case 'SUCCESS':
-        console.log(`Processing subscription SUCCESS for orderId: ${merchantOrderId}`);
         try {
           // Use token from Kashier webhook data
-          console.log(`🔍 Using token from webhook data for order: ${merchantOrderId}`);
-
           if (!userToken) {
-            console.error(`❌ No user token provided in webhook data for order: ${merchantOrderId}`);
             console.error('Subscription activation failed - missing authentication token in webhook');
             break;
           }
-
-          console.log(`✅ Token found in webhook data for order: ${merchantOrderId}`);
 
           // Update subscription with payment details
           const subscriptionPayload = {
@@ -105,7 +77,6 @@ export async function POST(request: NextRequest) {
           });
 
           if (response.ok) {
-            console.log(`Subscription ${merchantOrderId} activated successfully with payload:`, subscriptionPayload);
           } else {
             console.error(
               `Failed to activate subscription ${merchantOrderId}: ${response.status} ${response.statusText}`
@@ -116,7 +87,6 @@ export async function POST(request: NextRequest) {
         }
         break;
       case 'FAILED':
-        console.log(`Processing subscription FAILED for orderId: ${merchantOrderId}`);
         try {
           // Update subscription status to failed
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/Subscribe/${merchantOrderId}`, {
@@ -131,7 +101,6 @@ export async function POST(request: NextRequest) {
           });
 
           if (response.ok) {
-            console.log(`Subscription ${merchantOrderId} marked as failed`);
           } else {
             console.error(
               `Failed to update subscription ${merchantOrderId}: ${response.status} ${response.statusText}`
@@ -142,7 +111,6 @@ export async function POST(request: NextRequest) {
         }
         break;
       case 'PENDING':
-        console.log(`Processing subscription PENDING for orderId: ${merchantOrderId}`);
         try {
           // Update subscription status to pending
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Account/Subscribe/${merchantOrderId}`, {
@@ -157,7 +125,6 @@ export async function POST(request: NextRequest) {
           });
 
           if (response.ok) {
-            console.log(`Subscription ${merchantOrderId} status updated to pending`);
           } else {
             console.error(
               `Failed to update subscription ${merchantOrderId}: ${response.status} ${response.statusText}`

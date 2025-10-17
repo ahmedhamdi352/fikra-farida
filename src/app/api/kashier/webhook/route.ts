@@ -36,30 +36,15 @@ export async function POST(request: NextRequest) {
 
     const expectedSignature = crypto.createHmac('sha256', KASHIER_WEBHOOK_SECRET).update(stringToSign).digest('hex');
 
-    console.log(`String Used for Hashing: "${stringToSign}"`);
-    console.log(`Received Signature: ${signature}`);
-    console.log(`Calculated Signature: ${expectedSignature}`);
-
     if (signature !== expectedSignature) {
       console.error('Invalid webhook signature. Request may be fraudulent.');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
 
-    console.log(
-      JSON.stringify({
-        logType: 'KASHIER_WEBHOOK_VALIDATED',
-        eventType: event.event,
-        orderId: data.merchantOrderId,
-        paymentStatus: data.status,
-        timestamp: new Date().toISOString(),
-      })
-    );
-
     const { merchantOrderId, status } = data;
 
     switch (status) {
       case 'SUCCESS':
-        console.log(`Processing SUCCESS for orderId: ${merchantOrderId}`);
         try {
           // Update order status to success
           const response = await fetch(
@@ -76,7 +61,6 @@ export async function POST(request: NextRequest) {
           );
 
           if (response.ok) {
-            console.log(`Order ${merchantOrderId} status updated to success`);
           } else {
             console.error(
               `Failed to update order ${merchantOrderId} status: ${response.status} ${response.statusText}`
@@ -87,7 +71,6 @@ export async function POST(request: NextRequest) {
         }
         break;
       case 'FAILED':
-        console.log(`Processing FAILED for orderId: ${merchantOrderId}`);
         try {
           // Update order status to failed
           const response = await fetch(
@@ -104,7 +87,6 @@ export async function POST(request: NextRequest) {
           );
 
           if (response.ok) {
-            console.log(`Order ${merchantOrderId} status updated to failed`);
           } else {
             console.error(
               `Failed to update order ${merchantOrderId} status: ${response.status} ${response.statusText}`
@@ -115,7 +97,6 @@ export async function POST(request: NextRequest) {
         }
         break;
       case 'PENDING':
-        console.log(`Processing PENDING for orderId: ${merchantOrderId}`);
         try {
           // Update order status to pending
           const response = await fetch(
@@ -132,7 +113,6 @@ export async function POST(request: NextRequest) {
           );
 
           if (response.ok) {
-            console.log(`Order ${merchantOrderId} status updated to pending`);
           } else {
             console.error(
               `Failed to update order ${merchantOrderId} status: ${response.status} ${response.statusText}`

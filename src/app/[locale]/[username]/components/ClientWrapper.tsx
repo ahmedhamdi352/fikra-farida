@@ -161,24 +161,11 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
   const handleSaveContact = async () => {
     if (!profileData) return;
     try {
-      // Debug logging to help identify issues
-      console.log('Profile data for vCard:', {
-        fullname: profileData.fullname,
-        company: profileData.company,
-        imageFilename: profileData.imageFilename,
-        email: profileData.email,
-        phoneNumber1: profileData.phoneNumber1
-      });
 
-      // Show loading message
       alert('Generating contact with photo...');
       
       const vCardBlob = await generateVCard(profileData);
       
-      // Debug: Log the generated vCard content
-      vCardBlob.text().then(vCardText => {
-        console.log('Generated vCard content:', vCardText);
-      });
       
       // Create a more descriptive filename
       const cleanName = (profileData.fullname || profileData.username || 'contact')
@@ -261,7 +248,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
     // Get the image URL from imageFilename
     const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile'; // Placeholder for missing image
     const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
-    console.log(theme)
+ 
     switch (theme) {
       case 'edge':
         return (
