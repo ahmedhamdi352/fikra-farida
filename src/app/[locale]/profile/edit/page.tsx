@@ -15,8 +15,10 @@ import { useUploadProfileImageMutation, useUploadCoverImageMutation } from 'hook
 import { UnlockedButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function EditProfilePage() {
+  const t = useTranslations('profile.editProfilePage');
   const { data: profileData, isLoading } = useGetProfileQuery();
   const { onUploadProfileImage, isLoading: isUploadingProfileImage } = useUploadProfileImageMutation();
   const { onUploadCoverImage, isLoading: isUploadingCoverImage } = useUploadCoverImageMutation();
@@ -316,15 +318,15 @@ export default function EditProfilePage() {
 
         <div className="flex justify-around py-6 text-center">
           <div>
-            <p className="text-lg font-semibold text-[var(--main-color1)]">plan</p>
+            <p className="text-lg font-semibold text-[var(--main-color1)]">{t('plan')}</p>
             <p className="">{profileData?.type === 2 ? 'Pro' : 'Personal'}</p>
           </div>
           <div>
-            <p className="text-lg font-semibold text-[var(--main-color1)]">products</p>
+            <p className="text-lg font-semibold text-[var(--main-color1)]">{t('products')}</p>
             <p className="">{profileData?.LinkedProducts.length}</p>
           </div>
           <div>
-            <p className="text-lg font-semibold text-[var(--main-color1)]">profile</p>
+            <p className="text-lg font-semibold text-[var(--main-color1)]">{t('profile')}</p>
             <p className="">{JSON.parse(localStorage.getItem('user_profiles') || '[]').length}</p>
           </div>
         </div>
@@ -356,7 +358,7 @@ export default function EditProfilePage() {
 
           <div className="flex flex-col gap-2">
             <CollapsibleSection
-              title="Personal Details"
+              title={t('personalDetails')}
             >
               <EditProfileForm
                 ref={profileFormRef}
@@ -365,7 +367,7 @@ export default function EditProfilePage() {
             </CollapsibleSection>
 
             <CollapsibleSection
-              title="Contact Details"
+              title={t('contactDetails')}
             >
               <EditProfileContactForm
                 ref={contactFormRef}
@@ -375,7 +377,7 @@ export default function EditProfilePage() {
             </CollapsibleSection>
 
             <CollapsibleSection
-              title="Customization"
+              title={t('customization')}
               openOption={customizationParam ? true : false}
               data-section="customization"
             >
@@ -407,7 +409,7 @@ export default function EditProfilePage() {
                 className={`w-[60%] px-6 py-3 bg-yellow-500 text-black rounded-2xl hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 text-sm font-medium ${isUpdating ? 'opacity-75 cursor-not-allowed' : ''
                   }`}
               >
-                {isUpdating ? 'Updating...' : 'Update Profile'}
+                {isUpdating ? t('updating') : t('updateProfile')}
               </button>
 
               <Link href={`/${profileData?.username}`} className="mt-2 bg-[#FEF3C7] text-black font-medium w-[60%] px-6 py-3 rounded-2xl flex items-center justify-center gap-2">
@@ -421,7 +423,7 @@ export default function EditProfilePage() {
                     fill="black"
                   />
                 </svg>
-                Preview
+                {t('preview')}
               </Link>
             </div>
           </div>

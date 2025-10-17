@@ -5,6 +5,7 @@ import { useGetProfileQuery } from 'hooks/profile';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import StoreItem from './StoreItem';
+import { useTranslations } from 'next-intl';
 
 interface Category {
   id: string;
@@ -19,6 +20,7 @@ interface App {
 }
 
 export default function StorePage() {
+  const t = useTranslations('storePage');
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -27,13 +29,13 @@ export default function StorePage() {
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement }>({});
 
   const categories: Category[] = [
-    { id: 'socialMedia', name: 'Social Media' },
-    { id: 'chatting', name: 'Chatting' },
-    { id: 'music', name: 'Music' },
-    { id: 'business', name: 'Business' },
-    { id: 'meeting', name: 'Meeting' },
-    { id: 'appsSoftware', name: 'Apps & Software' },
-    { id: 'custom', name: 'Custom' },
+    { id: 'socialMedia', name: t('socialMedia') },
+    { id: 'chatting', name: t('chatting') },
+    { id: 'music', name: t('music') },
+    { id: 'business', name: t('business') },
+    { id: 'meeting', name: t('meeting') },
+    { id: 'appsSoftware', name: t('appsSoftware') },
+    { id: 'custom', name: t('custom') },
   ];
 
   const apps: App[] = [
@@ -168,6 +170,7 @@ export default function StorePage() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="rtl:rotate-180"
           >
             <path d="M19 12H5M12 19l-7-7 7-7-11-11 11-11 7 7 7 7" />
           </svg>
@@ -175,7 +178,7 @@ export default function StorePage() {
         <div className="relative flex-1">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder={t('search')}
             className="bg-transparent w-full p-3 pl-10 border border-[--main-color1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}

@@ -20,7 +20,7 @@ interface ProfileInformationProps {
 }
 
 export default function ProfileInformation({ profileData, withEdit, withSwitch, withBio }: ProfileInformationProps) {
-  const t = useTranslations('profile');
+  const t = useTranslations('profile.profileInformation');
   const [showMenu, setShowMenu] = useState(false);
   const [showProfileSwitcher, setShowProfileSwitcher] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -288,7 +288,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
 
                             {/* Title */}
                             <h3 className="font-bold text-2xl text-black mb-4">
-                              {!profileData?.IsLocked ? 'Account Locked' : 'Account Unlocked'}
+                              {!profileData?.IsLocked ? t('accountLocked') : t('accountUnlocked')}
                             </h3>
 
                             {/* Lock and Key Image */}
@@ -299,21 +299,21 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                             {/* Description */}
                             <p className="text-black mb-4 px-4">
                               {profileData?.IsLocked
-                                ? 'Are you sure you want to unlock this account?'
-                                : 'When activating this option, your profile will be locked, and no one will be able to access your data when scanning the digital card or any of your smart products. Instead, they will see a message stating that the account is currently unavailable. You can reactivate your profile at any time through the same option.'}
+                                ? t('areYouSureYouWantToUnlockThisAccount')
+                                : t('descriptionActive')}
                             </p>
 
                             <div className="modal-action w-full">
                               <form method="dialog" className="w-full flex gap-3">
                                 <button className="btn bg-gray-300 hover:bg-gray-400 text-black border-none flex-1">
-                                  Cancel
+                                  {t('cancel')}
                                 </button>
                                 <button
                                   onClick={handleLockConfirm}
                                   className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none flex-1"
                                   disabled={isLockLoading}
                                 >
-                                  {isLockLoading ? 'Processing...' : 'Confirm'}
+                                  {isLockLoading ? t('processing') : t('confirm')}
                                 </button>
                               </form>
                             </div>

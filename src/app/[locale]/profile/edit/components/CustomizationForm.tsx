@@ -9,6 +9,7 @@ import rounded from 'assets/images/rounded.png';
 import * as yup from 'yup';
 import Image from 'next/image'
 import { ProfileForReadDTO } from 'types';
+import { useTranslations } from 'next-intl';
 // Theme options with their respective icons
 const themeOptions = [
   { id: 'basic', name: 'basic', icon: primary },
@@ -43,7 +44,7 @@ interface CustomizationFormProps {
 }
 
 const CustomizationForm = forwardRef<CustomizationFormRef, CustomizationFormProps>(({ initialData }, ref) => {
-
+  const t = useTranslations('profile.editProfilePage');
   const schema = yup.object().shape({
     theme: yup.string().default(''),
     iconColor: yup.string().default(''),
@@ -83,7 +84,7 @@ const CustomizationForm = forwardRef<CustomizationFormRef, CustomizationFormProp
       {/* Theme Selection */}
       <div className="flex items-center justify-between mb-4 px-4 py-2 rounded-lg border border-[var(--main-color1)]">
         <div className="flex items-center gap-2">
-          <span className="text-body">Save Button</span>
+          <span className="text-body">{t('saveButton')}</span>
           <div className="relative group">
             <div className="tooltip" data-tip="hello">
               <svg
@@ -157,7 +158,7 @@ const CustomizationForm = forwardRef<CustomizationFormRef, CustomizationFormProp
                   />
                 </div>
                 <span className={`text-sm font-medium ${selectedTheme !== theme.id ? 'dark:text-white text-black' : 'dark:text-[var(--primary-color1)] text-[var(--primary-color1)]'} text-center`}>
-                  {theme.name}
+                  {t(theme.name)}
                 </span>
               </div>
             ))}
@@ -170,7 +171,7 @@ const CustomizationForm = forwardRef<CustomizationFormRef, CustomizationFormProp
         <div className="flex flex-col p-4 rounded-xl" style={{ border: '1px solid #B0A18E', background: 'rgba(255, 244, 211, 0.10)' }}>
 
           <div className='flex items-center justify-between'>
-            <h3 className="text-lg font-medium mb-3">Icon Color</h3>
+            <h3 className="text-lg font-medium mb-3">{t('iconColor')}</h3>
             <label className="relative inline-flex items-center cursor-pointer mb-3">
               <input
                 type="checkbox"
@@ -222,7 +223,7 @@ const CustomizationForm = forwardRef<CustomizationFormRef, CustomizationFormProp
         <div className="flex flex-col p-4 rounded-xl" style={{ border: '1px solid #B0A18E', background: 'rgba(255, 244, 211, 0.10)' }}>
 
           <div className='flex items-center justify-between'>
-            <h3 className="text-lg font-medium mb-3">Background Color</h3>
+            <h3 className="text-lg font-medium mb-3">{t('backgroundColor')}</h3>
             <label className="relative inline-flex items-center cursor-pointer mb-3">
               <input
                 type="checkbox"

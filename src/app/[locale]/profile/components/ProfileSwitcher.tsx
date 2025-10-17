@@ -11,6 +11,7 @@ import { ProfileForReadDTO } from 'types';
 import { useRouter } from 'next/navigation';
 import { ProButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
+import { useTranslations } from 'next-intl';
 interface ProfileSwitcherProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,6 +32,7 @@ const mapProfileDTOToProfile = (profileDTO: ProfileForReadDTO): Profile => {
 };
 
 export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProps) {
+  const t = useTranslations('profile');
   const { profiles, activeProfile, switchProfile, setAuth } = useAuth();
   const { data: profilesData, isLoading } = useGetProfilesQuery();
 
@@ -137,7 +139,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
           <div className="w-1/3 h-1 bg-[#FEC400] rounded-full"></div>
         </div>
 
-        <h2 className="text-center text-2xl font-bold text-[#FEC400] mb-4">Profiles</h2>
+        <h2 className="text-center text-2xl font-bold text-[#FEC400] mb-4">{t('profiles')}</h2>
 
         {isLoading &&
           <div className='flex justify-center items-center h-full'>
@@ -146,7 +148,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
         }
         {!isLoading &&
           <div className="mb-4">
-            <p className="text-gray-300 mb-2">Current Profile:</p>
+            <p className="text-gray-300 mb-2">{t('currentProfile')}</p>
           </div>
         }
 
@@ -215,7 +217,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--main-color1)]">Add New Profile</h3>
+                <h3 className="text-xl font-bold text-[var(--main-color1)]">{t('addNewProfile')}</h3>
               </div>
             </div>
             {!hasProAccess && <ProButton />}

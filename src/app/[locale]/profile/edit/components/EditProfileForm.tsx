@@ -28,16 +28,16 @@ interface EditProfileFormProps {
 }
 
 const EditProfileForm = forwardRef<EditProfileFormRef, EditProfileFormProps>(({ initialData }, ref) => {
-  const t = useTranslations('auth');
+  const t = useTranslations('profile.editProfilePage');
 
   const schema = yup.object().shape({
-    profileTitle: yup.string().required('Profile title is required'),
+    profileTitle: yup.string().required(t('profileTitleRequired')),
     username: yup
       .string()
-      .required(t('register.validation.usernameRequired'))
-      .matches(/^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/, t('register.validation.usernameEnglishOnly')),
+      .required(t('usernameRequired'))
+      .matches(/^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/, t('usernameEnglishOnly')),
 
-    fullname: yup.string().required('Full name is required'),
+    fullname: yup.string().required(t('fullnameRequired')),
     bio: yup.string().optional(),
     company: yup.string().optional(),
     jobTitle: yup.string().optional(),
@@ -81,53 +81,53 @@ const EditProfileForm = forwardRef<EditProfileFormRef, EditProfileFormProps>(({ 
         <div className="sm:col-span-3">
           <TextInput<ProfileFormData>
             name="profileTitle"
-            label='Profile Title'
+            label={t('profileTitle')}
             control={control}
-            placeholder='Enter your profile title'
+            placeholder={t('profileTitlePlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-3">
           <TextInput<ProfileFormData>
             name="username"
-            label='Username'
+            label={t('username')}
             control={control}
-            placeholder='Enter your username'
+            placeholder={t('usernamePlaceholder')}
           />
         </div>
         <div className="sm:col-span-3">
           <TextInput<ProfileFormData>
             name="fullname"
-            label='Full Name'
+            label={t('fullname')}
             control={control}
-            placeholder='Enter your full name'
+            placeholder={t('fullnamePlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-3">
           <TextInput<ProfileFormData>
             name="jobTitle"
-            label='Job Title'
+            label={t('jobTitle')}
             control={control}
-            placeholder='Enter your job title'
+            placeholder={t('jobTitlePlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-6">
           <TextInput<ProfileFormData>
             name="company"
-            label='Company'
+            label={t('company')}
             control={control}
-            placeholder='Enter your company name'
+            placeholder={t('companyPlaceholder')}
           />
         </div>
 
         <div className="sm:col-span-6">
           <TextArea<ProfileFormData>
             name="bio"
-            label='Bio'
+            label={t('bio')}
             control={control}
-            placeholder='Tell us about yourself...'
+            placeholder={t('bioPlaceholder')}
             className="min-h-[100px]"
           />
         </div>

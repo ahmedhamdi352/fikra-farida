@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import lockIcon from 'assets/images/lock.png';
+import { useTranslations } from 'next-intl';
 
 interface LockedAccountPopupProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function LockedAccountPopup({
   onClose,
   isLocked = false,
 }: LockedAccountPopupProps) {
+  const t = useTranslations('lockedAccountPopup');
   const [mounted, setMounted] = useState(false);
   const lockConfirmModalRef = useRef<HTMLDialogElement>(null);
 
@@ -72,7 +74,7 @@ export default function LockedAccountPopup({
 
           {/* Title */}
           <h3 className="font-bold text-2xl text-black mb-4">
-            {!isLocked ? 'Account Locked' : 'Account Unlocked'}
+            {!isLocked ? t('accountLocked') : t('accountUnlocked')}
           </h3>
 
           {/* Lock and Key Image */}
@@ -82,7 +84,7 @@ export default function LockedAccountPopup({
 
           {/* Description */}
           <p className="text-black mb-4 px-4">
-            This account is currently unavailable. It seems that the digital card owner has disabled their profile at the moment. You can leave them a message and they will contact you when their account is reactivated.
+          { t('thisAccountIsCurrentlyUnavailable')}
           </p>
 
 

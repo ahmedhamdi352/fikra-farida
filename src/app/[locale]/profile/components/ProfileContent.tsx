@@ -238,11 +238,11 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
             {/* Title */}
             <h3 className="font-bold text-2xl text-black mb-4">
-              {!profileData?.autoconnect ? 'Collect Info' : 'Disable Collect Info'}
+              {!profileData?.autoconnect ? t('collectInfo') : t('disableCollectInfo')}
             </h3>
 
             <p className="text-black mb-4 px-4">
-              When this feature is enabled, a form automatically appears when you share your digital card, allowing you to instantly collect contact details.
+              {t('whenThisFeatureIsEnabled')}
             </p>
 
             <div className="mb-4 relative">
@@ -251,24 +251,24 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
             {/* Description */}
             <p className="text-black text-start mb-4 px-4">
-              <span className="font-bold">How it works</span>
+              <span className="font-bold">{t('howItWorks')}</span>
               <ul className="list-none">
-                <li>1. Share your digital card with someone.</li>
-                <li>2. A quick form will pop up for them to fill out.</li>
-                <li>3. Once completed, the person is automatically saved as a contact.</li>
-                <li>4. You can export the data to an Excel file for easy management.</li>
+                <li>{t('collectInfoStep1')}</li>
+                <li>{t('collectInfoStep2')}</li>
+                <li>{t('collectInfoStep3')}</li>
+                <li>{t('collectInfoStep4')}</li>
               </ul>
             </p>
 
             <div className="modal-action w-full">
               <form method="dialog" className="w-full flex gap-3">
-                <button className="btn bg-gray-300 hover:bg-gray-400 text-black border-none flex-1">Cancel</button>
+                <button className="btn bg-gray-300 hover:bg-gray-400 text-black border-none flex-1">{t('cancel')}</button>
                 <button
                   onClick={handleCollectInfoConfirm}
                   className="btn bg-[#FEC400] hover:bg-[#FEC400]/90 text-black border-none flex-1"
                   disabled={isCollectInfoLoading}
                 >
-                  {isCollectInfoLoading ? 'Processing...' : 'Confirm'}
+                  {isCollectInfoLoading ? t('processing') : t('confirm')}
                 </button>
               </form>
             </div>
@@ -285,20 +285,20 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
             {/* Title */}
             <h3 className="font-bold text-2xl text-black mb-4">
-              {!profileData?.directurl ? 'Direct Link Mode' : 'Disable Direct Link Mode'}
+              {!profileData?.directurl ? t('directLinkMode') : t('disableDirectLinkMode')}
             </h3>
 
             {/* Description */}
             <p className="text-black mb-4 px-4 text-start">
-              instantly redirect customers to any link without browsing your full profile.
+              {t('instantlyRedirectCustomers')}
             </p>
 
             <form method="dialog" className="w-full">
               <div className="w-full mb-3">
                 <div className="bg-[#50514E] rounded-xl p-3 mb-4">
-                  <h4 className="text-white font-semibold text-xl mb-2 text-center">Set Direct Link</h4>
+                  <h4 className="text-white font-semibold text-xl mb-2 text-center">{t('setDirectLink')}</h4>
 
-                  <p className="mb-2 text-start text-white">Available Links</p>
+                  <p className="mb-2 text-start text-white">{t('availableLinks')}</p>
                   {/* Container with overflow-x-auto to enable horizontal scrolling */}
                   <div ref={scrollContainerRef} className="overflow-x-auto max-h-[300px]">
                     {/* Grid layout with fixed columns that will scroll horizontally together */}
@@ -337,11 +337,11 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
 
             </form>
             <p className="text-black mb-4 px-4 text-start">
-              <span className="font-bold">How to activate:</span>
+              <span className="font-bold">{t('howToActivate')}</span>
               <ul className="list-none">
-                <li>1- Select the link you want to direct others to and set it as direct.</li>
-                <li>2- Enable the direct toggle.</li>
-                <li>3- Share the link via our smart products or QR code.</li>
+                <li>{t('step1')}</li>
+                <li>{t('step2')}</li>
+                <li>{t('step3')}</li>
               </ul>
             </p>
 
@@ -350,7 +350,7 @@ export default function ProfileContent({ profileData }: { profileData?: ProfileF
               <button
                 className="py-2 px-8 bg-gray-300 hover:bg-gray-400 text-black rounded-lg font-medium"
               >
-                Cancel
+                {t('cancel')}
               </button>
             </form>
             {/* </div> */}
