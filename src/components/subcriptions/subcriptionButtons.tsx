@@ -4,6 +4,7 @@ import Crown from 'assets/icons/crown.png'
 import Image from 'next/image'
 import SubscriptionsPopup from './subcriptionsPopup'
 import { useTranslations } from 'next-intl';
+import { cn } from 'utils/Tailwind'
 
 export function UnlockedButton() {
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
@@ -38,12 +39,12 @@ export function TryNow() {
   )
 }
 
-export function UpgradButton() {
+export function UpgradButton({className}:{className?:string}) {
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const t = useTranslations('subscription');
   return (
     <>
-      <button type="button" onClick={() => setShowSubscriptionPopup(true)} className='flex gap-2 py-3 px-6 bg-[#FFF4D3] font-semibold text-black rounded-xl'>
+      <button type="button" onClick={() => setShowSubscriptionPopup(true)} className={cn('flex justify-around items-center gap-2 py-3 px-6 bg-[#FFF4D3] font-semibold text-black rounded-xl',className)}>
         {t('upgradeNow')}
         <Image src={Crown} alt="lock" />
       </button>

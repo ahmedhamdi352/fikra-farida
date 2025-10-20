@@ -14,7 +14,7 @@ import { CartProvider } from 'context/CartContext';
 import { AuthProvider } from 'context/AuthContext';
 import QueryProvider from 'providers/query-provider';
 import { SiteProvider } from 'context/SiteContext';
-import FloatingActionButtons from 'components/FloatingActionButtons';
+import ConditionalFloatingActionButtons from 'components/ConditionalFloatingActionButtons';
 
 type Props = {
   children: React.ReactNode;
@@ -117,7 +117,7 @@ export default async function LocaleLayout(props: Props) {
                       <HeaderWrapper initialData={siteData} />
                       <main className="flex-1 pt-[72px]">{children}</main>
                       <FooterWrapper initialData={siteData} />
-                      <FloatingActionButtons
+                      <ConditionalFloatingActionButtons
                         whatsappNumber={siteData.contactWhatsapp}
                         phoneNumber={siteData.contactPhone}
                         email={siteData.contactEmail}

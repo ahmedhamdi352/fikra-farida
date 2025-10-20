@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom';
 import lock from 'assets/images/lock.png';
 import ProfileSwitcher from './ProfileSwitcher';
 import Link from 'next/link';
-import { ProButton } from 'components/subcriptions/subcriptionButtons';
+import { ProButton, UpgradButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
 import { useTranslations } from 'next-intl';
 
@@ -369,6 +369,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
             )}
           </div>
           <p className="text-gray-400 text-sm">{profileData.jobTitle}</p>
+         {!hasProAccess && <UpgradButton className='p-2 px-3 my-2' />}
         </div>
       </div>
 

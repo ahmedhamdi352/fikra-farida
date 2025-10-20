@@ -4,7 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import ExportButton from './ExportButton';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { cn } from 'utils/Tailwind';
 interface BasicThemeProps {
   profileData: ProfileForReadDTO;
   onUpdateVisitCount: (pk: string | number) => Promise<void>;
@@ -14,6 +15,7 @@ interface BasicThemeProps {
 const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: BasicThemeProps) => {
   // Get the image URL from imageFilename
   const t = useTranslations('profile');
+  const locale = useLocale();
   const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile';
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 
@@ -23,9 +25,9 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
     >
       <div className="relative">
         {/* Profile image positioning - centered at top for basic theme */}
-        <div className="flex justify-start pt-8 z-20 mt-16 mx-5">
+        <div className="flex justify-center pt-8 z-20 mt-16 mx-5">
           {imageUrl && (
-            <div className="w-40 h-40 rounded-lg overflow-hidden relative shadow-lg">
+            <div className="w-40 h-40 rounded-full overflow-hidden relative shadow-lg">
               <Image
                 src={imageUrl}
                 alt={profileData?.fullname || 'Profile'}
@@ -39,11 +41,11 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
         </div>
         <ExportButton 
           profileData={profileData} 
-          className="z-[10] absolute top-14 ltl:right-2 ltl:left-auto rtl:left-2 rtl:right-auto" 
+          className={cn('z-[10] absolute top-14', locale === 'ar' ? 'left-2' : 'right-2')}
         />
       </div>
       
-      <div className="flex flex-col items-start justify-start pt-4 pb-4 px-8 relative z-10">
+      <div className="flex flex-col items-center justify-center pt-4 pb-4 px-8 relative z-10">
         <div className='flex items-center gap-2'>
           <h2 className="text-3xl font-bold mb-1 leading-tight text-left text-black">{profileData?.fullname}</h2>
           {profileData?.type === 2 && (
