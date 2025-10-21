@@ -151,6 +151,10 @@ async function uploadCoverImage(payload: FormData) {
   return await httpClient.post<any>(`${ApiURLs.uploadCoverImage}`, payload);
 }
 
+async function updateUserVisits(payload: { userpk: number, action: number }) {
+  return await httpClient.post<any>(`${ApiURLs.updateUserVisits}?userpk=${payload.userpk}&action=${payload.action}`);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -251,5 +255,9 @@ export const ProfileService = {
   uploadCoverImage: {
     request: uploadCoverImage,
     mutationKey: 'upload-cover-image',
+  },
+  updateUserVisits: {
+    request: updateUserVisits,
+    mutationKey: 'update-user-visits',
   },
 };

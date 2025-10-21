@@ -33,4 +33,5 @@ export const ApiURLs = {
   updateSubscription: '/api/Account/Subscribe',
   visitCount: '/api/CustomLink/Visit',
   blogs: '/api/Blogs',
+  updateUserVisits: '/api/Account/Visit',
 } as const;

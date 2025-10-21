@@ -100,6 +100,8 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       });
     },
     getValues: () => {
+      console.log(methods.getValues());
+      console.log(showEmail, showPhone, showWebsite);
       return {
         ...methods.getValues(),
         showEmail: showEmail,

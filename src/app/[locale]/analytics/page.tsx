@@ -12,6 +12,10 @@ import { ProButton, UnlockedButton, UpgradButton } from 'components/subcriptions
 import { cn } from 'utils';
 import DateFilterPopup from 'components/DateFilterPopup';
 import { useTranslations, useLocale } from 'next-intl';
+import phoneContactIcon from 'assets/icons/phoneContact.png';
+import emailContactIcon from 'assets/icons/emailContact.png';
+import websiteContactIcon from 'assets/icons/websiteContact.png';
+import saveContactIcon from 'assets/icons/saveContact.png';
 
 type TimeFilter = 'today' | 'week' | 'month' | 'quarter' | 'custom';
 
@@ -21,6 +25,7 @@ const AnalyticsPage = () => {
   const isRTL = locale === 'ar';
   const { data: profileData, isLoading, } = useGetProfileQuery();
   const { data: profileAnalytics, isLoading: isLoadingAnalytics, onGetAnalytics } = useGetAnalyticsMutation();
+  console.log(profileAnalytics);
   const [selectedFilter, setSelectedFilter] = useState<TimeFilter>('today');
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
@@ -323,31 +328,101 @@ const AnalyticsPage = () => {
           </div>}
           <h3 className="font-semibold mb-4">{t('contactClicks')}</h3>
           <div className="space-y-3">
-            {profileData?.links
-              ?.filter(link => ['phone', 'email', 'save_contact', 'website', 'businessPhone'].includes(link.title))
-              .map((link, index) => (
-                <div
-                  key={index}
-                  className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
-                >
-                  <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
-                    <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
-                      <Image
-                        src={`https://fikrafarida.com/Media/icons/${link.iconurl}`}
-                        alt={link.title}
-                        width={32}
-                        height={32}
-                        className="object-cover"
-                      />
-                    </div>
-                    <span className="flex-grow truncate">{link.title}</span>
-                    <span className="ml-3">
-                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
-                      <span className="text-[var(--main-color1)] mx-2">{t('clicks')}</span>
-                    </span>
+            {/* Phone Item */}
+            {profileData?.showPhone && profileData?.phoneNumber1.length > 0 && (
+              <div
+                className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
+              >
+                <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
+                  <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
+                  <Image
+                src={phoneContactIcon}
+                alt="phone"
+                width={32}
+                height={32}
+                className="object-cover"
+              />  
                   </div>
+                  <span className="text-base flex-grow truncate">Phone</span>
+                  <span className="ml-3">
+                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'phone')?.Clicks || 0 : ''}
+                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalClickedPhoneClicks|| 0} {t('clicks')}</span>
+                  </span>
                 </div>
-              ))}
+              </div>
+            )}
+
+            {/* Email Item */}
+            {profileData?.showEmail && profileData?.email.length > 0 && (
+              <div
+                className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
+              >
+                <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
+                  <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
+                  <Image
+                src={emailContactIcon}
+                alt="email"
+                width={32}
+                height={32}
+                className="object-cover"
+              />
+                  </div>
+                  <span className="text-base flex-grow truncate">Email</span>
+                  <span className="ml-3">
+                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'email')?.Clicks || 0 : ''}
+                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalClickedEmailClicks|| 0} {t('clicks')}</span>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Website Item */}
+            {profileData?.showWebsite && profileData?.websiteUrl.length > 0 && (
+              <div
+                className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
+              >
+                <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
+                  <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
+              <Image
+                src={websiteContactIcon}
+                alt="website"
+                width={32}
+                height={32}
+                className="object-cover"
+              />
+                  </div>
+                  <span className="text-base flex-grow truncate">Website</span>
+                  <span className="ml-3">
+                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'website')?.Clicks || 0 : ''}
+                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalClickedWebsiteClicks|| 0} {t('clicks')}</span>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Save Contact Item */}
+            {profileData?.saveContact && (
+              <div
+                className="bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.12)] transition-all duration-200 rounded-xl border border-[#B0A18E]"
+              >
+                <div className={cn("flex items-center px-4 ps-1 py-2 gap-2", !hasProAccess && "opacity-40")}>
+                  <div className="w-8 h-8 rounded-full overflow-hidden relative flex-shrink-0 mr-3">
+                  <Image
+                src={saveContactIcon}
+                alt="save contact"
+                width={32}
+                height={32}
+                className="object-cover"
+              />
+                  </div>
+                  <span className="text-base flex-grow truncate">Save Contact</span>
+                  <span className="ml-3">
+                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'save_contact')?.Clicks || 0 : ''}
+                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalSavedContactClicks|| 0} {t('clicks')}</span>
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

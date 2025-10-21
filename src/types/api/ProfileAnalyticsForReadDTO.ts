@@ -3,6 +3,10 @@ export type ProfileAnalyticsForReadDTO = {
   TotalClicks: number;
   Rate: number;
   Links: link[];
+  TotalClickedEmailClicks: number;
+TotalClickedPhoneClicks: number;
+TotalClickedWebsiteClicks: number;
+TotalSavedContactClicks: number;
 };
 
 type link = {

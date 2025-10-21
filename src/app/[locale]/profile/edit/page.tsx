@@ -154,28 +154,28 @@ export default function EditProfilePage() {
 
         // Map emails to email1, email2, etc.
         contactData.emails?.forEach((email, index) => {
-          if (email?.value) {
+          if (email?.value || email?.value === '') {
             if (index === 0) {
-              transformedContactData[`email`] = email.value;
+              transformedContactData[`email`] = email?.value || '';
             } else {
-              transformedContactData[`email${index}`] = email.value;
+              transformedContactData[`email${index}`] = email?.value || '';
             }
           }
         });
 
         // Map phones to phoneNumber1, phoneNumber2, etc.
         contactData.phones?.forEach((phone, index) => {
-          if (phone?.value) {
+          if (phone?.value || phone?.value === '') {
             // Remove any non-digit characters except the leading +
             const formattedPhone = phone.value.replace(/[^\d+]/g, '');
-            transformedContactData[`phoneNumber${index + 1}`] = formattedPhone;
+            transformedContactData[`phoneNumber${index + 1}`] = formattedPhone || '';
           }
         });
 
         // Map websites if needed (assuming single website)
         contactData.websites?.forEach((website) => {
-          if (website?.value) {
-            transformedContactData[`websiteUrl`] = website.value;
+          if (website?.value || website?.value === '') {
+            transformedContactData[`websiteUrl`] = website?.value || '';
           }
         })
       }

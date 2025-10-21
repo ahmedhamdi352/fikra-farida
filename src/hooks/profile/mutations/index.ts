@@ -15,3 +15,4 @@ export * from './useExportContactsFileMutation';
 export * from './useAddContactToGroupMutation';
 export * from './useUploadProfileImageMutation';
 export * from './useUploadCoverImageMutation';
+export * from './useUpdateUserVisitsMutation';
