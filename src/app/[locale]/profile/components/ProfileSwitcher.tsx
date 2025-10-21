@@ -49,7 +49,6 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
   // Set mounted state when component mounts
   useEffect(() => {
     setMounted(true);
-    return () => setMounted(false);
   }, []);
 
   // Sync profiles data from API to localStorage when received
@@ -166,19 +165,24 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
             >
               <div className="flex items-center gap-3">
                 <div className="relative flex-shrink-0">
-                  {profile.imageFilename ? (
-                    <Image
-                      src={`https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`}
-                      alt={profile.fullname}
-                      className="w-16 h-16 rounded-full bg-black"
-                      width={64}
-                      height={64}
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center">
-                      <span className="text-2xl text-white">{profile.fullname.charAt(0)}</span>
-                    </div>
-                  )}
+                  <div className="w-16 h-16 rounded-full bg-[#E0B850] flex items-center justify-center relative overflow-hidden">
+                    {profile.imageFilename && profile.imageFilename !== 'avatar1.png' ? (
+                      <Image
+                        src={`https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`}
+                        alt={profile.fullname}
+                        className="w-full h-full object-cover"
+                        width={64}
+                        height={64}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    <span className="text-2xl text-white font-bold absolute inset-0 flex items-center justify-center">
+                      {profile.fullname?.charAt(0) || 'P'}
+                    </span>
+                  </div>
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-white">{profile.fullname}</h3>

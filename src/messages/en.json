@@ -451,6 +451,8 @@
       "backgroundColor":"Background Color"
     },
     "profileInformation":{
+      "cancel":"Cancel",
+      "confirm":"Confirm",
       "switchProfile":"Switch Profile",
       "customization":"Customization",
       "lockProfile":"Lock Profile",
