@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { ProfileService } from 'api/services';
 import { useIsLoadingMutation } from 'hooks';
 import SnackbarUtils from 'utils/SnackbarUtils';
 
 
 export function useUpdateUserVisitsMutation() {
-  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationKey: [ProfileService.updateUserVisits.mutationKey],
