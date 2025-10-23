@@ -39,7 +39,7 @@ export default function CheckoutPage() {
             <h2 className="text-2xl font-semibold mb-4">{tPayment('cartEmpty')}</h2>
             <p className="text-gray-400 mb-8">{tPayment('cartEmptyMessage')}</p>
             <Link
-              href={`/products`}
+              href={`/collections`}
               className="inline-block py-3 px-6 bg-[#FEC400] text-black font-semibold rounded-lg hover:bg-[#FEC400]/90 transition-colors"
             >
               {tPayment('browseProducts')}

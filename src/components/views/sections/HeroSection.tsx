@@ -57,13 +57,13 @@ export default function HeroSection() {
 
             <div className="flex flex-wrap justify-center gap-4 animate-rotateIn">
               <Link
-                href='/products'
+                href='/collections'
                 className="bg-[--main-color1] text-black px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
               >
                 {t('hero.buttonForProducts')}
               </Link>
               <Link
-                href='/teams'
+                href='/teams' 
                 className="border border-[--main-color1] text-[--main-color1] px-8 py-3 rounded-lg font-semibold hover:bg-[--main-color1] hover:text-black transition-colors flex items-center gap-2">
                 {t('hero.buttonForTeams')}
                 <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor">

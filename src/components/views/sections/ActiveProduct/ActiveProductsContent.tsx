@@ -150,7 +150,7 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
               {totalFilteredPages > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-12">
                   <Link
-                    href={`/products?page=${currentPage - 1}`}
+                    href={`/collections?page=${currentPage - 1}`}
                     className={`p-2 rounded-full transition-colors ${
                       currentPage === 1 ? 'pointer-events-none text-gray-500' : 'text-yellow-500 hover:bg-white/5'
                     }`}
@@ -169,7 +169,7 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
                   {Array.from({ length: totalFilteredPages }).map((_, index) => (
                     <Link
                       key={index}
-                      href={`/products?page=${index + 1}`}
+                      href={`/collections?page=${index + 1}`}
                       className={`w-8 h-8 rounded-full transition-colors flex items-center justify-center ${
                         currentPage === index + 1 ? 'bg-yellow-500 text-black' : 'text-white hover:bg-white/5'
                       }`}
@@ -179,7 +179,7 @@ export function ActiveProducts({ products, totalPages }: ProductsContentProps) {
                   ))}
 
                   <Link
-                    href={`/products?page=${currentPage + 1}`}
+                    href={`/collections?page=${currentPage + 1}`}
                     className={`p-2 rounded-full transition-colors ${
                       currentPage === totalFilteredPages
                         ? 'pointer-events-none text-gray-500'

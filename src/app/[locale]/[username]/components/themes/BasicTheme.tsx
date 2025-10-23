@@ -94,7 +94,7 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
       
       <div className="px-6 pb-6 relative z-10 flex justify-center">
         <Link
-          href='/products'
+          href='/collections'
           style={{
             borderRadius: '12px',
           }}

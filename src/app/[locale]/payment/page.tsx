@@ -263,7 +263,7 @@ const PaymentPage = () => {
             <h2 className="text-2xl font-semibold">{t('cartEmpty')}</h2>
             <p className="text-gray-400 mb-8">{t('cartEmptyMessage')}</p>
             <Link
-              href={`/products`}
+              href={`/collections`}
               className="inline-block py-3 px-6 bg-[#FEC400] text-black font-semibold rounded-lg hover:bg-[#FEC400]/90 transition-colors"
             >
               {t('browseProducts')}
@@ -529,7 +529,7 @@ const PaymentPage = () => {
                       )}
                     </div>
 
-                    <Link href={`/products/${item.id}`} className="flex-1">
+                    <Link href={`/collections/${item.id}`} className="flex-1">
                       <p className="text-[#FEC400] text-sm mb-1">{item.id}</p>
                       <h3 className="text-lg font-semibold mb-2">{locale === 'en' ? item.name : item.arName}</h3>
                       <div className="flex items-center gap-4">

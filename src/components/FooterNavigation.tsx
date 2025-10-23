@@ -11,7 +11,7 @@ const FooterNavigation = () => {
       <Link href="/" className="block hover:text-[#F1911B] transition-colors">
         {t('nav.home')}
       </Link>
-      <Link href="/products" className="block hover:text-[#F1911B] transition-colors">
+      <Link href="/collections" className="block hover:text-[#F1911B] transition-colors">
         {t('nav.products')}
       </Link>
       <Link href="/blogs" className="block hover:text-[#F1911B] transition-colors">

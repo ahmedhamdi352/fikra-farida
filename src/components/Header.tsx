@@ -21,7 +21,7 @@ interface HeaderProps {
 
 const OfferBanner = ({ title }: { title: string | null }) => {
   return (
-    <Link href="/products">
+    <Link href="/collections">
       <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-700 via-grey-200 to-gray-700 text-white text-center p-2 z-50">
         <div className="font-bold text-body whitespace-nowrap animate-marquee"> {title} </div>
       </div>
@@ -148,8 +148,8 @@ const Header = ({ siteData }: HeaderProps) => {
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 rounded-md transition-all duration-300 group-hover:scale-105"></div>
             </Link>
             <Link
-              href="/products"
-              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname.includes('/products')
+              href="/collections"
+              className={`relative px-3 py-1 rounded-md transition-all duration-300 ${pathname.includes('/collections')
                 ? 'text-white font-bold bg-white/20'
                 : 'text-black hover:text-white group'
                 }`}
@@ -292,8 +292,8 @@ const Header = ({ siteData }: HeaderProps) => {
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0 group-hover:opacity-100 animate-shimmer bg-[length:200%_100%]"></div>
                     </Link>
                     <Link
-                      href="/products"
-                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/products')
+                      href="/collections"
+                      className={`relative flex gap-4 items-center justify-start p-2 rounded-md transition-all duration-300 overflow-hidden ${pathname.includes('/collections')
                         ? 'bg-yellow-500 text-black dark:text-white font-bold'
                         : 'dark:text-gray-200 text-gray-500 group'
                         }`}

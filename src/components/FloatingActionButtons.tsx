@@ -27,10 +27,10 @@ const FloatingActionButtons = ({ whatsappNumber, phoneNumber, email }: FloatingA
 
   const buttons = [
     {
-      icon: <FaWhatsapp className="w-6 h-6" />,
-      color: 'bg-green-500 hover:bg-green-600',
-      href: whatsappNumber,
-      show: !!whatsappNumber,
+      icon: <FaEnvelope className="w-5 h-5" />,
+      color: 'bg-red-500 hover:bg-red-600',
+      href: `mailto:${email}`,
+      show: !!email,
     },
     {
       icon: <FaPhone className="w-5 h-5" />,
@@ -39,10 +39,10 @@ const FloatingActionButtons = ({ whatsappNumber, phoneNumber, email }: FloatingA
       show: !!phoneNumber,
     },
     {
-      icon: <FaEnvelope className="w-5 h-5" />,
-      color: 'bg-red-500 hover:bg-red-600',
-      href: `mailto:${email}`,
-      show: !!email,
+      icon: <FaWhatsapp className="w-6 h-6" />,
+      color: 'bg-green-500 hover:bg-green-600',
+      href: whatsappNumber,
+      show: !!whatsappNumber,
     },
   ].filter(button => button.show);
 

@@ -44,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link
-      href={`/products/${product.id}`}
+      href={`/collections/${product.id}`}
       className="block bg-transparent rounded-lg shadow-xl overflow-hidden relative group h-full"
     >
       <div className="flex flex-col h-full">

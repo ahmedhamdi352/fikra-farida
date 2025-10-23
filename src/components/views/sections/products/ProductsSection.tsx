@@ -21,7 +21,7 @@ export async function ProductsSection() {
         <ProductSlider products={products} />
         <div className="mt-16">
           <Button
-            href="/products"
+            href="/collections"
             withArrow
             className="relative group px-8 py-3  rounded-[10px] bg-transparent border-2 border-transparent hover:opacity-100 transition-colors"
             translationKey="products.allProducts"
