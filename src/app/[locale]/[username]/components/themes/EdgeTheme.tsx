@@ -62,7 +62,7 @@ const EdgeTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: EdgeT
         />
       </div>
       
-      <div className="flex flex-col items-start justify-start pt-16 pb-4 px-8 relative z-10">
+      <div dir="ltr" className="flex flex-col items-start justify-start pt-16 pb-4 px-8 relative z-10">
         <div className='flex items-center gap-2'>
           <h2 className="text-3xl font-bold  leading-tight text-left">{profileData?.fullname}</h2>
           {profileData?.type === 2 && (
