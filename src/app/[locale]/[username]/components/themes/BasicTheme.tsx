@@ -4,8 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import ExportButton from './ExportButton';
-import { useLocale, useTranslations } from 'next-intl';
-import { cn } from 'utils/Tailwind';
+import { useTranslations } from 'next-intl';
 import ActionButtons from './ActionButtons';
 interface BasicThemeProps {
   profileData: ProfileForReadDTO;
@@ -16,7 +15,6 @@ interface BasicThemeProps {
 const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: BasicThemeProps) => {
   // Get the image URL from imageFilename
   const t = useTranslations('profile');
-  const locale = useLocale();
   const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile';
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 

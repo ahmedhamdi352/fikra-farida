@@ -1,6 +1,4 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 'use client';
-
 import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
