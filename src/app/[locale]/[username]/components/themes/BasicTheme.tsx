@@ -26,7 +26,7 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
     >
       <div className="relative">
         {/* Profile image positioning - centered at top for basic theme */}
-        <div className="flex justify-center pt-8 z-20 mt-16 mx-5">
+        <div dir="ltr" className="flex justify-start pt-8 z-20 mt-16 mx-5">
           {imageUrl && (
             <div className="w-40 h-40 rounded-full overflow-hidden relative shadow-lg">
               <Image
@@ -42,11 +42,10 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
         </div>
         <ExportButton 
           profileData={profileData} 
-          className={cn('z-[10] absolute top-14', locale === 'ar' ? 'left-2' : 'right-2')}
         />
       </div>
       
-      <div className="flex flex-col items-center justify-center pt-4 pb-4 px-8 relative z-10">
+      <div dir="ltr" className="flex flex-col items-start justify-start pt-4 pb-4 px-8 relative z-10">
         <div className='flex items-center gap-2'>
           <h2 className="text-3xl font-bold mb-1 leading-tight text-left text-black">{profileData?.fullname}</h2>
           {profileData?.type === 2 && (

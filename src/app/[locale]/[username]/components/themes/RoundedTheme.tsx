@@ -58,7 +58,8 @@ const RoundedTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Ro
             </div>
           )}
         </div>
-        <ExportButton profileData={profileData}  className="z-[10] absolute top-14 ltl:right-2 ltl:left-auto rtl:left-2 rtl:right-auto"/>
+        <ExportButton profileData={profileData} 
+         />
       </div>
       
       <div className="flex flex-col items-center justify-center pt-16 pb-4 px-8  relative z-10">

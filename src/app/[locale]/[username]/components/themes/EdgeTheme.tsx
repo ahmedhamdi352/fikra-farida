@@ -44,7 +44,7 @@ const EdgeTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: EdgeT
     >
       <div className="relative">
         <CoverPhoto />
-        <div className="absolute top-[50%] left-[5%] z-20 flex justify-start">
+        <div dir="ltr" className="absolute top-[50%] left-[5%] z-20 flex justify-start">
           {imageUrl && (
             <div className="w-40 h-40 rounded-lg overflow-hidden relative shadow-lg">
               <Image
@@ -59,7 +59,6 @@ const EdgeTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: EdgeT
           )}
         </div>
         <ExportButton profileData={profileData}
-         className="z-[10] absolute top-14 ltl:right-2 ltl:left-auto rtl:left-2 rtl:right-auto" 
         />
       </div>
       
