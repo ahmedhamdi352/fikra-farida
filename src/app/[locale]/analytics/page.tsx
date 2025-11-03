@@ -31,6 +31,14 @@ const AnalyticsPage = () => {
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
   const filterRef = useRef<HTMLDivElement>(null);
 
+  // Helper function to format date as YYYY-MM-DD (date only, no time)
+  const formatDateOnly = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const hasProAccess = useSubscriptionStatus({
     subscriptionType: profileData?.type,
     subscriptionEndDate: profileData?.subscriptionEnddate
@@ -93,8 +101,8 @@ const AnalyticsPage = () => {
     // Only make API call for preset filters, not for custom until Apply is clicked
     if (selectedFilter !== 'custom') {
       onGetAnalytics({
-        StartDate: startDate.toISOString(),
-        EndDate: selectedFilter === 'today' ? '' : endDate.toISOString(),
+        StartDate: formatDateOnly(startDate),
+        EndDate: selectedFilter === 'today' ? '' : formatDateOnly(endDate),
       });
     }
   }, [selectedFilter]);
@@ -114,11 +122,10 @@ const AnalyticsPage = () => {
       // Apply the custom filter immediately when Apply is clicked
       const startDate = new Date(dateFilter.from);
       const endDate = new Date(dateFilter.to);
-      endDate.setHours(23, 59, 59, 999); // Set to end of day
 
       onGetAnalytics({
-        StartDate: startDate.toISOString(),
-        EndDate: endDate.toISOString(),
+        StartDate: formatDateOnly(startDate),
+        EndDate: formatDateOnly(endDate),
       });
     }
   };
@@ -128,6 +135,8 @@ const AnalyticsPage = () => {
     setSelectedFilter('today');
     setShowFilterDropdown(false);
   };
+
+  console.log("hasProAccess", hasProAccess);
 
   const isFilterApplied = selectedFilter === 'custom' && dateFilter.from && dateFilter.to;
 
@@ -345,8 +354,7 @@ const AnalyticsPage = () => {
                   </div>
                   <span className="text-base flex-grow truncate">Phone</span>
                   <span className="ml-3">
-                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'phone')?.Clicks || 0 : ''}
-                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalClickedPhoneClicks|| 0} {t('clicks')}</span>
+                    <span className="text-[var(--main-color1)] mx-2">{hasProAccess ? profileAnalytics?.TotalClickedPhoneClicks|| 0 : ''} {t('clicks')}</span>
                   </span>
                 </div>
               </div>
@@ -369,8 +377,7 @@ const AnalyticsPage = () => {
                   </div>
                   <span className="text-base flex-grow truncate">Email</span>
                   <span className="ml-3">
-                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'email')?.Clicks || 0 : ''}
-                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalClickedEmailClicks|| 0} {t('clicks')}</span>
+                    <span className="text-[var(--main-color1)] mx-2">{hasProAccess ? profileAnalytics?.TotalClickedEmailClicks|| 0 : ''} {t('clicks')}</span>
                   </span>
                 </div>
               </div>
@@ -393,8 +400,7 @@ const AnalyticsPage = () => {
                   </div>
                   <span className="text-base flex-grow truncate">Website</span>
                   <span className="ml-3">
-                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'website')?.Clicks || 0 : ''}
-                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalClickedWebsiteClicks|| 0} {t('clicks')}</span>
+                    <span className="text-[var(--main-color1)] mx-2">{hasProAccess ? profileAnalytics?.TotalClickedWebsiteClicks|| 0 : ''} {t('clicks')}</span>
                   </span>
                 </div>
               </div>
@@ -417,8 +423,7 @@ const AnalyticsPage = () => {
                   </div>
                   <span className="text-base flex-grow truncate">Save Contact</span>
                   <span className="ml-3">
-                    {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === 'save_contact')?.Clicks || 0 : ''}
-                    <span className="text-[var(--main-color1)] mx-2">{profileAnalytics?.TotalSavedContactClicks|| 0} {t('clicks')}</span>
+                    <span className="text-[var(--main-color1)] mx-2">{hasProAccess ? profileAnalytics?.TotalSavedContactClicks|| 0 : ''} {t('clicks')}</span>
                   </span>
                 </div>
               </div>
@@ -451,8 +456,8 @@ const AnalyticsPage = () => {
                       />
                     </div>
                     <span className="text-base flex-grow truncate">{link.title}</span>
-                    <span className="ml-3">
-                      {!hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
+                    <span className="ml-3 text-[var(--main-color1)]">
+                      {hasProAccess ? profileAnalytics?.Links?.find(a => a.Title === link.title)?.Clicks || 0 : ''}
                       <span className="text-[var(--main-color1)] mx-2">{t('clicks')}</span>
                     </span>
                   </div>
