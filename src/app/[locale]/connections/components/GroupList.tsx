@@ -7,6 +7,7 @@ import { GroupResponseDTO } from 'types';
 import { useSubscriptionStatus } from 'hooks';
 import { UnlockedButton } from 'components/subcriptions/subcriptionButtons';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 interface GroupListProps {
   groups: GroupResponseDTO[];
@@ -95,6 +96,14 @@ const GroupList: React.FC<GroupListProps> = ({
             />
           </svg>
         </div>
+        <Link
+                href="/group"
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+              >
+                <span className="text-center text-h4">{t('create') + ' +'}</span>
+              </Link>
       </div>
 
       {/* Groups List */}

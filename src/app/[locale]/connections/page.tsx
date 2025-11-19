@@ -119,29 +119,6 @@ const ConnectionsPage = () => {
             <ProfileInformation profileData={profileData} withEdit={false} withSwitch={true} />
           </div>
 
-          {/* Add Button */}
-          <div className="flex items-center justify-end mb-6">
-            {activeTab === TabType.GROUPS ? (
-              <Link
-                href="/group"
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
-              >
-                <span className="text-center text-h4">{t('create') + ' +'}</span>
-              </Link>
-            ) : (
-              <button
-                onClick={() => {
-                  setShowAutoConnectPopup(true);
-                }}
-                className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
-              >
-                <span className="text-center text-h4">{t('add') + ' +'}</span>
-              </button>
-            )}
-          </div>
-
           {/* Tabs */}
           <div className="mb-6">
             <nav className="-mb-px flex justify-around space-x-8">
@@ -184,6 +161,7 @@ const ConnectionsPage = () => {
                 isLoading={connectionsLoading}
                 onGetConnections={onGetConnections}
                 groups={groups}
+                onShowAutoConnectPopup={() => setShowAutoConnectPopup(true)}
               />
             )}
           </div>

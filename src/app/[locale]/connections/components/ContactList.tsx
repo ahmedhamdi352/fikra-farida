@@ -22,13 +22,15 @@ interface ContactListProps {
     connectUser2?: string;
   }) => void;
   groups: GroupResponseDTO[];
+  onShowAutoConnectPopup: () => void;
 }
 
 const ContactList: React.FC<ContactListProps> = ({
   contacts,
   isLoading,
   onGetConnections,
-  groups
+  groups,
+  onShowAutoConnectPopup
 }) => {
   const t = useTranslations('profile.connectionsPage');
   const siteData = useSiteData();
@@ -195,6 +197,7 @@ const ContactList: React.FC<ContactListProps> = ({
           </svg>
         </div>
 
+
         {/* Filter Dropdown */}
         <div className="relative" ref={filterRef}>
           <button
@@ -226,6 +229,13 @@ const ContactList: React.FC<ContactListProps> = ({
             onClearFilter={handleClearFilter}
           />
         </div>
+
+        <button
+          onClick={onShowAutoConnectPopup}
+          className="btn btn-ghost border bg-[--main-color1] text-center p-6 text-black rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+        >
+          <span className="text-center text-h4">{t('add') + ' +'}</span>
+        </button>
       </div>
 
       {/* Contacts List */}
