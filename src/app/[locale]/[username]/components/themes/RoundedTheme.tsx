@@ -7,6 +7,7 @@ import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import ExportButton from './ExportButton';
 import { useTranslations } from 'next-intl';
 import ActionButtons from './ActionButtons';
+import PreviewImage from 'assets/images/No_image_preview.jpg';
 interface RoundedThemeProps {
   profileData: ProfileForReadDTO;
   onUpdateVisitCount: (pk: string | number) => Promise<void>;
@@ -16,7 +17,7 @@ interface RoundedThemeProps {
 const RoundedTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: RoundedThemeProps) => {
   // Get the image URL from imageFilename
   const t = useTranslations('profile');
-  const imageUrl = profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : 'https://placehold.co/96x96/E0B850/FFFFFF?text=Profile';
+  const imageUrl = profileData?.imageFilename  && profileData.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : PreviewImage;
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 
   // Cover Photo Component

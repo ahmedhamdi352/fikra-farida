@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { ProButton, UpgradButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
 import { useTranslations } from 'next-intl';
+import PreviewImage from 'assets/images/No_image_preview.jpg';
 
 interface ProfileInformationProps {
   profileData?: ProfileForReadDTO;
@@ -259,7 +260,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                       </div>
                       {/* Lock Profile Toggle */}
                       {
-                        hasProAccess ? (
+                        hasProAccess || profileData?.IsLocked ? (
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
@@ -330,10 +331,10 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
       )}
       <div className="flex items-center gap-4">
         <div className="relative flex-shrink-0">
-          {profileData.imageFilename && (
+          
             <>
               <Image
-                src={`https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}`}
+                src={profileData.imageFilename && profileData.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : PreviewImage}
                 alt="Profile"
                 className="w-24 h-24 rounded-full bg-black"
                 width={100}
@@ -345,7 +346,7 @@ export default function ProfileInformation({ profileData, withEdit, withSwitch, 
                 </div>
               )}
             </>
-          )}
+          
         </div>
         <div className="flex flex-col py-2">
           <div className="flex items-center gap-2">

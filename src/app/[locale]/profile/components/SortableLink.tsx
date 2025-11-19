@@ -14,9 +14,11 @@ interface SortableLinkProps {
 }
 
 export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
+  const isDisabled = (link.sort || 0) === 0;
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: link.pk,
     animateLayoutChanges: () => false,
+    disabled: isDisabled,
   });
   const [mounted, setMounted] = useState(false);
 
@@ -59,10 +61,14 @@ export const SortableLink = ({ link, totalCount }: SortableLinkProps) => {
     >
       <div className="flex items-center px-4 py-2">
         <button
-          className="touch-none select-none -ml-1 p-1 text-[#B0A18E] hover:text-[#FEC400] active:text-[#FEC400] transition-colors mr-2
-                    md:mr-3 relative before:content-[''] before:absolute before:inset-[-8px] before:bg-transparent"
-          {...listeners}
+          className={`touch-none select-none -ml-1 p-1 transition-colors mr-2 md:mr-3 relative before:content-[''] before:absolute before:inset-[-8px] before:bg-transparent ${
+            isDisabled 
+              ? 'text-gray-500 cursor-not-allowed opacity-50' 
+              : 'text-[#B0A18E] hover:text-[#FEC400] active:text-[#FEC400]'
+          }`}
+          {...(!isDisabled ? listeners : {})}
           aria-label="Drag to reorder"
+          disabled={isDisabled}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

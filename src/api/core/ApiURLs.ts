@@ -34,4 +34,5 @@ export const ApiURLs = {
   visitCount: '/api/CustomLink/Visit',
   blogs: '/api/Blogs',
   updateUserVisits: '/api/Account/Visit',
+  updateEmail: '/api/Account/UpdateEmail',
 } as const;

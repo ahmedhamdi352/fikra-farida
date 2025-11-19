@@ -438,6 +438,7 @@
       "urlInvalid":"Please enter a valid URL",
       "urlRequired":"URL is required",
       "emailAddress":"Email Addresses",
+      "profileEmailAddress":"Profile Email Address",
       "phoneNumbers":"Phone Numbers",
       "websiteURLs":"Website URLs",
       "emailAddressPlaceholder":"Enter email address",

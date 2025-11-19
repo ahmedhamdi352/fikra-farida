@@ -33,6 +33,11 @@ export function useCreateProfileMutation() {
         return;
       }
 
+      if(!response.sucess) {
+        SnackbarUtils.error(response.message || 'Failed to create profile');
+        return;
+      }
+
       // Invalidate and refetch the profiles list
       await queryClient.invalidateQueries({
         queryKey: [ProfileService.getProfiles.queryKey],

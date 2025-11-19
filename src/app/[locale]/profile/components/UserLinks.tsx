@@ -38,7 +38,14 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
 
   useEffect(() => {
     if (profileLinks) {
-      const sortedLinks = [...(profileLinks || [])].sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    
+      const activeLinks = (profileLinks || []).filter(link => (link.sort || 0) > 0);
+      const inactiveLinks = (profileLinks || []).filter(link => (link.sort || 0) === 0);
+      
+    
+      const sortedActiveLinks = activeLinks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+      const sortedLinks = [...sortedActiveLinks, ...inactiveLinks];
+      
       setLinks(sortedLinks);
     }
   }, [profileLinks]);
@@ -67,10 +74,46 @@ export const UserLinks = ({ profileLinks, onLinksChange }: UserLinksProps) => {
       setLinks(items => {
         const oldIndex = items?.findIndex(item => item.pk === active.id);
         const newIndex = items?.findIndex(item => item.pk === over.id);
+        
+        const activeLink = items[oldIndex];
+        const overLink = items[newIndex];
+        
+        // Prevent dragging links with sort === 0
+        if (activeLink && (activeLink.sort || 0) === 0) {
+          return items;
+        }
+        
+        // Prevent dropping above links with sort === 0 (they should stay at bottom)
+        if (overLink && (overLink.sort || 0) === 0) {
+          // Find the first link with sort === 0 and place before it
+          const firstInactiveIndex = items.findIndex(item => (item.sort || 0) === 0);
+          if (firstInactiveIndex !== -1 && oldIndex < firstInactiveIndex) {
+            const newLinks = arrayMove(items, oldIndex, firstInactiveIndex - 1);
+            onLinksChange?.(newLinks);
+            // Only update sort for active links (sort > 0)
+            const activeLinks = newLinks.filter(link => (link.sort || 0) > 0);
+            const payload = activeLinks.map((link, index) => ({ pk: link.pk, sort: index + 1 }));
+            const payloadKey = JSON.stringify(payload);
+
+            if (updateTimerRef.current) {
+              clearTimeout(updateTimerRef.current);
+            }
+            updateTimerRef.current = setTimeout(() => {
+              if (lastPayloadRef.current !== payloadKey) {
+                lastPayloadRef.current = payloadKey;
+                onUpdateBulkLinksSort(payload);
+              }
+            }, 150);
+            return newLinks;
+          }
+          return items;
+        }
 
         const newLinks = arrayMove(items, oldIndex, newIndex);
         onLinksChange?.(newLinks);
-        const payload = newLinks.map((link, index) => ({ pk: link.pk, sort: index + 1 }));
+        // Only update sort for active links (sort > 0)
+        const activeLinks = newLinks.filter(link => (link.sort || 0) > 0);
+        const payload = activeLinks.map((link, index) => ({ pk: link.pk, sort: index + 1 }));
         const payloadKey = JSON.stringify(payload);
 
         // Debounce and de-duplicate identical payloads to avoid double calls

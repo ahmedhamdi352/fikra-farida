@@ -15,9 +15,6 @@ import { PhoneInput } from 'components/forms/phone-input';
 interface ProfileFormData {
   username: string;
   fullName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
   phoneNumber1: string;
 }
 
@@ -33,15 +30,6 @@ export default function ProfileForm() {
       .required(t('register.validation.usernameRequired'))
       .matches(/^[a-zA-Z0-9!@#$%^&*()\-_+=[\]{}|\\:;"'<>,.?/]*$/, t('register.validation.usernameEnglishOnly')),
     fullName: yup.string().required(t('register.validation.fullNameRequired')),
-    email: yup.string().required(t('register.validation.emailRequired')).email(t('register.validation.emailInvalid')),
-    password: yup
-      .string()
-      .required(t('register.validation.passwordRequired'))
-      .min(6, t('register.validation.passwordMin')),
-    confirmPassword: yup
-      .string()
-      .required(t('register.validation.passwordRequired'))
-      .oneOf([yup.ref('password')], t('register.validation.passwordMatch')),
     phoneNumber1: yup.string().required(t('register.validation.phoneRequired')),
   });
 
@@ -52,17 +40,15 @@ export default function ProfileForm() {
 
   const onSubmit = async (data: ProfileFormData) => {
     const registrationData = {
-      email: data.email,
       fullname: data.fullName,
       username: data.username,
-      password: data.password,
       phoneNumber1: data.phoneNumber1,
     };
     await onAddProfile(registrationData);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="h-[80vh] lg:h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 card-container">
         <div className="flex flex-col items-center">
           <Image
@@ -122,28 +108,6 @@ export default function ProfileForm() {
               }
             />
 
-            <TextInput
-              control={control}
-              name="email"
-              type="email"
-              placeholder={t('register.emailPlaceholder')}
-              icon={
-                <svg
-                  className="h-5 w-5 text-[var(--main-color1)]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-              }
-            />
-
             <PhoneInput
               name="phoneNumber1"
               control={control}
@@ -153,49 +117,6 @@ export default function ProfileForm() {
               disableDropdown={false}
             />
 
-            <TextInput
-              control={control}
-              name="password"
-              type="password"
-              placeholder={t('register.passwordPlaceholder')}
-              icon={
-                <svg
-                  className="h-5 w-5 text-[var(--main-color1)]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              }
-            />
-
-            <TextInput
-              control={control}
-              name="confirmPassword"
-              type="password"
-              placeholder={t('register.confirmPasswordPlaceholder')}
-              icon={
-                <svg
-                  className="h-5 w-5 text-[var(--main-color1)]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              }
-            />
           </div>
 
           <button

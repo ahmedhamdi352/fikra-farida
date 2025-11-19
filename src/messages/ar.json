@@ -444,6 +444,7 @@
       "urlInvalid":"يرجى إدخال رابط صالح",
       "urlRequired":"يرجى إدخال رابط",
       "emailAddress":"البريد الإلكتروني",
+      "profileEmailAddress":"البريد الإلكتروني الخاص بالحساب",
       "phoneNumbers":"رقم الهاتف",
       "websiteURLs":"الرابط الإلكتروني",
       "emailAddressPlaceholder":"أدخل البريد الإلكتروني",

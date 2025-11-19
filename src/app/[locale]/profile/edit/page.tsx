@@ -16,6 +16,8 @@ import { UnlockedButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import PreviewImage from 'assets/images/No_image_preview.jpg';
+import { useUpdateEmailMutation } from 'hooks/profile';
 
 export default function EditProfilePage() {
   const t = useTranslations('profile.editProfilePage');
@@ -23,8 +25,8 @@ export default function EditProfilePage() {
   const { onUploadProfileImage, isLoading: isUploadingProfileImage } = useUploadProfileImageMutation();
   const { onUploadCoverImage, isLoading: isUploadingCoverImage } = useUploadCoverImageMutation();
 
-  const [coverImageUrl, setCoverImageUrl] = useState(profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : ''); // Replace with your default
-  const [profileImageUrl, setProfileImageUrl] = useState(profileData?.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : ''); // Replace with your default
+  const [coverImageUrl, setCoverImageUrl] = useState(profileData?.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : PreviewImage); // Replace with your default
+  const [profileImageUrl, setProfileImageUrl] = useState(profileData?.imageFilename  && profileData.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : PreviewImage); // Replace with your default
   const [isUpdating, setIsUpdating] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
@@ -36,6 +38,7 @@ export default function EditProfilePage() {
   const customizationFormRef = useRef<CustomizationFormRef>(null);
 
   const { onUpdateProfile, isLoading: isUpdatingProfile } = useUpdateProfileMutation();
+  const { onUpdateEmail, isLoading: isUpdatingEmail } = useUpdateEmailMutation();
   const searchParams = useSearchParams();
   const customizationParam = searchParams?.get('customization');
 
@@ -118,6 +121,7 @@ export default function EditProfilePage() {
       }
 
       interface ContactFormData {
+        emailAddress?: string;
         showEmail: boolean;
         showPhone: boolean;
         showWebsite: boolean;
@@ -148,6 +152,10 @@ export default function EditProfilePage() {
       };
 
       if (isContactData(contactData)) {
+        // Add emailAddress if it exists
+        if (contactData.emailAddress) {
+          transformedContactData.emailAddress = contactData.emailAddress;
+        }
         transformedContactData.showEmail = contactData.showEmail;
         transformedContactData.showPhone = contactData.showPhone;
         transformedContactData.showWebsite = contactData.showWebsite;
@@ -189,6 +197,9 @@ export default function EditProfilePage() {
       };
 
       await onUpdateProfile(combinedData);
+      if (transformedContactData.emailAddress) {
+        await onUpdateEmail({ email: transformedContactData.emailAddress as string });
+      }
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error('Failed to update profile');
@@ -254,13 +265,13 @@ export default function EditProfilePage() {
 
   useEffect(() => {
     if (profileData) {
-      setProfileImageUrl(profileData.imageFilename ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : '');
-      setCoverImageUrl(profileData.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : '');
+      setProfileImageUrl(profileData.imageFilename  && profileData.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : PreviewImage);
+      setCoverImageUrl(profileData.coverImage ? `https://fikrafarida.com/Media/Profiles/${profileData.coverImage}` : PreviewImage);
     }
   }, [profileData])
 
-  if (isLoading || isUpdatingProfile || isUploadingProfileImage || isUploadingCoverImage) {
-    return <LoadingOverlay isLoading={isLoading || isUpdatingProfile || isUploadingProfileImage || isUploadingCoverImage} />;
+  if (isLoading || isUpdatingEmail || isUpdatingProfile || isUploadingProfileImage || isUploadingCoverImage) {
+    return <LoadingOverlay isLoading={isLoading || isUpdatingEmail || isUpdatingProfile || isUploadingProfileImage || isUploadingCoverImage} />;
   }
 
   return (
@@ -332,29 +343,6 @@ export default function EditProfilePage() {
         </div>
 
         <div className="px-6 py-5 ">
-          {/* <div className='flex justify-center gap-4 items-center w-full mb-6'>
-            <div className='flex flex-col gap-1 w-[50%]'>
-              <p className='text-[var(--main-color1)] font-normal text-[12px]'>
-                profile title
-              </p>
-              <div className='flex justify-start items-center border border-[var(--main-color1)] rounded-[5px] p-2'>
-                <p className='text-[var(--main-color1)] font-semibold pr-6 text-start text-[12px]'>
-                  {profileData?.fullname}
-                </p>
-              </div>
-            </div>
-
-            <div className='flex flex-col gap-1 w-[50%]'>
-              <p className='text-[var(--main-color1)] font-normal text-[12px]'>
-                User Name
-              </p>
-              <div className='flex justify-start items-center border border-[var(--main-color1)] rounded-[5px] p-2'>
-                <p className='text-[var(--main-color1)] font-semibold pr-6 text-start text-[12px]'>
-                  {profileData?.username}
-                </p>
-              </div>
-            </div>
-          </div> */}
 
           <div className="flex flex-col gap-2">
             <CollapsibleSection

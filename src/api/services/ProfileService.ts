@@ -108,7 +108,12 @@ async function getProfiles() {
 }
 
 async function addProfile(profile: ProfileForCreateDTO) {
-  return await httpClient.post<ProfileForReadDTO>(`${ApiURLs.createProfile}`, profile);
+  return await httpClient.post<{
+    success?: boolean;
+    sucess?: boolean;
+    errorcode: number;
+    message: string;
+  }>(`${ApiURLs.createProfile}`, profile);
 }
 
 async function getAnalytics(payload: { StartDate: string; EndDate: string }) {
@@ -155,6 +160,10 @@ async function updateUserVisits(payload: { userpk: number, action: number }) {
   return await httpClient.post<any>(`${ApiURLs.updateUserVisits}?userpk=${payload.userpk}&action=${payload.action}`);
 }
 
+async function updateEmail(payload: { email: string }) {
+  return await httpClient.post<any>(`${ApiURLs.updateEmail}`, payload);
+}
+
 export const ProfileService = {
   getProfile: {
     request: getProfile,
@@ -163,6 +172,10 @@ export const ProfileService = {
   updateProfile: {
     request: updateProfile,
     mutationKey: 'update-profile',
+  },
+  updateEmail: {
+    request: updateEmail,
+    mutationKey: 'update-email',
   },
   addProfile: {
     request: addProfile,

@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { ProButton } from 'components/subcriptions/subcriptionButtons';
 import { useSubscriptionStatus } from 'hooks';
 import { useTranslations } from 'next-intl';
+import PreviewImage from 'assets/images/No_image_preview.jpg';
 interface ProfileSwitcherProps {
   isOpen: boolean;
   onClose: () => void;
@@ -154,21 +155,27 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
         <div className="space-y-4">
 
           {/* Existing Profiles */}
-          {profilesData?.map((profile) => (
+          {profilesData?.map((profile, index) => {
+            const isFirstProfile = index === 0;
+            const isDisabled = !hasProAccess && !isFirstProfile;
+            
+            return (
             <div
               key={profile.userPk}
-              className={`px-4 py-6 rounded-lg cursor-pointer ${activeProfile?.userPk === profile.userPk
+              className={`px-4 py-6 rounded-lg ${isDisabled 
+                ? 'opacity-50 cursor-not-allowed' 
+                : 'cursor-pointer'} ${activeProfile?.userPk === profile.userPk
                 ? 'border-2 border-[#FEC400] bg-[#646458]'
                 : 'bg-[#646458]/70 hover:bg-[#646458]'
                 }`}
-              onClick={() => handleProfileSwitch(profile)}
+              onClick={() => !isDisabled && handleProfileSwitch(profile)}
             >
               <div className="flex items-center gap-3">
                 <div className="relative flex-shrink-0">
                   <div className="w-16 h-16 rounded-full bg-[#E0B850] flex items-center justify-center relative overflow-hidden">
-                    {profile.imageFilename && profile.imageFilename !== 'avatar1.png' ? (
+                  
                       <Image
-                        src={`https://fikrafarida.com/Media/Profiles/${profile.imageFilename}`}
+                        src={profile.imageFilename && profile.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profile.imageFilename}` : PreviewImage}
                         alt={profile.fullname}
                         className="w-full h-full object-cover"
                         width={64}
@@ -178,10 +185,7 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
                           e.currentTarget.nextElementSibling?.classList.remove('hidden');
                         }}
                       />
-                    ) : null}
-                    <span className="text-2xl text-white font-bold absolute inset-0 flex items-center justify-center">
-                      {profile.fullname?.charAt(0) || 'P'}
-                    </span>
+               
                   </div>
                 </div>
                 <div>
@@ -204,7 +208,8 @@ export default function ProfileSwitcher({ isOpen, onClose }: ProfileSwitcherProp
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
 
           {/* Add New Profile Button */}
           {profiles.length < 5 && <div

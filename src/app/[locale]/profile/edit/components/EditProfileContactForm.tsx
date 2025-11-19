@@ -16,7 +16,7 @@ export interface ContactField {
 }
 
 export interface ProfileContactFormData {
-
+  emailAddress: string;
   emails: ContactField[];
   phones: ContactField[];
   websites: ContactField[];
@@ -35,8 +35,8 @@ interface EditProfileContactFormProps {
 const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfileContactFormProps>(({ initialData, hasProAccess }, ref) => {
   const t = useTranslations('profile.editProfilePage');
   const defaultValues: ProfileContactFormData = {
-
-    emails: initialData?.email ? [{ value: initialData.email }] : [{ value: '' }],
+    emailAddress: initialData?.email || '',
+    emails: initialData?.profileEmail ? [{ value: initialData.profileEmail || '' }] : [{ value: '' }],
     phones: [{ value: initialData?.phoneNumber1 || '' }],
     websites: initialData?.websiteUrl ? [{ value: initialData.websiteUrl }] : [{ value: '' }]
   };
@@ -213,10 +213,17 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
 
   return (
     <form id="profile-contact-form" className="space-y-6">
+      <TextInput
+        name="emailAddress"
+        type="email"
+        control={control}
+        placeholder={t('emailAddressPlaceholder')}
+        label={t('emailAddress')}
+      />
       {renderFieldGroup(
         emailFields,
         'emails',
-        t('emailAddress'),
+        t('profileEmailAddress'),
         t('emailAddressPlaceholder'),
         () => appendEmail({ value: '' }),
         (index) => removeEmail(index),
