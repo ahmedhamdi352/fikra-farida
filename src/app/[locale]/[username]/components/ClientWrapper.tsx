@@ -160,7 +160,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
     if (!profileData) return;
     try {
 
-      alert('Generating contact with photo...');
+      // alert('Generating contact with photo...');
       
       const vCardBlob = await generateVCard(profileData);
       
@@ -174,7 +174,7 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
       saveAs(vCardBlob, `${cleanName}.vcf`);
       
       // Show success message
-      alert('Contact saved successfully with photo!');
+      // alert('Contact saved successfully with photo!');
     } catch (error) {
       console.error('Error saving contact:', error);
       alert('Failed to save contact. Please try again.');

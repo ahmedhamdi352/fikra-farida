@@ -148,7 +148,7 @@ const ContactList: React.FC<ContactListProps> = ({
   const handleSaveContact = async (contact: ConnectionForCreateDTO) => {
     if (!contact) return;
     try {
-      alert('Generating contact...');
+      // alert('Generating contact...');
       
       const vCardBlob = await generateVCard(contact);
       
@@ -158,7 +158,7 @@ const ContactList: React.FC<ContactListProps> = ({
         .trim();
       
       saveAs(vCardBlob, `${cleanName}.vcf`);
-      alert('Contact saved successfully!');
+      // alert('Contact saved successfully!');
     } catch (error) {
       console.error('Error saving contact:', error);
       alert('Failed to save contact. Please try again.');

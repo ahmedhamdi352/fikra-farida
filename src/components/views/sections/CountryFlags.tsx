@@ -50,7 +50,7 @@ export default function CountryFlags() {
                 >
                   <Image
                     src={country.flag}
-                    alt={t(country.translationKey)}
+                    alt={`${country?.translationKey} flag`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 45vw, (max-width: 1100px) 30vw, 33vw"
