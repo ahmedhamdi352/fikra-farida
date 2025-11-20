@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
 import bgImage from 'assets/images/flags/Map.png';
 import egyptFlag from 'assets/images/flags/eg.png';
 import saudiFlag from 'assets/images/flags/sa.png';
@@ -21,7 +20,6 @@ const countries = [
 ];
 
 export default function CountryFlags() {
-  const t = useTranslations('home.countries');
 
   return (
     <section className="lg:py-16">
