@@ -7,7 +7,7 @@ import saveAs from 'file-saver';
 import ViewContactPopup from './ViewContactPopup';
 import AddToGroupPopup from './AddToGroupPopup';
 import { DateUtils } from 'utils';
-import DateFilterPopup from 'components/DateFilterPopup';
+import DateFilterButton from 'components/DateFilterButton';
 import { useSiteData } from 'context/SiteContext';
 import { useTranslations } from 'next-intl';
 import { GroupResponseDTO } from 'types';
@@ -43,21 +43,16 @@ const ContactList: React.FC<ContactListProps> = ({
   const [showAddContactToGroupPopup, setShowAddContactToGroupPopup] = useState(false);
   const [selectedContactPk, setSelectedContactPk] = useState<number | null>(null);
   const [selectedContact] = useState<ConnectionForCreateDTO | null>(null);
-  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
   const [isFilterApplied, setIsFilterApplied] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
-  const filterRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpenMenuId(null);
-      }
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-        setShowFilterDropdown(false);
       }
     };
 
@@ -88,7 +83,6 @@ const ContactList: React.FC<ContactListProps> = ({
         connectUser2: siteData?.connectUser2 ?? undefined,
       });
 
-      setShowFilterDropdown(false);
       setIsFilterApplied(true);
     } catch (error) {
       console.error('Error applying date filter:', error);
@@ -199,36 +193,13 @@ const ContactList: React.FC<ContactListProps> = ({
 
 
         {/* Filter Dropdown */}
-        <div className="relative" ref={filterRef}>
-          <button
-            onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-            className={`p-2.5 border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[--main-color1] ${isFilterApplied
-              ? 'border-[--main-color1] bg-[--main-color1] text-white'
-              : 'border-[--main-color1] hover:bg-[--main-color1] hover:bg-opacity-10 text-[--main-color1]'
-              }`}
-            title={t('filterByDate')}
-          >
-            <svg
-              className="h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M3 6h18M7 12h10m-7 6h4" />
-            </svg>
-          </button>
-
-          <DateFilterPopup
-            showFilterDropdown={showFilterDropdown}
-            dateFilter={dateFilter}
-            onClose={() => setShowFilterDropdown(false)}
-            onDateFilterChange={setDateFilter}
-            onApplyFilter={handleApplyFilter}
-            onClearFilter={handleClearFilter}
-          />
-        </div>
+        <DateFilterButton
+          dateFilter={dateFilter}
+          onDateFilterChange={setDateFilter}
+          onApplyFilter={handleApplyFilter}
+          onClearFilter={handleClearFilter}
+          isFilterApplied={isFilterApplied}
+        />
 
         <button
           onClick={onShowAutoConnectPopup}

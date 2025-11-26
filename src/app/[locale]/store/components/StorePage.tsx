@@ -17,6 +17,8 @@ interface App {
   name: string;
   iconurl: string;
   category: string;
+  type?: string;
+  url?: string;
 }
 
 export default function StorePage() {
@@ -31,68 +33,90 @@ export default function StorePage() {
   const categories: Category[] = [
     { id: 'socialMedia', name: t('socialMedia') },
     { id: 'chatting', name: t('chatting') },
-    { id: 'music', name: t('music') },
     { id: 'business', name: t('business') },
     { id: 'meeting', name: t('meeting') },
-    { id: 'appsSoftware', name: t('appsSoftware') },
-    { id: 'custom', name: t('custom') },
+    { id: 'payment', name: t('payment') },
+    { id: 'creative', name: t('creative') },
+    { id: 'music', name: t('music') },
+    { id: 'workSpace', name: t('workSpace') },
   ];
 
   const apps: App[] = [
     //social media
-    { id: 'facebook', name: 'Facebook', iconurl: 'facebook.svg', category: 'socialMedia' },
-    { id: 'instagram', name: 'Instagram', iconurl: 'instagram.svg', category: 'socialMedia' },
-    { id: 'youtube', name: 'YouTube', iconurl: 'youtube.svg', category: 'socialMedia' },
-    { id: 'snapchat', name: 'Snapchat', iconurl: 'snapchat.svg', category: 'socialMedia' },
-    { id: 'x', name: 'X', iconurl: 'twitter.svg', category: 'socialMedia' },
-    { id: 'tiktok', name: 'TikTok', iconurl: 'tiktok.svg', category: 'socialMedia' },
-    { id: 'pinterest', name: 'Pinterest', iconurl: 'pinterest.svg', category: 'socialMedia' },
-    { id: 'linkedin', name: 'LinkedIn', iconurl: 'linkedin.svg', category: 'socialMedia' },
-    { id: 'quora', name: 'Quora', iconurl: 'quora.svg', category: 'socialMedia' },
-    { id: 'reddit', name: 'Reddit', iconurl: 'reddit.svg', category: 'socialMedia' },
-    { id: 'clubhouse', name: 'Clubhouse', iconurl: 'clubhouse.svg', category: 'socialMedia' },
+    { id: 'facebook', name: 'Facebook', iconurl: 'facebook.svg',type: 'link', category: 'socialMedia' },
+    { id: 'instagram', name: 'Instagram', iconurl: 'instagram.svg', type: 'username', category: 'socialMedia' , url:'https://instagram.com/' },
+    { id: 'youtube', name: 'YouTube', iconurl: 'youtube.svg',type: 'link', category: 'socialMedia' },
+    { id: 'tiktok', name: 'TikTok', iconurl: 'tiktok.svg',type: 'username', category: 'socialMedia' , url:'https://tiktok.com/' },
+    { id: 'x', name: 'X', iconurl: 'x.svg',type: 'username', category: 'socialMedia' , url:'https://x.com/' },
+    { id: 'snapchat', name: 'Snapchat', iconurl: 'snapchat.svg',type: 'username', category: 'socialMedia' , url:'https://snapchat.com/add/' },
+    { id: 'linkedin', name: 'LinkedIn', iconurl: 'linkedin.svg',type: 'link', category: 'socialMedia' },
+    { id: 'threads', name: 'Threads', iconurl: 'threads.svg',type: 'username', category: 'socialMedia' , url:'https://threads.net/' },
+    { id: 'clubhouse', name: 'Clubhouse', iconurl: 'clubhouse.svg', type: 'link', category: 'socialMedia' },
+    {id: 'vimeo', name: 'Vimeo', iconurl: 'vimeo.svg', type: 'link', category: 'socialMedia' },
+   
     //chatting
-    { id: 'whatsapp', name: 'WhatsApp', iconurl: 'whatsapp.svg', category: 'chatting' },
-    { id: 'messenger', name: 'Messenger', iconurl: 'messenger.svg', category: 'chatting' },
-    { id: 'telegram', name: 'Telegram', iconurl: 'telegram.svg', category: 'chatting' },
-    { id: 'signal', name: 'Signal', iconurl: 'signal.svg', category: 'chatting' },
-    { id: 'webchat', name: 'WebChat', iconurl: 'wechat.svg', category: 'chatting' },
-    { id: 'line', name: 'Line', iconurl: 'line.svg', category: 'chatting' },
-    { id: 'imo', name: 'IMO', iconurl: 'imo.svg', category: 'chatting' },
-    { id: 'viber', name: 'Viber', iconurl: 'viber.svg', category: 'chatting' },
-    //music
-    { id: 'spotify', name: 'Spotify', iconurl: 'spotify.svg', category: 'music' },
-    { id: 'anghami', name: 'Anghami', iconurl: 'anghami.svg', category: 'music' },
-    { id: 'castbox', name: 'Castbox', iconurl: 'castbox.svg', category: 'music' },
-    { id: 'soundcloud', name: 'Soundcloud', iconurl: 'soundcloud.svg', category: 'music' },
-    { id: 'appleMusic', name: 'Apple Music', iconurl: 'apple.svg', category: 'music' },
+    { id: 'mergencyPhone', name: 'Emergency Phone',  iconurl: 'phone.svg', type:'number', category: 'chatting' },
+    { id: 'whatsapp', name: 'WhatsApp', iconurl: 'whatsapp.svg', type: 'number', category: 'chatting' },
+    { id: 'messenger', name: 'Messenger', iconurl: 'messenger.svg', type: 'link', category: 'chatting' },
+    { id: 'telegram', name: 'Telegram', iconurl: 'telegram.svg', type: 'username', category: 'chatting', url:'https://t.me/' },
+    { id: 'webchat', name: 'WebChat', iconurl: 'wechat.svg', type:'link', category: 'chatting' },
+    { id: 'viber', name: 'Viber', iconurl: 'viber.svg', type:'number', category: 'chatting' },
+    {id:'faceTime', name: 'FaceTime', iconurl: 'facetime.svg', type:'number', category: 'chatting' },
+    { id: 'imo', name: 'IMO', iconurl: 'imo.svg', type:'number', category: 'chatting' },
+    { id: 'line', name: 'Line', iconurl: 'line.svg', type:'number', category: 'chatting' },
+  
     //business
-    { id: 'businessPhone', name: 'Business Phone', iconurl: 'phone.svg', category: 'business' },
-    { id: 'businessEmail', name: 'Business Email', iconurl: 'email.svg', category: 'business' },
-    { id: 'website', name: 'website', iconurl: 'globe.svg', category: 'business' },
-    { id: 'hotline', name: 'hotline', iconurl: 'hotline.svg', category: 'business' },
-    { id: 'address', name: 'address', iconurl: 'map.svg', category: 'business' },
-    { id: 'paypal', name: 'paypal', iconurl: 'paypal.svg', category: 'business' },
-    { id: 'medium', name: 'medium', iconurl: 'medium.svg', category: 'business' },
-    { id: 'ted', name: 'TED', iconurl: 'ted.svg', category: 'business' },
-    //meeting
-    { id: 'skype', name: 'Skype', iconurl: 'skype.svg', category: 'meeting' },
-    { id: 'zoom', name: 'Zoom', iconurl: 'zoom.svg', category: 'meeting' },
-    { id: 'googleMeet', name: 'Google Meet', iconurl: 'googlemeet.svg', category: 'meeting' },
-    { id: 'slack', name: 'Slack', iconurl: 'slack.svg', category: 'meeting' },
-    { id: 'faceTime', name: 'FaceTime', iconurl: 'facetime.svg', category: 'meeting' },
+    { id: 'website', name: 'website', iconurl: 'globe.svg', type:'link', category: 'business' },
+    { id: 'businessEmail', name: 'Business Email', iconurl: 'email.svg', type:'email', category: 'business' },
+    { id: 'businessPhone', name: 'Business Phone', iconurl: 'phone.svg', type:'number', category: 'business' },
+    { id: 'address', name: 'Address Location', iconurl: 'map.svg', type:'link' ,category: 'business' },
+    {id:'WA Business', name: 'WhatsApp Business', iconurl: 'whatsappBusiness.svg', type:'number', category: 'business' },
+    {id:"gmail", name: 'Gmail', iconurl: 'gmail.svg', type:'email', category: 'business' },
+    {id:'googleReviews', name: 'Google Reviews', iconurl: 'googleReviews.svg', type:'link', category: 'business' },
+    {id:'Trustpilot', name: 'Trustpilot', iconurl: 'trustpilot.svg', type:'link', category: 'business' },
+    { id: 'notion', name: 'Notion', iconurl: 'notion.svg', type:'link', category: 'business' },
+    {id:'googleForms', name: 'Google Forms', iconurl: 'googleForms.svg', type:'link', category: 'business' },
+    { id: 'appStore', name: 'App Store', iconurl: 'appstore.svg', type:'link', category: 'business' },
+    { id: 'googlePlay', name: 'Google Play', iconurl: 'googleplay.svg', type:'link', category: 'business' },
 
-    //apps&software
-    { id: 'googlePlay', name: 'Google Play', iconurl: 'googleplay.svg', category: 'appsSoftware' },
-    { id: 'appStore', name: 'App Store', iconurl: 'appstore.svg', category: 'appsSoftware' },
-    { id: 'notion', name: 'Notion', iconurl: 'notion.svg', category: 'appsSoftware' },
-    { id: 'github', name: 'Github', iconurl: 'github.svg', category: 'appsSoftware' },
-    { id: 'gitlab', name: 'Gitlab', iconurl: 'gitlab.svg', category: 'appsSoftware' },
-    { id: 'bitbucket', name: 'Bitbucket', iconurl: 'bitbucket.svg', category: 'appsSoftware' },
-    { id: 'stackoverflow', name: 'Stackoverflow', iconurl: 'stackoverflow.svg', category: 'appsSoftware' },
+    //meeting
+    { id: 'zoom', name: 'Zoom', iconurl: 'zoom.svg', type:'link', category: 'meeting' },
+    { id: 'googleMeet', name: 'Google Meet', iconurl: 'googlemeet.svg', type:'link', category: 'meeting' },
+    { id: 'slack', name: 'Slack', iconurl: 'slack.svg', type:'link', category: 'meeting' },
+    {id:'calendly', name: 'Calendly', iconurl: 'calendly.svg', type:'link', category: 'meeting' },
+    { id: 'skype', name: 'Skype', iconurl: 'skype.svg', type:'link', category: 'meeting' },
+    { id: 'teams', name: 'Teams', iconurl: 'teams.svg', type:'link', category: 'meeting' },
+
+    //payment
+    { id: 'instapay', name: 'Instapay', iconurl: 'instapay.svg', type:'link', category: 'payment' },
+    { id: 'telda', name: 'Telda', iconurl: 'telda.svg', type:'link', category: 'payment' },
+    { id: 'wallets', name: 'Wallets', iconurl: 'wallets.svg', type:'number', category: 'payment' },
+    { id: 'cashApp', name: 'Cash App', iconurl: 'cashApp.svg', type:'link', category: 'payment' },
+    {id:'paypal', name: 'Paypal', iconurl: 'paypal.svg', type:'link', category: 'payment' },
+
+
+    //creative
+    { id: 'figma', name: 'Figma', iconurl: 'figma.svg', type:'link', category: 'creative' },
+    { id: 'dribbble', name: 'Dribbble', iconurl: 'dribbble.svg', type:'link', category: 'creative' },
+    { id: 'behance', name: 'Behance', iconurl: 'behance.svg', type:'link', category: 'creative' },
+    { id: 'podcasts', name: 'Podcasts', iconurl: 'podcasts.svg', type:'link', category: 'creative' },
+    { id: 'gitHub', name: 'GitHub', iconurl: 'github.svg', type:'link', category: 'creative' },
+    { id: 'pinterest', name: 'Pinterest', iconurl: 'pinterest.svg', type:'link', category: 'creative' },
+    { id: 'gitLab', name: 'GitLab', iconurl: 'gitlab.svg', type:'link', category: 'creative' },
+    { id: 'medium', name: 'Medium', iconurl: 'medium.svg', type:'link', category: 'creative' },
+    { id: 'ted', name: 'TED', iconurl: 'ted.svg', type:'link', category: 'creative' },
+    // { id: 'StackOverflow', name: 'StackOverflow', iconurl: 'stackoverflow.svg', category: 'creative' },
+
+      //music
+      { id: 'spotify', name: 'Spotify', iconurl: 'spotify.svg', type:'username', category: 'music' },
+      { id: 'appleMusic', name: 'Apple Music', iconurl: 'apple.svg', type:'link', category: 'music' },
+      { id: 'soundcloud', name: 'Soundcloud', iconurl: 'soundcloud.svg', type:'username', category: 'music' },
+      { id: 'anghami', name: 'Anghami', iconurl: 'anghami.svg', type:'username', category: 'music' },
+      { id: 'castbox', name: 'Castbox', iconurl: 'castbox.svg', type:'link', category: 'music' },
+      {id:'youtubeMusic', name: 'YouTube Music', iconurl: 'youtubeMusic.svg', type:'link', category: 'music' },
     //custom
-    { id: 'addALink', name: 'Add a link', iconurl: 'link.svg', category: 'custom' },
-    { id: 'addAFile', name: 'Add a file', iconurl: 'file.svg', category: 'custom' },
+    { id: 'addALink', name: 'Add a link', iconurl: 'link.svg', type:'customLink', category: 'workSpace' },
+    { id: 'addAFile', name: 'Add a file', iconurl: 'file.svg', type:'customFile', category: 'workSpace' },
   ];
 
   useEffect(() => {

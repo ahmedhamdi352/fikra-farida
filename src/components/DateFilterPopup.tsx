@@ -29,7 +29,10 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
       {/* Mobile Backdrop */}
       <div className="fixed inset-0 bg-black bg-opacity-25 z-40 sm:hidden" onClick={onClose} />
 
-      <div className="fixed bottom-0 left-0 right-0 sm:absolute sm:top-full sm:right-0 sm:bottom-auto sm:left-auto mt-0 sm:mt-2 w-full sm:w-80 md:w-96 bg-white border-0 sm:border border-[--main-color1] rounded-t-2xl sm:rounded-lg shadow-2xl sm:shadow-xl z-50 transform transition-transform duration-300 ease-out translate-y-0 sm:translate-y-0">
+      <div 
+        className="fixed bottom-0 left-0 right-0 sm:absolute sm:top-full sm:right-0 sm:bottom-auto sm:left-auto mt-0 sm:mt-2 w-full sm:w-80 md:w-96 bg-white border-0 sm:border border-[--main-color1] rounded-t-2xl sm:rounded-lg shadow-2xl sm:shadow-xl z-[100] transform transition-transform duration-300 ease-out translate-y-0 sm:translate-y-0"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Mobile Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 sm:hidden">
           <h3 className="text-lg font-semibold text-gray-900">Filter by Date</h3>
@@ -45,7 +48,7 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
 
         <div className="p-4 sm:p-4 space-y-4 max-h-[70vh] sm:max-h-none overflow-y-auto">
           {/* Date Inputs Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
               <div className="relative w-[320px]">
@@ -53,20 +56,10 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
                   type="date"
                   value={dateFilter.from}
                   onChange={(e) => onDateFilterChange({ ...dateFilter, from: e.target.value })}
+                  onClick={(e) => e.stopPropagation()}
                   className="h-[40px] w-full p-3 sm:p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-base sm:text-sm text-[var(--main-color1)]"
                 />
-                <svg
-                  className="absolute left-3 top-3.5 sm:top-2.5 h-5 w-5 text-[--main-color1] pointer-events-none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+    
               </div>
             </div>
 
@@ -77,20 +70,11 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
                   type="date"
                   value={dateFilter.to}
                   onChange={(e) => onDateFilterChange({ ...dateFilter, to: e.target.value })}
+                  onClick={(e) => e.stopPropagation()}
                   min={dateFilter.from}
                   className="h-[40px] w-full p-3 sm:p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-base sm:text-sm text-[var(--main-color1)]"
                 />
-                <svg
-                  className="absolute left-3 top-3.5 sm:top-2.5 h-5 w-5 text-[--main-color1] pointer-events-none"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+
               </div>
             </div>
           </div>

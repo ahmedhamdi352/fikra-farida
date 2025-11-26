@@ -1,15 +1,18 @@
-import { MutableRefObject, useState } from 'react';
+import { MutableRefObject, useState, useRef } from 'react';
 import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import Image from 'next/image';
 import { useAddLinkMutation, useUpdateLinkMutation, useDeleteLinkMutation } from 'hooks/links';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import { useTranslations } from 'next-intl';
+import { LinksService } from 'api/services/LinksService';
 
 interface App {
   id: string;
   name: string;
   iconurl: string;
   category: string;
+  type?: string;
+  url?: string;
 }
 
 interface Category {
@@ -28,9 +31,20 @@ interface StoreItemProps {
 
 const getButtonConfig = (
   appId: string,
-  t: ReturnType<typeof useTranslations<'storePage'>>,
+  appType?: string,
+  appIconUrl?: string,
+  t?: ReturnType<typeof useTranslations<'storePage'>>,
   profileData?: { links?: ProfileLink[] }
 ): { type: 'add' | 'update'; label: string; color: string } => {
+  if (!t) {
+    return { type: 'add', label: 'Add', color: 'bg-[--main-color1]' };
+  }
+
+  // For customLink and customFile, always show "Add" since users can add multiple
+  if (appType === 'customLink' || appType === 'customFile') {
+    return { type: 'add', label: t('add'), color: 'bg-[--main-color1]' };
+  }
+
   // Function to check if an app exists in the user's profile links
   const getProfileLink = (appId: string): ProfileLink | undefined => {
     if (!profileData?.links) return undefined;
@@ -46,120 +60,39 @@ const getButtonConfig = (
   return { type: 'update', label: t('update'), color: 'bg-[--main-color1]' };
 };
 
-// Function to construct the proper URL for each platform type
-const constructSocialMediaUrl = (platform: string, username: string): string => {
-  // Remove @ symbol if present for social media handles
-  const cleanUsername = username.startsWith('@') ? username.substring(1) : username;
-
-  // Convert platform to lowercase for case-insensitive matching
-  const platformLower = platform.toLowerCase();
-
-  // Special handling for phone numbers
-  if (platformLower === 'businessphone' || platformLower === 'hotline') {
-    // Clean the phone number - remove spaces, dashes, parentheses
-    const cleanPhone = cleanUsername.replace(/[\s\-()]/g, '');
-    return `tel:${cleanPhone}`;
-  }
-
-  // Special handling for email
-  if (platformLower === 'businessemail') {
-    return `mailto:${cleanUsername}`;
-  }
-
-  // Special handling for maps/address - use as is
-  if (platformLower === 'address') {
-    // For maps, we use the full URL as entered by the user without modification
-    return cleanUsername;
-  }
-
-  // Map of platform IDs to their URL formats
-  const platformUrlFormats: Record<string, string> = {
-    // Social Media
-    'facebook': 'https://facebook.com/',
-    'instagram': 'https://instagram.com/',
-    'twitter': 'https://twitter.com/',
-    'x': 'https://x.com/',
-    'linkedin': 'https://linkedin.com/in/',
-    'youtube': 'https://youtube.com/',
-    'tiktok': 'https://tiktok.com/@',
-    'pinterest': 'https://pinterest.com/',
-    'snapchat': 'https://snapchat.com/add/',
-    'quora': 'https://quora.com/profile/',
-    'reddit': 'https://reddit.com/user/',
-    'clubhouse': 'https://clubhouse.com/@',
-
-    // Chatting
-    'whatsapp': 'https://wa.me/',
-    'messenger': 'https://m.me/',
-    'telegram': 'https://t.me/',
-    'signal': 'https://signal.me/#p/',
-    'webchat': 'https://web.wechat.com/',
-    'line': 'https://line.me/ti/p/',
-    'imo': 'https://imo.im/',
-    'viber': 'viber://chat?number=',
-
-    // Music
-    'spotify': 'https://open.spotify.com/user/',
-    'anghami': 'https://play.anghami.com/',
-    'castbox': 'https://castbox.fm/',
-    'soundcloud': 'https://soundcloud.com/',
-    'applemusic': 'https://music.apple.com/',
-
-    // Business
-    'website': '',
-    'paypal': 'https://paypal.me/',
-    'medium': 'https://medium.com/@',
-    'ted': 'https://ted.com/',
-
-    // Meeting
-    'skype': 'skype:',
-    'zoom': 'https://zoom.us/j/',
-    'googlemeet': 'https://meet.google.com/',
-    'slack': 'https://slack.com/app_redirect?channel=',
-    'facetime': 'facetime:',
-
-    // Apps & Software
-    'googleplay': 'https://play.google.com/store/apps/details?id=',
-    'appstore': 'https://apps.apple.com/app/',
-    'notion': 'https://notion.so/',
-    'github': 'https://github.com/',
-    'gitlab': 'https://gitlab.com/',
-    'bitbucket': 'https://bitbucket.org/',
-    'stackoverflow': 'https://stackoverflow.com/users/',
-  };
-
-  // Get the URL format for the platform, or use the username as is for custom/unknown platforms
-  const urlFormat = platformUrlFormats[platformLower] || '';
-
-  // For custom websites or platforms without a specific format
-  if (platformLower === 'website' || platformLower === 'addalink' || !urlFormat) {
-    // If it's already a full URL, use it as is
-    if (cleanUsername.startsWith('http://') || cleanUsername.startsWith('https://')) {
-      return cleanUsername;
-    }
-    // Otherwise, add https:// prefix
-    return `https://${cleanUsername}`;
-  }
-
-  // For all other platforms, append the username to the URL format
-  return urlFormat + cleanUsername;
-};
-
 const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileData }: StoreItemProps): React.ReactNode => {
   const t = useTranslations('storePage');
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [username, setUsername] = useState('');
+  const [linkName, setLinkName] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { onAddLink, isLoading: isAddingLoading } = useAddLinkMutation();
   const { onUpdateLink, isLoading: isUpdatingLoading } = useUpdateLinkMutation();
   const { onDeleteLink, isLoading: isDeletingLoading } = useDeleteLinkMutation();
-  const isSubmittingLoading = isAddingLoading || isUpdatingLoading || isDeletingLoading;
+  const isSubmittingLoading = isAddingLoading || isUpdatingLoading || isDeletingLoading || isUploading;
 
   // Function to get existing link data if it exists
-  const getExistingLinkData = (appId: string): ProfileLink | undefined => {
+  const getExistingLinkData = (appId: string, appIconUrl?: string): ProfileLink | undefined => {
     if (!profileData?.links) return undefined;
+    // For customLink and customFile, match by iconurl since title might be custom
+    if (appId === 'addALink' || appId === 'addAFile') {
+      return profileData.links.find(link => link.iconurl === appIconUrl);
+    }
+    // For other apps, match by title
     return profileData.links.find(link => link.title.toLowerCase() === appId.toLowerCase());
+  };
+
+  // Extract username from URL for username type apps
+  const extractUsernameFromUrl = (url: string, baseUrl: string): string => {
+    if (!baseUrl || !url.startsWith(baseUrl)) {
+      return url;
+    }
+    return url.replace(baseUrl, '');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -167,16 +100,128 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
     if (!selectedApp) return;
 
     try {
-      // Check if username is already a full URL
-      const isFullUrl = username.startsWith('http://') || username.startsWith('https://');
-      // Construct the proper URL for the social media platform
-      const fullUrl = isFullUrl ? username : constructSocialMediaUrl(selectedApp.id, username);
-      const existingLink = getExistingLinkData(selectedApp.id);
+      const appType = selectedApp.type || 'link';
+
+      // Handle customLink type (name + URL)
+      if (appType === 'customLink') {
+        let finalUrl = linkUrl.trim();
+        if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+          finalUrl = `https://${finalUrl}`;
+        }
+
+        await onAddLink({
+          title: linkName.trim() || selectedApp.id,
+          url: finalUrl,
+          iconurl: selectedApp.iconurl,
+          type: 10,
+          sort: profileData?.links?.length || 0,
+        });
+
+        setIsModalOpen(false);
+        setSelectedApp(null);
+        setLinkName('');
+        setLinkUrl('');
+        return;
+      }
+
+      // Handle customFile type (name + file upload)
+      if (appType === 'customFile') {
+        if (!selectedFile) {
+          alert('Please select a file');
+          return;
+        }
+
+        setIsUploading(true);
+        try {
+          // First, add the link with a placeholder URL
+          const addLinkResponse = await onAddLink({
+            title: linkName.trim() || selectedApp.id,
+            url: '', // Empty URL for file type
+            iconurl: selectedApp.iconurl,
+            type: 11,
+            sort: profileData?.links?.length || 0,
+          });
+
+          console.log('Add link response:', addLinkResponse);
+
+          // Get the link ID from the response - the response has a 'link' property with the link data
+          interface AddLinkResponse {
+            link?: { pk: number };
+            pk?: number;
+            data?: { pk: number };
+            linkPk?: number;
+            id?: number;
+          }
+          const response = addLinkResponse as AddLinkResponse;
+          const linkPk = response?.link?.pk || 
+                       addLinkResponse?.pk || 
+                       response?.data?.pk || 
+                       (typeof addLinkResponse === 'number' ? addLinkResponse : null) ||
+                       response?.linkPk ||
+                       response?.id;
+
+          if (!linkPk) {
+            console.error('Response structure:', JSON.stringify(addLinkResponse, null, 2));
+            throw new Error('Failed to get link ID from response');
+          }
+
+          console.log('Link created with pk:', linkPk);
+          console.log('Uploading file:', selectedFile.name);
+
+          // Then upload the file
+          await LinksService.uploadLinkFile.request(linkPk, selectedFile);
+          
+          console.log('File uploaded successfully');
+        } catch (error) {
+          console.error('Error in file upload process:', error);
+          alert('Failed to upload file. Please try again.');
+          throw error;
+        } finally {
+          setIsUploading(false);
+        }
+
+        setIsModalOpen(false);
+        setSelectedApp(null);
+        setLinkName('');
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        return;
+      }
+
+      // Handle other types (existing logic)
+      let finalUrl = username.trim();
+
+      // Handle different types
+      if (appType === 'username' && selectedApp.url) {
+        // For username type: add base URL + username
+        const cleanUsername = username.trim().replace(/^@/, ''); // Remove @ if present
+        finalUrl = selectedApp.url + cleanUsername;
+      } else if (appType === 'link') {
+        // For link type: use as-is, but add https:// if not present
+        if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+          finalUrl = `https://${finalUrl}`;
+        }
+      } else if (appType === 'number') {
+        // For number type: use as-is (phone numbers)
+        finalUrl = username.trim();
+      } else if (appType === 'email') {
+        // For email type: use as-is
+        finalUrl = username.trim();
+      } else if (appType === 'custom') {
+        // For custom type: use as-is, add https:// if not present
+        if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+          finalUrl = `https://${finalUrl}`;
+        }
+      }
+
+      const existingLink = getExistingLinkData(selectedApp.id, selectedApp.iconurl);
 
       if (existingLink) {
         await onUpdateLink({
           pk: existingLink.pk,
-          url: fullUrl,
+          url: finalUrl,
           title: existingLink.title,
           iconurl: existingLink.iconurl,
           type: existingLink.type,
@@ -185,7 +230,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
       } else {
         await onAddLink({
           title: selectedApp.id,
-          url: fullUrl,
+          url: finalUrl,
           iconurl: selectedApp.iconurl,
           type: 0,
           sort: profileData?.links?.length || 0,
@@ -197,6 +242,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
       setUsername('');
     } catch (error) {
       console.error('Error adding link:', error);
+      setIsUploading(false);
       throw error;
     }
   };
@@ -217,7 +263,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
       <h2 className="text-xl font-bold mb-4 text-[--main-color1] dark:text-white">{category.name}</h2>
       <div className="flex flex-col space-y-2">
         {categoryApps.map((app: App) => {
-          const buttonConfig = getButtonConfig(app.id, t, profileData);
+          const buttonConfig = getButtonConfig(app.id, app.type, app.iconurl, t, profileData);
           return (
             <div
               key={app.id}
@@ -239,11 +285,25 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
                 className="py-1 px-4 text-xs text-[--main-color1] rounded-[125px] border border-[#FEC400] bg-[rgba(254,196,0,0.20)] flex items-center justify-center gap-1"
                 onClick={() => {
                   setSelectedApp(app);
-                  const existingLink = getExistingLinkData(app.id);
+                  const existingLink = getExistingLinkData(app.id, app.iconurl);
+                  
+                  // Reset all form fields
+                  setUsername('');
+                  setLinkName('');
+                  setLinkUrl('');
+                  setSelectedFile(null);
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                  }
+
                   if (existingLink && buttonConfig.type === 'update') {
-                    setUsername(existingLink.url || '');
-                  } else {
-                    setUsername('');
+                    // Extract username from URL if type is username
+                    if (app.type === 'username' && app.url && existingLink.url) {
+                      const extractedUsername = extractUsernameFromUrl(existingLink.url, app.url);
+                      setUsername(extractedUsername);
+                    } else {
+                      setUsername(existingLink.url || '');
+                    }
                   }
                   setIsModalOpen(true);
                 }}
@@ -321,16 +381,105 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="mb-6">
-                <input
-                  type="text"
-                  placeholder={`${selectedApp.name} username`}
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
-                  className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
-                  required
-                />
-              </div>
+              {/* Custom Link Form (name + URL) */}
+              {selectedApp.type === 'customLink' && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter link name"
+                      value={linkName}
+                      onChange={e => setLinkName(e.target.value)}
+                      className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
+                      required
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      URL
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="Enter link URL"
+                      value={linkUrl}
+                      onChange={e => setLinkUrl(e.target.value)}
+                      className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Custom File Form (name + file upload) */}
+              {selectedApp.type === 'customFile' && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter file name"
+                      value={linkName}
+                      onChange={e => setLinkName(e.target.value)}
+                      className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
+                      required
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      File
+                    </label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      onChange={e => {
+                        const file = e.target.files?.[0];
+                        setSelectedFile(file || null);
+                      }}
+                      className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[--main-color1] file:text-black hover:file:bg-[--main-color1]/90"
+                      required
+                    />
+                    {selectedFile && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Selected: {selectedFile.name}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* Regular Form (for other types) */}
+              {selectedApp.type !== 'customLink' && selectedApp.type !== 'customFile' && (
+                <div className="mb-6">
+                  <input
+                    type={
+                      selectedApp.type === 'email' ? 'email' :
+                      selectedApp.type === 'number' ? 'tel' :
+                      'text'
+                    }
+                    placeholder={
+                      selectedApp.type === 'username' ? `Enter ${selectedApp.name} username` :
+                      selectedApp.type === 'link' ? `Enter ${selectedApp.name} link` :
+                      selectedApp.type === 'number' ? `Enter ${selectedApp.name} number` :
+                      selectedApp.type === 'email' ? `Enter ${selectedApp.name} email` :
+                      `Enter ${selectedApp.name}`
+                    }
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
+                    required
+                  />
+                  {selectedApp.type === 'username' && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      We need only username
+                    </p>
+                  )}
+                </div>
+              )}
 
               <button
                 type="submit"
@@ -362,13 +511,13 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
                     {t('processing')}
                   </span>
                 ) : (
-                  `${getButtonConfig(selectedApp?.id || '', t, profileData).type === 'update' ? t('update') : t('add')} ${selectedApp?.name
+                  `${getButtonConfig(selectedApp?.id || '', selectedApp?.type, selectedApp?.iconurl, t, profileData).type === 'update' ? t('update') : t('add')} ${selectedApp?.name
                   }`
                 )}
               </button>
 
-              {/* Remove button only appears for existing links */}
-              {selectedApp && getButtonConfig(selectedApp.id, t, profileData).type === 'update' && (
+              {/* Remove button only appears for existing links (not for customLink/customFile) */}
+              {selectedApp && selectedApp.type !== 'customLink' && selectedApp.type !== 'customFile' && getButtonConfig(selectedApp.id, selectedApp.type, selectedApp.iconurl, t, profileData).type === 'update' && (
                 <div className="mt-3">
                   <span
                     className="block text-center text-red-500 cursor-pointer hover:underline"

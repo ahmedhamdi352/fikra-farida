@@ -164,7 +164,15 @@ async function updateEmail(payload: { email: string }) {
   return await httpClient.post<any>(`${ApiURLs.updateEmail}`, payload);
 }
 
+async function getGroupMembers(groupId: number) {
+  return await httpClient.get<ConnectionForCreateDTO[]>(`${ApiURLs.groups}/${groupId}/connections`);
+}
+
 export const ProfileService = {
+  getGroupMembers: {
+    request: getGroupMembers,
+    mutationKey: 'get-group-members',
+  },
   getProfile: {
     request: getProfile,
     queryKey: 'get-profile',

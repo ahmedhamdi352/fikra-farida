@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useGetProfileQuery } from 'hooks/profile';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
@@ -10,7 +10,7 @@ import { useGetAnalyticsMutation } from 'hooks/profile/mutations';
 import { useSubscriptionStatus } from 'hooks';
 import { ProButton, UnlockedButton, UpgradButton } from 'components/subcriptions/subcriptionButtons';
 import { cn } from 'utils';
-import DateFilterPopup from 'components/DateFilterPopup';
+import DateFilterButton from 'components/DateFilterButton';
 import { useTranslations, useLocale } from 'next-intl';
 import phoneContactIcon from 'assets/icons/phoneContact.png';
 import emailContactIcon from 'assets/icons/emailContact.png';
@@ -27,9 +27,7 @@ const AnalyticsPage = () => {
   const { data: profileAnalytics, isLoading: isLoadingAnalytics, onGetAnalytics } = useGetAnalyticsMutation();
   console.log(profileAnalytics);
   const [selectedFilter, setSelectedFilter] = useState<TimeFilter>('today');
-  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
-  const filterRef = useRef<HTMLDivElement>(null);
 
   // Helper function to format date as YYYY-MM-DD (date only, no time)
   const formatDateOnly = (date: Date): string => {
@@ -44,19 +42,6 @@ const AnalyticsPage = () => {
     subscriptionEndDate: profileData?.subscriptionEnddate
   });
 
-  // Handle clicks outside dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-        setShowFilterDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     const now = new Date();
@@ -109,15 +94,11 @@ const AnalyticsPage = () => {
 
   const handleFilterChange = (filter: TimeFilter) => {
     setSelectedFilter(filter);
-    if (filter !== 'custom') {
-      setShowFilterDropdown(false);
-    }
   };
 
   const handleApplyFilter = () => {
     if (dateFilter.from && dateFilter.to) {
       setSelectedFilter('custom');
-      setShowFilterDropdown(false);
 
       // Apply the custom filter immediately when Apply is clicked
       const startDate = new Date(dateFilter.from);
@@ -133,20 +114,19 @@ const AnalyticsPage = () => {
   const handleClearFilter = () => {
     setDateFilter({ from: '', to: '' });
     setSelectedFilter('today');
-    setShowFilterDropdown(false);
   };
 
   console.log("hasProAccess", hasProAccess);
 
-  const isFilterApplied = selectedFilter === 'custom' && dateFilter.from && dateFilter.to;
+  const isFilterApplied = selectedFilter === 'custom' && !!(dateFilter.from && dateFilter.to);
 
   if (isLoading || isLoadingAnalytics) {
     return <LoadingOverlay isLoading={isLoading || isLoadingAnalytics} />;
   }
 
   return (
-    <div className="min-h-screen w-full min-h-screen py-8 px-4">
-      <div className="w-full max-w-screen-md  py-8">
+    <div className="min-h-screen w-full py-8 px-4 md:flex md:flex-col md:items-center">
+      <div className="w-full max-w-screen-md mx-auto py-8">
         <div className="flex items-center mb-6">
           <Link href="/profile" className="flex items-center text-[--main-color1] gap-2">
             <svg
@@ -174,7 +154,7 @@ const AnalyticsPage = () => {
 
         {/* Time Filter Buttons */}
         <div
-          className="flex gap-2 mb-6 overflow-x-auto"
+          className="flex gap-2 mb-6 overflow-x-auto sm:overflow-visible"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
         >
           <style jsx global>{`
@@ -210,40 +190,16 @@ const AnalyticsPage = () => {
           >
             {t('quarter')}
           </button>
-          <div className="relative" ref={filterRef}>
-            <button
-              onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-              className={`px-4 py-2 rounded-full font-medium whitespace-nowrap flex items-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[--main-color1] ${isFilterApplied
-                ? 'bg-[--main-color1] text-black'
-                : 'bg-gray-200 dark:bg-[#2A2A2A] hover:bg-gray-300 dark:hover:bg-[#3A3A3A]'
-                }`}
-              title="Custom date filter"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-              </svg>
-            </button>
-          </div>
-
+          <DateFilterButton
+            dateFilter={dateFilter}
+            onDateFilterChange={setDateFilter}
+            onApplyFilter={handleApplyFilter}
+            onClearFilter={handleClearFilter}
+            isFilterApplied={isFilterApplied}
+            buttonClassName="px-4 py-2 rounded-full font-medium whitespace-nowrap flex items-center bg-gray-200 dark:bg-[#2A2A2A] hover:bg-gray-300 dark:hover:bg-[#3A3A3A]"
+            iconClassName="w-5 h-5"
+          />
         </div>
-        <DateFilterPopup
-          showFilterDropdown={showFilterDropdown}
-          dateFilter={dateFilter}
-          onClose={() => setShowFilterDropdown(false)}
-          onDateFilterChange={setDateFilter}
-          onApplyFilter={handleApplyFilter}
-          onClearFilter={handleClearFilter}
-        />
 
         {/* Stats Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">

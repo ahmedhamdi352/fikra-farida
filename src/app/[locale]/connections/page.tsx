@@ -76,7 +76,7 @@ const ConnectionsPage = () => {
 
   return (
     <>
-      <div className="min-h-screen w-full py-8 px-4">
+      <div className="min-h-screen w-full py-8 px-4 md:flex md:flex-col md:items-center">
         <div className="w-full max-w-screen-md mx-auto py-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -128,7 +128,7 @@ const ConnectionsPage = () => {
                 }}
                 className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.CONTACTS
                   ? 'border-[--main-color1] text-[--main-color1]'
-                  : 'border-transparent text-gray-400 hover:text-gray-700'
+                  : 'border-transparent text-gray-400 hover:text-gray-200'
                   }`}
               >
                 {t('contacts')}
@@ -139,7 +139,7 @@ const ConnectionsPage = () => {
                 }}
                 className={`flex-1 py-4 px-1 border-b-2 font-medium text-sm ${activeTab === TabType.GROUPS
                   ? 'border-[--main-color1] text-[--main-color1]'
-                  : 'border-transparent text-gray-400 hover:text-gray-700 '
+                  : 'border-transparent text-gray-400 hover:text-gray-200 '
                   }`}
               >
                 {t('groups')}

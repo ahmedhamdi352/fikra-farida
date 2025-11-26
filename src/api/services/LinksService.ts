@@ -34,6 +34,19 @@ async function updateVisitCount(pk: string | number) {
   return await httpClient.post(`${ApiURLs.visitCount}?linkpk=${pk}`);
 }
 
+interface UploadLinkFileResponse {
+  success?: boolean;
+  message?: string;
+  [key: string]: unknown;
+}
+
+async function uploadLinkFile(linkpk: string | number, file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  // Don't set Content-Type header - let the browser set it with the boundary
+  return await httpClient.post<UploadLinkFileResponse>(`${ApiURLs.uploadLinkFile}?linkpk=${linkpk}`, formData);
+}
+
 export const LinksService = {
   addLink: {
     request: addLink,
@@ -50,5 +63,9 @@ export const LinksService = {
   updateVisitCount: {
     request: updateVisitCount,
     mutationKey: 'update-visit-count',
+  },
+  uploadLinkFile: {
+    request: uploadLinkFile,
+    mutationKey: 'upload-link-file',
   },
 };

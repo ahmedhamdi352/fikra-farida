@@ -35,4 +35,5 @@ export const ApiURLs = {
   blogs: '/api/Blogs',
   updateUserVisits: '/api/Account/Visit',
   updateEmail: '/api/Account/UpdateEmail',
+  uploadLinkFile: '/api/Media/UploadLinkFile',
 } as const;

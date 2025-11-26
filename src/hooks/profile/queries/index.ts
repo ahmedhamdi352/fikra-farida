@@ -5,3 +5,4 @@ export * from './useGetGroupQuery';
 export * from './useGetOfflineQrCodeQuery';
 export * from './useGetProfileByKeyQuery';
 export * from './useGetProfilesQuery';
+export * from './useGetGroupMembersQuery';

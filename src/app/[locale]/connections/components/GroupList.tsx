@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useDeleteGroupMutation } from 'hooks/profile';
 import { useRouter } from 'next/navigation';
 import { GroupResponseDTO } from 'types';
@@ -29,37 +29,11 @@ const GroupList: React.FC<GroupListProps> = ({
   const { onDeleteGroup } = useDeleteGroupMutation();
   
   const [searchQuery, setSearchQuery] = useState('');
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const hasProAccess = useSubscriptionStatus({
     subscriptionType: profileData?.type,
     subscriptionEndDate: profileData?.subscriptionEnddate
   });
-
-  // Close menu when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setOpenMenuId(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
-  }, []);
-
-  const toggleMenu = (groupId: number, event: React.MouseEvent | React.TouchEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setOpenMenuId(openMenuId === groupId ? null : groupId);
-  };
 
   const filteredGroups = groups.filter(
     group =>
@@ -118,17 +92,9 @@ const GroupList: React.FC<GroupListProps> = ({
               <div
                 key={group.GroupId}
                 className="relative flex flex-col items-start justify-start gap-4 py-6 px-4 rounded-xl border border-[#BEAF9E] bg-[rgba(255,244,211,0.10)]"
-                ref={menuRef}
               >
-                <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-4 p-1">
-                  <button
-                    className="focus:outline-none touch-manipulation"
-                    onClick={e => toggleMenu(group.GroupId, e)}
-                    onTouchEnd={e => toggleMenu(group.GroupId, e)}
-                    aria-expanded={openMenuId === group.GroupId}
-                    aria-controls={`group-menu-${group.GroupId}`}
-                    aria-label="Group options"
-                  >
+                <div className="dropdown dropdown-end absolute ltr:right-2 rtl:left-2 top-4">
+                  <div tabIndex={0} role="button" className="btn btn-ghost btn-sm p-1 min-h-0 h-auto">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M5 14C6.10457 14 7 13.1046 7 12C7 10.8954 6.10457 10 5 10C3.89543 10 3 10.8954 3 12C3 13.1046 3.89543 14 5 14Z"
@@ -146,20 +112,24 @@ const GroupList: React.FC<GroupListProps> = ({
                         strokeWidth="1.5"
                       />
                     </svg>
-                  </button>
+                  </div>
                   <ul
-                    id={`group-menu-${group.GroupId}`}
-                    className={`absolute right-0 mt-2 z-50 bg-[#50514E] text-white menu p-2 shadow-lg rounded-lg w-48 max-w-[calc(100vw-2rem)] overflow-hidden transition-all duration-200 ${openMenuId === group.GroupId ? 'block' : 'hidden'
-                      }`}
-                    onClick={e => e.stopPropagation()}
-                    onTouchEnd={e => e.stopPropagation()}
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby={`group-options-${group.GroupId}`}
+                    tabIndex={0}
+                    className="dropdown-content menu bg-[#50514E] text-white rounded-lg w-48 shadow-lg z-[1] p-2"
                   >
-                    <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md ">
+                    <li>
                       <button
-                        className="px-2 py-1.5 active:bg-transparent focus:bg-transparent w-full text-left"
+                        className="w-full text-left"
+                        onClick={() => {
+                          router.push(`/group/view?groupId=${group.GroupId}`);
+                        }}
+                      >
+                        {t('viewGroup')}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full text-left"
                         onClick={() => {
                           const searchParams = new URLSearchParams();
                           searchParams.set('groupId', group.GroupId.toString());
@@ -169,10 +139,10 @@ const GroupList: React.FC<GroupListProps> = ({
                         {t('editGroup')}
                       </button>
                     </li>
-                    <li className="px-2 py-1.5 hover:bg-[#3e3f3c] rounded-md">
+                    <li>
                       <button
                         onClick={() => onDeleteGroup(group.GroupId)}
-                        className="px-2 py-1.5 active:bg-transparent focus:bg-transparent"
+                        className="w-full text-left"
                       >
                         {t('deleteGroup')}
                       </button>
