@@ -448,6 +448,7 @@
       "phoneNumbers":"Phone Numbers",
       "websiteURLs":"Website URLs",
       "emailAddressPlaceholder":"Enter email address",
+      "emailChangeHint":"If you change this email, you will be logged out and need to log in again",
       "phoneNumberPlaceholder":"Enter phone number",
       "websiteURLPlaceholder":"Enter website URL",
       "saveButton":"Save Button",

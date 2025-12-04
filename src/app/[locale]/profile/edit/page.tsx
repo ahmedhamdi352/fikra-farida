@@ -164,7 +164,7 @@ export default function EditProfilePage() {
         contactData.emails?.forEach((email, index) => {
           if (email?.value || email?.value === '') {
             if (index === 0) {
-              transformedContactData[`email`] = email?.value || '';
+              transformedContactData[`profileEmail`] = email?.value || '';
             } else {
               transformedContactData[`email${index}`] = email?.value || '';
             }
@@ -197,7 +197,7 @@ export default function EditProfilePage() {
       };
 
       await onUpdateProfile(combinedData);
-      if (transformedContactData.emailAddress) {
+      if (transformedContactData.emailAddress !== profileData?.email) {
         await onUpdateEmail({ email: transformedContactData.emailAddress as string });
       }
     } catch (error) {

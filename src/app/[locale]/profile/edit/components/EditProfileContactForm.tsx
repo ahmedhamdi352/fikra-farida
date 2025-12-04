@@ -47,7 +47,7 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
       .array()
       .of(
         yup.object().shape({
-          value: yup.string().email(t('emailInvalid')).required(t('emailRequired')),
+          value: yup.string().email(t('emailInvalid')),
         })
       )
       .min(1, t('emailRequired')),
@@ -213,13 +213,18 @@ const EditProfileContactForm = forwardRef<EditProfileContactFormRef, EditProfile
 
   return (
     <form id="profile-contact-form" className="space-y-6">
-      <TextInput
-        name="emailAddress"
-        type="email"
-        control={control}
-        placeholder={t('emailAddressPlaceholder')}
-        label={t('emailAddress')}
-      />
+      <div>
+        <TextInput
+          name="emailAddress"
+          type="email"
+          control={control}
+          placeholder={t('emailAddressPlaceholder')}
+          label={t('emailAddress')}
+        />
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          {t('emailChangeHint')}
+        </p>
+      </div>
       {renderFieldGroup(
         emailFields,
         'emails',

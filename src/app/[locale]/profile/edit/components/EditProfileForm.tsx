@@ -10,7 +10,7 @@ import TextArea from 'components/forms/text-area';
 import { useTranslations } from 'next-intl';
 
 export interface ProfileFormData {
-  profileTitle: string;
+  profileTitle?: string;
   username: string;
   fullname: string;
   bio?: string;
@@ -31,7 +31,7 @@ const EditProfileForm = forwardRef<EditProfileFormRef, EditProfileFormProps>(({ 
   const t = useTranslations('profile.editProfilePage');
 
   const schema = yup.object().shape({
-    profileTitle: yup.string().required(t('profileTitleRequired')),
+    profileTitle: yup.string().optional(),
     username: yup
       .string()
       .required(t('usernameRequired'))

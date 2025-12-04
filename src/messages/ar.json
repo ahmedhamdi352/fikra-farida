@@ -454,6 +454,7 @@
       "phoneNumbers":"رقم الهاتف",
       "websiteURLs":"الرابط الإلكتروني",
       "emailAddressPlaceholder":"أدخل البريد الإلكتروني",
+      "emailChangeHint":"إذا قمت بتغيير هذا البريد الإلكتروني، سيتم تسجيل خروجك وستحتاج إلى تسجيل الدخول مرة أخرى",
       "phoneNumberPlaceholder":"أدخل رقم الهاتف",
       "websiteURLPlaceholder":"أدخل الرابط الإلكتروني",
       "saveButton":"زر الحفظ جهة الاتصال",
