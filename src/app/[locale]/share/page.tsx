@@ -88,9 +88,10 @@ export default function SharePage() {
                     files: [file],
                     title: 'QR Code',
                   });
-                } catch (shareError: any) {
+                } catch (shareError: unknown) {
                   // If user cancelled, don't show error
-                  if (shareError.name === 'AbortError' || shareError.name === 'NotAllowedError') {
+                  const error = shareError as { name?: string };
+                  if (error.name === 'AbortError' || error.name === 'NotAllowedError') {
                     return;
                   }
                   // Otherwise, fall through to download
@@ -135,7 +136,8 @@ export default function SharePage() {
         // Try Web Share API first
         if (navigator.share) {
           try {
-            if ('canShare' in navigator && (navigator as any).canShare({ files: [file] })) {
+            const navShare = navigator as Navigator & { canShare?: (data: { files: File[] }) => boolean };
+            if ('canShare' in navigator && navShare.canShare && navShare.canShare({ files: [file] })) {
               await navigator.share({
                 files: [file],
                 title: 'QR Code',
@@ -149,8 +151,9 @@ export default function SharePage() {
               });
               return;
             }
-          } catch (shareError: any) {
-            if (shareError.name === 'AbortError' || shareError.name === 'NotAllowedError') {
+          } catch (shareError: unknown) {
+            const error = shareError as { name?: string };
+            if (error.name === 'AbortError' || error.name === 'NotAllowedError') {
               return;
             }
             // Fall through to download
