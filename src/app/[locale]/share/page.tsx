@@ -21,8 +21,14 @@ export default function SharePage() {
     subscriptionEndDate: profileData?.subscriptionEnddate
   });
   const [offLine, setOffLine] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+
   useEffect(() => {
     onGetProfile();
+    // Detect iOS
+    const ios = /iPhone|iPad|iPod/i.test(navigator.platform) ||
+      (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+    setIsIOS(ios);
   }, []);
 
   useEffect(() => {
@@ -38,15 +44,133 @@ export default function SharePage() {
   }, [offLine, profileData?.userPk]);
 
   const handleAddToHomeScreen = async () => {
-    if (!QrCodeData?.imagename) {
+    const qrCodeImageName = offLine ? offlineQrCodeData?.imagename : QrCodeData?.imagename;
+    
+    if (!qrCodeImageName) {
       alert('QR code is not available');
       return;
     }
 
-    const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${QrCodeData.imagename}`;
+    const qrCodeUrl = `https://fikrafarida.com/Media/Profiles/${qrCodeImageName}`;
 
-    // Redirect to the QR code page with the URL as a parameter
-    window.location.href = `/qr-code?url=${encodeURIComponent(qrCodeUrl)}`;
+    try {
+      // For iOS, use canvas approach to ensure proper image format
+      if (isIOS) {
+        const img = document.createElement('img');
+        img.crossOrigin = 'anonymous';
+        
+        img.onload = async () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext('2d');
+            
+            if (!ctx) {
+              throw new Error('Could not get canvas context');
+            }
+            
+            ctx.drawImage(img, 0, 0);
+            
+            // Convert canvas to blob
+            canvas.toBlob(async (blob) => {
+              if (!blob) {
+                alert('Failed to process image. Please try again.');
+                return;
+              }
+              
+              const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+              
+              // Use Web Share API to save to gallery
+              if (navigator.share) {
+                try {
+                  await navigator.share({
+                    files: [file],
+                    title: 'QR Code',
+                  });
+                } catch (shareError: any) {
+                  // If user cancelled, don't show error
+                  if (shareError.name === 'AbortError' || shareError.name === 'NotAllowedError') {
+                    return;
+                  }
+                  // Otherwise, fall through to download
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = 'qrcode.png';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  URL.revokeObjectURL(url);
+                }
+              } else {
+                // Fallback for iOS without share API
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'qrcode.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+              }
+            }, 'image/png', 1.0);
+          } catch (error) {
+            console.error('Error processing image:', error);
+            alert('Failed to save QR code. Please try again.');
+          }
+        };
+        
+        img.onerror = () => {
+          alert('Failed to load QR code image. Please try again.');
+        };
+        
+        img.src = qrCodeUrl;
+      } else {
+        // For Android and other devices
+        const response = await fetch(qrCodeUrl);
+        const blob = await response.blob();
+        const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+        
+        // Try Web Share API first
+        if (navigator.share) {
+          try {
+            if ('canShare' in navigator && (navigator as any).canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: 'QR Code',
+              });
+              return;
+            } else {
+              // Try without canShare check
+              await navigator.share({
+                files: [file],
+                title: 'QR Code',
+              });
+              return;
+            }
+          } catch (shareError: any) {
+            if (shareError.name === 'AbortError' || shareError.name === 'NotAllowedError') {
+              return;
+            }
+            // Fall through to download
+          }
+        }
+        
+        // Fallback: Direct download
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'qrcode.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Error saving QR code:', error);
+      alert('Failed to save QR code. Please try again.');
+    }
   };
 
   const handleOfflineToggle = (checked: boolean): void => {
@@ -217,7 +341,7 @@ export default function SharePage() {
             {t('offlineSharing')}
           </div>
           {
-            !hasProAccess ? (
+            hasProAccess ? (
               <label className="relative inline-flex items-center cursor-pointer ml-3">
                 <input
                   type="checkbox"
