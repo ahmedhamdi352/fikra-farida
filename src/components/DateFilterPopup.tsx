@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface DateFilter {
   from: string;
@@ -14,24 +15,49 @@ interface DateFilterPopupProps {
   onClearFilter: () => void;
 }
 
-const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
+const DateFilterPopup = React.forwardRef<HTMLDivElement, DateFilterPopupProps>(({
   showFilterDropdown,
   dateFilter,
   onClose,
   onDateFilterChange,
   onApplyFilter,
   onClearFilter,
-}) => {
-  if (!showFilterDropdown) return null;
+}, ref) => {
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!showFilterDropdown || !mounted) return null;
+
+  const popupContent = (
     <>
       {/* Mobile Backdrop */}
-      <div className="fixed inset-0 bg-black bg-opacity-25 z-40 sm:hidden" onClick={onClose} />
+      <div className="date-filter-backdrop fixed inset-0 bg-black bg-opacity-25 z-40 sm:hidden" onClick={onClose} />
 
       <div 
-        className="fixed bottom-0 left-0 right-0 sm:absolute sm:top-full sm:right-0 sm:bottom-auto sm:left-auto mt-0 sm:mt-2 w-full sm:w-80 md:w-96 bg-white border-0 sm:border border-[--main-color1] rounded-t-2xl sm:rounded-lg shadow-2xl sm:shadow-xl z-[100] transform transition-transform duration-300 ease-out translate-y-0 sm:translate-y-0"
-        onClick={(e) => e.stopPropagation()}
+        ref={ref}
+        data-date-filter-popup
+        className="fixed bottom-0 left-0 right-0 sm:absolute sm:top-full sm:right-0 sm:bottom-auto sm:left-auto sm:mt-2 w-full sm:w-80 md:w-96 bg-white border-0 sm:border border-[--main-color1] rounded-t-2xl sm:rounded-lg shadow-2xl sm:shadow-xl z-[100]"
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+        }}
+        onTouchEnd={(e) => {
+          e.stopPropagation();
+        }}
+        onTouchMove={(e) => {
+          e.stopPropagation();
+        }}
+        style={{
+          maxHeight: '80vh',
+        }}
       >
         {/* Mobile Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 sm:hidden">
@@ -46,24 +72,29 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
           </button>
         </div>
 
-        <div className="p-4 sm:p-4 space-y-4 max-h-[70vh] sm:max-h-none overflow-y-auto">
+        <div 
+          className="p-4 sm:p-4 space-y-4 max-h-[70vh] sm:max-h-none overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
+        >
           {/* Date Inputs Grid */}
           <div className="grid grid-cols-1 gap-4">
             <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
-              <div className="relative w-[320px]">
+              <div className="relative w-full">
                 <input
                   type="date"
                   value={dateFilter.from}
                   onChange={(e) => onDateFilterChange({ ...dateFilter, from: e.target.value })}
                   onClick={(e) => e.stopPropagation()}
-                  className="h-[40px] w-full p-3 sm:p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-base sm:text-sm text-[var(--main-color1)]"
+                  onTouchStart={(e) => e.stopPropagation()}
+                  className="h-[40px] w-[95%] p-3 sm:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-base sm:text-sm text-[var(--main-color1)] bg-[#F5F5F5]"
                 />
-    
               </div>
             </div>
 
-            <div className="relative w-[320px]">
+            <div className="relative w-full">
               <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
               <div className="relative">
                 <input
@@ -71,10 +102,10 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
                   value={dateFilter.to}
                   onChange={(e) => onDateFilterChange({ ...dateFilter, to: e.target.value })}
                   onClick={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
                   min={dateFilter.from}
-                  className="h-[40px] w-full p-3 sm:p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-base sm:text-sm text-[var(--main-color1)]"
+                  className="h-[40px] w-[95%] p-3 sm:p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[--main-color1] focus:border-transparent text-base sm:text-sm text-[var(--main-color1)] bg-[#F5F5F5]"
                 />
-
               </div>
             </div>
           </div>
@@ -90,9 +121,17 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col gap-3 pt-2">
+          <div 
+            className="flex flex-col gap-3 pt-2"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
             <button
-              onClick={onApplyFilter}
+              onClick={(e) => {
+                e.stopPropagation();
+                onApplyFilter();
+              }}
+              onTouchStart={(e) => e.stopPropagation()}
               disabled={!dateFilter.from && !dateFilter.to}
               className="w-full bg-[--main-color1] text-white px-4 py-3 sm:py-2.5 rounded-lg text-base sm:text-sm font-medium hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
             >
@@ -102,7 +141,11 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
               Apply Filter
             </button>
             <button
-              onClick={onClearFilter}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClearFilter();
+              }}
+              onTouchStart={(e) => e.stopPropagation()}
               className="w-full bg-white border-2 border-gray-300 text-gray-700 px-4 py-3 sm:py-2.5 rounded-lg text-base sm:text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 flex items-center justify-center gap-2"
             >
               <svg className="h-5 w-5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -115,6 +158,18 @@ const DateFilterPopup: React.FC<DateFilterPopupProps> = ({
       </div>
     </>
   );
-};
+
+  // Use portal for mobile, regular rendering for desktop
+  if (typeof window !== 'undefined') {
+    const isMobile = window.innerWidth < 640; // sm breakpoint
+    if (isMobile) {
+      return createPortal(popupContent, document.body);
+    }
+  }
+
+  return popupContent;
+});
+
+DateFilterPopup.displayName = 'DateFilterPopup';
 
 export default DateFilterPopup;

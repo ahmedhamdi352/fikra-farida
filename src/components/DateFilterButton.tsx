@@ -31,24 +31,39 @@ const DateFilterButton: React.FC<DateFilterButtonProps> = ({
   const t = useTranslations('profile.connectionsPage');
   const [showFilterDropdown, setShowFilterDropdown] = React.useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
+  const popupRef = React.useRef<HTMLDivElement>(null);
 
   // Handle clicks outside dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      
+      // Check if click is inside the button container
+      const isInsideButton = filterRef.current?.contains(target);
+      
+      // Check if click is inside the popup (works for both portal and non-portal)
+      const popupElement = document.querySelector('[data-date-filter-popup]');
+      const isInsidePopup = popupElement?.contains(target);
+      
+      // Only close if click is outside both button and popup
+      if (!isInsideButton && !isInsidePopup) {
         setShowFilterDropdown(false);
       }
     };
 
     if (showFilterDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-    }
+      // Use a small delay to avoid immediate closing when opening
+      const timeoutId = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+      }, 100);
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('touchstart', handleClickOutside);
+      };
+    }
   }, [showFilterDropdown]);
 
   const handleApplyFilter = () => {
@@ -62,13 +77,13 @@ const DateFilterButton: React.FC<DateFilterButtonProps> = ({
   };
 
   return (
-    <div className="relative" ref={filterRef} style={{ zIndex: showFilterDropdown ? 50 : 'auto' }}>
+    <div className="relative inline-block" ref={filterRef} style={{ zIndex: showFilterDropdown ? 50 : 'auto' }}>
       <button
         onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-        className={`p-4 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[--main-color1] ${
+        className={`${buttonClassName || 'px-4 py-2 rounded-full font-medium whitespace-nowrap bg-gray-200 dark:bg-[#2A2A2A] hover:bg-gray-300 dark:hover:bg-[#3A3A3A]'} transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[--main-color1] ${
           isFilterApplied
-            ? 'border-[--main-color1] bg-[--main-color1] text-black'
-            : (buttonClassName || 'border border-[--main-color1] hover:bg-[--main-color1] hover:bg-opacity-10 text-[--main-color1]')
+            ? 'bg-[--main-color1] text-black'
+            : ''
         }`}
         title={t('filterByDate')}
       >
@@ -85,6 +100,7 @@ const DateFilterButton: React.FC<DateFilterButtonProps> = ({
       </button>
 
       <DateFilterPopup
+        ref={popupRef}
         showFilterDropdown={showFilterDropdown}
         dateFilter={dateFilter}
         onClose={() => setShowFilterDropdown(false)}
