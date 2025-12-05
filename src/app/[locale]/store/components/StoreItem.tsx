@@ -89,7 +89,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
   const [phoneNumberValue, setPhoneNumberValue] = useState<string>('');
   
   // Form control for phone input (only used when type is 'number')
-  const { control: phoneControl, watch: watchPhone, setValue: setPhoneValue, reset: resetPhoneForm } = useForm<PhoneFormData>({
+  const { control: phoneControl, watch: watchPhone, reset: resetPhoneForm } = useForm<PhoneFormData>({
     defaultValues: {
       phoneNumber: '',
     },

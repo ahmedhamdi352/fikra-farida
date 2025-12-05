@@ -19,7 +19,6 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
   const imageUrl = profileData?.imageFilename  && profileData.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : PreviewImage;
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 
-  console.log(profileData?.links);
   return (
     <div className="basic-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
       style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}

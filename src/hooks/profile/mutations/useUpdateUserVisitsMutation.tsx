@@ -10,7 +10,7 @@ export function useUpdateUserVisitsMutation() {
   const mutation = useMutation({
     mutationKey: [ProfileService.updateUserVisits.mutationKey],
     mutationFn: ProfileService.updateUserVisits.request,
-    onSuccess: async (response: any) => {
+    onSuccess: async () => {
       try {
       } catch (error) {
         console.error('Failed to update user visits:', error);
