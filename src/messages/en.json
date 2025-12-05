@@ -347,6 +347,7 @@
     "editProfile":"Edit Profile",
     "customization":"Customization",
     "lockProfile":"Lock Profile",
+    "workSpace":"Workspace",
     "sharePage":{
       "yourQRCode":"Your QR Code",
       "shareLink":"Share Link",
@@ -410,6 +411,8 @@
     "saveContact":"Save Contact",
     "export":"Export",
     "createYourOwnCard":"Create Your Own Card",
+    "customLinks":"Custom Links",
+    "customFiles":"Photos & Documents",
     "profiles":"Profiles",
     "currentProfile":"Current Profile",
     "addNewProfile":"Add New Profile",
@@ -486,7 +489,12 @@
     "add":"Add",
     "update":"Update",
     "remove":"Remove",
-    "processing":"Processing..."
+    "processing":"Processing...",
+    "customFiles":"Custom Files",
+    "customLinks":"Custom Links",
+    "view":"View",
+    "delete":"Delete",
+    "confirmDelete":"Are you sure you want to delete this file?"
   },
   "lockedAccountPopup":{
     "accountLocked":"Account Locked",

@@ -1,10 +1,14 @@
-import { MutableRefObject, useState, useRef } from 'react';
+import { MutableRefObject, useState, useRef, useEffect } from 'react';
 import { ProfileLink } from 'types/api/ProfileForReadDTO';
 import Image from 'next/image';
 import { useAddLinkMutation, useUpdateLinkMutation, useDeleteLinkMutation } from 'hooks/links';
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import { useTranslations } from 'next-intl';
 import { LinksService } from 'api/services/LinksService';
+import { useForm } from 'react-hook-form';
+import { PhoneInput } from 'components/forms/phone-input';
+import { useQueryClient } from '@tanstack/react-query';
+import { ProfileService } from 'api/services';
 
 interface App {
   id: string;
@@ -60,9 +64,14 @@ const getButtonConfig = (
   return { type: 'update', label: t('update'), color: 'bg-[--main-color1]' };
 };
 
+interface PhoneFormData {
+  phoneNumber: string;
+}
+
 const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileData }: StoreItemProps): React.ReactNode => {
   const t = useTranslations('storePage');
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
+  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [username, setUsername] = useState('');
@@ -75,6 +84,23 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
   const { onUpdateLink, isLoading: isUpdatingLoading } = useUpdateLinkMutation();
   const { onDeleteLink, isLoading: isDeletingLoading } = useDeleteLinkMutation();
   const isSubmittingLoading = isAddingLoading || isUpdatingLoading || isDeletingLoading || isUploading;
+  
+  // State to track phone number for PhoneInput (needed to force re-render)
+  const [phoneNumberValue, setPhoneNumberValue] = useState<string>('');
+  
+  // Form control for phone input (only used when type is 'number')
+  const { control: phoneControl, watch: watchPhone, setValue: setPhoneValue, reset: resetPhoneForm } = useForm<PhoneFormData>({
+    defaultValues: {
+      phoneNumber: '',
+    },
+  });
+  
+  // Update form when phoneNumberValue changes
+  useEffect(() => {
+    if (isModalOpen && selectedApp?.type === 'number') {
+      resetPhoneForm({ phoneNumber: phoneNumberValue });
+    }
+  }, [phoneNumberValue, isModalOpen, selectedApp?.type, resetPhoneForm]);
 
   // Function to get existing link data if it exists
   const getExistingLinkData = (appId: string, appIconUrl?: string): ProfileLink | undefined => {
@@ -142,8 +168,6 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
             sort: profileData?.links?.length || 0,
           });
 
-          console.log('Add link response:', addLinkResponse);
-
           // Get the link ID from the response - the response has a 'link' property with the link data
           interface AddLinkResponse {
             link?: { pk: number };
@@ -165,13 +189,16 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
             throw new Error('Failed to get link ID from response');
           }
 
-          console.log('Link created with pk:', linkPk);
-          console.log('Uploading file:', selectedFile.name);
-
-          // Then upload the file
           await LinksService.uploadLinkFile.request(linkPk, selectedFile);
           
-          console.log('File uploaded successfully');
+          // Refetch profile data after file upload
+          queryClient.invalidateQueries({ queryKey: [ProfileService.getProfile.queryKey] });
+          try {
+            await ProfileService.getProfile.request();
+          } catch (error) {
+            console.error('Error refetching profile after file upload:', error);
+          }
+
         } catch (error) {
           console.error('Error in file upload process:', error);
           alert('Failed to upload file. Please try again.');
@@ -191,7 +218,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
       }
 
       // Handle other types (existing logic)
-      let finalUrl = username.trim();
+      let finalUrl = '';
 
       // Handle different types
       if (appType === 'username' && selectedApp.url) {
@@ -200,17 +227,34 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
         finalUrl = selectedApp.url + cleanUsername;
       } else if (appType === 'link') {
         // For link type: use as-is, but add https:// if not present
+        finalUrl = username.trim();
         if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
           finalUrl = `https://${finalUrl}`;
         }
       } else if (appType === 'number') {
-        // For number type: use as-is (phone numbers)
-        finalUrl = username.trim();
+        // For number type: get value from phone form
+        let phoneNumber = watchPhone('phoneNumber') || username.trim();
+        // If app has a url property (like tel:), prepend it to the phone number
+        if (selectedApp.url) {
+          // Remove the url prefix if already present to avoid duplication
+          phoneNumber = phoneNumber.replace(new RegExp(`^${selectedApp.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i'), '');
+          finalUrl = selectedApp.url + phoneNumber;
+        } else {
+          finalUrl = phoneNumber;
+        }
       } else if (appType === 'email') {
-        // For email type: use as-is
-        finalUrl = username.trim();
+        // For email type: use as-is, but if app has a url property (like mailto:), prepend it
+        let emailValue = username.trim();
+        if (selectedApp.url) {
+          // Remove the url prefix if already present to avoid duplication
+          emailValue = emailValue.replace(new RegExp(`^${selectedApp.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i'), '');
+          finalUrl = selectedApp.url + emailValue;
+        } else {
+          finalUrl = emailValue;
+        }
       } else if (appType === 'custom') {
         // For custom type: use as-is, add https:// if not present
+        finalUrl = username.trim();
         if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
           finalUrl = `https://${finalUrl}`;
         }
@@ -240,6 +284,7 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
       setIsModalOpen(false);
       setSelectedApp(null);
       setUsername('');
+      setPhoneNumberValue('');
     } catch (error) {
       console.error('Error adding link:', error);
       setIsUploading(false);
@@ -301,10 +346,46 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
                     if (app.type === 'username' && app.url && existingLink.url) {
                       const extractedUsername = extractUsernameFromUrl(existingLink.url, app.url);
                       setUsername(extractedUsername);
+                    } else if (app.type === 'number') {
+                      // For number type, set phone value
+                      // Check if the stored value already has country code or tel: prefix
+                      const phoneValue = existingLink.url || '';
+                      let formattedPhone = phoneValue;
+                      
+                      // Remove tel: prefix if present (we'll add it back on save)
+                      if (app.url && phoneValue.startsWith(app.url)) {
+                        formattedPhone = phoneValue.substring(app.url.length);
+                      }
+                      
+                      // If it doesn't start with +, try to format it
+                      if (formattedPhone && !formattedPhone.startsWith('+')) {
+                        // If it starts with 0 (common in Egypt), replace with +20
+                        if (formattedPhone.startsWith('0')) {
+                          formattedPhone = '+20' + formattedPhone.substring(1);
+                        } else {
+                          // Assume it's already without country code, add default (Egypt +20)
+                          formattedPhone = '+20' + formattedPhone;
+                        }
+                      }
+                      
+                      // If it already has +, use it as is (e.g., "+201115826263")
+                      setPhoneNumberValue(formattedPhone || '');
+                      setUsername(existingLink.url || '');
+                    } else if (app.type === 'email') {
+                      // For email type, remove mailto: prefix if present (we'll add it back on save)
+                      let emailValue = existingLink.url || '';
+                      if (app.url && emailValue.startsWith(app.url)) {
+                        emailValue = emailValue.substring(app.url.length);
+                      }
+                      setUsername(emailValue);
                     } else {
                       setUsername(existingLink.url || '');
                     }
+                  } else if (app.type === 'number') {
+                    // Reset phone value when opening modal for new entry
+                    setPhoneNumberValue('');
                   }
+                  
                   setIsModalOpen(true);
                 }}
               >
@@ -455,28 +536,39 @@ const StoreItem = ({ categoryId, category, categoryApps, categoryRefs, profileDa
               {/* Regular Form (for other types) */}
               {selectedApp.type !== 'customLink' && selectedApp.type !== 'customFile' && (
                 <div className="mb-6">
-                  <input
-                    type={
-                      selectedApp.type === 'email' ? 'email' :
-                      selectedApp.type === 'number' ? 'tel' :
-                      'text'
-                    }
-                    placeholder={
-                      selectedApp.type === 'username' ? `Enter ${selectedApp.name} username` :
-                      selectedApp.type === 'link' ? `Enter ${selectedApp.name} link` :
-                      selectedApp.type === 'number' ? `Enter ${selectedApp.name} number` :
-                      selectedApp.type === 'email' ? `Enter ${selectedApp.name} email` :
-                      `Enter ${selectedApp.name}`
-                    }
-                    value={username}
-                    onChange={e => setUsername(e.target.value)}
-                    className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
-                    required
-                  />
-                  {selectedApp.type === 'username' && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      We need only username
-                    </p>
+                  {selectedApp.type === 'number' ? (
+                    <PhoneInput
+                      key={`phone-input-${selectedApp.id}-${phoneNumberValue || 'new'}`}
+                      name="phoneNumber"
+                      control={phoneControl}
+                      placeholder={`Enter ${selectedApp.name} number`}
+                      defaultCountry="eg"
+                      defaultValue={phoneNumberValue || ''}
+                    />
+                  ) : (
+                    <>
+                      <input
+                        type={
+                          selectedApp.type === 'email' ? 'email' :
+                          'text'
+                        }
+                        placeholder={
+                          selectedApp.type === 'username' ? `Enter ${selectedApp.name} username` :
+                          selectedApp.type === 'link' ? `Enter ${selectedApp.name} link` :
+                          selectedApp.type === 'email' ? `Enter ${selectedApp.name} email` :
+                          `Enter ${selectedApp.name}`
+                        }
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                        className="w-full p-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#2A2A2A] text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[--main-color1]"
+                        required
+                      />
+                      {selectedApp.type === 'username' && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          We need only username
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}

@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import StoreItem from './StoreItem';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { useDeleteLinkMutation } from 'hooks/links';
 
 interface Category {
   id: string;
@@ -24,6 +26,7 @@ interface App {
 export default function StorePage() {
   const t = useTranslations('storePage');
   const { data: profileData, isLoading, onGetProfile } = useGetProfileQuery();
+  const { onDeleteLink, isLoading: isDeletingLoading } = useDeleteLinkMutation();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<string>('');
@@ -46,32 +49,32 @@ export default function StorePage() {
     { id: 'facebook', name: 'Facebook', iconurl: 'facebook.svg',type: 'link', category: 'socialMedia' },
     { id: 'instagram', name: 'Instagram', iconurl: 'instagram.svg', type: 'username', category: 'socialMedia' , url:'https://instagram.com/' },
     { id: 'youtube', name: 'YouTube', iconurl: 'youtube.svg',type: 'link', category: 'socialMedia' },
-    { id: 'tiktok', name: 'TikTok', iconurl: 'tiktok.svg',type: 'username', category: 'socialMedia' , url:'https://tiktok.com/' },
-    { id: 'x', name: 'X', iconurl: 'x.svg',type: 'username', category: 'socialMedia' , url:'https://x.com/' },
-    { id: 'snapchat', name: 'Snapchat', iconurl: 'snapchat.svg',type: 'username', category: 'socialMedia' , url:'https://snapchat.com/add/' },
+    { id: 'tiktok', name: 'TikTok', iconurl: 'tiktok.svg',type: 'username', category: 'socialMedia' , url:'https://tiktok.com/@' },
+    { id: 'x', name: 'X', iconurl: 'x.svg',type: 'username', category: 'socialMedia' , url:'https://twitter.com/' },
+    { id: 'snapchat', name: 'Snapchat', iconurl: 'snapchat.svg',type: 'username', category: 'socialMedia' , url:'https://www.snapchat.com/add/' },
     { id: 'linkedin', name: 'LinkedIn', iconurl: 'linkedin.svg',type: 'link', category: 'socialMedia' },
-    { id: 'threads', name: 'Threads', iconurl: 'threads.svg',type: 'username', category: 'socialMedia' , url:'https://threads.net/' },
+    { id: 'threads', name: 'Threads', iconurl: 'threads.svg',type: 'username', category: 'socialMedia' , url:'https://www.threads.com/@' },
     { id: 'clubhouse', name: 'Clubhouse', iconurl: 'clubhouse.svg', type: 'link', category: 'socialMedia' },
     {id: 'vimeo', name: 'Vimeo', iconurl: 'vimeo.svg', type: 'link', category: 'socialMedia' },
    
     //chatting
-    { id: 'mergencyPhone', name: 'Emergency Phone',  iconurl: 'phone.svg', type:'number', category: 'chatting' },
-    { id: 'whatsapp', name: 'WhatsApp', iconurl: 'whatsapp.svg', type: 'number', category: 'chatting' },
+    { id: 'mergencyPhone', name: 'Emergency Phone',  iconurl: 'emergencyPhone.svg', type:'number', category: 'chatting', url: 'tel:' },
+    { id: 'whatsapp', name: 'WhatsApp', iconurl: 'whatsapp.svg', type: 'number', category: 'chatting', url: 'https://wa.me/' },
     { id: 'messenger', name: 'Messenger', iconurl: 'messenger.svg', type: 'link', category: 'chatting' },
     { id: 'telegram', name: 'Telegram', iconurl: 'telegram.svg', type: 'username', category: 'chatting', url:'https://t.me/' },
     { id: 'webchat', name: 'WebChat', iconurl: 'wechat.svg', type:'link', category: 'chatting' },
-    { id: 'viber', name: 'Viber', iconurl: 'viber.svg', type:'number', category: 'chatting' },
-    {id:'faceTime', name: 'FaceTime', iconurl: 'facetime.svg', type:'number', category: 'chatting' },
+    { id: 'viber', name: 'Viber', iconurl: 'viber.svg', type:'number', category: 'chatting', url:'viber://chat?number=' },
+    {id:'faceTime', name: 'FaceTime', iconurl: 'facetime.svg', type:'number', category: 'chatting', url:'facetime://' },
     { id: 'imo', name: 'IMO', iconurl: 'imo.svg', type:'number', category: 'chatting' },
-    { id: 'line', name: 'Line', iconurl: 'line.svg', type:'number', category: 'chatting' },
+    { id: 'line', name: 'Line', iconurl: 'line.svg', type:'number', category: 'chatting',url:'https://line.me/R/ti/p/' },
   
     //business
     { id: 'website', name: 'website', iconurl: 'globe.svg', type:'link', category: 'business' },
-    { id: 'businessEmail', name: 'Business Email', iconurl: 'email.svg', type:'email', category: 'business' },
-    { id: 'businessPhone', name: 'Business Phone', iconurl: 'phone.svg', type:'number', category: 'business' },
+    { id: 'businessEmail', name: 'Business Email', iconurl: 'email.svg', type:'email', category: 'business', url:'mailto:' },
+    { id: 'businessPhone', name: 'Business Phone', iconurl: 'BusinessPhone.svg', type:'number', category: 'business', url: 'tel:' },
     { id: 'address', name: 'Address Location', iconurl: 'map.svg', type:'link' ,category: 'business' },
-    {id:'WA Business', name: 'WhatsApp Business', iconurl: 'whatsappBusiness.svg', type:'number', category: 'business' },
-    {id:"gmail", name: 'Gmail', iconurl: 'gmail.svg', type:'email', category: 'business' },
+    {id:'WA Business', name: 'WhatsApp Business', iconurl: 'whatsappBusiness.svg', type:'number', category: 'business', url: 'https://wa.me/' },
+    {id:"gmail", name: 'Gmail', iconurl: 'gmail.svg', type:'email', category: 'business', url:'mailto:'},
     {id:'googleReviews', name: 'Google Reviews', iconurl: 'googleReviews.svg', type:'link', category: 'business' },
     {id:'Trustpilot', name: 'Trustpilot', iconurl: 'trustpilot.svg', type:'link', category: 'business' },
     { id: 'notion', name: 'Notion', iconurl: 'notion.svg', type:'link', category: 'business' },
@@ -261,6 +264,207 @@ export default function StorePage() {
           );
         })}
       </div>
+
+      {/* Custom Links Section (type 10) */}
+      {profileData?.links && profileData.links.filter(link => link.type === 10).length > 0 && (
+        <div className="px-2 pb-8">
+          <h2 className="text-xl font-bold mb-4 text-[--main-color1] dark:text-white">{t('customLinks')}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {profileData.links
+              .filter(link => link.type === 10)
+              .map(link => {
+                const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
+
+                return (
+                  <div
+                    key={link.pk}
+                    className="card-container rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-200 dark:border-gray-700 relative p-4"
+                  >
+                    {/* Delete button */}
+                    <button
+                      onClick={() => {
+                        const confirmMessage = t('confirmDelete');
+                        if (window.confirm(confirmMessage)) {
+                          onDeleteLink(link.pk);
+                        }
+                      }}
+                      disabled={isDeletingLoading}
+                      className="absolute top-2 right-2 z-10 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={t('delete')}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                    
+                    <div className="flex items-center gap-3 pr-8">
+                      {/* Link Icon */}
+                      <div className="w-12 h-12 rounded-full overflow-hidden relative flex-shrink-0">
+                        <Image
+                          src={`${baseIconsUrl}${link.iconurl || 'link.svg'}`}
+                          alt={link.title || 'Custom link'}
+                          width={48}
+                          height={48}
+                          className="object-cover"
+                        />
+                      </div>
+                      
+                      {/* Link Info */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate" title={link.title}>
+                          {link.title || 'Untitled'}
+                        </h3>
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-[--main-color1] hover:underline truncate block mt-1"
+                          title={link.url}
+                        >
+                          {link.url}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
+
+      {/* Custom Files Section (type 11) */}
+      {profileData?.links && profileData.links.filter(link => link.type === 11).length > 0 && (
+        <div className="px-2 pb-8">
+          <h2 className="text-xl font-bold mb-4 text-[--main-color1] dark:text-white">{t('customFiles')}</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {profileData.links
+              .filter(link => link.type === 11)
+              .map(link => {
+                const fileUrl = `https://fikrafarida.com/media/Blob/${link.url}`;
+                const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(link.url || '');
+                const isPdf = /\.pdf$/i.test(link.url || '');
+
+                return (
+                  <div
+                    key={link.pk}
+                    className="card-container rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-200 dark:border-gray-700 relative"
+                  >
+                    {/* Delete button */}
+                    <button
+                      onClick={() => {
+                        const confirmMessage = t('confirmDelete');
+                        if (window.confirm(confirmMessage)) {
+                          onDeleteLink(link.pk);
+                        }
+                      }}
+                      disabled={isDeletingLoading}
+                      className="absolute top-2 right-2 z-10 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={t('delete')}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                    {isImage ? (
+                      <div className="relative w-full aspect-square">
+                        <Image
+                          src={fileUrl}
+                          alt={link.title || 'Custom file'}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    ) : isPdf ? (
+                      <div className="flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-800 aspect-square">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="48"
+                          height="48"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-red-500 mb-2"
+                        >
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                          <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">PDF</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-6 bg-gray-100 dark:bg-gray-800 aspect-square">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="48"
+                          height="48"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-gray-500 mb-2"
+                        >
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                          <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">File</span>
+                      </div>
+                    )}
+                    <div className="p-3">
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate" title={link.title}>
+                        {link.title || 'Untitled'}
+                      </h3>
+                      <a
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-[--main-color1] hover:underline mt-1 inline-block"
+                      >
+                        {t('view')}
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

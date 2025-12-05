@@ -25,7 +25,6 @@ const AnalyticsPage = () => {
   const isRTL = locale === 'ar';
   const { data: profileData, isLoading, } = useGetProfileQuery();
   const { data: profileAnalytics, isLoading: isLoadingAnalytics, onGetAnalytics } = useGetAnalyticsMutation();
-  console.log(profileAnalytics);
   const [selectedFilter, setSelectedFilter] = useState<TimeFilter>('today');
   const [dateFilter, setDateFilter] = useState({ from: '', to: '' });
 
@@ -115,8 +114,6 @@ const AnalyticsPage = () => {
     setDateFilter({ from: '', to: '' });
     setSelectedFilter('today');
   };
-
-  console.log("hasProAccess", hasProAccess);
 
   const isFilterApplied = selectedFilter === 'custom' && !!(dateFilter.from && dateFilter.to);
 
@@ -230,21 +227,21 @@ const AnalyticsPage = () => {
                     d="M12 2V6"
                     stroke="#FEC400"
                     stroke-opacity="0.9"
-                    stroke-linecap="round"
+                    strokeLinecap="round"
                     stroke-linejoin="round"
                   />
                   <path
                     d="M11 11L21 13L18 15L21 18L18 21L15 18L13 21L11 11Z"
                     stroke="#FEC400"
                     stroke-opacity="0.9"
-                    stroke-linecap="round"
+                    strokeLinecap="round"
                     stroke-linejoin="round"
                   />
                   <path
                     d="M19.071 4.92871L16.2425 7.75721M4.929 19.0707L7.7575 16.2422M2 11.9997H6M4.929 4.92871L7.7575 7.75721"
                     stroke="#FEC400"
                     stroke-opacity="0.9"
-                    stroke-linecap="round"
+                    strokeLinecap="round"
                     stroke-linejoin="round"
                   />
                 </svg>
@@ -268,8 +265,8 @@ const AnalyticsPage = () => {
                     d="M2.28577 8.00014H3.80958L5.71434 3.42871L7.23815 12.5716L9.52386 5.71443L11.1201 10.2859L12.1905 8.00014H13.7143"
                     stroke="#FEC400"
                     stroke-opacity="0.9"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 <span className="text-[var(--main-color1)]">{t('rate')}</span>

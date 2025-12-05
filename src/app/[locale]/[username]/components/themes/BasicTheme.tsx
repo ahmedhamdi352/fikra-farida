@@ -19,6 +19,7 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
   const imageUrl = profileData?.imageFilename  && profileData.imageFilename !== 'avatar1.png' ? `https://fikrafarida.com/Media/Profiles/${profileData.imageFilename}` : PreviewImage;
   const baseIconsUrl = process.env.NEXT_PUBLIC_BASE_ICONS_URL;
 
+  console.log(profileData?.links);
   return (
     <div className="basic-profile w-full max-w-2xl mx-auto h-fit relative overflow-auto flex flex-col"
       style={{ background: (profileData?.ColorMode && profileData?.ColorMode?.length > 0) ? profileData?.ColorMode : 'linear-gradient(180deg, rgba(255, 233, 162, 0.10) 1.29%, rgba(239, 218, 152, 0.30) 8.49%, rgba(228, 209, 145, 0.40) 18.01%, rgba(223, 204, 142, 0.50) 21.33%, rgba(213, 194, 135, 0.60) 35.43%, rgba(201, 184, 128, 0.70) 44.01%, rgba(191, 174, 121, 0.80) 55.29%, rgba(179, 164, 114, 0.70) 66.27%, rgba(171, 156, 109, 0.50) 76%, rgba(164, 150, 104, 0.40) 94.83%, rgba(153, 140, 97, 0.20) 105.89%)' }}
@@ -61,10 +62,10 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
 
       <ActionButtons profileData={profileData} handleSaveContact={handleSaveContact} />
 
-      {/* Profile Links List - Sorted by sort property */}
-      <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-10">
+      {/* Profile Links List - Sorted by sort property (excluding type 10 and 11) */}
+      <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-4">
         {profileData?.links
-          ?.filter(link => link.sort && link.sort > 0)
+          ?.filter(link => link.sort && link.sort > 0 && link.type !== 10 && link.type !== 11)
           .sort((a, b) => (a.sort || 0) - (b.sort || 0))
           .map((link) => (
             <Link
@@ -89,6 +90,108 @@ const BasicTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Basi
             </Link>
           ))}
       </div>
+
+      {/* Custom Links Section (type 10) */}
+      {profileData?.links && profileData.links.filter(link => link.type === 10).length > 0 && (
+        <div className="px-6 flex flex-col gap-2 relative z-10 w-full pb-4">
+          <h3 className="text-lg font-semibold text-white mb-2">{t('workSpace') || 'Custom Links'}</h3>
+          {profileData.links
+            .filter(link => link.type === 10)
+            .map((link) => (
+              <Link
+                onClick={() => onUpdateVisitCount(link.pk)}
+                href={link.url}
+                target="_blank"
+                key={link.pk}
+                style={{ borderRadius: '12px', background: 'rgba(255, 244, 211, 0.10)' }}
+                className="px-2 flex items-center justify-start"
+              >
+                <div className="w-16 h-16 rounded-full flex items-center justify-center">
+                  <Image
+                    src={`${baseIconsUrl}${link.iconurl || 'link.svg'}`}
+                    alt={link.title}
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                    onError={(e) => { e.currentTarget.src = 'https://placehold.co/24x24/1877F2/FFFFFF?text=Link'; }}
+                  />
+                </div>
+                <div className="flex flex-col flex-1 min-w-0">
+                  <span className="text-[16px] text-white font-semibold truncate">{link.title}</span>
+                  <span className="text-xs text-white/70 truncate">{link.url}</span>
+                </div>
+              </Link>
+            ))}
+        </div>
+      )}
+
+      {/* Custom Files Section (type 11) */}
+      {profileData?.links && profileData.links.filter(link => link.type === 11).length > 0 && (
+        <div className="px-6 relative z-10 w-full pb-4">
+          {/* <h3 className="text-lg font-semibold text-white mb-3">{t('customFiles') || 'Photos & Documents'}</h3> */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {profileData.links
+              .filter(link => link.type === 11)
+              .map(link => {
+                const fileUrl = `https://fikrafarida.com/media/Blob/${link.url}`;
+                const isImage = /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(link.url || '');
+                // Get file extension for display
+                const fileExtension = link.url?.split('.').pop()?.toUpperCase() || 'FILE';
+
+                return (
+                  <Link
+                    key={link.pk}
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => onUpdateVisitCount(link.pk)}
+                    className="rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all border border-gray-300 dark:border-white/20"
+                    style={{ background: 'rgba(255, 244, 211, 0.10)' }}
+                  >
+                    {isImage ? (
+                      <div className="relative w-full aspect-square">
+                        <Image
+                          src={fileUrl}
+                          alt={link.title || 'Custom file'}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-4 aspect-square">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="80"
+                          height="80"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-gray-600 dark:text-white/70 mb-1"
+                        >
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                          <polyline points="14 2 14 8 20 8"></polyline>
+                          <line x1="16" y1="13" x2="8" y2="13"></line>
+                          <line x1="16" y1="17" x2="8" y2="17"></line>
+                          <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <span className="text-xs text-gray-600 dark:text-white/70">{fileExtension}</span>
+                      </div>
+                    )}
+                    <div className="p-2">
+                      <p className="text-xs text-black dark:text-white font-medium truncate" title={link.title}>
+                        {link.title || 'Untitled'}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+          </div>
+        </div>
+      )}
       
       <div className="px-6 pb-6 relative z-10 flex justify-center">
         <Link

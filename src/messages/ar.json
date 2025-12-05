@@ -353,6 +353,7 @@
     "editProfile":"تعديل الحساب",
     "customization":"التخصيص",
     "lockProfile":"قفل الحساب",
+    "workSpace":"مساحة العمل",
     "sharePage":{
       "yourQRCode":"رمز ال QR الخاص بك",
       "shareLink":"مشاركة الرابط",
@@ -416,6 +417,8 @@
     "saveContact":"حفظ الاتصال",
     "export":"مشاركة",
     "createYourOwnCard":"إنشاء بطاقتك الخاصة",
+    "customLinks":"الروابط المخصصة",
+    "customFiles":"الصور والمستندات",
     "profiles":"الحسابات",
     "currentProfile":"الحساب الحالي",
     "addNewProfile":"إضافة حساب جديد",
@@ -493,7 +496,12 @@
     "add":"إضافة",
     "update":"تحديث",
     "remove":"حذف",
-    "processing":"جاري المعالجة..."
+    "processing":"جاري المعالجة...",
+    "customFiles":"الملفات المخصصة",
+    "customLinks":"الروابط المخصصة",
+    "view":"عرض",
+    "delete":"حذف",
+    "confirmDelete":"هل أنت متأكد أنك تريد حذف هذا الملف؟"
   },
   "lockedAccountPopup":{
     "accountLocked":"حساب مقفل",

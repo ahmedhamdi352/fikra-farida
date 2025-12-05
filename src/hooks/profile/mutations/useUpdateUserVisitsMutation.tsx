@@ -12,7 +12,6 @@ export function useUpdateUserVisitsMutation() {
     mutationFn: ProfileService.updateUserVisits.request,
     onSuccess: async (response: any) => {
       try {
-       console.log(response);
       } catch (error) {
         console.error('Failed to update user visits:', error);
         SnackbarUtils.error('Failed to update user visits');
