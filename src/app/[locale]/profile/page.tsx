@@ -1,33 +1,76 @@
-'use client';
-
-import ProductScanButton from 'components/profile/ProductScanButton';
-import ProfileContent from './components/ProfileContent';
-import Link from 'next/link';
-import ClientUserLinks from './components/ClientUserLinks';
-import { useGetProfileQuery } from 'hooks/profile';
-import LoadingOverlay from 'components/ui/LoadingOverlay';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { ApiURLs } from 'api/core';
+import { ProfileForReadDTO } from 'types';
+import ProfileContentClient from './components/ProfileContentClient';
 import ProfileTabs from './components/ProfileTabs';
-import { useTranslations } from 'next-intl';
+import ClientUserLinks from './components/ClientUserLinks';
+import ProductScanButton from 'components/profile/ProductScanButton';
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 
-export default function ProfilePage() {
-  const { data: profileData, isLoading, } = useGetProfileQuery();
-  const t = useTranslations('profile');
+async function getProfile(): Promise<ProfileForReadDTO | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
 
-  if (isLoading) {
-    return <LoadingOverlay isLoading={isLoading} />;
+    if (!token) {
+      return null;
+    }
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiUrl) {
+      throw new Error('API URL is not defined in environment variables');
+    }
+
+    const response = await fetch(`${apiUrl}${ApiURLs.myProfile}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token,
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        return null;
+      }
+      throw new Error(`Failed to fetch profile: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching profile data:', error);
+    return null;
+  }
+}
+
+interface ProfilePageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default async function ProfilePage({ params }: ProfilePageProps) {
+  const { locale } = await params;
+  const profileData = await getProfile();
+  const t = await getTranslations('profile');
+
+  if (!profileData) {
+    redirect(`/${locale}/login`);
   }
 
   return (
     <div className="w-full min-h-screen py-8 px-4 flex flex-col items-center">
       <ProfileTabs />
-      <ProfileContent profileData={profileData} />
+      <ProfileContentClient profileData={profileData} />
       <div className="flex items-center justify-center gap-2 mt-4">
         <Link
           href="/store"
           className="inline-flex items-center whitespace-nowrap gap-2 bg-[#FEC400] text-black text-body px-6 py-3 rounded-2xl"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
-            <g clip-path="url(#clip0_2369_8968)">
+            <g clipPath="url(#clip0_2369_8968)">
               <path
                 d="M9.25 14.25C9.25 14.7656 9.34766 15.25 9.54297 15.7031C9.73828 16.1562 10.0039 16.5547 10.3398 16.8984C10.6758 17.2422 11.0742 17.5117 11.5352 17.707C11.9961 17.9023 12.4844 18 13 18H15.25V19.5H13C12.2734 19.5 11.5938 19.3633 10.9609 19.0898C10.3281 18.8164 9.77344 18.4414 9.29688 17.9648C8.82031 17.4883 8.44531 16.9336 8.17188 16.3008C7.89844 15.668 7.75781 14.9844 7.75 14.25C7.75 13.5234 7.88672 12.8438 8.16016 12.2109C8.43359 11.5781 8.80859 11.0234 9.28516 10.5469C9.76172 10.0703 10.3164 9.69531 10.9492 9.42188C11.582 9.14844 12.2656 9.00781 13 9H13.75V10.5H13C12.4844 10.5 12 10.5977 11.5469 10.793C11.0938 10.9883 10.6953 11.2578 10.3516 11.6016C10.0078 11.9453 9.73828 12.3438 9.54297 12.7969C9.34766 13.25 9.25 13.7344 9.25 14.25ZM18.25 10.5V9H19C19.7266 9 20.4062 9.13672 21.0391 9.41016C21.6719 9.68359 22.2266 10.0586 22.7031 10.5352C23.1797 11.0117 23.5547 11.5664 23.8281 12.1992C24.1016 12.832 24.2422 13.5156 24.25 14.25C24.25 14.9375 24.1211 15.5977 23.8633 16.2305C23.6055 16.8633 23.2344 17.4258 22.75 17.918V14.25C22.75 13.7344 22.6523 13.25 22.457 12.7969C22.2617 12.3438 21.9922 11.9492 21.6484 11.6133C21.3047 11.2773 20.9062 11.0078 20.4531 10.8047C20 10.6016 19.5156 10.5 19 10.5H18.25ZM11.5 4.5C12.2266 4.5 12.9062 4.63672 13.5391 4.91016C14.1719 5.18359 14.7266 5.55859 15.2031 6.03516C15.6797 6.51172 16.0547 7.06641 16.3281 7.69922C16.6016 8.33203 16.7422 9.01562 16.75 9.75C16.75 10.4766 16.6133 11.1562 16.3398 11.7891C16.0664 12.4219 15.6914 12.9766 15.2148 13.4531C14.7383 13.9297 14.1836 14.3047 13.5508 14.5781C12.918 14.8516 12.2344 14.9922 11.5 15H10.75V13.5H11.5C12.0156 13.5 12.5 13.4023 12.9531 13.207C13.4062 13.0117 13.8008 12.7461 14.1367 12.4102C14.4727 12.0742 14.7422 11.6758 14.9453 11.2148C15.1484 10.7539 15.25 10.2656 15.25 9.75C15.25 9.23438 15.1523 8.75 14.957 8.29688C14.7617 7.84375 14.4922 7.44922 14.1484 7.11328C13.8047 6.77734 13.4062 6.50781 12.9531 6.30469C12.5 6.10156 12.0156 6 11.5 6H5.5C4.98438 6 4.5 6.09766 4.04688 6.29297C3.59375 6.48828 3.19531 6.75781 2.85156 7.10156C2.50781 7.44531 2.23828 7.84375 2.04297 8.29688C1.84766 8.75 1.75 9.23438 1.75 9.75C1.75 10.2656 1.84766 10.75 2.04297 11.2031C2.23828 11.6562 2.50391 12.0547 2.83984 12.3984C3.17578 12.7422 3.57422 13.0117 4.03516 13.207C4.49609 13.4023 4.98438 13.5 5.5 13.5H6.25V15H5.5C4.77344 15 4.09375 14.8633 3.46094 14.5898C2.82812 14.3164 2.27344 13.9414 1.79688 13.4648C1.32031 12.9883 0.945312 12.4336 0.671875 11.8008C0.398438 11.168 0.257812 10.4844 0.25 9.75C0.25 9.02344 0.386719 8.34375 0.660156 7.71094C0.933594 7.07812 1.30859 6.52344 1.78516 6.04688C2.26172 5.57031 2.81641 5.19531 3.44922 4.92188C4.08203 4.64844 4.76562 4.50781 5.5 4.5H11.5ZM24.25 19.5V21H21.25V24H19.75V21H16.75V19.5H19.75V16.5H21.25V19.5H24.25Z"
                 fill="black"

@@ -166,7 +166,8 @@ const RoundedTheme = ({ profileData, onUpdateVisitCount, handleSaveContact }: Ro
                           alt={link.title || 'Custom file'}
                           fill
                           className="object-cover"
-                          unoptimized
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                          loading="lazy"
                         />
                       </div>
                     ) : (

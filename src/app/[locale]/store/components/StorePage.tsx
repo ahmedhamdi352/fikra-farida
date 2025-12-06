@@ -3,11 +3,12 @@
 import LoadingOverlay from 'components/ui/LoadingOverlay';
 import { useGetProfileQuery } from 'hooks/profile';
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
-import StoreItem from './StoreItem';
+import { useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useDeleteLinkMutation } from 'hooks/links';
+
+const StoreItem = lazy(() => import('./StoreItem'));
 
 interface Category {
   id: string;
@@ -252,15 +253,16 @@ export default function StorePage() {
         {Object.entries(appsByCategory).map(([categoryId, categoryApps]) => {
           const category = categories.find(c => c.id === categoryId) || { id: categoryId, name: categoryId };
           return (
-            <StoreItem
-              key={categoryId}
-              categoryId={categoryId}
-              category={category}
+            <Suspense key={categoryId} fallback={<div className="p-4 text-center">Loading...</div>}>
+              <StoreItem
+                categoryId={categoryId}
+                category={category}
               categoryApps={categoryApps}
               categoryRefs={categoryRefs}
               activeCategory={activeCategory}
               profileData={profileData}
             />
+            </Suspense>
           );
         })}
       </div>

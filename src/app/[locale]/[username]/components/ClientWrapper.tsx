@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { saveAs } from 'file-saver';
-import LockedAccountPopup from './LockedAccountPopup';
-import AutoConnectPopup from './AutoConnectPopup';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import { useUpdateVisitCountMutation } from 'hooks/links/mutations/useUpdateVisitCountMutation';
-import { BasicTheme, EdgeTheme, RoundedTheme } from './themes';
+
+const LockedAccountPopup = lazy(() => import('./LockedAccountPopup'));
+const AutoConnectPopup = lazy(() => import('./AutoConnectPopup'));
+const BasicTheme = lazy(() => import('./themes/BasicTheme').then(m => ({ default: m.default })));
+const EdgeTheme = lazy(() => import('./themes/EdgeTheme').then(m => ({ default: m.default })));
+const RoundedTheme = lazy(() => import('./themes/RoundedTheme').then(m => ({ default: m.default })));
 
 interface ClientWrapperProps {
   isAccountLocked: boolean;
@@ -229,24 +232,32 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
   };
   return (
     <>
-      {!isAccountLocked && profileData && renderProfileContent(theme || 'basic', async (pk: string | number) => { await onUpdateVisitCount(pk || profileData.userPk); })}
+      {!isAccountLocked && profileData && (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+          {renderProfileContent(theme || 'basic', async (pk: string | number) => { await onUpdateVisitCount(pk || profileData.userPk); })}
+        </Suspense>
+      )}
       {isAccountLocked && profileData &&
         <>
         </>
       }
       {isAccountLocked && (
-        <LockedAccountPopup
-          isOpen={showPopup}
-          onClose={handleClose}
-        />
+        <Suspense fallback={null}>
+          <LockedAccountPopup
+            isOpen={showPopup}
+            onClose={handleClose}
+          />
+        </Suspense>
       )}
       {
         !isAccountLocked && profileData?.autoconnect && (
-          <AutoConnectPopup
-            isOpen={showAutoConnectPopup}
-            onClose={handleCloseAutoConnectPopup}
-            userPk={profileData.userPk}
-          />
+          <Suspense fallback={null}>
+            <AutoConnectPopup
+              isOpen={showAutoConnectPopup}
+              onClose={handleCloseAutoConnectPopup}
+              userPk={profileData.userPk}
+            />
+          </Suspense>
         )
       }
     </>
