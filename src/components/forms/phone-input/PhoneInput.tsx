@@ -13,6 +13,7 @@ import {
 } from 'react-international-phone';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { useLocale } from 'next-intl';
 
 type PhoneFieldProps<T extends FieldValues = FieldValues> = Omit<React.ComponentPropsWithoutRef<'input'>, 'name'> &
   PhoneInputProps & {
@@ -42,6 +43,8 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
   ...rest
 }: PhoneFieldProps<TFieldValues>) {
   const [isOpen, setIsOpen] = useState(false);
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
 
   const countriesOptions = () => {
     if (onlyCountries) {
@@ -91,7 +94,7 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
             )}
             <div className="relative flex w-full">
               <div className="relative w-full">
-                <div className="absolute inset-y-0 left-0 flex items-center z-10">
+                <div className={`absolute inset-y-0 ${isRTL ? 'right-0' : 'left-0'} flex items-center z-10`}>
                   <div className="relative">
                     <button
                       type="button"
@@ -103,11 +106,11 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                         <FlagImage iso2={country.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
                         <span className="text-base">+{country.dialCode}</span>
                       </div>
-                      <ChevronDownIcon className={`h-5 w-5 text-black dark:text-white/70 ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDownIcon className={`h-5 w-5 text-black dark:text-white/70 ${isRTL ? 'mr-2' : 'ml-2'} transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                     </button>
                     {/* Custom Dropdown */}
                     {isOpen && (
-                      <div className="absolute top-full left-0 mt-1 w-full max-h-60 overflow-auto bg-[#F5F5F5] dark:bg-black/90 backdrop-blur-sm rounded-lg shadow-lg z-50">
+                      <div className={`absolute top-full ${isRTL ? 'right-0' : 'left-0'} mt-1 w-full max-h-60 overflow-auto bg-[#F5F5F5] dark:bg-black/90 backdrop-blur-sm rounded-lg shadow-lg z-50`}>
                         {countriesOptions().map((option, index) => {
                           const countryData = parseCountry(option);
                           return (
@@ -125,7 +128,7 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                             >
                               <FlagImage iso2={countryData.iso2} className="w-6 h-4 rounded-[1px] object-cover" />
                               <span className="text-black dark:text-white text-base font-medium">{countryData.name}</span>
-                              <span className="text-gray-400 dark:text-gray-500 ml-auto text-base">+{countryData.dialCode}</span>
+                              <span className={`text-gray-400 dark:text-gray-500 ${isRTL ? 'mr-auto' : 'ml-auto'} text-base`}>+{countryData.dialCode}</span>
                             </button>
                           );
                         })}
@@ -137,13 +140,14 @@ function PhoneInputField<TFieldValues extends FieldValues = FieldValues>({
                   type="tel"
                   id={name}
                   placeholder={placeholder}
-                  className={`w-full pl-[130px] pr-4 py-4 bg-[#F5F5F5] dark:bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-[var(--main-color1)]'
+                  className={`w-full ${isRTL ? 'pr-[130px] pl-4' : 'pl-[130px] pr-4'} py-4 bg-[#F5F5F5] dark:bg-[rgba(0,0,0,0.25)] rounded-lg focus:outline-none ${error ? 'ring-2 ring-red-500 border-red-500' : 'focus:ring-2 focus:ring-[var(--main-color1)]'
                     } text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400`}
                   value={inputValue}
                   onChange={handleInputChange}
                   onBlur={onBlur}
                   disabled={disabled}
                   ref={ref}
+                  dir={isRTL ? 'rtl' : 'ltr'}
                   {...rest}
                 />
               </div>
