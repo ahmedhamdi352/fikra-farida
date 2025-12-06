@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { locales, Locale } from '../../i18n';
 import { Metadata } from 'next';
 import { getSiteData } from '../actions';
+import { siteConfig } from 'config/site';
 import HeaderWrapper from 'components/HeaderWrapper';
 import FooterWrapper from 'components/FooterWrapper';
 import { CartProvider } from 'context/CartContext';
@@ -27,14 +28,16 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   if (!locales.includes(locale)) notFound();
 
-  let siteConfig;
+  let siteData;
   try {
-    siteConfig = await getSiteData();
+    siteData = await getSiteData();
   } catch (error) {
     console.error('Error fetching site data:', error);
-    siteConfig = {
+    siteData = {
       name: 'Fikra Farida',
-      description: 'test',
+      siteName: 'Fikra Farida',
+      description: 'Communication between people easily and in the fastest way',
+      domain: 'fikrafarida.com',
       siteLogo: '',
       siteIcon: '',
       email: '',
@@ -48,12 +51,46 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     };
   }
 
+  const siteUrl = `https://${siteData.domain || 'fikrafarida.com'}`;
+  const ogImage = siteData.siteLogo || `${siteUrl}/icons/icon-512x512.png`;
+
   return {
+    metadataBase: new URL(siteUrl),
     title: {
       template: `%s | ${siteConfig.name}`,
-      default: `${siteConfig.siteName} - Communication between people easily`,
+      default: `${siteData.siteName || siteConfig.name} - Communication between people easily`,
     },
     description: 'Communication between people easily and in the fastest way',
+    keywords: ['digital business card', 'contact sharing', 'networking', 'QR code', 'profile sharing', 'business card', 'vCard'],
+    openGraph: {
+      type: 'website',
+      locale: locale === 'ar' ? 'ar_SA' : 'en_US',
+      url: siteUrl,
+      siteName: siteData.siteName || siteConfig.name,
+      title: `${siteData.siteName || siteConfig.name} - Communication between people easily`,
+      description: 'Communication between people easily and in the fastest way',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: siteData.siteName || siteConfig.name,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${siteData.siteName || siteConfig.name} - Communication between people easily`,
+      description: 'Communication between people easily and in the fastest way',
+      images: [ogImage],
+    },
+    alternates: {
+      canonical: siteUrl,
+      languages: {
+        'en': `${siteUrl}/en`,
+        'ar': `${siteUrl}/ar`,
+      },
+    },
   };
 }
 

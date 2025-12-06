@@ -59,6 +59,10 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // Performance optimizations
+  poweredByHeader: false,
+  generateEtags: true,
+
   // Headers for caching
   async headers() {
     return [

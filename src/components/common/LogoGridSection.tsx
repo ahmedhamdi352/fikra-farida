@@ -17,14 +17,14 @@ export default function LogoGridSection({ images, className }: LogoGridSectionPr
       <div className="v-slider">
         <div className="v-slide-track h-[62px] lg:h-[82px]">
           {repeatArray(images1, 20)?.map((el, index) => (
-            <Image src={el} alt={`image_${index}`} key={index} className="h-full w-full" loading="lazy" />
+            <Image src={el} alt={`image_${index}`} key={index} className="h-full w-full" loading="lazy" width={100} height={62} sizes="100px" />
           ))}
         </div>
       </div>
       <div className="v-slider v-slider-reverse">
         <div className="v-slide-track h-[62px] lg:h-[82px]">
           {repeatArray(images2, 20)?.map((el, index) => (
-            <Image src={el} alt={`image_${index}`} key={index} className="h-full w-full" loading="lazy" />
+            <Image src={el} alt={`image_${index}`} key={index} className="h-full w-full" loading="lazy" width={100} height={62} sizes="100px" />
           ))}
         </div>
       </div>

@@ -1,4 +1,4 @@
-// import { Metadata } from 'next';
+import { Metadata } from 'next';
 import ClientWrapper from './components/ClientWrapper';
 import type { Viewport } from 'next';
 import { ProfileForReadDTO } from 'types';
@@ -75,22 +75,48 @@ async function getProfileByUsername(username: string): Promise<ProfileResponse> 
   }
 }
 
-export async function generateMetadata({ params }: UsernameProps) {
-  const { username } = await params;
+export async function generateMetadata({ params }: UsernameProps): Promise<Metadata> {
+  const { locale, username } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://fikrafarida.com';
+  const profileUrl = `${siteUrl}/${locale}/${username}`;
 
   // Try to get profile data for better metadata
   try {
     const profileData = await getProfileByUsername(username);
     if (profileData.success && profileData.data) {
       if (typeof profileData.data === 'object' && 'fullname' in profileData.data) {
+        const fullName = profileData.data.fullname || username;
+        const bio = profileData.data.bio || `View ${fullName}'s digital business card and contact information`;
+        const profileImage = profileData.data.imageFilename 
+          ? `https://fikrafarida.com/Media/Profiles/${profileData.data.imageFilename}`
+          : `${siteUrl}/icons/icon-512x512.png`;
+
         return {
-          title: `${profileData.data?.fullname || username}'s Profile`,
-          description: `View ${profileData.data?.fullname || username}'s profile page`,
-        };
-      } else {
-        return {
-          title: `${username}'s Profile`,
-          description: `View ${username}'s profile page`,
+          title: `${fullName}'s Profile`,
+          description: bio,
+          alternates: {
+            canonical: profileUrl,
+          },
+          openGraph: {
+            type: 'profile',
+            url: profileUrl,
+            title: `${fullName}'s Digital Business Card`,
+            description: bio,
+            images: [
+              {
+                url: profileImage,
+                width: 1200,
+                height: 630,
+                alt: `${fullName}'s profile`,
+              },
+            ],
+          },
+          twitter: {
+            card: 'summary_large_image',
+            title: `${fullName}'s Digital Business Card`,
+            description: bio,
+            images: [profileImage],
+          },
         };
       }
     }
@@ -101,7 +127,30 @@ export async function generateMetadata({ params }: UsernameProps) {
   // Fallback metadata
   return {
     title: `${username}'s Profile`,
-    description: `View ${username}'s profile page`,
+    description: `View ${username}'s digital business card and contact information`,
+    alternates: {
+      canonical: profileUrl,
+    },
+    openGraph: {
+      type: 'profile',
+      url: profileUrl,
+      title: `${username}'s Digital Business Card`,
+      description: `View ${username}'s digital business card and contact information`,
+      images: [
+        {
+          url: `${siteUrl}/icons/icon-512x512.png`,
+          width: 1200,
+          height: 630,
+          alt: `${username}'s profile`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${username}'s Digital Business Card`,
+      description: `View ${username}'s digital business card and contact information`,
+      images: [`${siteUrl}/icons/icon-512x512.png`],
+    },
   };
 }
 

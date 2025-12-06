@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://fikrafarida.com/sitemap.xml
+
+# Disallow admin and private pages
+Disallow: /profile/
+Disallow: /login
+Disallow: /register
+Disallow: /forget-password
+Disallow: /reset-password
+Disallow: /checkout
+Disallow: /payment
+Disallow: /analytics
+Disallow: /connections
+Disallow: /store
+Disallow: /subscription
+Disallow: /teams
+Disallow: /qr-code
+Disallow: /share
+
+# Allow public pages
+Allow: /
+Allow: /about
+Allow: /blogs
+Allow: /contact
+Allow: /collections
+Allow: /active-products
+

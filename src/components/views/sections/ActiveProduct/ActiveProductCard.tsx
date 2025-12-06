@@ -61,6 +61,7 @@ export function ProductCard({ product, qrKey }: ProductCardProps) {
                 alt={productName}
                 fill
                 className="object-contain p-2 md:p-4"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 priority
               />
             ) : (
