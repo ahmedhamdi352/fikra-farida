@@ -185,8 +185,8 @@ const PaymentPage = () => {
           phoneNumber: data.phone,
           email: data?.email || '',
         },
-        countryCode: locale,
-        domain: window.location.hostname,
+        countryCode: siteData.code,
+        domain: siteData.domain,
         paymentMethod: paymentMethod,
       };
 
@@ -324,29 +324,31 @@ const PaymentPage = () => {
                   }
                 />
 
-                <Select
+                <TextInput
                   control={control}
-                  name="city"
-                  placeholder={t('city')}
-                  options={getCityNames().map(city => ({ value: city, label: city }))}
+                  name="governorate"
+                  placeholder={t('governorate')}
                   icon={
                     <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
                     </svg>
                   }
-                  required
                 />
+
               </div>
-              <TextInput
+              <Select
                 control={control}
-                name="governorate"
-                placeholder={t('governorate')}
+                name="city"
+                placeholder={t('city')}
+                options={getCityNames().map(city => ({ value: city, label: city }))}
                 icon={
                   <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
                   </svg>
                 }
+                required
               />
+
               <TextInput
                 control={control}
                 name="address"
@@ -383,31 +385,31 @@ const PaymentPage = () => {
               <p className="text-sm text-gray-400">{t('secureTransaction')}</p>
 
               <div className="space-y-2">
-               { siteData.EnableOnlinePayment && <>
-                <label
-                  className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'online'
-                    ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
-                    : 'border-gray-600 hover:border-[#FEC400]/50'
-                    }`}
-                >
-                  <input type="radio" {...control.register('paymentMethod')} value="online" className="hidden" />
-                  <div
-                    className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'online' ? 'border-[#FEC400]' : 'border-gray-600'
+                {siteData.EnableOnlinePayment && <>
+                  <label
+                    className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'online'
+                      ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
+                      : 'border-gray-600 hover:border-[#FEC400]/50'
                       }`}
                   >
-                    {paymentMethod === 'online' && <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />}
-                  </div>
-                  <span className="text-gray-500">{t('onlinePayment')}</span>
-                  <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
-                    <Image src="/visa.png" alt="Visa" width={35} height={22} className="object-contain" />
-                    <Image src="/mastercard.png" alt="Mastercard" width={35} height={22} className="object-contain" />
-                    <Image src="/mada.png" alt="Mada" width={35} height={22} className="object-contain" />
-                  </div>
-                </label>
-                <p className="text-sm">{t('onlineOptions')}</p>
+                    <input type="radio" {...control.register('paymentMethod')} value="online" className="hidden" />
+                    <div
+                      className={`w-5 h-5 rounded-full border-2 mx-3 flex items-center justify-center ${paymentMethod === 'online' ? 'border-[#FEC400]' : 'border-gray-600'
+                        }`}
+                    >
+                      {paymentMethod === 'online' && <div className="w-2.5 h-2.5 rounded-full bg-[#FEC400]" />}
+                    </div>
+                    <span className="text-gray-500">{t('onlinePayment')}</span>
+                    <div className="flex items-center gap-1 rtl:mr-auto ltr:ml-auto">
+                      <Image src="/visa.png" alt="Visa" width={35} height={22} className="object-contain" />
+                      <Image src="/mastercard.png" alt="Mastercard" width={35} height={22} className="object-contain" />
+                      <Image src="/mada.png" alt="Mada" width={35} height={22} className="object-contain" />
+                    </div>
+                  </label>
+                  <p className="text-sm">{t('onlineOptions')}</p>
                 </>}
-                
-               { siteData.EnableCashOnDelivery && <label
+
+                {siteData.EnableCashOnDelivery && <label
                   className={`flex items-center w-full p-4 border rounded-lg cursor-pointer transition-all ${paymentMethod === 'cash'
                     ? 'border-[#FEC400] bg-[rgba(254,196,0,0.1)]'
                     : 'border-gray-600 hover:border-[#FEC400]/50'

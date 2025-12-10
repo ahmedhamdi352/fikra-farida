@@ -4,6 +4,7 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { saveAs } from 'file-saver';
 import { ProfileForReadDTO } from 'types/api/ProfileForReadDTO';
 import { useUpdateVisitCountMutation } from 'hooks/links/mutations/useUpdateVisitCountMutation';
+import { useParams } from 'next/navigation';
 
 const LockedAccountPopup = lazy(() => import('./LockedAccountPopup'));
 const AutoConnectPopup = lazy(() => import('./AutoConnectPopup'));
@@ -158,6 +159,9 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
   const [showPopup, setShowPopup] = useState(false);
   const [showAutoConnectPopup, setShowAutoConnectPopup] = useState(false);
   const { onUpdateVisitCount } = useUpdateVisitCountMutation();
+  const params = useParams();
+  const locale = params?.locale as string;
+  const username = params?.username as string;
 
   const handleSaveContact = async () => {
     if (!profileData) return;
@@ -198,9 +202,22 @@ export default function ClientWrapper({ isAccountLocked, profileData, theme = 'b
 
   useEffect(() => {
     if (profileData?.directurl) {
-      window.location.replace(profileData.directurl);
+      // Check if directurl is a file (PNG, PDF, etc.)
+      const fileExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip', '.rar', '.mp4', '.mp3', '.mov', '.avi'];
+      const isFile = fileExtensions.some(ext => 
+        profileData.directurl.toLowerCase().endsWith(ext)
+      );
+
+      if (isFile) {
+        // If it's a file, redirect to the profile page URL instead
+        const profilePageUrl = `https://fikrafarida.com/media/Blob/${profileData.directurl}`;
+        window.location.replace(profilePageUrl);
+      } else {
+        // If it's not a file, redirect to the directurl as normal
+        window.location.replace(profileData.directurl);
+      }
     }
-  }, [profileData]);
+  }, [profileData, locale, username]);
 
 
   // Render profile content based on theme
