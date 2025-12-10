@@ -61,12 +61,12 @@ export default function StorePage() {
     //chatting
     { id: 'mergencyPhone', name: 'Emergency Phone',  iconurl: 'emergencyPhone.svg', type:'number', category: 'chatting', url: 'tel:' },
     { id: 'whatsapp', name: 'WhatsApp', iconurl: 'whatsapp.svg', type: 'number', category: 'chatting', url: 'https://wa.me/' },
-    { id: 'messenger', name: 'Messenger', iconurl: 'messenger.svg', type: 'link', category: 'chatting' },
+    { id: 'messenger', name: 'Messenger', iconurl: 'messenger.svg', type: 'username', url:'https://m.me/', category: 'chatting' },
     { id: 'telegram', name: 'Telegram', iconurl: 'telegram.svg', type: 'username', category: 'chatting', url:'https://t.me/' },
-    { id: 'webchat', name: 'WebChat', iconurl: 'wechat.svg', type:'link', category: 'chatting' },
+    { id: 'webchat', name: 'WebChat', iconurl: 'wechat.svg', type:'username', category: 'chatting', url:'https://weixin.qq.com/' },
     { id: 'viber', name: 'Viber', iconurl: 'viber.svg', type:'number', category: 'chatting', url:'viber://chat?number=' },
     {id:'faceTime', name: 'FaceTime', iconurl: 'facetime.svg', type:'number', category: 'chatting', url:'facetime://' },
-    { id: 'imo', name: 'IMO', iconurl: 'imo.svg', type:'number', category: 'chatting' },
+    { id: 'imo', name: 'IMO', iconurl: 'imo.svg', type:'number', category: 'chatting',url:'https://imo.im/' },
     { id: 'line', name: 'Line', iconurl: 'line.svg', type:'number', category: 'chatting',url:'https://line.me/R/ti/p/' },
   
     //business
@@ -93,10 +93,10 @@ export default function StorePage() {
 
     //payment
     { id: 'instapay', name: 'Instapay', iconurl: 'instapay.svg', type:'link', category: 'payment' },
-    { id: 'telda', name: 'Telda', iconurl: 'telda.svg', type:'link', category: 'payment' },
+    { id: 'telda', name: 'Telda', iconurl: 'telda.svg', type:'username', url:'https://telda.app/',  category: 'payment' },
     { id: 'wallets', name: 'Wallets', iconurl: 'wallets.svg', type:'number', category: 'payment' },
-    { id: 'cashApp', name: 'Cash App', iconurl: 'cashApp.svg', type:'link', category: 'payment' },
-    {id:'paypal', name: 'Paypal', iconurl: 'paypal.svg', type:'link', category: 'payment' },
+    { id: 'cashApp', name: 'Cash App', iconurl: 'cashApp.svg', type:'username',url:'https://cash.app/$', category: 'payment' },
+    {id:'paypal', name: 'Paypal', iconurl: 'paypal.svg', type:'username',url:'https://www.paypal.com/paypalme/', category: 'payment' },
 
 
     //creative
@@ -104,9 +104,9 @@ export default function StorePage() {
     { id: 'dribbble', name: 'Dribbble', iconurl: 'dribbble.svg', type:'link', category: 'creative' },
     { id: 'behance', name: 'Behance', iconurl: 'behance.svg', type:'link', category: 'creative' },
     { id: 'podcasts', name: 'Podcasts', iconurl: 'podcasts.svg', type:'link', category: 'creative' },
-    { id: 'gitHub', name: 'GitHub', iconurl: 'github.svg', type:'link', category: 'creative' },
+    { id: 'gitHub', name: 'GitHub', iconurl: 'github.svg', type:'username',url:'https://github.com/', category: 'creative' },
     { id: 'pinterest', name: 'Pinterest', iconurl: 'pinterest.svg', type:'link', category: 'creative' },
-    { id: 'gitLab', name: 'GitLab', iconurl: 'gitlab.svg', type:'link', category: 'creative' },
+    { id: 'gitLab', name: 'GitLab', iconurl: 'gitlab.svg', type:'username',url:'https://gitlab.com/', category: 'creative' },
     { id: 'medium', name: 'Medium', iconurl: 'medium.svg', type:'link', category: 'creative' },
     { id: 'ted', name: 'TED', iconurl: 'ted.svg', type:'link', category: 'creative' },
     // { id: 'StackOverflow', name: 'StackOverflow', iconurl: 'stackoverflow.svg', category: 'creative' },
