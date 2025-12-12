@@ -9,12 +9,16 @@ export default function ProductScanButton() {
   const t = useTranslations('profile');
   const [isScanning, setIsScanning] = useState(false);
   const [showCameraModal, setShowCameraModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Refs for our DOM elements and stream
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const requestRef = useRef<number | null>(null);
+  const lastScanTimeRef = useRef<number>(0);
+  const frameCountRef = useRef<number>(0);
+  const processingCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Function to stop the camera stream and cleanup
   const stopCameraStream = useCallback(() => {
@@ -27,59 +31,182 @@ export default function ProductScanButton() {
     }
   }, []);
 
-  // Main scanning loop function
-  const scanLoop = useCallback(() => {
-    if (videoRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA && canvasRef.current) {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
+  // Close the modal and cleanup
+  const handleClose = useCallback(() => {
+    setShowCameraModal(false);
+    setIsScanning(false);
+    setIsProcessing(false);
+    frameCountRef.current = 0;
+    lastScanTimeRef.current = 0;
+    stopCameraStream();
+  }, [stopCameraStream]);
 
-      if (ctx) {
-        // Set canvas dimensions to match the video feed
-        canvas.height = video.videoHeight;
-        canvas.width = video.videoWidth;
+  // Handle successful scan with smooth UX flow
+  const handleScanSuccess = useCallback(async (url: string, scanLoopCallback: () => void) => {
+    try {
+      // Show visual feedback first (border is already drawn)
+      // Wait a moment for user to see the success
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Draw the current video frame to the canvas
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // Get the image data from the canvas
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-        // Use jsQR to check for a QR code
-        let code;
+      // Validate URL to make sure it's safe to open
+      if (url) {
         try {
-          code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: 'dontInvert',
-          });
+          // Check if it's a valid URL format
+          new URL(url);
+
+          // Show success message
+          SnackbarUtils.success('QR Code scanned successfully');
+
+          // Wait a bit more before opening link for smoother UX
+          await new Promise(resolve => setTimeout(resolve, 300));
+
+          // Open in new tab
+          const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+          
+          // If popup was blocked, show message
+          if (!newWindow) {
+            SnackbarUtils.warning('Please allow popups to open the link');
+          }
+
+          // Wait a moment before closing modal
+          await new Promise(resolve => setTimeout(resolve, 500));
         } catch (error) {
-          console.error('Error decoding QR code:', error);
-          // Don't show error message here as it would show repeatedly during scanning
-          // Continue scanning
+          console.error('Invalid URL format:', url, error);
+          SnackbarUtils.warning('The QR code contains invalid URL format');
+          setIsProcessing(false);
+          // Continue scanning after error
+          if (videoRef.current && canvasRef.current) {
+            requestRef.current = requestAnimationFrame(scanLoopCallback);
+          }
+          return;
         }
-
-        // If a QR code is found
-        if (code) {
-          // Draw a line to highlight the QR code - good for user feedback
-          const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = code.location;
-          ctx.beginPath();
-          ctx.moveTo(topLeftCorner.x, topLeftCorner.y);
-          ctx.lineTo(topRightCorner.x, topRightCorner.y);
-          ctx.lineTo(bottomRightCorner.x, bottomRightCorner.y);
-          ctx.lineTo(bottomLeftCorner.x, bottomLeftCorner.y);
-          ctx.closePath();
-          ctx.lineWidth = 4;
-          ctx.strokeStyle = '#FEC400';
-          ctx.stroke();
-
-          // Handle the successful scan
-          handleScanSuccess(code.data);
-          return; // Exit the loop
+      } else {
+        SnackbarUtils.warning('QR code does not contain a valid URL');
+        setIsProcessing(false);
+        // Continue scanning after error
+        if (videoRef.current && canvasRef.current) {
+          requestRef.current = requestAnimationFrame(scanLoopCallback);
         }
+        return;
+      }
+
+      // Close the camera modal after smooth flow
+      handleClose();
+    } catch (error) {
+      console.error('Error processing QR code:', error);
+      SnackbarUtils.error('Error processing QR code. Please try again.');
+      setIsProcessing(false);
+      // Continue scanning after error
+      if (videoRef.current && canvasRef.current) {
+        requestRef.current = requestAnimationFrame(scanLoopCallback);
       }
     }
+  }, [handleClose]);
+
+  // Main scanning loop function - optimized for mobile devices
+  const scanLoop = useCallback(() => {
+    if (isProcessing || !videoRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA || !canvasRef.current) {
+      requestRef.current = requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      requestRef.current = requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    // Throttle scanning: process every 3rd frame for better performance on mobile
+    frameCountRef.current += 1;
+    if (frameCountRef.current % 3 !== 0) {
+      requestRef.current = requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    // Set canvas dimensions to match the video feed (for display)
+    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+
+    // Draw the current video frame to the canvas for visual feedback
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Create a smaller processing canvas for better performance
+    if (!processingCanvasRef.current) {
+      processingCanvasRef.current = document.createElement('canvas');
+    }
+    const processingCanvas = processingCanvasRef.current;
+    const processingCtx = processingCanvas.getContext('2d', { willReadFrequently: true });
+
+    if (!processingCtx) {
+      requestRef.current = requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    // Downscale for processing (max 640px width for better performance)
+    const maxProcessingWidth = 640;
+    const scale = Math.min(maxProcessingWidth / video.videoWidth, 1);
+    processingCanvas.width = Math.floor(video.videoWidth * scale);
+    processingCanvas.height = Math.floor(video.videoHeight * scale);
+
+    // Draw scaled video frame to processing canvas
+    processingCtx.drawImage(video, 0, 0, processingCanvas.width, processingCanvas.height);
+
+    // Get the image data from the processing canvas
+    const imageData = processingCtx.getImageData(0, 0, processingCanvas.width, processingCanvas.height);
+
+    // Use jsQR to check for a QR code with better settings for mobile
+    let code;
+    try {
+      code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'attemptBoth', // Try both normal and inverted
+      });
+    } catch (error) {
+      console.error('Error decoding QR code:', error);
+      requestRef.current = requestAnimationFrame(scanLoop);
+      return;
+    }
+
+    // If a QR code is found
+    if (code) {
+      // Debounce: prevent multiple scans of the same code
+      const now = Date.now();
+      if (now - lastScanTimeRef.current < 2000) {
+        // Same code scanned within 2 seconds, ignore
+        requestRef.current = requestAnimationFrame(scanLoop);
+        return;
+      }
+
+      // Scale QR code location back to full canvas size for display
+      const scaleX = canvas.width / processingCanvas.width;
+      const scaleY = canvas.height / processingCanvas.height;
+      const { topLeftCorner, topRightCorner, bottomRightCorner, bottomLeftCorner } = code.location;
+
+      // Draw a line to highlight the QR code - good for user feedback
+      ctx.beginPath();
+      ctx.moveTo(topLeftCorner.x * scaleX, topLeftCorner.y * scaleY);
+      ctx.lineTo(topRightCorner.x * scaleX, topRightCorner.y * scaleY);
+      ctx.lineTo(bottomRightCorner.x * scaleX, bottomRightCorner.y * scaleY);
+      ctx.lineTo(bottomLeftCorner.x * scaleX, bottomLeftCorner.y * scaleY);
+      ctx.closePath();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#FEC400';
+      ctx.stroke();
+
+      // Mark as processing to prevent multiple scans
+      setIsProcessing(true);
+      lastScanTimeRef.current = now;
+
+      // Handle the successful scan with smooth UX
+      handleScanSuccess(code.data, scanLoop);
+      return; // Exit the loop
+    }
+
     // Continue the loop
     requestRef.current = requestAnimationFrame(scanLoop);
-  }, []);
+  }, [isProcessing, handleScanSuccess]);
 
   // Function to start the camera and the scanning loop
   const startCamera = useCallback(async () => {
@@ -87,16 +214,23 @@ export default function ProductScanButton() {
       setIsScanning(true);
       setShowCameraModal(true);
 
+      // Check if mediaDevices API is available
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         SnackbarUtils.error('Camera access not supported in this browser');
         setIsScanning(false);
+        setShowCameraModal(false);
         return;
       }
 
       stopCameraStream();
 
+      // Better camera constraints for mobile devices
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' },
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
       });
 
       streamRef.current = stream;
@@ -109,48 +243,29 @@ export default function ProductScanButton() {
       }
     } catch (error) {
       console.error('Error accessing camera:', error);
-      SnackbarUtils.error(
-        'Could not access camera. Please check permissions and make sure you are using a secure connection (HTTPS).'
-      );
+      
+      let errorMessage = 'Could not access camera. ';
+      
+      // Check for specific error types
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+          errorMessage += 'Camera permission denied. Please allow camera access in your browser settings.';
+        } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+          errorMessage += 'No camera found. Please connect a camera device.';
+        } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+          errorMessage += 'Camera is already in use by another application.';
+        } else {
+          errorMessage += 'Please check camera permissions.';
+        }
+      } else {
+        errorMessage += 'Please check camera permissions.';
+      }
+      
+      SnackbarUtils.error(errorMessage);
       setIsScanning(false);
       setShowCameraModal(false);
     }
   }, [scanLoop, stopCameraStream]);
-
-  // Handle successful scan
-  const handleScanSuccess = (url: string) => {
-    try {
-      SnackbarUtils.success('QR Code scanned successfully');
-
-      // Open the URL in a new tab
-      if (url) {
-        // Validate URL to make sure it's safe to open
-        try {
-          // Check if it's a valid URL format
-          new URL(url);
-
-          // Open in new tab
-          window.open(url, '_blank', 'noopener,noreferrer');
-        } catch (error) {
-          console.error('Invalid URL format:', url, error);
-          SnackbarUtils.warning('The QR code contains invalid URL format');
-        }
-      }
-
-      // Close the camera modal
-      handleClose();
-    } catch (error) {
-      console.error('Error processing QR code:', error);
-      SnackbarUtils.error('Error processing QR code. Please try again.');
-    }
-  };
-
-  // Close the modal and cleanup
-  const handleClose = () => {
-    setShowCameraModal(false);
-    setIsScanning(false);
-    stopCameraStream();
-  };
 
   // Cleanup effect when component unmounts
   useEffect(() => {
@@ -181,12 +296,22 @@ export default function ProductScanButton() {
             className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-11/12 max-w-md flex flex-col items-center gap-4"
             onClick={e => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold text-black">Point Camera at QR Code</h2>
+            <h2 className="text-xl font-bold text-black">
+              {isProcessing ? 'Processing...' : 'Point Camera at QR Code'}
+            </h2>
 
             <div className="relative w-full rounded-lg overflow-hidden" style={{ aspectRatio: '1/1' }}>
               <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
               {/* The canvas is overlaid on the video to draw the highlight box */}
-              <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
+              <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full pointer-events-none" />
+              {isProcessing && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
+                  <div className="bg-white rounded-lg p-4 flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 border-4 border-[#FEC400] border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-sm text-black font-medium">Processing QR Code...</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <button
