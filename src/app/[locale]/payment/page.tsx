@@ -75,7 +75,7 @@ const PaymentPage = () => {
     phone: yup.string().required(t('validation.phoneRequired')),
     address: yup.string().required(t('validation.addressRequired')),
     city: yup.string<EgyptCity>().when('country', {
-      is: (val: string) => {
+      is: () => {
         // Check if country code is 'EG' (Egypt)
         const countryCode = siteData.code?.toUpperCase();
         return Boolean(countryCode && countryCode === 'EG');
@@ -85,7 +85,7 @@ const PaymentPage = () => {
     }),
     country: yup.string().required(t('validation.countryRequired')),
     governorate: yup.string().when('country', {
-      is: (val: string) => {
+      is: () => {
         // Check if country code is 'EG' (Egypt)
         const countryCode = siteData.code?.toUpperCase();
         return Boolean(countryCode && countryCode === 'EG');
