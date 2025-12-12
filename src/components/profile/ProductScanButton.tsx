@@ -60,12 +60,13 @@ export default function ProductScanButton() {
           // Wait a bit more before opening link for smoother UX
           await new Promise(resolve => setTimeout(resolve, 300));
 
-          // Open in new tab
+          // Try to open in new tab, fallback to same tab if popup is blocked
           const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
           
-          // If popup was blocked, show message
-          if (!newWindow) {
-            SnackbarUtils.warning('Please allow popups to open the link');
+          // If popup was blocked, navigate in the same tab instead
+          if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+            // Fallback: navigate in current tab
+            window.location.href = url;
           }
 
           // Wait a moment before closing modal
