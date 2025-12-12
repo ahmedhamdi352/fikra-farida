@@ -27,9 +27,9 @@ interface PaymentFormData {
   email?: string;
   phone: string;
   address: string;
-  city: EgyptCity;
+  city?: EgyptCity;
   country: string;
-  governorate: string;
+  governorate?: string;
   notes?: string;
   paymentMethod: 'online' | 'cash';
 }
@@ -51,6 +51,8 @@ const PaymentPage = () => {
 
   const [isLoadingOnline, setIsLoadingOnline] = useState(false);
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+  const [defaultCountry, setDefaultCountry] = useState('eg');
 
   const [shippingInfo, setShippingInfo] = useState<{ zoneName: string; price: number } | null>(null);
 
@@ -72,14 +74,30 @@ const PaymentPage = () => {
       }),
     phone: yup.string().required(t('validation.phoneRequired')),
     address: yup.string().required(t('validation.addressRequired')),
-    city: yup.string<EgyptCity>().required(t('validation.cityRequired')),
+    city: yup.string<EgyptCity>().when('country', {
+      is: (val: string) => {
+        // Check if country code is 'EG' (Egypt)
+        const countryCode = siteData.code?.toUpperCase();
+        return Boolean(countryCode && countryCode === 'EG');
+      },
+      then: schema => schema.required(t('validation.cityRequired')),
+      otherwise: schema => schema.optional(),
+    }),
     country: yup.string().required(t('validation.countryRequired')),
-    governorate: yup.string().required(t('validation.governorateRequired')),
+    governorate: yup.string().when('country', {
+      is: (val: string) => {
+        // Check if country code is 'EG' (Egypt)
+        const countryCode = siteData.code?.toUpperCase();
+        return Boolean(countryCode && countryCode === 'EG');
+      },
+      then: schema => schema.required(t('validation.governorateRequired')),
+      otherwise: schema => schema.optional(),
+    }),
     notes: yup.string(),
     paymentMethod: yup.string().oneOf(['online', 'cash']).required(t('validation.paymentMethodRequired')),
   }) satisfies yup.ObjectSchema<PaymentFormData>;
 
-  const { control, handleSubmit, watch } = useForm<PaymentFormData>({
+  const { control, handleSubmit, watch, setValue } = useForm<PaymentFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
       paymentMethod: 'online',
@@ -100,6 +118,23 @@ const PaymentPage = () => {
 
   const paymentMethod = watch('paymentMethod');
   const discountCode = watchDiscount('discountCode');
+  const countryCode = siteData.code?.toUpperCase();
+  const isEgypt = Boolean(countryCode && countryCode === 'EG');
+
+  // Set mounted state and default country after hydration to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+    setDefaultCountry(siteData.code?.toLocaleLowerCase() || 'eg');
+  }, [siteData.code]);
+
+  // Clear city and governorate when country is not Egypt
+  useEffect(() => {
+    if (!isEgypt) {
+      setValue('city', undefined);
+      setValue('governorate', undefined);
+      setShippingInfo(null);
+    }
+  }, [isEgypt, setValue]);
 
   // Watch for payment method changes and reset discount
   useEffect(() => {
@@ -111,12 +146,12 @@ const PaymentPage = () => {
 
   const selectedCity = watch('city');
   useEffect(() => {
-    if (selectedCity) {
+    if (selectedCity && isEgypt) {
       setShippingInfo(getZoneInfo(selectedCity));
     } else {
       setShippingInfo(null);
     }
-  }, [selectedCity]);
+  }, [selectedCity, isEgypt]);
 
   const total = items.reduce((sum, item) => {
     const itemPrice = parseFloat(item.finalPrice || item.price);
@@ -127,7 +162,7 @@ const PaymentPage = () => {
   const hasFreeShipping = items.some(item => item.Categories?.some(cat => cat.Code === 'Free Shipping'));
 
   const subtotal = total;
-  const shippingCost = hasFreeShipping ? 0 : shippingInfo ? shippingInfo.price : getShippingPrice(selectedCity);
+  const shippingCost = hasFreeShipping ? 0 : shippingInfo ? shippingInfo.price : (selectedCity && isEgypt ? getShippingPrice(selectedCity) : 0);
   const finalTotal = appliedDiscount ? appliedDiscount.priceAfterDiscount + shippingCost : subtotal + shippingCost;
   // const discount = appliedDiscount?.totalDiscount || 0;
 
@@ -179,8 +214,8 @@ const PaymentPage = () => {
         billing: {
           name: data.fullName,
           address: data.address,
-          governorate: data.governorate,
-          city: data.city,
+          governorate: data.governorate || '',
+          city: data.city || '',
           country: data.country,
           phoneNumber: data.phone,
           email: data?.email || '',
@@ -311,7 +346,7 @@ const PaymentPage = () => {
 
             <section className="space-y-4">
               <h2 className="text-xl font-semibold">{t('deliveryInformation')}</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className={`grid gap-4 ${mounted && isEgypt ? 'grid-cols-2' : 'grid-cols-1'}`}>
                 <TextInput
                   control={control}
                   name="country"
@@ -324,30 +359,33 @@ const PaymentPage = () => {
                   }
                 />
 
-                <TextInput
+                {mounted && isEgypt && (
+                  <TextInput
+                    control={control}
+                    name="governorate"
+                    placeholder={t('governorate')}
+                    icon={
+                      <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
+                      </svg>
+                    }
+                  />
+                )}
+              </div>
+              {mounted && isEgypt && (
+                <Select
                   control={control}
-                  name="governorate"
-                  placeholder={t('governorate')}
+                  name="city"
+                  placeholder={t('city')}
+                  options={getCityNames().map(city => ({ value: city, label: city }))}
                   icon={
                     <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
                     </svg>
                   }
+                  required
                 />
-
-              </div>
-              <Select
-                control={control}
-                name="city"
-                placeholder={t('city')}
-                options={getCityNames().map(city => ({ value: city, label: city }))}
-                icon={
-                  <svg className="w-5 h-5 text-[#FEC400]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm0-4H5V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z" />
-                  </svg>
-                }
-                required
-              />
+              )}
 
               <TextInput
                 control={control}
@@ -364,9 +402,10 @@ const PaymentPage = () => {
                 name="phone"
                 control={control}
                 required
-                defaultCountry={siteData.code.toLocaleLowerCase() || 'eg'}
+                defaultCountry={mounted ? defaultCountry : 'eg'}
                 placeholder={t('phone')}
-                disableDropdown={true}
+                disableDropdown={false}
+                key={mounted ? defaultCountry : 'eg'}
               />
               <TextArea
                 control={control}

@@ -6,6 +6,7 @@ import { useCart } from 'context/CartContext';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useSiteData } from 'context/SiteContext';
 
 export default function CheckoutPage() {
   const { items, removeFromCart, updateQuantity } = useCart();
@@ -17,6 +18,7 @@ export default function CheckoutPage() {
   const tPayment = useTranslations('Payment');
 
   const locale = params.locale as string;
+  const siteData = useSiteData();
 
   useEffect(() => {
     const total = items.reduce((sum, item) => {
@@ -215,7 +217,7 @@ export default function CheckoutPage() {
             <div className="h-[1px] bg-white/10 my-4"></div>
             <div className="flex justify-between items-center">
               <span>{t('subtotal')}</span>
-              <span className="dark:text-white text-black text-xl font-medium">{total.toFixed(2)} </span>
+              <span className="dark:text-white text-black text-xl font-medium">{total.toFixed(2)} {siteData.currency} </span>
             </div>
           </div>
 
